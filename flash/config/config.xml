@@ -1,0 +1,29 @@
+<config>
+   <settings>
+   	<debug>true</debug>
+   	<file>http://localhost/drupal6/sites/all/modules/mediafront/players/osmplayer/player/media/wanted.flv</file>
+   </settings>
+   <plugins>
+      <plugin>
+         <type>mediaPlayer</type>
+         <name>mediaPlayer</name>
+         <visible>true</visible>
+      </plugin>     
+      <plugin>
+         <type>playLoader</type>
+         <name>playLoader</name>
+         <visible>true</visible>         
+         <dependencies>
+            <dependency>mediaPlayer</dependency>
+         </dependencies>
+      </plugin> 
+      <plugin>
+         <type>controlBar</type>
+         <name>controlBar</name>
+         <visible>true</visible>         
+         <dependencies>
+            <dependency>mediaPlayer</dependency>
+         </dependencies>
+      </plugin>          
+   </plugins>
+</config>
