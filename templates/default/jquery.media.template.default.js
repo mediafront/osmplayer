@@ -245,7 +245,7 @@
                
                // Setup an event where if they click on the media display, it will show the controls.
                if( this.mediaDisplay ) {
-                  this.mediaDisplay.bind("click", function() {
+                  this.mediaDisplay.display.bind("click", function() {
                      if( mediaplayer.fullScreen ) {
                         _this.onFullScreenMouse();
                      }
