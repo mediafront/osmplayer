@@ -771,6 +771,7 @@
                case "playerready":
                   this.playerReady = true;
                   clearTimeout( this.reflowInterval );
+                  this.player.setVolume(0);
                   this.startProgress();
                   break;
                case "buffering":
