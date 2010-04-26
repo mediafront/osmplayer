@@ -1179,7 +1179,7 @@
                this.videoFile = videoFile;             
                
                // Load the new media file into the Flash player.
-               this.player.loadMedia( videoFile.path ); 
+               this.player.loadMedia( videoFile.path, videoFile.stream ); 
                
                // Let them know the player is ready.          
                onUpdate( {type:"playerready"} );                 
