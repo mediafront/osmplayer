@@ -37,7 +37,8 @@
       link:"http://www.mediafront.org",
       file:"",
       image:"",
-      timeout:2000
+      timeout:2000,
+      autoLoad:true
    }); 
 
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
@@ -142,30 +143,41 @@
 
          // Handle the control events.
          this.onControlUpdate = function( data ) {
-            if( this.media && this.media.playerReady ) {
-               switch( data.type ) {
-                  case "play":
-                     this.media.player.playMedia();
-                     break;
-                  case "pause":
-                     this.media.player.pauseMedia();
-                     break;
-                  case "seek":
-                     this.media.player.seekMedia( data.value );
-                     break;
-                  case "volume":
-                     this.media.player.setVolume( data.value );
-                     break;
-                  case "mute":
-                     this.media.mute( data.value );
-                     break;
+            if( this.media ) {
+               // If the player is ready.
+               if( this.media.playerReady ) {
+                  switch( data.type ) {
+                     case "play":
+                        this.media.player.playMedia();
+                        break;
+                     case "pause":
+                        this.media.player.pauseMedia();
+                        break;
+                     case "seek":
+                        this.media.player.seekMedia( data.value );
+                        break;
+                     case "volume":
+                        this.media.player.setVolume( data.value );
+                        break;
+                     case "mute":
+                        this.media.mute( data.value );
+                        break;
+                  }
                }
-               
+               // If there are files in the queue but no current media file.
+               else if( (this.media.playQueue.length > 0) && !this.media.mediaFile ) {
+                  // They interacted with the player.  Always autoload at this point on.
+                  settings.autoLoad = true;
+                  
+                  // Then play the next file in the queue.
+                  this.playNext();
+               }  
+
                // Let the template do something...
                if( settings.template && settings.template.onControlUpdate ) {             
                   settings.template.onControlUpdate( data ); 
-               }   
-            }          
+               }
+            }        
          }; 
          
          // Handle the full screen event requests.
@@ -370,6 +382,10 @@
             this.showPlay(false);
             this.showPreview(false);
             this.showBusy(true);
+            
+            if( this.media ) {
+               this.media.reset();
+            }
          };
          
          // Loads an image...
@@ -389,10 +405,9 @@
          // Expose the public load functions from the media display.
          this.loadFiles = function( files ) { 
             this.reset();
-            if( this.media ) { 
-               this.hasMedia = this.media.loadFiles( files ); 
+            if( this.media && this.media.loadFiles( files ) && settings.autoLoad ) {
+               this.media.playNext();
             }
-            return this.hasMedia;
          };
          
          // Play the next file.

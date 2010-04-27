@@ -143,9 +143,7 @@
                // Load the media...
                if( this.player && this.nodeInfo.mediafiles ) {
                   // Load the media...
-                  if( this.player.loadFiles( this.nodeInfo.mediafiles.media ) ) {
-                     this.player.playNext();
-                  }
+                  this.player.loadFiles( this.nodeInfo.mediafiles.media );
                   
                   // Load the preview image.
                   var image = this.getImage("preview");

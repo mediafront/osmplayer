@@ -96,6 +96,17 @@
             }                       
          };    
          
+         this.reset = function() {
+            this.loaded = false;
+            clearInterval( this.progressInterval );
+            clearInterval( this.updateInterval );
+            clearTimeout( this.reflowInterval );  
+            this.playQueue.length = 0;                                  
+            this.playQueue = []; 
+            this.playerReady = false;
+            this.mediaFile = null;             
+         };         
+         
          this.resetContent = function() {
             this.display.empty();
             this.display.append( this.template );
@@ -109,7 +120,8 @@
          
          this.loadFiles = function( files ) {
             if( files ) {
-               this.playQueue.length = 0;
+               this.playQueue.length = 0;                                  
+               this.playQueue = []; 
                this.addToQueue( files.intro );
                this.addToQueue( files.commercial );
                this.addToQueue( files.prereel );
@@ -163,7 +175,7 @@
                // Send out an update about the initialize.
                this.onMediaUpdate({type:"initialize"});        
             }
-         };      
+         };    
 
          this.getMediaFile = function( file ) {
             var mFile = {};
@@ -267,6 +279,7 @@
                this.player.setVolume( (settings.volume / 100) );
                if( !settings.autostart ) {
                   this.player.pauseMedia();
+                  settings.autostart = true;
                }
                else {
                   this.display.trigger( "mediaupdate", data ); 
@@ -314,6 +327,7 @@
             this.loaded = false;
             clearInterval( this.progressInterval );
             clearInterval( this.updateInterval );
+            clearTimeout( this.reflowInterval );             
             if( this.playerReady ) {
                this.player.stopMedia();
             }              
