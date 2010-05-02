@@ -158,11 +158,13 @@
                      });
                   }
                   
-                  // Create our media player.
-                  this.player.createMedia( file ); 
-                  
-                  // Reflow the player if it does not show up.
-                  this.startReflow();
+                  if( this.player ) {
+                     // Create our media player.                     
+                     this.player.createMedia( file ); 
+                     
+                     // Reflow the player if it does not show up.
+                     this.startReflow();
+                  }
                }   
                else if( this.player ) {
                   // Load our file into the current player.
@@ -186,7 +188,7 @@
             mFile.stream = settings.streamer ? settings.streamer : file.stream;
             mFile.path = file.path ? jQuery.trim(file.path) : ( settings.baseURL + jQuery.trim(file.filepath) );
             mFile.extension = file.extension ? file.extension : this.getFileExtension(mFile.path);
-            mFile.player = file.player ? file.player : this.getPlayer(mFile.extension);
+            mFile.player = file.player ? file.player : this.getPlayer(mFile.extension, mFile.path);
             mFile.type = file.type ? file.type : this.getType(mFile.extension);
             return mFile;       
          };
@@ -197,7 +199,7 @@
          };
          
          // Get the player for this media.
-         this.getPlayer = function( extension ) {
+         this.getPlayer = function( extension, path ) {
             switch( extension )
             {
                case "ogg":case "ogv":
@@ -214,6 +216,16 @@
                   
                case "flv":case "f4v":case "mov":case "3g2":case "m4a":case "aac":case "wav":case "aif":case "wma":            
                   return "flash";  
+               default:
+                  if( extension.substring(0,3).toLowerCase() == "com" ) {
+                     // Is this a vimeo path...
+                     if( path.search(/^http(s)?\:\/\/(www\.)?vimeo\.com/i) == 0 ) {
+                        return "vimeo";
+                     }
+                     else if( path.search(/^http(s)?\:\/\/(www\.)?youtube\.com/i) == 0 ) {
+                        return "youtube";
+                     }
+                  }
             }           
             return "";
          };

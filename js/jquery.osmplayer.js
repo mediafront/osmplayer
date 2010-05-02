@@ -707,11 +707,13 @@
                      });
                   }
                   
-                  // Create our media player.
-                  this.player.createMedia( file ); 
-                  
-                  // Reflow the player if it does not show up.
-                  this.startReflow();
+                  if( this.player ) {
+                     // Create our media player.                     
+                     this.player.createMedia( file ); 
+                     
+                     // Reflow the player if it does not show up.
+                     this.startReflow();
+                  }
                }   
                else if( this.player ) {
                   // Load our file into the current player.
@@ -735,7 +737,7 @@
             mFile.stream = settings.streamer ? settings.streamer : file.stream;
             mFile.path = file.path ? jQuery.trim(file.path) : ( settings.baseURL + jQuery.trim(file.filepath) );
             mFile.extension = file.extension ? file.extension : this.getFileExtension(mFile.path);
-            mFile.player = file.player ? file.player : this.getPlayer(mFile.extension);
+            mFile.player = file.player ? file.player : this.getPlayer(mFile.extension, mFile.path);
             mFile.type = file.type ? file.type : this.getType(mFile.extension);
             return mFile;       
          };
@@ -746,7 +748,7 @@
          };
          
          // Get the player for this media.
-         this.getPlayer = function( extension ) {
+         this.getPlayer = function( extension, path ) {
             switch( extension )
             {
                case "ogg":case "ogv":
@@ -763,6 +765,16 @@
                   
                case "flv":case "f4v":case "mov":case "3g2":case "m4a":case "aac":case "wav":case "aif":case "wma":            
                   return "flash";  
+               default:
+                  if( extension.substring(0,3).toLowerCase() == "com" ) {
+                     // Is this a vimeo path...
+                     if( path.search(/^http(s)?\:\/\/(www\.)?vimeo\.com/i) == 0 ) {
+                        return "vimeo";
+                     }
+                     else if( path.search(/^http(s)?\:\/\/(www\.)?youtube\.com/i) == 0 ) {
+                        return "youtube";
+                     }
+                  }
             }           
             return "";
          };
@@ -5021,7 +5033,7 @@
             this.ready = false;
             var playerId = (options.id + "_media");
             var flashvars = {
-               clip_id:videoFile.path,
+               clip_id:this.getId(videoFile.path),
                width:this.display.width(),
                height:this.display.height(),
                js_api:'1',
@@ -5043,6 +5055,11 @@
                }
             );
          };      
+         
+         this.getId = function( path ) {
+            var regex = /^http[s]?\:\/\/(www\.)?vimeo\.com\/([0-9]+)/i;
+            return path.search(regex) == 0 ? path.replace(regex, "$2") : path;
+         };
          
          this.loadMedia = function( videoFile ) {
             this.bytesLoaded = 0;
@@ -5324,6 +5341,11 @@
             );
          };      
          
+         this.getId = function( path ) {
+            var regex = /^http[s]?\:\/\/(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9]+)/i;
+            return path.search(regex) == 0 ? path.replace(regex, "$2") : path;
+         };         
+         
          this.loadMedia = function( videoFile ) {
             if( this.player ) {
                this.loaded = false;            
@@ -5333,7 +5355,7 @@
                onUpdate( {type:"playerready"} );                 
                
                // Load our video.
-               this.player.loadVideoById( this.videoFile.path, 0 );
+               this.player.loadVideoById( this.getId( this.videoFile.path ), 0 );
             }
          };
          
@@ -5368,7 +5390,7 @@
                onUpdate( {type:"playerready"} );                
                
                // Load our video.
-               this.player.loadVideoById( this.videoFile.path, 0 );  
+               this.player.loadVideoById( this.getId( this.videoFile.path ), 0 );  
             }         
          };
          
