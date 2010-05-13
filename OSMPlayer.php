@@ -249,7 +249,10 @@ class OSMPlayer
     */
    public function getPlayerParams()
    {
-      return $this->playerParams;  
+      $params = $this->playerParams;  
+      $params['flashplayer'] = $this->base_url . '/' . $params['flashplayer'];
+      $params['logo'] = $this->base_url . '/' . $params['logo'];
+      return $params;
    }
 
    /**
