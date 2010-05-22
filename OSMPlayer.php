@@ -62,6 +62,9 @@ class OSMPlayer
    // The version of this player.
    private $version = '';
    
+   // The CSS directory to store the cached templates in.
+   private $css_dir = '';
+   
    // All the configurable id's for the elements within this player.
    private $ids = array(
       'loading' => '.mediaplayerloading',
@@ -245,6 +248,13 @@ class OSMPlayer
    }
 
    /**
+    * Set the CSS directory for this media player.
+    */
+   public function setCSSDirectory( $dir ) {
+   	$this->css_dir = $dir;
+   }
+   
+   /**
     * Returns the player parameters.
     */
    public function getPlayerParams()
@@ -406,20 +416,20 @@ class OSMPlayer
    public function createCSS()
    {     
       // Store the CSS directory for later usage.
-      $css_dir = dirname(__FILE__) . '/css';
+      $dir = $this->css_dir ? $this->css_dir : dirname(__FILE__) . '/css';
    	
-   	  // Make sure this directory exists.
-   	  if( !is_dir( $css_dir ) ) {
-   	    // Create the directory.
-   	    mkdir( $css_dir, 0775, true );
-   	  }
+      // Make sure this directory exists.
+      if( !is_dir( $dir ) ) {
+         // Create the directory.
+         mkdir( $dir, 0775, true );
+      }
    	
-   	  // Now make sure the directory has the right permissions.
-   	  chmod( $css_dir, 0775 );
+      // Now make sure the directory has the right permissions.
+      chmod( $dir, 0775 );
    	
       // Store the template and theme names.
       $template = $this->settings['template'];
-      $to_path = $css_dir . '/' . $this->settings['id'];
+      $to_path = $dir . '/' . $this->settings['id'];
       $from_path = 'templates/' . $template . '/osmplayer_' . $template;
 
       // Setup the files array.
