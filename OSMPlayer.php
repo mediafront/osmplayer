@@ -487,17 +487,21 @@ class OSMPlayer
     */   
    public function getCSSFiles()
    {
+      // Get the CSS path.
+      $css_path = $this->css_dir ? $this->css_dir : dirname(__FILE__);
+      $css_local_path = $this->css_dir ? '' : 'css/';
+   	
       // Cache the prefix name.
       $id = $this->settings['id'];
       
       // The CSS files for this id.
       $files = array(
-         "css/{$id}.css",
-         "css/{$id}_ie.css"      
+         $css_local_path . "{$id}.css",
+         $css_local_path . "{$id}_ie.css"      
       );
       
       // If the CSS files do not exist, then create them.
-      if( !is_file( dirname(__FILE__) . $files[0] ) ) {
+      if( !is_file( $css_path . '/' . $files[0] ) ) {
          $this->createCSS();
       }
       

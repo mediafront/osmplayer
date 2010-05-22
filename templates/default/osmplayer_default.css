@@ -111,6 +111,10 @@
    width:64px;	
 }
 
+.mediatitlelinksinner {
+   float:right;	
+}
+
 .mediatitlelinks a, .mediapager div.mediapagerlink {
    float:left;
    margin:2px 2px 0 0px !important;   
