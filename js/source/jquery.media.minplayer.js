@@ -239,9 +239,6 @@
             if( settings.template && settings.template.onMediaUpdate ) {
                settings.template.onMediaUpdate( data );
             }
-            
-            // Now pass on this event for all that care.
-            this.display.trigger( "mediaupdate", data );  
          };
          
          // Allow mulitple controllers to control this media.
