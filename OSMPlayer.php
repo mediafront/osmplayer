@@ -171,7 +171,8 @@ class OSMPlayer
       'skin' => 'default',
       'autoNext' => true,
       'prefix' => '',
-      'showScrollbar' => true
+      'showScrollbar' => true,
+      'wmode' => 'transparent'
    );
 
    // All of the settings that can be used to control the function of the player (not passed to the js player).

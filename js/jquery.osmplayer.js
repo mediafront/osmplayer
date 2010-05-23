@@ -305,6 +305,7 @@
                this.display.width(), 
                this.display.height(),
                {},
+               options.wmode,
                function( obj ) {
                   _this.player = obj;  
                   _this.loadPlayer(); 
@@ -505,7 +506,8 @@
       autostart:false,
       streamer:"",
       embedWidth:450,
-      embedHeight:337
+      embedHeight:337,
+      wmode:"transparent"
    }); 
 
    jQuery.fn.mediadisplay = function( settings ) {  
@@ -1118,6 +1120,7 @@
                this.display.width(), 
                this.display.height(),
                flashvars,
+               settings.wmode,               
                function( obj ) {
                   _this.player = obj; 
                   _this.loadPlayer();  
@@ -1213,8 +1216,9 @@
                settings.flashplayer,
                "mediafront_player", 
                settings.embedWidth, 
-               settings.embedHeight, 
-               flashVars );
+               settings.embedHeight,
+               flashVars,
+               settings.wmode );
          };         
          
          // Not implemented yet...
@@ -4769,7 +4773,7 @@
             return scaledRect;         
          },             
          
-         getFlash : function( player, id, width, height, flashvars ) {
+         getFlash : function( player, id, width, height, flashvars, wmode ) {
             // Get the protocol.
             var protocol = window.location.protocol; 
             if (protocol.charAt(protocol.length - 1) == ':') { 
@@ -4795,11 +4799,11 @@
             flash += '<param name="allowScriptAccess" value="always"></param>'; 
             flash += '<param name="allowfullscreen" value="true" />';
             flash += '<param name="movie" value="' + player + '"></param>';
-            flash += '<param name="wmode" value="transparent"></param>';
+            flash += '<param name="wmode" value="' + wmode + '"></param>';
             flash += '<param name="quality" value="high"></param>';
             flash += '<param name="FlashVars" value="' + flashVarsString + '"></param>';
             flash += '<embed src="' + player + '" quality="high" width="' + width + '" height="' + height + '" ';
-            flash += 'id="' + id + '" name="' + id + '" swLiveConnect="true" allowScriptAccess="always" wmode="transparent"';
+            flash += 'id="' + id + '" name="' + id + '" swLiveConnect="true" allowScriptAccess="always" wmode="' + wmode + '"';
             flash += 'allowfullscreen="true" type="application/x-shockwave-flash" FlashVars="' + flashVarsString + '" ';
             flash += 'pluginspage="' + protocol + '://www.macromedia.com/go/getflashplayer" />';
             flash += '</object>';
@@ -4819,7 +4823,7 @@
          },
          
          // Insert flash routine.  If they have swfobject, then this function will dynamically use that instead.
-         insertFlash : function( obj, player, id, width, height, flashvars, onAdded ) {
+         insertFlash : function( obj, player, id, width, height, flashvars, wmode, onAdded ) {
             jQuery.media.utils.removeFlash( obj, id );
             obj.children().remove();             
             obj.append('<div id="' + id + '"><p><a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a></p></div>');
@@ -4827,7 +4831,7 @@
                var params = {
                   allowScriptAccess:"always",
                   allowfullscreen:"true",
-                  wmode:"transparent",
+                  wmode:wmode,
                   quality:"high"
                };                              
                swfobject.embedSWF( 
@@ -4846,7 +4850,7 @@
                );
             }
             else {            
-               var flash = jQuery.media.utils.getFlash( player, id, width, height, flashvars );
+               var flash = jQuery.media.utils.getFlash( player, id, width, height, flashvars, wmode );
                var container = obj.find('#' + id).eq(0);
                if( jQuery.browser.msie ) {
                   container[0].outerHTML = flash;
@@ -4993,6 +4997,7 @@
                this.display.width(), 
                this.display.height(),
                flashvars,
+               options.wmode,
                function( obj ) {
                   _this.player = obj; 
                   _this.loadPlayer();  
@@ -5278,6 +5283,7 @@
                this.display.width(), 
                this.display.height(),
                {},
+               options.wmode,
                function( obj ) {
                   _this.player = obj; 
                   _this.loadPlayer();  

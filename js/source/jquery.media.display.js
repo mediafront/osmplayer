@@ -32,7 +32,8 @@
       autostart:false,
       streamer:"",
       embedWidth:450,
-      embedHeight:337
+      embedHeight:337,
+      wmode:"transparent"
    }); 
 
    jQuery.fn.mediadisplay = function( settings ) {  

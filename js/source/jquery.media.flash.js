@@ -89,6 +89,7 @@
                this.display.width(), 
                this.display.height(),
                flashvars,
+               settings.wmode,               
                function( obj ) {
                   _this.player = obj; 
                   _this.loadPlayer();  
@@ -184,8 +185,9 @@
                settings.flashplayer,
                "mediafront_player", 
                settings.embedWidth, 
-               settings.embedHeight, 
-               flashVars );
+               settings.embedHeight,
+               flashVars,
+               settings.wmode );
          };         
          
          // Not implemented yet...
