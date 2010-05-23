@@ -529,7 +529,7 @@ class OSMPlayer
     */
    public function getVersion()
    {
-      $this->version = $this->version ? $this->version : file_get_contents( dirname(__FILE__) . '/version' );
+      $this->version = $this->version ? $this->version : file_get_contents( dirname(__FILE__) . '/version.txt' );
       return $this->version;
    }
 
