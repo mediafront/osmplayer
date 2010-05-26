@@ -74,11 +74,11 @@ class Playlist
    private $schema;
    private $playlist;
    
-	// The base path where this script is loaded.
-	private $base_path = '';
-	
-	// The base url where this script is loaded.
-	private $base_url = '';   
+   // The base path where this script is loaded.
+   private $base_path = '';
+   
+   // The base url where this script is loaded.
+   private $base_url = '';   
    
    private $mediaTypes = array('ogg', 'ogv', 'oga', 'flv', 'rtmp', 'mp4', 'm4v', 'mov', '3g2', 'mp3', 'm4a', 'aac', 'wav', 'aif', 'wma');
    private $imageTypes = array('jpg', 'gif', 'png');
@@ -288,40 +288,40 @@ class Playlist
    private function get_media_files($path, &$files, $folder = 0) 
    {
       // Only continue if this is a directory.
-   	if(is_dir($path)) {
-   	  
-   	   // Open the directory.
-   		if($contents = opendir($path)) {
-   		 
-   		   // Iterate through all the files in this directory.
-   			while(($node = readdir($contents)) !== false) {
-   			   
-   			   // Make sure this is not the parent or current directory elements.
-   				if($node!="." && $node!="..") {
-   				  
-   				   // If this node is a directory, then we will want to recurse.
-   				   $directory = is_dir($path.'/'.$node);
-   					if($directory) {
-   					   
-   					   // Get the index of this directory and recurse.
+      if(is_dir($path)) {
+        
+         // Open the directory.
+         if($contents = opendir($path)) {
+          
+            // Iterate through all the files in this directory.
+            while(($node = readdir($contents)) !== false) {
+               
+               // Make sure this is not the parent or current directory elements.
+               if($node!="." && $node!="..") {
+                 
+                  // If this node is a directory, then we will want to recurse.
+                  $directory = is_dir($path.'/'.$node);
+                  if($directory) {
+                     
+                     // Get the index of this directory and recurse.
                      $index = (substr($node, $this->folderLength) - 1);
-   					   $this->get_media_files($path.'/'.$node, $files, $index);
-   					}
-   					else if (!$directory){
-   					 
-   					   // If this is not a directory, then we need to add it to our files list.
-   					   $extension = $this->get_file_ext($node);		
+                     $this->get_media_files($path.'/'.$node, $files, $index);
+                  }
+                  else if (!$directory){
+                   
+                     // If this is not a directory, then we need to add it to our files list.
+                     $extension = $this->get_file_ext($node);     
                      if( in_array($extension, $this->mediaTypes) ) {
-   							$files[$folder]['media'][] = $path.'/'.$node;
-   						}
-   						else if( in_array($extension, $this->imageTypes) ) {
-   							$files[$folder]['image'] = $path.'/'.$node;
-   						}	
-   					}
-   				}
-   			}
-   		}
-   	}
+                        $files[$folder]['media'][] = $path.'/'.$node;
+                     }
+                     else if( in_array($extension, $this->imageTypes) ) {
+                        $files[$folder]['image'] = $path.'/'.$node;
+                     }  
+                  }
+               }
+            }
+         }
+      }
    }
    
    /**
@@ -356,7 +356,7 @@ class Playlist
          case 'ogv':
             return 'video/ogg';
          case 'oga':
-         	return 'audio/ogg';
+            return 'audio/ogg';
          case 'wav':
             return 'audio/wav';
          case 'aif':

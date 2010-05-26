@@ -498,6 +498,82 @@
  *  THE SOFTWARE.
  */
 
+   jQuery.media = jQuery.extend( {}, {
+      checkPoints : {},
+      checkPoint : function( name ) {
+         var thisTime = new Date().getTime();
+         var lastTime = jQuery.media.checkPoints[name] ? jQuery.media.checkPoints[name] : 0;
+         jQuery.media.checkPoints[name] = thisTime - lastTime;
+      },
+      finalPoint : function() {
+         jQuery.media.debug( jQuery.media.checkPoints );
+         jQuery.media.checkPoints = {};            
+      },
+      debug : function( text ) {
+         var _this = this;
+
+         this.dump = function(arr, level) {
+            var dumped_text = "";
+            var level_padding = "";
+                        
+            if(!level) {
+               level = 0;
+            }
+            
+            for(var j=0;j<=level;j++) {
+               level_padding += "   ";
+            }
+            if(typeof(arr) == 'object') {
+               for(var key in arr) {
+                  if( arr.hasOwnProperty(key) ) {
+                     var value = arr[key];
+                     if(typeof(value) == 'object') {
+                        dumped_text += level_padding + "'" + key + "' ...\n";
+                        dumped_text += _this.dump(value,level+1);
+                     } else {
+                        dumped_text += level_padding + "'" + key + "' => \"" + value + "\"\n";
+                     }                      
+                  }
+               }
+            } else {
+               dumped_text = "- "+ arr +" ("+typeof(arr)+")";
+            }
+            return dumped_text;
+         };   
+
+         if( arguments[1] ) {
+            jQuery(".mediadebug").empty();
+         }
+         jQuery(".mediadebug").append( "<pre>" + this.dump( text ) + "</pre><br/>" );
+      }
+   }, jQuery.media );  
+
+/**
+ *  Copyright (c) 2010 Alethia Inc,
+ *  http://www.alethia-inc.com
+ *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *
+ *  License:  GPL version 3.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+
         
    
    // Set up our defaults for this component.
@@ -587,10 +663,31 @@
             this.display.append( this.template );
          };
          
+         // Adds a media file to the play queue.
          this.addToQueue = function( file ) {
+            // Check to see if this file is an array... then we
+            // have several files to pick the best one to play.
+            if( (typeof file) == 'array' ) {
+               file = this.getPlayableMedia( file ); 
+            }
+            
             if( file ) {
                this.playQueue.push( file );
             }
+         };
+         
+         // Returns the media that has the lowest weight value, which means
+         // this player prefers that media over the others.
+         this.getPlayableMedia = function( files ) {
+            var mFile = null;
+            var i = files.length;
+            while(i--) {
+               var tempFile = this.getMediaFile( files[i] );
+               if( !mFile || (tempFile.weight < mFile.weight) ) {
+                  mFile = tempFile;
+               }
+            }
+            return mFile;
          };
          
          this.loadFiles = function( files ) {
@@ -654,6 +751,7 @@
             }
          };    
 
+         // Returns a media file object.
          this.getMediaFile = function( file ) {
             var mFile = {};
             file = (typeof file === "string") ? {path:file} : file;
@@ -663,6 +761,7 @@
             mFile.stream = settings.streamer ? settings.streamer : file.stream;
             mFile.path = file.path ? jQuery.trim(file.path) : ( settings.baseURL + jQuery.trim(file.filepath) );
             mFile.extension = file.extension ? file.extension : this.getFileExtension(mFile.path);
+            mFile.weight = file.weight ? file.weight : this.getWeight( mFile.extension );
             mFile.player = file.player ? file.player : this.getPlayer(mFile.extension, mFile.path);
             mFile.type = file.type ? file.type : this.getType(mFile.extension);
             return mFile;       
@@ -712,6 +811,28 @@
                   return "video";
                case "oga":case "mp3":case "m4a":case "aac":case "wav":case "aif":case "wma":
                   return "audio";
+            }
+         };
+
+         // Get the preference "weight" of this media type.  
+         // The lower the number, the higher the preference.
+         this.getWeight = function( extension ) {
+            switch( extension ) {  
+               case 'mp4':case 'm4v':case 'm4a':
+                  return 5;
+               case 'ogg':case 'ogv':
+                  return this.playTypes.ogg ? 5 : 10;
+               case 'oga':
+                  return this.playTypes.audioOgg ? 5 : 10;               
+               case 'mp3':
+                  return 6;
+               case 'mov':case 'flv':case 'f4v':case '3g2':
+                  return 7;
+               case 'wav':case 'aif':case 'aac':
+                  return 8;
+               case 'wma':
+                  return 9;
+                  
             }
          };
 

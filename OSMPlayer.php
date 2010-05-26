@@ -252,7 +252,7 @@ class OSMPlayer
     * Set the CSS directory for this media player.
     */
    public function setCSSDirectory( $dir ) {
-   	$this->css_dir = $dir;
+      $this->css_dir = $dir;
    }
    
    /**
@@ -418,16 +418,16 @@ class OSMPlayer
    {     
       // Store the CSS directory for later usage.
       $dir = $this->css_dir ? $this->css_dir : dirname(__FILE__) . '/css';
-   	
+      
       // Make sure this directory exists.
       if( !is_dir( $dir ) ) {
          // Create the directory.
          mkdir( $dir, 0775, true );
       }
-   	
+      
       // Now make sure the directory has the right permissions.
       chmod( $dir, 0775 );
-   	
+      
       // Store the template and theme names.
       $template = $this->settings['template'];
       $to_path = $dir . '/' . $this->settings['id'];
@@ -491,7 +491,7 @@ class OSMPlayer
       // Get the CSS path.
       $css_path = $this->css_dir ? $this->css_dir : dirname(__FILE__);
       $css_local_path = $this->css_dir ? '' : 'css/';
-   	
+      
       // Cache the prefix name.
       $id = $this->settings['id'];
       
@@ -539,8 +539,8 @@ class OSMPlayer
     */
    public function getCSSHeader()
    {
-      $base_path = $this->base_path ? $this->base_path . '/' : '';   	
-   	
+      $base_path = $this->base_path ? $this->base_path . '/' : '';      
+      
       // Add the CSS files.
       $css_files = $this->getCSSFiles();
       $header = '<link rel="stylesheet" type="text/css" href="' . $base_path . $css_files[0] . '" />';
@@ -549,7 +549,7 @@ class OSMPlayer
       $header .= "\n";
       
       // Return the header.
-      return $header;   	
+      return $header;      
    }
    
    /**

@@ -539,10 +539,31 @@
             this.display.append( this.template );
          };
          
+         // Adds a media file to the play queue.
          this.addToQueue = function( file ) {
+            // Check to see if this file is an array... then we
+            // have several files to pick the best one to play.
+            if( (typeof file) == 'array' ) {
+               file = this.getPlayableMedia( file ); 
+            }
+            
             if( file ) {
                this.playQueue.push( file );
             }
+         };
+         
+         // Returns the media that has the lowest weight value, which means
+         // this player prefers that media over the others.
+         this.getPlayableMedia = function( files ) {
+            var mFile = null;
+            var i = files.length;
+            while(i--) {
+               var tempFile = this.getMediaFile( files[i] );
+               if( !mFile || (tempFile.weight < mFile.weight) ) {
+                  mFile = tempFile;
+               }
+            }
+            return mFile;
          };
          
          this.loadFiles = function( files ) {
@@ -606,6 +627,7 @@
             }
          };    
 
+         // Returns a media file object.
          this.getMediaFile = function( file ) {
             var mFile = {};
             file = (typeof file === "string") ? {path:file} : file;
@@ -615,6 +637,7 @@
             mFile.stream = settings.streamer ? settings.streamer : file.stream;
             mFile.path = file.path ? jQuery.trim(file.path) : ( settings.baseURL + jQuery.trim(file.filepath) );
             mFile.extension = file.extension ? file.extension : this.getFileExtension(mFile.path);
+            mFile.weight = file.weight ? file.weight : this.getWeight( mFile.extension );
             mFile.player = file.player ? file.player : this.getPlayer(mFile.extension, mFile.path);
             mFile.type = file.type ? file.type : this.getType(mFile.extension);
             return mFile;       
@@ -664,6 +687,28 @@
                   return "video";
                case "oga":case "mp3":case "m4a":case "aac":case "wav":case "aif":case "wma":
                   return "audio";
+            }
+         };
+
+         // Get the preference "weight" of this media type.  
+         // The lower the number, the higher the preference.
+         this.getWeight = function( extension ) {
+            switch( extension ) {  
+               case 'mp4':case 'm4v':case 'm4a':
+                  return 5;
+               case 'ogg':case 'ogv':
+                  return this.playTypes.ogg ? 5 : 10;
+               case 'oga':
+                  return this.playTypes.audioOgg ? 5 : 10;               
+               case 'mp3':
+                  return 6;
+               case 'mov':case 'flv':case 'f4v':case '3g2':
+                  return 7;
+               case 'wav':case 'aif':case 'aac':
+                  return 8;
+               case 'wma':
+                  return 9;
+                  
             }
          };
 
