@@ -308,11 +308,13 @@
             // Store the active teaser for next time.                                   
             this.selectedTeaser = teaser;             
 
-            // Now activate the new teaser.
-            this.selectedTeaser.setSelected( true );           
-                     
-            // Set this item as visible in the scroll region.
-            this.scrollRegion.setVisible( teaser.index ); 
+            if( this.selectedTeaser ) {
+               // Now activate the new teaser.
+               this.selectedTeaser.setSelected( true );           
+                        
+               // Set this item as visible in the scroll region.
+               this.scrollRegion.setVisible( teaser.index ); 
+            }
          };
 
          // Activate the teaser.
@@ -328,14 +330,16 @@
             // Store the active teaser for next time.                                   
             this.activeTeaser = teaser;             
 
-            // Now activate the new teaser.
-            this.activeTeaser.setActive( true );      
-
-            // Set the active and current index to this one.
-            this.pager.activeIndex = this.pager.currentIndex = teaser.index;
-            
-            // Trigger an even that the teaser has been activated.
-            jQuery.event.trigger( "playlistload", teaser.node.nodeInfo ); 
+            if( this.activeTeaser ) {
+               // Now activate the new teaser.
+               this.activeTeaser.setActive( true );      
+   
+               // Set the active and current index to this one.
+               this.pager.activeIndex = this.pager.currentIndex = teaser.index;
+               
+               // Trigger an even that the teaser has been activated.
+               jQuery.event.trigger( "playlistload", teaser.node.nodeInfo ); 
+            }
          };
       })( server, this, settings );
    };

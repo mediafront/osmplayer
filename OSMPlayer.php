@@ -223,8 +223,8 @@ class OSMPlayer
          $base_url .= "/$dir";
       }
       
-      $this->base_path = trim( str_replace( realpath('.'), '', dirname(__FILE__)), '/' );
-      $this->base_url = $base_url . '/' . $this->base_path;
+      $this->base_path = isset($params['base_path']) ? $params['base_path'] : trim( str_replace( realpath('.'), '', dirname(__FILE__)), '/' );
+      $this->base_url = isset($params['base_url']) ? $params['base_url'] : $base_url . '/' . $this->base_path;
       $this->settings['playerurl'] = $this->base_url;
       
       // Set the correct flash player and logo url path.

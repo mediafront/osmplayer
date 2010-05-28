@@ -496,7 +496,8 @@
             // Check for video types...
             var elem = document.createElement("video");
             types.ogg  = this.checkPlayType( elem, "video/ogg");  
-            types.h264  = this.checkPlayType( elem, "video/mp4"); 
+            types.h264  = this.checkPlayType( elem, "video/mp4");
+            types.webm = this.checkPlayType( elem, "video/x-webm");
                
             // Now check for audio types...
             elem = document.createElement("audio");
@@ -658,6 +659,9 @@
                case "mp4":case "m4v":
                   return this.playTypes.h264 ? "html5" : "flash";               
                
+               case "webm":
+                  return this.playTypes.webm ? "html5" : "flash";
+               
                case "oga":
                   return this.playTypes.audioOgg ? "html5" : "flash";
                   
@@ -665,13 +669,16 @@
                   return this.playTypes.mp3 ? "html5" : "flash";
                   
                case "flv":case "f4v":case "mov":case "3g2":case "m4a":case "aac":case "wav":case "aif":case "wma":            
-                  return "flash";  
+                  return "flash"; 
+                   
                default:
                   if( extension.substring(0,3).toLowerCase() == "com" ) {
                      // Is this a vimeo path...
                      if( path.search(/^http(s)?\:\/\/(www\.)?vimeo\.com/i) == 0 ) {
                         return "vimeo";
                      }
+                     
+                     // This is a youtube path...
                      else if( path.search(/^http(s)?\:\/\/(www\.)?youtube\.com/i) == 0 ) {
                         return "youtube";
                      }
@@ -683,7 +690,7 @@
          // Get the type of media this is...
          this.getType = function( extension ) {
             switch( extension ) {  
-               case "ogg":case "ogv":case "mp4":case "m4v":case "flv":case "f4v":case "mov":case "3g2":
+               case "webm":case "ogg":case "ogv":case "mp4":case "m4v":case "flv":case "f4v":case "mov":case "3g2":
                   return "video";
                case "oga":case "mp3":case "m4a":case "aac":case "wav":case "aif":case "wma":
                   return "audio";
@@ -694,7 +701,7 @@
          // The lower the number, the higher the preference.
          this.getWeight = function( extension ) {
             switch( extension ) {  
-               case 'mp4':case 'm4v':case 'm4a':
+               case 'mp4':case 'm4v':case 'm4a':case'webm':
                   return 5;
                case 'ogg':case 'ogv':
                   return this.playTypes.ogg ? 5 : 10;
