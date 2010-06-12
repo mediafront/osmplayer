@@ -36,14 +36,14 @@
    });   
 
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      listMask:".medialistmask",
-      list:".medialist",
-      scrollWrapper:".mediascrollbarwrapper",
-      scrollBar:".mediascrollbar",
-      scrollTrack:".mediascrolltrack",
-      scrollHandle:".mediascrollhandle",
-      scrollUp:".mediascrollup",
-      scrollDown:".mediascrolldown"        
+      listMask:"#medialistmask",
+      list:"#medialist",
+      scrollWrapper:"#mediascrollbarwrapper",
+      scrollBar:"#mediascrollbar",
+      scrollTrack:"#mediascrolltrack",
+      scrollHandle:"#mediascrollhandle",
+      scrollUp:"#mediascrollup",
+      scrollDown:"#mediascrolldown"        
    });     
    
    jQuery.fn.mediascroll = function( settings ) {
@@ -214,7 +214,7 @@
             this.setScrollSize( settings.vertical ? this.listMask.height() : this.listMask.width() );                                 
 
             // Now reset the list position.
-            this.setScrollPos( this.listPos );
+            this.setScrollPos( /*this.listPos*/0, true );
          };
          
          // Refreshes the scroll region.

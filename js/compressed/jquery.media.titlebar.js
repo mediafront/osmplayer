@@ -23,4 +23,4 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-(function(a){jQuery.media.ids=jQuery.extend(jQuery.media.ids,{titleLinks:".mediatitlelinks"});jQuery.fn.mediatitlebar=function(b){if(this.length===0){return null;}return new (function(c,d){var e=this;this.display=c;this.titleLinks=this.display.find(d.ids.titleLinks);this.display.find("a").each(function(){var f=a(this).attr("href");a(this).medialink(d,function(g){g.preventDefault();e.display.trigger(g.data.id);},{id:f.substr(1),obj:a(this)});});})(this,b);};})(jQuery);
+(function(a){jQuery.media.ids=jQuery.extend(jQuery.media.ids,{titleLinks:"#mediatitlelinks"});jQuery.fn.mediatitlebar=function(b){if(this.length===0){return null;}return new (function(c,d){var e=this;this.display=c;this.titleLinks=this.display.find(d.ids.titleLinks);this.display.find("a").each(function(){var f=a(this).attr("href");a(this).medialink(d,function(g){g.preventDefault();e.display.trigger(g.data.id);},{id:f.substr(1),obj:a(this)});});})(this,b);};})(jQuery);

@@ -25,7 +25,7 @@
  */
 (function($) { 
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      titleLinks:".mediatitlelinks"                 
+      titleLinks:"#mediatitlelinks"                 
    });     
    
    jQuery.fn.mediatitlebar = function( settings ) { 

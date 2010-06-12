@@ -34,10 +34,10 @@
    }); 
 
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      pager:".mediapager",
-      scroll:".mediascroll",
-      busy:".mediabusy",
-      links:".medialinks"       
+      pager:"#mediapager",
+      scroll:"#mediascroll",
+      busy:"#mediabusy",
+      links:"#medialinks"       
    });   
    
    jQuery.fn.mediaplaylist = function( server, settings ) {

@@ -104,8 +104,9 @@ class Playlist
          $base_url .= "/$dir";
       }
       
-      $this->base_path = trim( str_replace( realpath('.'), '', dirname(__FILE__)), '/' );
-      $this->base_url = $base_url . '/' . $this->base_path;      
+      $this->base_path = isset($params['base_path']) ? $params['base_path'] : trim( str_replace( realpath('.'), '', dirname(__FILE__)), '/' );
+      $this->base_path = trim( str_replace('\\', '/', $this->base_path), '/' );      
+      $this->base_url = isset($params['base_url']) ? $params['base_url'] : $base_url . '/' . $this->base_path;      
    }
    
    /**
@@ -125,7 +126,7 @@ class Playlist
    
    public function clearCache()
    {
-      unlink( dirname(__FILE__) . '/cache/' . $this->playlist . '.xml' );
+      unlink( dirname(__FILE__) . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $this->playlist . '.xml' );
    }
    
    /**
@@ -160,8 +161,8 @@ class Playlist
       // Initialize some variables.
       $xml = '';
       $dirname = dirname(__FILE__);
-      $playlist_dir = $dirname . '/playlists/' . $this->playlist;   
-      $playlist_file = $dirname . '/cache/' . $this->playlist . '.xml';
+      $playlist_dir = $dirname . DIRECTORY_SEPARATOR . 'playlists' . DIRECTORY_SEPARATOR . $this->playlist;   
+      $playlist_file = $dirname . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $this->playlist . '.xml';
 
       // If there is already a cache file, then we will just want to use it.
       if( $this->cache && file_exists($playlist_file) ) 
@@ -299,23 +300,26 @@ class Playlist
                // Make sure this is not the parent or current directory elements.
                if($node!="." && $node!="..") {
                  
+                 	// Cache the full node path.
+                  $node = $path.DIRECTORY_SEPARATOR.$node;
+                  
                   // If this node is a directory, then we will want to recurse.
-                  $directory = is_dir($path.'/'.$node);
+                  $directory = is_dir($node);
                   if($directory) {
                      
                      // Get the index of this directory and recurse.
                      $index = (substr($node, $this->folderLength) - 1);
-                     $this->get_media_files($path.'/'.$node, $files, $index);
+                     $this->get_media_files($node, $files, $index);
                   }
                   else if (!$directory){
                    
                      // If this is not a directory, then we need to add it to our files list.
                      $extension = $this->get_file_ext($node);     
                      if( in_array($extension, $this->mediaTypes) ) {
-                        $files[$folder]['media'][] = $path.'/'.$node;
+                        $files[$folder]['media'][] = $node;
                      }
                      else if( in_array($extension, $this->imageTypes) ) {
-                        $files[$folder]['image'] = $path.'/'.$node;
+                        $files[$folder]['image'] = $node;
                      }  
                   }
                }

@@ -33,7 +33,7 @@
    }); 
 
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      linkScroll:".medialinkscroll"               
+      linkScroll:"#medialinkscroll"               
    });    
    
    jQuery.fn.medialinks = function( settings ) {  

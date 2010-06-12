@@ -41,12 +41,12 @@
    });    
 
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      loading:".mediaplayerloading",
-      player:".mediaplayer",
-      menu:".mediamenu",
-      titleBar:".mediatitlebar",
-      node:".medianode",
-      playlist:".mediaplaylist"   
+      loading:"#mediaplayerloading",
+      player:"#mediaplayer",
+      menu:"#mediamenu",
+      titleBar:"#mediatitlebar",
+      node:"#medianode",
+      playlist:"#mediaplaylist"   
    });   
    
    // Initialize our players, playlists, and controllers.   
@@ -124,6 +124,9 @@
          // Add some keyboard event handlers.
          $(window).keypress( function( event ) {
             switch( event.keyCode ) {
+               case 0:   /* SpaceBar */
+                  _this.onSpaceBar();
+                  break;
                case 27:  /* ESC Key */
                   _this.onEscKey();
                   break;
@@ -180,6 +183,20 @@
                   this.node.player.fullScreen( this.fullScreen );
                }              
             }            
+         };
+         
+         // When they press the space bar, we will toggle the player play/pause state.
+         this.onSpaceBar = function() {
+            if( this.fullScreen ) {            
+               if( this.node && this.node.player && this.node.player.media && this.node.player.media.player ) {
+                  if( this.node.player.playing ) {
+                     this.node.player.media.player.pauseMedia();  
+                  }
+                  else {
+                     this.node.player.media.player.playMedia(); 
+                  }
+               } 
+            }
          };
          
          // Setup the title bar.

@@ -28,7 +28,7 @@
    
    // Set up our defaults for this component.
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      linkText:".medialinktext"
+      linkText:"#medialinktext"
    });    
    
    jQuery.fn.playlistlink = function( settings, linkInfo ) {  
