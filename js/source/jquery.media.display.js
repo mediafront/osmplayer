@@ -242,7 +242,7 @@
                case "mp3":
                   return this.playTypes.mp3 ? "html5" : "flash";
                   
-               case "flv":case "f4v":case "mov":case "3g2":case "m4a":case "aac":case "wav":case "aif":case "wma":            
+               case "swf":case "flv":case "f4v":case "mov":case "3g2":case "m4a":case "aac":case "wav":case "aif":case "wma":            
                   return "flash"; 
                    
                default:
@@ -264,7 +264,7 @@
          // Get the type of media this is...
          this.getType = function( extension ) {
             switch( extension ) {  
-               case "webm":case "ogg":case "ogv":case "mp4":case "m4v":case "flv":case "f4v":case "mov":case "3g2":
+               case"swf":case "webm":case "ogg":case "ogv":case "mp4":case "m4v":case "flv":case "f4v":case "mov":case "3g2":
                   return "video";
                case "oga":case "mp3":case "m4a":case "aac":case "wav":case "aif":case "wma":
                   return "audio";
@@ -283,7 +283,7 @@
                   return this.playTypes.audioOgg ? 5 : 10;               
                case 'mp3':
                   return 6;
-               case 'mov':case 'flv':case 'f4v':case '3g2':
+               case 'mov':case'swf':case 'flv':case 'f4v':case '3g2':
                   return 7;
                case 'wav':case 'aif':case 'aac':
                   return 8;
