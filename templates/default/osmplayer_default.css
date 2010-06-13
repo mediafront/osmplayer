@@ -102,13 +102,13 @@
 
 #mediacontrol {
    position: absolute;
-   z-index:204;	
+   z-index:1004;	
    min-width:350px;
 }
 
 #mediatitlelinks {
    float:right;
-   z-index:210;
+   z-index:1010;
    width:64px;	
 }
 
@@ -154,7 +154,7 @@
 }
 
 #mediadisplay {	
-	z-index:200;
+	z-index:1000;
 	position:absolute;
    background-color:#000;   
 }
@@ -191,7 +191,7 @@
 
 #mediaseekhandle, #mediavolumehandle {
    position:absolute;	
-   z-index: 206;  	
+   z-index: 1006;  	
 	margin-top:-11px;
 }
 
@@ -201,13 +201,13 @@
 
 #mediaseekupdate, #mediavolumeupdate {
 	position:absolute;
-   z-index: 205; 	  
+   z-index: 1005; 	  
    height:4px;;     
 }
 
 #mediaseekprogress {
    position:absolute;   
-   z-index: 204;  	
+   z-index: 1004;  	
    height:4px; 
 }
 
@@ -220,7 +220,7 @@
 
 #mediamenu {
 	position: absolute;
-   z-index: 210;
+   z-index: 1010;
    width:300px;
    height:150px;
    display:none;
@@ -234,7 +234,7 @@
 
 #mediabusy {
    position: absolute;
-   z-index: 203;
+   z-index: 1003;
    background-image:url('images/mask.png');   
 }
 
@@ -245,7 +245,7 @@
 
 #mediaplay {
    position: absolute;
-   z-index: 202;  
+   z-index: 1002;  
    background-image:url('images/mask.png');   
 }
 
@@ -258,7 +258,7 @@
 #mediapreview {
    position: absolute;
    background-color:#000;   
-   z-index: 201;  
+   z-index: 1001;  
    width:100%; 
 }
 

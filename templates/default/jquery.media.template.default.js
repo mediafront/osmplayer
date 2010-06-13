@@ -242,6 +242,7 @@
                   
                   // Set these so that it doesn't mess up when they minimize...
                   mediaplayer.playlist.pager.display.hide();
+                  mediaplayer.playlist.busy.hide();
                   mediaplayer.playlist.display.css("width", "0px");
                }
                
@@ -331,7 +332,8 @@
                var newCSS = settings.vertical ? {width:newWidth} : {height:newHeight};
                
                if( on ) {
-                  mediaplayer.playlist.pager.display.hide();  
+                  mediaplayer.playlist.pager.display.hide();
+                  mediaplayer.playlist.busy.hide();
                }
                else {
                   this.showPlaylist( true );
@@ -343,7 +345,10 @@
                   }
                   else {
                      mediaplayer.playlist.refresh();
-                     mediaplayer.playlist.pager.display.show();   
+                     mediaplayer.playlist.pager.display.show();
+                     if( mediaplayer.playlist.busyVisible ) {
+                        mediaplayer.playlist.busy.show();
+                     }
                   }
                });           
             };
@@ -578,6 +583,11 @@
                      this.player.showPlayerController(true);
                   }                  
                   
+                  // Hide the playlist busy cursor.
+                  if( mediaplayer.playlist ) {
+                     mediaplayer.playlist.busy.hide();
+                  }
+                  
                   // Set the items as absolute...
                   this.setCSS({
                      titleLinks:{"position":"absolute"},
@@ -652,6 +662,11 @@
                   // Hide the players controls, and show the HTML controls.
                   if( this.player ) {
                      this.player.showPlayerController(false);
+                  }                                   
+                  
+                  // Show the playlist busy cursor if it needs to be shown.
+                  if( mediaplayer.playlist && mediaplayer.playlist.busyVisible ) {
+                     mediaplayer.playlist.busy.show();
                   }                  
                   
                   // Now set the css to the previous state.

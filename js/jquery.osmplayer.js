@@ -3581,6 +3581,7 @@
          
          // Store the busy cursor.
          this.busy = playlist.find( settings.ids.busy );
+         this.busyVisible = false;
          this.busyImg = this.busy.find("img");
          this.busyWidth = this.busyImg.width();
          this.busyHeight = this.busyImg.height();         
@@ -3592,9 +3593,11 @@
          this.loading = function( _loading ) {
             this.pager.enabled = !_loading;
             if( _loading ) {
+               this.busyVisible = true;
                this.busy.show();
             }
             else {
+               this.busyVisible = false;
                this.busy.hide();   
             }
          };       
