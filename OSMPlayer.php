@@ -173,7 +173,8 @@ class OSMPlayer
       'prefix' => '',
       'showScrollbar' => true,
       'controllerOnly' => false,
-      'wmode' => 'transparent'
+      'wmode' => 'transparent',
+      'forceOverflow' => false
    );
 
    // All of the settings that can be used to control the function of the player (not passed to the js player).
