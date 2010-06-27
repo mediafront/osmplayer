@@ -111,7 +111,16 @@
          // Save the jQuery display.                                        
          this.display = this.dialog.find( settings.ids.player );
          var _this = this;          
-         
+
+         // Fix a really strange issue where if any of the parent elements are invisible
+         // when this player's template is initializing, it would crash due to the issue
+         // with calling the position() function on an invisible object.  This seems to fix
+         // that issue.
+         var invisibleParents = [];
+
+         // Now check the visibility of the parents, and add the offenders to the array.
+         jQuery.media.utils.checkVisibility( this.display, invisibleParents );
+
          // Add this player to the players object.
          jQuery.media.players[settings.id] = this;                  
          
@@ -245,8 +254,8 @@
                _this.onNodeLoad( data );
             });
             
-            if( this.node.player ) {
-               this.node.player.display.bind( "mediaupdate", function( event, data ) {
+            if( this.node.player && this.node.player.media ) {
+               this.node.player.media.display.bind( "mediaupdate", function( event, data ) {
                   _this.onMediaUpdate( data );
                });
             }            
@@ -261,7 +270,7 @@
          }
          
          // Called when the media updates.
-         this.onMediaUpdate = function( data ) { 
+         this.onMediaUpdate = function( data ) {
             // When the media completes, have the active playlist load the next item.
             if( settings.autoNext && this.activePlaylist && (data.type == "complete") ) {
                this.activePlaylist.pager.loadNext( true );              
@@ -385,11 +394,19 @@
             }
          }; 
 
-         this.load = function() {            
+         this.initializeTemplate = function() {
             // Initialize our template.
             if( settings.template.initialize ) {
                settings.template.initialize( settings );
-            }        
+            }
+
+            // Now reset the visibility of the parents.
+            jQuery.media.utils.resetVisibility( invisibleParents );
+         };
+
+         this.load = function() {            
+            // Initialize our template.
+            this.initializeTemplate();
             
             // Resize the player.
             this.onResize( 0, 0 );

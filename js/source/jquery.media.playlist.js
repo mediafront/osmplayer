@@ -78,7 +78,7 @@
 
          // Store the dimensions.
          this.width = this.scrollRegion.width;
-         this.height = this.scrollRegion.height;  
+         this.height = this.scrollRegion.height;
          
          if( settings.vertical ) {
             this.display.width( this.width );
@@ -205,6 +205,10 @@
          // Set this playlist.
          this.setPlaylist = function( _playlist ) {
             if( _playlist && _playlist.nodes ) {
+               // Now check the visibility of the parents, and add the offenders to the array.
+               var invisibleParents = [];
+               jQuery.media.utils.checkVisibility( this.display, invisibleParents );
+
                // Set the total number of items for the pager.
                this.pager.setTotalItems( _playlist.total_rows );  
    
@@ -226,6 +230,9 @@
    
                // Load the next node.
                this.pager.loadNext( this.setActive );
+
+               // Now reset the invisibilty.
+               jQuery.media.utils.resetVisibility( invisibleParents );
             }
             
             // We are finished loading.
