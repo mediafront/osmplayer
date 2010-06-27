@@ -33,11 +33,13 @@ package com.mediafront.display.media
       public var stream:String = null;
       public var extension:String = "";
       public var mediaType:String = "";
+	  public var loaded:Boolean = false;
          
       public function MediaFile( file:Object )
       {
          path = file.path;      
          stream = file.stream;
+		 loaded = false;
          extension = file.extension ? file.extension : Utils.getFileExtension(path);
          mediaType = file.mediaType ? file.mediaType : getMediaType();
       } 
