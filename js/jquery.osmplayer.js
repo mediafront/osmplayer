@@ -507,7 +507,8 @@
       streamer:"",
       embedWidth:450,
       embedHeight:337,
-      wmode:"transparent"
+      wmode:"transparent",
+      forceOverflow:false
    }); 
 
    jQuery.fn.mediadisplay = function( settings ) {  
@@ -527,7 +528,15 @@
          this.mediaFile = null; 
          this.width = 0;
          this.height = 0;
-         
+
+         // If they provide the forceOverflow variable, then that means they
+         // wish to force the media player to override all parents overflow settings.
+         if( settings.forceOverflow ) {
+            // Make sure that all parents have overflow visible so that
+            // browser full screen will always work.
+            this.display.parents().css("overflow", "visible");
+         }
+
          this.checkPlayType = function( elem, playType ) {
             if( (typeof elem.canPlayType) == 'function' ) { 
                return ("no" != elem.canPlayType(playType)) && ("" != elem.canPlayType(playType));
@@ -829,16 +838,19 @@
             }
          };
 
+         this.reflowPlayer = function() {
+            var _marginLeft = parseInt( this.display.css("marginLeft"), 10 );
+            this.display.css({marginLeft:(_marginLeft+1)});
+            setTimeout( function() {
+                _this.display.css({marginLeft:_marginLeft});
+            }, 1 );
+         };
+
          this.startReflow = function() {
             clearTimeout( this.reflowInterval );
             this.reflowInterval = setTimeout( function() {
-               // If the player does not register after two seconds, try to wiggle it... just a little bit!
-               // No seriously... this is needed for Firefox in Windows for some odd reason.
-               var marginLeft = parseInt( _this.display.css("marginLeft"), 10 );
-               _this.display.css({marginLeft:(marginLeft+1)});
-               setTimeout( function() {
-                  _this.display.css({marginLeft:marginLeft});
-               }, 1 );
+               // If the player does not register after two seconds, try a reflow.
+               _this.reflowPlayer();
             }, 2000 );      
          };         
          
@@ -3193,7 +3205,16 @@
          // Save the jQuery display.                                        
          this.display = this.dialog.find( settings.ids.player );
          var _this = this;          
-         
+
+         // Fix a really strange issue where if any of the parent elements are invisible
+         // when this player's template is initializing, it would crash due to the issue
+         // with calling the position() function on an invisible object.  This seems to fix
+         // that issue.
+         var invisibleParents = [];
+
+         // Now check the visibility of the parents, and add the offenders to the array.
+         jQuery.media.utils.checkVisibility( this.display, invisibleParents );
+
          // Add this player to the players object.
          jQuery.media.players[settings.id] = this;                  
          
@@ -3247,7 +3268,7 @@
          
          // The active playlist.
          this.activePlaylist = null;
-         
+
          // Hide or Show the menu.
          this.showMenu = function( show ) {
             if( settings.template.onMenu ) {
@@ -3327,8 +3348,8 @@
                _this.onNodeLoad( data );
             });
             
-            if( this.node.player ) {
-               this.node.player.display.bind( "mediaupdate", function( event, data ) {
+            if( this.node.player && this.node.player.media ) {
+               this.node.player.media.display.bind( "mediaupdate", function( event, data ) {
                   _this.onMediaUpdate( data );
                });
             }            
@@ -3343,7 +3364,7 @@
          }
          
          // Called when the media updates.
-         this.onMediaUpdate = function( data ) { 
+         this.onMediaUpdate = function( data ) {
             // When the media completes, have the active playlist load the next item.
             if( settings.autoNext && this.activePlaylist && (data.type == "complete") ) {
                this.activePlaylist.pager.loadNext( true );              
@@ -3467,11 +3488,19 @@
             }
          }; 
 
-         this.load = function() {            
+         this.initializeTemplate = function() {
             // Initialize our template.
             if( settings.template.initialize ) {
                settings.template.initialize( settings );
-            }        
+            }
+
+            // Now reset the visibility of the parents.
+            jQuery.media.utils.resetVisibility( invisibleParents );
+         };
+
+         this.load = function() {            
+            // Initialize our template.
+            this.initializeTemplate();
             
             // Resize the player.
             this.onResize( 0, 0 );
@@ -3571,7 +3600,7 @@
 
          // Store the dimensions.
          this.width = this.scrollRegion.width;
-         this.height = this.scrollRegion.height;  
+         this.height = this.scrollRegion.height;
          
          if( settings.vertical ) {
             this.display.width( this.width );
@@ -3698,6 +3727,10 @@
          // Set this playlist.
          this.setPlaylist = function( _playlist ) {
             if( _playlist && _playlist.nodes ) {
+               // Now check the visibility of the parents, and add the offenders to the array.
+               var invisibleParents = [];
+               jQuery.media.utils.checkVisibility( this.display, invisibleParents );
+
                // Set the total number of items for the pager.
                this.pager.setTotalItems( _playlist.total_rows );  
    
@@ -3719,6 +3752,9 @@
    
                // Load the next node.
                this.pager.loadNext( this.setActive );
+
+               // Now reset the invisibilty.
+               jQuery.media.utils.resetVisibility( invisibleParents );
             }
             
             // We are finished loading.
@@ -5009,7 +5045,32 @@
             }
 
             return scaledRect;         
-         },             
+         },
+
+         // Checks all parents visibility, and resets them and adds those items to a passed in
+         // array which can be used to reset their visibiltiy at a later point by calling
+         // resetVisibility
+         checkVisibility : function( display, invisibleParents ) {
+            var isVisible = true;
+            display.parents().each( function() {
+                var jObject = jQuery(this);
+                if( !jObject.is(':visible') ) {
+                    isVisible = false;
+                    var attrClass = jObject.attr("class");
+                    invisibleParents.push( {obj:jObject, attr:attrClass} );
+                    jObject.removeClass(attrClass);
+                }
+            });
+         },
+
+         // Reset's the visibility of the passed in parent elements.
+         resetVisibility : function( invisibleParents ) {
+            // Now iterate through all of the invisible objects and rehide them.
+            var i = invisibleParents.length;
+            while(i--){
+                invisibleParents[i].obj.addClass(invisibleParents[i].attr);
+            }
+         },
          
          getFlash : function( player, id, width, height, flashvars, wmode ) {
             // Get the protocol.
