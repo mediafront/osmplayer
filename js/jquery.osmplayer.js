@@ -3268,7 +3268,7 @@
          
          // The active playlist.
          this.activePlaylist = null;
-
+         
          // Hide or Show the menu.
          this.showMenu = function( show ) {
             if( settings.template.onMenu ) {
@@ -3763,13 +3763,15 @@
 
          // When a vote has been cast, we also need to update the playlist.
          this.onVoteSet = function( vote ) {
-            var i = this.teasers.length;
-            while(i--) {
-               var teaser = this.teasers[i];
-               if( teaser.node.nodeInfo.nid == vote.content_id ) {
-                  teaser.node.voter.updateVote( vote );     
-               }               
-            }               
+            if( vote ) {
+               var i = this.teasers.length;
+               while(i--) {
+                  var teaser = this.teasers[i];
+                  if( teaser.node.nodeInfo.nid == vote.content_id ) {
+                     teaser.node.voter.updateVote( vote );
+                  }
+               }
+            }
          };
          
          // Add a single teaser to the list.
