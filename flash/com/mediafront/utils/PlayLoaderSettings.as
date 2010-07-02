@@ -34,6 +34,5 @@ package com.mediafront.utils
       } 
      
       public var playLoader:String = "playLoader";
-      public var preview:String = "";
    }
 }
