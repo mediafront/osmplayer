@@ -395,6 +395,11 @@
          this.loadImage = function( image ) {
             if( this.preview ) {
                this.preview.loadImage( image );
+
+               // Now set the preview image in the media player.
+               if( this.media ) {
+                  this.media.preview = image;
+               }
             }
          };
          

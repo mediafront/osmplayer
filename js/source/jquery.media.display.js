@@ -45,6 +45,7 @@
          var _this = this;
          this.volume = 0;
          this.player = null;
+         this.preview = '';
          this.reflowInterval = null;
          this.updateInterval = null;
          this.progressInterval = null;
@@ -192,7 +193,7 @@
                   
                   if( this.player ) {
                      // Create our media player.                     
-                     this.player.createMedia( file ); 
+                     this.player.createMedia( file, this.preview );
                      
                      // Reflow the player if it does not show up.
                      this.startReflow();

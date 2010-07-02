@@ -34,7 +34,7 @@
          this.mediaType = "";    
          
          // Create a new HTML5 player.
-         this.createMedia = function( mediaFile ) {
+         this.createMedia = function( mediaFile, preview ) {
             // Remove any previous Flash players.
             jQuery.media.utils.removeFlash( this.display, options.id + "_media" );
             this.display.children().remove();    
