@@ -142,17 +142,17 @@
    
                // Load the media...
                if( this.player && this.nodeInfo.mediafiles ) {
-                  // Load the media...
-                  this.player.loadFiles( this.nodeInfo.mediafiles.media );
-                  
                   // Load the preview image.
                   var image = this.getImage("preview");
                   if( image ) {
                      this.player.loadImage( image.path );
                   }
                   else {
-                     this.player.clearImage();   
+                     this.player.clearImage();
                   }
+
+                  // Load the media...
+                  this.player.loadFiles( this.nodeInfo.mediafiles.media );
                }
                
                // Get the vote for these voters.
