@@ -28,7 +28,7 @@ package com.mediafront.display.menu
    import flash.events.*;
 
    public class MenuEvent extends Event
-   {			
+   {        
       public function MenuEvent( type:String, a:Object = null )
       {
          super( type, true );

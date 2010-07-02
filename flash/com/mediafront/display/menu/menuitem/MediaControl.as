@@ -25,49 +25,49 @@
  */
 package com.mediafront.display.menu.menuitem
 {
-	import com.mediafront.display.Skinable;
-	import com.mediafront.display.menu.MenuEvent
-	import com.mediafront.plugin.IPlugin;
-	import com.mediafront.plugin.PluginEvent;
-	import com.mediafront.utils.Settings;	
-	import com.mediafront.utils.MenuSettings;
-	
-	import flash.display.MovieClip;
-	import flash.system.Security;	
-	
-	public class MediaControl extends Skinable implements IPlugin
-	{
-		public function MediaControl()
-		{
-			super();
-			Security.allowDomain("*");		
-		}		
-		
-		public function loadSettings( settings:Settings ) : void
-		{
-			_settings = new MenuSettings( settings );
-			loadSkin( settings.baseURL + "/skins/" + _settings.skin + "/" + _settings.mediaControl + ".swf" );						
-		}
-		
-		public override function setSkin( _skin:MovieClip ) : void
+   import com.mediafront.display.Skinable;
+   import com.mediafront.display.menu.MenuEvent
+   import com.mediafront.plugin.IPlugin;
+   import com.mediafront.plugin.PluginEvent;
+   import com.mediafront.utils.Settings;  
+   import com.mediafront.utils.MenuSettings;
+   
+   import flash.display.MovieClip;
+   import flash.system.Security; 
+   
+   public class MediaControl extends Skinable implements IPlugin
+   {
+      public function MediaControl()
       {
-			_skin.visible = mediaControlVisible;
-      }		
-		
-		public function initialize( comps:Object ) : void
-		{
-			
-		}
-		
-		public function onReady() : void {}
-		
-		public function onMenuEvent() : void
-		{
-			skin.showMediaControl();
-		}
-		
-		public var mediaControlVisible:Boolean = false;
-		private var components:Object;
-		public var _settings:MenuSettings;
-	}	
+         super();
+         Security.allowDomain("*");    
+      }     
+      
+      public function loadSettings( settings:Settings ) : void
+      {
+         _settings = new MenuSettings( settings );
+         loadSkin( settings.baseURL + "/skins/" + _settings.skin + "/" + _settings.mediaControl + ".swf" );                
+      }
+      
+      public override function setSkin( _skin:MovieClip ) : void
+      {
+         _skin.visible = mediaControlVisible;
+      }     
+      
+      public function initialize( comps:Object ) : void
+      {
+         
+      }
+      
+      public function onReady() : void {}
+      
+      public function onMenuEvent() : void
+      {
+         skin.showMediaControl();
+      }
+      
+      public var mediaControlVisible:Boolean = false;
+      private var components:Object;
+      public var _settings:MenuSettings;
+   }  
 }

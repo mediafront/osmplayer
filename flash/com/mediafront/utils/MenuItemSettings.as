@@ -22,4 +22,18 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- */package com.mediafront.utils{  	public class MenuItemSettings extends Settings   {              public function MenuItemSettings( settings:Object )      {			super( settings );			super.load( this );			      } 				public var embed:String = "embed";		public var playAgain:String = "playAgain";   }}
+ */
+package com.mediafront.utils
+{  
+   public class MenuItemSettings extends Settings
+   {        
+      public function MenuItemSettings( settings:Object )
+      {
+         super( settings );
+         super.load( this );        
+      } 
+     
+      public var embed:String = "embed";
+      public var playAgain:String = "playAgain";
+   }
+}

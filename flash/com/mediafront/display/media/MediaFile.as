@@ -25,21 +25,21 @@
  */
 package com.mediafront.display.media 
 {  
-	import com.mediafront.utils.Utils;
-	
+   import com.mediafront.utils.Utils;
+   
    public class MediaFile
    {
       public var path:String = "";
       public var stream:String = null;
       public var extension:String = "";
       public var mediaType:String = "";
-	  public var loaded:Boolean = false;
+      public var loaded:Boolean = false;
          
       public function MediaFile( file:Object )
       {
          path = file.path;      
          stream = file.stream;
-		 loaded = false;
+         loaded = false;
          extension = file.extension ? file.extension : Utils.getFileExtension(path);
          mediaType = file.mediaType ? file.mediaType : getMediaType();
       } 
