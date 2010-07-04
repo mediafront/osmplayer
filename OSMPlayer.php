@@ -39,89 +39,95 @@ define('OSMPLAYER_DEFAULT_HEIGHT', 400);
  * To learn how to use this class, please visit the online documentation at
  * http://www.mediafront.org/documentation.
  */
-class OSMPlayer
-{
-   // The complete settings of the media player.
-   private $settings;
+class OSMPlayer {
+  // The complete settings of the media player.
+  private $settings;
 
-   // The base path where this script is loaded.
-   private $base_path = '';
+  // The playlists connected to this media player.
+  private $playlists = array();
 
-   // The base url where this script is loaded.
-   private $base_url = '';
+  // The controllers connected to this media player.
+  private $controllers = array();
 
-   // The prefix for the media player to keep html/css collisions from occuring.
-   private $prefix = 'player';
+  // The template for this osm player instance.
+  public $template = null;
 
-   // The playlists connected to this media player.
-   private $playlists = array();
+  // To store the player parameters.
+  private $playerParams = null;
 
-   // The controllers connected to this media player.
-   private $controllers = array();
+  /**
+   * Constructor.
+   *
+   * Creates a new instance of a media player.
+   *
+   * Usage:
+   *
+   *    $player = new OSMPlayer(array(
+   *       'width' => 640,
+   *       'height' => 480,
+   *       'playlist' => 'http://www.mysite.com/playlist.xml'
+   *    ));
+   */
+  public function OSMPlayer( $_params = array() ) {
+    // First set the defaults.
+    $this->playerParams = OSMPlayer::getPlayerParams();
+    $this->settings = array_merge( $this->playerParams, OSMPlayer::getPlayerSettings() );
 
-   // The version of this player.
-   private $version = '';
+    if( $_params ) {
+      // Set the parameters ( which will override the defaults ).
+      $this->settings = array_merge( $this->settings, $_params );
+    }
 
-   // The CSS directory to store the cached templates in.
-   private $css_dir = '';
+    // Set the base path and url of this class.
+    $base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+    $base_url = $base_root .= '://'. $_SERVER['HTTP_HOST'];
+    if ($dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/')) {
+       $base_url .= "/$dir";
+    }
 
-   // All the configurable id's for the elements within this player.
-   private $ids = array(
-      'loading' => '#mediaplayerloading',
-      'player' => '#mediaplayer',
-      'menu' => '#mediamenu',
-      'titleBar' => '#mediatitlebar',
-      'node' => '#medianode',
-      'playlist' => '#mediaplaylist',
-      'currentTime' => '#mediacurrenttime',
-      'totalTime' => '#mediatotaltime',
-      'playPause' => '#mediaplaypause',
-      'seekUpdate' => '#mediaseekupdate',
-      'seekProgress' => '#mediaseekprogress',
-      'seekBar' => '#mediaseekbar',
-      'seekHandle' => '#mediaseekhandle',
-      'volumeUpdate' => '#mediavolumeupdate',
-      'volumeBar' => '#mediavolumebar',
-      'volumeHandle' => '#mediavolumehandle',
-      'mute' => '#mediamute',
-      'linkText' => '#medialinktext',
-      'linkScroll' => '#medialinkscroll',
-      'close' => '#mediamenuclose',
-      'embed' => '#mediaembed',
-      'elink' => '#mediaelink',
-      'email' => '#mediaemail',
-      'busy' => '#mediabusy',
-      'preview' => '#mediapreview',
-      'play' => '#mediaplay',
-      'media' => '#mediadisplay',
-      'control' => '#mediacontrol',
-      'voter' => '#mediavoter',
-      'uservoter' => '#mediauservoter',
-      'mediaRegion' => '#mediaregion',
-      'field' => '.mediafield',
-      'prev' => '#mediaprev',
-      'next' => '#medianext',
-      'loadPrev' => '#medialoadprev',
-      'loadNext' => '#medialoadnext',
-      'prevPage' => '#mediaprevpage',
-      'nextPage' => '#medianextpage',
-      'pager' => '#mediapager',
-      'scroll' => '#mediascroll',
-      'busy' => '#mediabusy',
-      'links' => '#medialinks',
-      'listMask' => '#medialistmask',
-      'list' => '#medialist',
-      'scrollWrapper' => '#mediascrollbarwrapper',
-      'scrollBar' => '#mediascrollbar',
-      'scrollTrack' => '#mediascrolltrack',
-      'scrollHandle' => '#mediascrollhandle',
-      'scrollUp' => '#mediascrollup',
-      'scrollDown' => '#mediascrolldown',
-      'titleLinks' => '#mediatitlelinks'
-   );
+    $base_path = isset($params['base_path']) ? $params['base_path'] : trim( str_replace( realpath('.'), '', dirname(__FILE__)), '/' );
+    $this->settings['base_path'] = trim(str_replace('\\', '/', $base_path), '/');
+    $this->settings['base_url'] = isset($params['base_url']) ? $params['base_url'] : $base_url . '/' . $this->settings['base_path'];
+    $this->settings['playerurl'] = $this->settings['base_url'];
 
-   // All of the player specific parameters that can be changed.
-   private $playerParams = array(
+    // Set the correct flash player and logo url path.
+    if( $_SERVER['HTTP_HOST'] ) {
+      $this->settings['flashplayer'] = isset($_params['flashplayer']) ? $_params['flashplayer'] : ($this->settings['base_url'] . '/flash/mediafront.swf');
+      $this->settings['logo'] = isset($_params['logo']) ? $_params['logo'] : ($this->settings['base_url'] . '/logo.png');
+    }
+
+    // Create our template.
+    include "templates/" . $this->settings['template'] . "/template.php";
+    $this->template = new Template( $this->settings );
+    
+    // Make sure we set the Prefix.
+    $this->setPrefix( isset($_params['prefix']) ? $_params['prefix'] : ($this->settings['id'] . '_') );
+
+  }
+
+  /**
+   * Returns the player settings.
+   */
+  public static function getPlayerSettings() {
+    return array(
+      'width' => OSMPLAYER_DEFAULT_WIDTH,
+      'height' => OSMPLAYER_DEFAULT_HEIGHT,
+      'theme' => 'dark-hive',
+      'version' => '0.01',
+      'showController' => true,
+      'disablePlaylist' => false,
+      'playlistOnly' => false,
+      'showNodeVoter' => true,
+      'showTeaserVoter' => true,
+      'showTitleBar' => true
+    );
+  }
+
+  /**
+   * Returns the player parameters.
+   */
+  public static function getPlayerParams() {
+    return array(
       'id' => 'player',
       'showPlaylist' => true,
       'file' => '',
@@ -134,7 +140,7 @@ class OSMPlayer
       'apiKey' => "",
       'sessid' => "",
       'api' => 2,
-      'version' => 6,
+      'drupalVersion' => 6,
       'links' => array(),
       'linksvertical' => false,
       'logo' => 'logo.png',
@@ -175,676 +181,322 @@ class OSMPlayer
       'controllerOnly' => false,
       'wmode' => 'transparent',
       'forceOverflow' => false
-   );
+    );
+  }
 
-   // All of the settings that can be used to control the function of the player (not passed to the js player).
-   private $playerSettings = array(
-      'width' => OSMPLAYER_DEFAULT_WIDTH,
-      'height' => OSMPLAYER_DEFAULT_HEIGHT,
-      'theme' => 'dark-hive',
-      'version' => '0.01',
-      'showController' => true,
-      'disablePlaylist' => false,
-      'playlistOnly' => false,
-      'showNodeVoter' => true,
-      'showTeaserVoter' => true,
-      'showTitleBar' => true
-   );
+  /**
+   * Set's the current session id for this player.
+   */
+  public function setSessionId( $sessid ) {
+    $this->settings['sessid'] = $sessid;
+  }
 
-   /**
-    * Constructor.
-    *
-    * Creates a new instance of a media player.
-    *
-    * Usage:
-    *
-    *    $player = new OSMPlayer(array(
-    *       'width' => 640,
-    *       'height' => 480,
-    *       'playlist' => 'http://www.mysite.com/playlist.xml'
-    *    ));
-    */
-   public function OSMPlayer( $_params = array() )
-   {
-      // First set the defaults.
-      $this->settings = array_merge( $this->playerParams, $this->playerSettings );
+  /**
+   * Get's the current template.
+   */
+  public function getTemplate() {
+    return $this->settings['template'];
+  }
 
-      if( $_params ) {
-         // Set the parameters ( which will override the defaults ).
-         $this->settings = array_merge( $this->settings, $_params );
-      }
+  /**
+   * Get's the current theme.
+   */
+  public function getTheme() {
+    return $this->settings['theme'];
+  }
 
-      // Make sure we set the ID.
-      $this->setId( $this->settings['id'] );
+  /**
+   * Connect the playlist of this media player to another media player.
+   *
+   * Usage:
+   *
+   *    $playlist = new OSMPlayer(array(
+   *       'width' => 150,
+   *       'height' => 400,
+   *       'playlistOnly' => true,
+   *       'playlist' => 'http://www.mysite.com/playlist.xml'
+   *    ));
+   *
+   *    $player = new OSMPlayer(array(
+   *       'width' => 450,
+   *       'height' => 400,
+   *       'disablePlaylist' => true
+   *    ));
+   *
+   *    $playlist->addPlaylistTo( $player );
+   */
+  public function addPlaylistTo( $player ) {
+    $this->playlists[] = is_string($player) ? $player : $player->getId();
+  }
 
-      // Set the base path and url of this class.
-      $base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
-      $base_url = $base_root .= '://'. $_SERVER['HTTP_HOST'];
-      if ($dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/')) {
-         $base_url .= "/$dir";
-      }
+  /**
+   * Connect the controlbar of this media player to another media player.
+   *
+   * Usage:
+   *
+   *    $controller = new OSMPlayer(array(
+   *       'width' => 400,
+   *       'height' => 26,
+   *       'controllerOnly' => true,
+   *    ));
+   *
+   *    $player = new OSMPlayer(array(
+   *       'playlist' => 'http://www.mysite.com/myplaylist.xml
+   *    ));
+   *
+   *    $controller->addControllerTo( $player );
+   */
+  public function addControllerTo( $player ) {
+    $this->controllers[] = is_string($player) ? $player : $player->getId();
+  }
 
-      $this->base_path = isset($params['base_path']) ? $params['base_path'] : trim( str_replace( realpath('.'), '', dirname(__FILE__)), '/' );
-      $this->base_path = trim(str_replace('\\', '/', $this->base_path), '/');
-      $this->base_url = isset($params['base_url']) ? $params['base_url'] : $base_url . '/' . $this->base_path;
-      $this->settings['playerurl'] = $this->base_url;
+  /**
+   * Returns the current id of the player.
+   */
+  public function getId() {
+    return $this->settings['id'];
+  }
 
-      // Set the correct flash player and logo url path.
-      $this->settings['flashplayer'] = isset($_params['flashplayer']) ? $_params['flashplayer'] : ($this->base_url . '/flash/mediafront.swf');
-      $this->settings['logo'] = isset($_params['logo']) ? $_params['logo'] : ($this->base_url . '/logo.png');
-   }
+  /**
+   * Set the id for this media player.
+   */
+  public function setId( $newId ) {
+    // Set the id of this player.
+    $this->settings['id'] = $newId;
+  }
 
-   /**
-    * Returns the current id of the player.
-    */
-   public function getId()
-   {
-      return $this->settings['id'];
-   }
+  /**
+   * Returns the current prefix of the player.
+   */
+  public function getPrefix() {
+    return $this->settings['prefix'];
+  }
 
-   /**
-    * Returns the player settings.
-    */
-   public function getPlayerSettings()
-   {
-      return $this->playerSettings;
-   }
+  /**
+   * Set the prefix for the CSS of this media player.
+   */
+  public function setPrefix( $newPrefix ) {
+    // Set the prefix.
+    $this->settings['prefix'] = $newPrefix;
 
-   /**
-    * Set the CSS directory for this media player.
-    */
-   public function setCSSDirectory( $dir ) {
-      $this->css_dir = $dir;
-   }
+    // Set the template prefix.
+    $this->template->setPrefix( $newPrefix );
+  }
 
-   /**
-    * Returns the player parameters.
-    */
-   public function getPlayerParams()
-   {
-      $params = $this->playerParams;
-      $params['flashplayer'] = $this->base_url . '/' . $params['flashplayer'];
-      $params['logo'] = $this->base_url . '/' . $params['logo'];
-      return $params;
-   }
+  /**
+   * Get the JS header for this player.
+   */
+  public function getJSHeader() {
+    $header = '';
+    $base_path = $this->settings['base_path'] ? $this->settings['base_path'] . '/' : '';
 
-   /**
-    * Set's the current session id for this player.
-    */
-   public function setSessionId( $sessid )
-   {
-      $this->settings['sessid'] = $sessid;
-   }
-
-   /**
-    * Get's the current template.
-    */
-   public function getTemplate()
-   {
-      return $this->settings['template'];
-   }
-
-   /**
-    * Get's the current theme.
-    */
-   public function getTheme()
-   {
-      return $this->settings['theme'];
-   }
-
-   /**
-    * Connect the playlist of this media player to another media player.
-    *
-    * Usage:
-    *
-    *    $playlist = new OSMPlayer(array(
-    *       'width' => 150,
-    *       'height' => 400,
-    *       'playlistOnly' => true,
-    *       'playlist' => 'http://www.mysite.com/playlist.xml'
-    *    ));
-    *
-    *    $player = new OSMPlayer(array(
-    *       'width' => 450,
-    *       'height' => 400,
-    *       'disablePlaylist' => true
-    *    ));
-    *
-    *    $playlist->addPlaylistTo( $player );
-    */
-   public function addPlaylistTo( $player )
-   {
-      $this->playlists[] = is_string($player) ? $player : $player->getId();
-   }
-
-   /**
-    * Connect the controlbar of this media player to another media player.
-    *
-    * Usage:
-    *
-    *    $controller = new OSMPlayer(array(
-    *       'width' => 400,
-    *       'height' => 26,
-    *       'controllerOnly' => true,
-    *    ));
-    *
-    *    $player = new OSMPlayer(array(
-    *       'playlist' => 'http://www.mysite.com/myplaylist.xml
-    *    ));
-    *
-    *    $controller->addControllerTo( $player );
-    */
-   public function addControllerTo( $player )
-   {
-      $this->controllers[] = is_string($player) ? $player : $player->getId();
-   }
-
-   /**
-    * Returns the CSS file that is located within the current theme.
-    */
-   public function getThemeCSS()
-   {
-      $theme_folder = 'jquery-ui/css/' . $this->settings['theme'];
-      $theme_css = '';
-
-      // Now search this folder for the CSS file...
-      if($contents = opendir( dirname(__FILE__) . '/' . $theme_folder)) {
-         while(($node = readdir($contents)) !== false) {
-            if( preg_match('/\.css$/', $node) ) {
-               $theme_css = $node;
-               break;
-            }
-         }
-      }
-
-      // Add the theme.
-      if( $theme_css ) {
-         return ($theme_folder . '/' . $theme_css);
-      }
-      else {
-         return '';
-      }
-   }
-
-   /**
-    * Writes the contents of one CSS file to another, but also replaces all the id's and
-    * class names to take into account the prefix ( id ) of the media player.
-    */
-   private function writeCSS( $css, $handle )
-   {
-      // Get the file contents and length.
-      $contents = file_get_contents( dirname(__FILE__) . '/' . $css);
-
-      // Change all of the images to the correct path...
-      $contents = str_replace( 'images/', $this->base_url . '/' . str_replace( basename($css), '', $css ) . 'images/', $contents );
-
-      // Get the length of the contents.
-      $len = strlen( $contents );
-
-      // Make sure we don't overwrite anything within brackets...
-      $match = 0;
-      $matches = array();
-      preg_match_all('/\{.*\}/sU', $contents, $matches, PREG_OFFSET_CAPTURE);
-
-      $match_len = strlen( $matches[0][$match][0] );
-
-      // Iterate through all the characters.
-      for( $i=0; $i<$len; $i++ ) {
-
-         // See if we need to increment the current match.
-         if( isset( $matches[0][$match+1] ) && ($i > $matches[0][$match+1][1]) ) {
-            $match++;
-            $match_len = strlen( $matches[0][$match][0] );
-         }
-
-         // Get the char at this index.
-         $char = $contents[$i];
-
-         // If this is a class or an id, and is not within brackets...
-         if( (($char == '#') || ($char == '.')) &&
-             !(($i > $matches[0][$match][1]) && ($i <= ($matches[0][$match][1]+$match_len))) ) {
-            fwrite( $handle, $char . $this->settings['id'] . '_' );
-         }
-         else {
-            fwrite( $handle, $char );
-         }
-      }
-   }
-
-   /**
-    * Create the CSS files for this media player.  This will dynamically rename all the
-    * id's and class names within the master CSS files ( theme and template ), and then create
-    * a cached version of them within the css folder.
-    */
-   public function createCSS()
-   {
-      // Store the CSS directory for later usage.
-      $dir = $this->css_dir ? $this->css_dir : dirname(__FILE__) . '/css';
-
-      // Make sure this directory exists.
-      if( !is_dir( $dir ) ) {
-         // Create the directory.
-         mkdir( $dir, 0775, true );
-      }
-
-      // Now make sure the directory has the right permissions.
-      @chmod( $dir, 0775 );
-
-      // Store the template and theme names.
-      $template = $this->settings['template'];
-      $to_path = $dir . '/' . $this->settings['id'];
-      $from_path = 'templates/' . $template . '/osmplayer_' . $template;
-
-      // Setup the files array.
-      $files = array(
-         ($to_path . '.css') => array(
-            $from_path . '.css',
-            $this->getThemeCSS()
-         ),
-         ($to_path . '_ie.css') => array(
-            $from_path . '_ie.css'
-         )
-      );
-
-      // Iterate through all of our css files we need to create.
-      foreach( $files as $file => $contents ) {
-         // Now open up the new css file.
-         $handle = fopen( $file, 'a+' );
-         if( $handle ) {
-            // Iterate through all the files that will be combined to
-            // create this css file.
-            foreach( $contents as $content ) {
-               // Write to the css file.
-               $this->writeCSS( $content, $handle );
-            }
-
-            // Close the file.
-            fclose( $handle );
-         }
-
-         // Now set the file permissions to 775.
-         @chmod( $file, 0775 );
-      }
-   }
-
-   /**
-    * Delete the current cached CSS files.
-    */
-   public function deleteCSS()
-   {
-      $css_path = $this->css_dir ? $this->css_dir : dirname(__FILE__) . '/css';
-      $css_path .= '/' . $this->settings['id'];
-      $css = $css_path . '.css';
-
-      if( is_file( $css ) ) {
-      	unlink( $css );
-      }
-
-      $css = $css_path . '_ie.css';
-      if( is_file( $css ) ) {
-         unlink( $css );
-      }
-   }
-
-   /**
-    * Get an array of the CSS files for this player.
-    */
-   public function getCSSFiles()
-   {
-      // Get the CSS path.
-      $css_path = $this->css_dir ? $this->css_dir : dirname(__FILE__);
-      $css_local_path = $this->css_dir ? '' : 'css/';
-      
-      // Cache the prefix name.
-      $id = $this->settings['id'];
-      
-      // The CSS files for this id.
-      $files = array(
-         $css_local_path . "{$id}.css",
-         $css_local_path . "{$id}_ie.css"      
-      );
-      
-      // If the CSS files do not exist, then create them.
-      if( !is_file( $css_path . '/' . $files[0] ) ) {
-         $this->createCSS();
-      }
-      
-      // Return the CSS files.
-      return $files;
-   }
-
-   /**
-    * Set the id for this media player.
-    */
-   public function setId( $newId )
-   {
-      // The id and the prefix are the same thing.
-      $this->settings['id'] = $newId;
-      $this->settings['prefix'] = $newId . '_';
-
-      // Iterate through all the id's and add the id.
-      foreach( $this->ids as $index => $id ) {
-         $this->ids[$index] = $id[0] . $this->settings['prefix'] . substr( $id, 1 );
-      }
-   }
-
-   /**
-    * Get's the player version number.
-    */
-   public function getVersion()
-   {
-      $this->version = $this->version ? $this->version : file_get_contents( dirname(__FILE__) . '/version.txt' );
-      return $this->version;
-   }
-
-   /**
-    * Get the CSS header for this player.
-    */
-   public function getCSSHeader()
-   {
-      $base_path = $this->base_path ? $this->base_path . '/' : '';
-
-      // Add the CSS files.
-      $css_files = $this->getCSSFiles();
-      $header = '<link rel="stylesheet" type="text/css" href="' . $base_path . $css_files[0] . '" />';
+    // Add all of the javascript files.
+    $jsfiles = $this->getJSFiles();
+    foreach( $jsfiles as $file ) {
+      $header .= '<script type="text/javascript" src="' . $base_path . $file .'"></script>';
       $header .= "\n";
-      $header .= '<!--[if IE]><link rel="stylesheet" type="text/css" href="' . $base_path . $css_files[1] . '" /><![endif]-->';
-      $header .= "\n";
+    }
 
-      // Return the header.
-      return $header;
-   }
+    // Return the header.
+    return $header;
+  }
 
-   /**
-    * Get the header for this media player.
-    */
-   public function getHeader()
-   {
-      $header = '';
-      $template = $this->settings['template'];
-      $base_path = $this->base_path ? $this->base_path . '/' : '';
+  /**
+   * Get the header for this media player.
+   */
+  public function getHeader() {
+    // Add the JS files to the header.
+    $header = $this->getJSHeader();
 
-      // Add all of the javascript files.
-      $jsfiles = $this->getJSFiles();
-      foreach( $jsfiles as $file ) {
-         $header .= '<script type="text/javascript" src="' . $base_path . $file .'"></script>';
-         $header .= "\n";
+    // Add the CSS files.
+    $header .= $this->template->getCSSHeader();
+
+    // Return the header.
+    return $header;
+  }
+
+  /**
+   * Get the javascript files for this media player.
+   */
+  public function getJSFiles() {
+    $template = $this->settings['template'];
+    if( $this->settings['debug'] ) {
+      return array_merge( array(
+        "js/source/jquery.media.drupal.js",
+        "js/source/jquery.media.parser.js",
+        "js/source/jquery.media.auto.js",
+        "js/source/jquery.media.rpc.js",
+        "js/source/jquery.media.json.js",
+        "js/source/jquery.media.sha256.js",
+        "js/source/jquery.media.utils.js",
+        "js/source/jquery.media.control.js",
+        "js/source/jquery.media.flash.js",
+        "js/source/jquery.media.html5.js",
+        "js/source/jquery.media.image.js",
+        "js/source/jquery.media.link.js",
+        "js/source/jquery.media.links.js",
+        "js/source/jquery.media.display.js",
+        "js/source/jquery.media.minplayer.js",
+        "js/source/jquery.media.menu.js",
+        "js/source/jquery.media.node.js",
+        "js/source/jquery.media.pager.js",
+        "js/source/jquery.media.player.js",
+        "js/source/jquery.media.playlist.js",
+        "js/source/jquery.media.playlistlink.js",
+        "js/source/jquery.media.rotator.js",
+        "js/source/jquery.media.slider.js",
+        "js/source/jquery.media.teaser.js",
+        "js/source/jquery.media.titlebar.js",
+        "js/source/jquery.media.scroll.js",
+        "js/source/jquery.media.voter.js",
+        "js/source/jquery.media.youtube.js",
+        "js/source/jquery.media.vimeo.js",
+        "js/source/jquery.media.dailymotion.js"
+      ), $this->template->settings['jsFiles']['debug'] );
+    }
+    else {
+      return array_merge( array(
+        "js/jquery.osmplayer.compressed.js",
+      ), $this->template->settings['jsFiles']['release'] );
+    }
+  }
+
+  /**
+   * Converts a PHP variable into its Javascript equivalent.
+   */
+  public function osm_json_encode($var) {
+    switch (gettype($var)) {
+      case 'boolean':
+        return $var ? 'true' : 'false'; // Lowercase necessary!
+      case 'integer':
+      case 'double':
+        return $var;
+      case 'resource':
+      case 'string':
+        return '"'. str_replace(array("\r", "\n", "<", ">", "&", "\'"),
+          array('\r', '\n', '\x3c', '\x3e', '\x26', "'"),
+          addslashes($var)) .'"';
+      case 'array':
+      // Arrays in JSON can't be associative. If the array is empty or if it
+      // has sequential whole number keys starting with 0, it's not associative
+      // so we can go ahead and convert it as an array.
+        if (empty ($var) || array_keys($var) === range(0, sizeof($var) - 1)) {
+          $output = array();
+          foreach ($var as $v) {
+            $output[] = $this->osm_json_encode($v);
+          }
+          return '['. implode(',', $output) .']';
+        }
+      // Otherwise, fall through to convert the array as an object.
+      case 'object':
+        $output = array();
+        foreach ($var as $k => $v) {
+          $output[] = $this->osm_json_encode(strval($k)) .': '. $this->osm_json_encode($v);
+        }
+        return '{'. implode(',', $output) .'}';
+      default:
+        return 'null';
+    }
+  }
+
+  /**
+   * Get the player parameters.  This will only return the parameters that are included in
+   * the playerParams array.
+   */
+  public function getParams() {
+    $params = array();
+    foreach( $this->settings as $param => $value ) {
+      if( array_key_exists( $param, $this->playerParams ) &&
+        ($this->playerParams[$param] != $value) ) {
+        switch( gettype($value) ) {
+          case 'array':
+          case 'object':
+            $params[] = $param . ':' . $this->osm_json_encode($value);
+            break;
+          case 'string':
+          // Make sure we are not dealing with a JSON string here.  If so, then don't include the quotes.
+            $params[] = (substr($value, 0, 1) == '{') ? ($param . ':' . $value) : ($param . ':"' . str_replace( '"', "'", $value ) . '"');
+            break;
+          case 'boolean':
+            $params[] = $param . ':' . ($value ? 'true' : 'false');
+            break;
+          default:
+            $params[] = $param . ':' . $value;
+            break;
+        }
       }
+    }
 
-      // Add the CSS files.
-      $header .= $this->getCSSHeader();
+    $ids = array();
 
-      // Return the header.
-      return $header;
-   }
+    // Iterate through all of our template Ids.
+    foreach( $this->template->getIds() as $id => $value ) {
 
-   /**
-    * Get the javascript files for this media player.
-    */
-   public function getJSFiles()
-   {
-      $template = $this->settings['template'];
-      if( $this->settings['debug'] ) {
-         return array(
-            "js/source/jquery.media.drupal.js",
-            "js/source/jquery.media.parser.js",
-            "js/source/jquery.media.auto.js",
-            "js/source/jquery.media.rpc.js",
-            "js/source/jquery.media.json.js",
-            "js/source/jquery.media.sha256.js",
-            "js/source/jquery.media.utils.js",
-            "js/source/jquery.media.control.js",
-            "js/source/jquery.media.flash.js",
-            "js/source/jquery.media.html5.js",
-            "js/source/jquery.media.image.js",
-            "js/source/jquery.media.link.js",
-            "js/source/jquery.media.links.js",
-            "js/source/jquery.media.display.js",
-            "js/source/jquery.media.minplayer.js",
-            "js/source/jquery.media.menu.js",
-            "js/source/jquery.media.node.js",
-            "js/source/jquery.media.pager.js",
-            "js/source/jquery.media.player.js",
-            "js/source/jquery.media.playlist.js",
-            "js/source/jquery.media.playlistlink.js",
-            "js/source/jquery.media.rotator.js",
-            "js/source/jquery.media.slider.js",
-            "js/source/jquery.media.teaser.js",
-            "js/source/jquery.media.titlebar.js",
-            "js/source/jquery.media.scroll.js",
-            "js/source/jquery.media.voter.js",
-            "js/source/jquery.media.youtube.js",
-            "js/source/jquery.media.vimeo.js",
-            "js/source/jquery.media.dailymotion.js",
-            "templates/{$template}/jquery.media.template.{$template}.js"
-         );
+      // Only set this if it is different from the default.
+      if( $this->template->defaultIds[$id] != $value ) {
+        $ids[] = $id . ':"' . $value . '"';
       }
-      else {
-         return array(
-            "js/jquery.osmplayer.compressed.js",
-            "templates/{$template}/jquery.media.template.{$template}.compressed.js"
-         );
-      }
-   }
+    }
 
-	/**
-	 * Converts a PHP variable into its Javascript equivalent.
-	 */
-	public function osm_json_encode($var) {
-	  switch (gettype($var)) {
-		 case 'boolean':
-			return $var ? 'true' : 'false'; // Lowercase necessary!
-		 case 'integer':
-		 case 'double':
-			return $var;
-		 case 'resource':
-		 case 'string':
-			return '"'. str_replace(array("\r", "\n", "<", ">", "&", "\'"),
-											array('\r', '\n', '\x3c', '\x3e', '\x26', "'"),
-											addslashes($var)) .'"';
-		 case 'array':
-			// Arrays in JSON can't be associative. If the array is empty or if it
-			// has sequential whole number keys starting with 0, it's not associative
-			// so we can go ahead and convert it as an array.
-			if (empty ($var) || array_keys($var) === range(0, sizeof($var) - 1)) {
-			  $output = array();
-			  foreach ($var as $v) {
-				 $output[] = $this->osm_json_encode($v);
-			  }
-			  return '['. implode(',', $output) .']';
-			}
-			// Otherwise, fall through to convert the array as an object.
-		 case 'object':
-			$output = array();
-			foreach ($var as $k => $v) {
-			  $output[] = $this->osm_json_encode(strval($k)) .': '. $this->osm_json_encode($v);
-			}
-			return '{'. implode(',', $output) .'}';
-		 default:
-			return 'null';
-	  }
-	}
-
-   /**
-    * Get the player parameters.  This will only return the parameters that are included in
-    * the playerParams array.
-    */
-   public function getParams()
-   {
-      $params = array();
-      foreach( $this->settings as $param => $value ) {
-         if( array_key_exists( $param, $this->playerParams ) &&
-             ($this->playerParams[$param] != $value) ) {
-            switch( gettype($value) ) {
-               case 'array':
-               case 'object':
-                  $params[] = $param . ':' . $this->osm_json_encode($value);
-                  break;
-               case 'string':
-                  // Make sure we are not dealing with a JSON string here.  If so, then don't include the quotes.
-                  $params[] = (substr($value, 0, 1) == '{') ? ($param . ':' . $value) : ($param . ':"' . str_replace( '"', "'", $value ) . '"');
-                  break;
-               case 'boolean':
-                  $params[] = $param . ':' . ($value ? 'true' : 'false');
-                  break;
-               default:
-                  $params[] = $param . ':' . $value;
-                  break;
-            }
-         }
-      }
-
-      $ids = array();
-      foreach( $this->ids as $id => $value ) {
-         $ids[] = $id . ':"' . $value . '"';
-      }
+    // If we have some id's different from the default, then add then to our params.
+    if( count( $ids ) ) {
       // Now add all the Id's to the settings.
       $params[] = 'ids:{' . implode(',', $ids) . '}';
-      return $params;
-   }
+    }
 
-   /**
-    * Returns the JavaScript code to add and instantiate the player on the page.
-    */
-   public function getJS()
-   {
-      // Return the script.
-      return '<script type="text/javascript">' . $this->getPlayerJS() . '</script>';
-   }
+    return $params;
+  }
 
-   /**
-    * Returns the javascript to add the player to the page.
-    */
-   public function getPlayerJS()
-   {
-      $playerId = $this->getId();
-      $params = $this->getParams();
+  /**
+   * Returns the JavaScript code to add and instantiate the player on the page.
+   */
+  public function getJS() {
+    // Return the script.
+    return '<script type="text/javascript">' . $this->getPlayerJS() . '</script>';
+  }
 
-      // Create the player in javascript.
-      $js = 'var ' . $playerId . ' = jQuery("#' . $playerId . '").mediaplayer({' . implode(',', $params) . '});';
+  /**
+   * Returns the javascript to add the player to the page.
+   */
+  public function getPlayerJS() {
+    $playerId = $this->getId();
+    $params = $this->getParams();
 
-      // Now that the player has made it's way through the loading process... hide the busy cursor.
-      $js .= 'jQuery("#'. $playerId .'_loading").hide();';
+    // Create the player in javascript.
+    $js = 'var ' . $playerId . ' = jQuery("#' . $playerId . '").mediaplayer({' . implode(',', $params) . '});';
 
-      // Now add our playlist connections to the javascript.
-      foreach( $this->playlists as $playlist ) {
-         $js .= 'jQuery.media.addPlaylist("' . $playlist . '",' . $playerId . ');';
-      }
+    // Now that the player has made it's way through the loading process... hide the busy cursor.
+    $js .= 'jQuery("#'. $playerId .'_loading").hide();';
 
-      // Now add our controller connections to the javascript.
-      foreach( $this->controllers as $controller ) {
-         $js .= 'jQuery.media.addController("' . $controller . '",' . $playerId . ');';
-      }
+    // Now add our playlist connections to the javascript.
+    foreach( $this->playlists as $playlist ) {
+      $js .= 'jQuery.media.addPlaylist("' . $playlist . '",' . $playerId . ');';
+    }
 
-      // Return the script.
-      return 'jQuery(document).ready(function() {' . $js . '});';
-   }
+    // Now add our controller connections to the javascript.
+    foreach( $this->controllers as $controller ) {
+      $js .= 'jQuery.media.addController("' . $controller . '",' . $playerId . ');';
+    }
 
-   /**
-    * A theme preprocess function for the main player.
-    */
-   public function theme_preprocess( &$variables )
-   {
-      $variables['titlebar'] = $this->theme( $variables,  '_titlebar' );
-      $variables['menu'] = $this->theme( $variables,  '_menu' );
-      $variables['node'] = $this->theme( $variables,  '_node' );
-      $variables['playlist'] = $this->theme( $variables,  '_playlist' );
-   }
+    // Return the script.
+    return 'jQuery(document).ready(function() {' . $js . '});';
+  }
 
-   /**
-    * A theme preprocess function for the node.
-    */
-   public function theme_preprocess_node( &$variables )
-   {
-      $variables['controlBar'] = $this->theme( $variables,  '_controlbar' );
-   }
+  /**
+   * The main API call for this player.  This will return the HTML and JavaScript for the
+   * media player that you wish to add to your page.
+   *
+   * This function allows for dynamic theming of the player by passing parameters to the media
+   * player ( i.e. playlistOnly, horizontal, etc ).
+   */
+  public function getPlayer() {
+    $output = $this->getJS();
+    $output .= "\n";
 
-   /**
-    * A theme preprocess function for the menu.
-    */
-   public function theme_preprocess_menu( &$variables )
-   {
-      $variables['version'] = $this->getVersion();
-   }
-
-   /**
-    * A theme preprocess function for the control bar.
-    */
-   public function theme_preprocess_controlbar( &$variables )
-   {
-      $variables['voter'] = $this->theme( $variables,  '_nodevoter' );
-   }
-
-   /**
-    * A theme preprocess function for the teaser.
-    */
-   public function theme_preprocess_teaser( &$variables )
-   {
-      $variables['teaservoter'] = $this->theme( $variables,  '_teaservoter' );
-   }
-
-   /**
-    * A theme preprocess function for the playlist.
-    */
-   public function theme_preprocess_playlist( &$variables )
-   {
-      $variables['teaser'] = $this->theme( $variables,  '_teaser' );
-
-      if( $variables['params']['vertical'] ) {
-         $variables['scrollBar'] = $this->theme( $variables,  '_scrollbar' );
-      }
-      else {
-         $variables['scrollBar'] = $this->theme( $variables,  '_hscrollbar' );
-      }
-
-      $variables['links'] = $variables['params']['links'] ? theme( $variables,  '_links' ) : '';
-      $variables['pager'] = $this->theme( $variables,  '_pager' );
-   }
-
-   /**
-    * This is the core theme function for the media player.  It allows for recursive themes to be
-    * declared where a preprocessor for each theme can be employed using a theme_preprocess_{$subtemplate} name.
-    */
-   public function theme( $variables, $subtemplate = '' )
-   {
-      $template = $variables['params']['template'];
-      $preprocess = 'theme_preprocess' . $subtemplate;
-      if( method_exists( $this, $preprocess ) ) {
-         $this->{$preprocess}( $variables );
-      }
-
-      // Extract the variables to a local namespace
-      extract($variables, EXTR_SKIP);
-
-      // Start output buffering
-      ob_start();
-
-      // Include the template.
-      include "templates/{$template}/osmplayer_{$template}{$subtemplate}.tpl.php";  
-
-      // Get the contents of the buffer
-      $contents = ob_get_contents();
-
-      // End buffering and discard
-      ob_end_clean();
-
-      // Return the contents
-      return $contents;
-   }
-
-   /**
-    * The main API call for this player.  This will return the HTML and JavaScript for the
-    * media player that you wish to add to your page.
-    *
-    * This function allows for dynamic theming of the player by passing parameters to the media
-    * player ( i.e. playlistOnly, horizontal, etc ).
-    */
-   public function getPlayer()
-   {
-      $output = $this->getJS();
-      $output .= "\n";
-      $output .= $this->theme( array('params' => $this->settings) );
-      return $output;
-   }
+    // Get the output from the template.
+    $output .= $this->template->theme( array('params' => $this->settings) );
+    
+    return $output;
+  }
 }
 ?>

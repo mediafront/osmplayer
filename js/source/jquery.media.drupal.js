@@ -31,7 +31,7 @@
       apiKey:"",
       api:2,
       sessid:"",
-      version:6         
+      drupalVersion:6         
    });
 
    // Extend the media namespace
@@ -45,7 +45,7 @@
    
             var hasKey = (settings.apiKey.length > 0);
             var usesKey = (settings.api == 1);
-            var nodeGet = (settings.version >= 6) ? "node.get" : "node.load";
+            var nodeGet = (settings.drupalVersion >= 6) ? "node.get" : "node.load";
             var autoProtocol = (settings.protocol == "auto");
    
             // Set up the commands.

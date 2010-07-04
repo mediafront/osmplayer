@@ -964,7 +964,7 @@
       apiKey:"",
       api:2,
       sessid:"",
-      version:6         
+      drupalVersion:6         
    });
 
    // Extend the media namespace
@@ -978,7 +978,7 @@
    
             var hasKey = (settings.apiKey.length > 0);
             var usesKey = (settings.api == 1);
-            var nodeGet = (settings.version >= 6) ? "node.get" : "node.load";
+            var nodeGet = (settings.drupalVersion >= 6) ? "node.get" : "node.load";
             var autoProtocol = (settings.protocol == "auto");
    
             // Set up the commands.
@@ -2012,14 +2012,7 @@
          this.playHeight = this.playImg.height();
          
          // Store the preview image.
-         this.preview = player.find( settings.ids.preview ).mediaimage();
-         
-         // Register for the even when it loads.
-         if( this.preview ) {
-            this.preview.display.bind("imageLoaded", function() {
-               _this.onPreviewLoaded();      
-            });
-         }
+         this.preview = null;
          
          // The internal player controls.
          this.usePlayerControls = false;
@@ -2321,7 +2314,18 @@
          
          // Loads an image...
          this.loadImage = function( image ) {
+            this.preview = player.find( settings.ids.preview ).mediaimage();
+
             if( this.preview ) {
+               // Set the size of the preview.
+               this.preview.resize( this.width, this.height );
+
+               // Bind to the image loaded event.
+               this.preview.display.bind("imageLoaded", function() {
+                  _this.onPreviewLoaded();
+               });
+
+               // Load the image.
                this.preview.loadImage( image );
 
                // Now set the preview image in the media player.
