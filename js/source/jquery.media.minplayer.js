@@ -84,14 +84,7 @@
          this.playHeight = this.playImg.height();
          
          // Store the preview image.
-         this.preview = player.find( settings.ids.preview ).mediaimage();
-         
-         // Register for the even when it loads.
-         if( this.preview ) {
-            this.preview.display.bind("imageLoaded", function() {
-               _this.onPreviewLoaded();      
-            });
-         }
+         this.preview = null;
          
          // The internal player controls.
          this.usePlayerControls = false;
@@ -393,7 +386,18 @@
          
          // Loads an image...
          this.loadImage = function( image ) {
+            this.preview = player.find( settings.ids.preview ).mediaimage();
+
             if( this.preview ) {
+               // Set the size of the preview.
+               this.preview.resize( this.width, this.height );
+
+               // Bind to the image loaded event.
+               this.preview.display.bind("imageLoaded", function() {
+                  _this.onPreviewLoaded();
+               });
+
+               // Load the image.
                this.preview.loadImage( image );
 
                // Now set the preview image in the media player.
