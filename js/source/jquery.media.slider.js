@@ -25,10 +25,15 @@
  */
 (function($) {
    jQuery.fn.mediaslider = function( handleId, vertical ) {
-      if( this.length === 0 ) { return null; }
+      if( this.length === 0 ) {
+         return null;
+      }
       return new (function( control, handleId, vertical ) {
          var _this = this;
-         this.display = control.css({cursor:"pointer",position:"relative"});
+         this.display = control.css({
+            cursor:"pointer",
+            position:"relative"
+         });
          this.dragging = false;
          this.value = 0;
          this.handle = this.display.find(handleId);
@@ -98,15 +103,15 @@
 
          this.display.bind("mouseleave", function( event ) {
             if( _this.dragging ) {          
-              _this.dragging = false;             
-              _this.setValue( _this.getPosition( event[_this.pagePos] ) );
+               _this.dragging = false;
+               _this.setValue( _this.getPosition( event[_this.pagePos] ) );
             }
          });  
          
          this.display.bind("mouseup", function( event ) {
             if( _this.dragging ) {             
-              _this.dragging = false;
-              _this.setValue( _this.getPosition( event[_this.pagePos] ) );
+               _this.dragging = false;
+               _this.setValue( _this.getPosition( event[_this.pagePos] ) );
             }
          });   
          

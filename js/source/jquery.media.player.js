@@ -94,7 +94,9 @@
    
    // The main entry point into the player. 
    jQuery.fn.mediaplayer = function( settings ) {
-      if( this.length === 0 ) { return null; }
+      if( this.length === 0 ) {
+         return null;
+      }
       // Return the media Media Player
       return new (function( player, settings ) {         
          // Get the settings.
@@ -178,8 +180,8 @@
          // Hide or Show the menu.
          this.showMenu = function( show ) {
             if( settings.template.onMenu ) {
-              this.menuOn = show;
-              settings.template.onMenu( this.menuOn, true );   
+               this.menuOn = show;
+               settings.template.onMenu( this.menuOn, true );
             }         
          };
          
@@ -365,7 +367,7 @@
          
          // Allow the player to be resized.
          this.setSize = function( newWidth, newHeight ) {
-             // Only call onResize if the width or height changes.
+            // Only call onResize if the width or height changes.
             newWidth = newWidth ? newWidth : this.width;
             newHeight = newHeight ? newHeight : this.height;
             if( (newWidth != this.width) || (newHeight != this.height) ) {
@@ -377,7 +379,10 @@
                this.width = newWidth;
                this.height = newHeight;   
                
-               this.dialog.css({width:this.width, height:this.height});
+               this.dialog.css({
+                  width:this.width,
+                  height:this.height
+                  });
                
                // Call the resize function.             
                this.onResize( deltaX, deltaY );

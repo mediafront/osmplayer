@@ -28,7 +28,9 @@
     * Load and scale an image while maintining original aspect ratio.
     */
    jQuery.fn.mediaimage = function( link, fitToImage ) {
-      if( this.length === 0 ) { return null; }
+      if( this.length === 0 ) {
+         return null;
+      }
       return new (function( container, link, fitToImage ) {
          this.display = container;
          var _this = this;
@@ -60,10 +62,16 @@
             this.height = fitToImage ? this.imgLoader.height : (newHeight ? newHeight : this.height ? this.height : this.display.height());
             if( this.width && this.height && loaded ) {  
                // Resize the wrapper.
-               this.display.css({width:this.width, height:this.height});
+               this.display.css({
+                  width:this.width,
+                  height:this.height
+                  });
                
                // Now resize the image in the container...
-               var rect = jQuery.media.utils.getScaledRect( ratio, {width:this.width, height:this.height} );
+               var rect = jQuery.media.utils.getScaledRect( ratio, {
+                  width:this.width,
+                  height:this.height
+                  } );
                this.image.attr( "src", this.imgLoader.src ).css({
                   marginLeft:rect.x, 
                   marginTop:rect.y, 

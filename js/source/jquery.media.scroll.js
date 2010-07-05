@@ -176,13 +176,21 @@
             if( this.scrollBar ) {
                var trackSize = this.scrollSize - 2*this.scrollButtonSize;
                if( settings.vertical ) {
-                  this.scrollBar.display.css({height:trackSize});
-                  this.scrollTrack.css({height:trackSize});
+                  this.scrollBar.display.css({
+                     height:trackSize
+                  });
+                  this.scrollTrack.css({
+                     height:trackSize
+                  });
                   this.scrollBar.setSize( 0, trackSize );
                }
                else {
-                  this.scrollBar.display.css({width:trackSize});
-                  this.scrollTrack.css({width:trackSize});
+                  this.scrollBar.display.css({
+                     width:trackSize
+                  });
+                  this.scrollTrack.css({
+                     width:trackSize
+                  });
                   this.scrollBar.setSize( trackSize, 0 );               
                }
             }        
@@ -230,11 +238,18 @@
             
             this.listSize += element.size;
             if( settings.vertical ) {
-               this.list.css({height:this.listSize, marginTop:this.listSize});      
+               this.list.css({
+                  height:this.listSize,
+                  marginTop:this.listSize
+                  });
             }
             else {
-               element.obj.css({"float":"left"});
-               this.list.css({width:this.listSize});
+               element.obj.css({
+                  "float":"left"
+               });
+               this.list.css({
+                  width:this.listSize
+                  });
             }
             this.elements.push( element );
             return element.obj;
@@ -244,8 +259,18 @@
          this.getElement = function( element, index ) {
             var size = this.elementSize;
             var pos = this.listSize;
-            element.css({width:this.elementWidth, height:this.elementHeight});
-            return {obj:element, size:size, position:pos, bottom:(pos+size), mid:(size/2), index:index};         
+            element.css({
+               width:this.elementWidth,
+               height:this.elementHeight
+               });
+            return {
+               obj:element,
+               size:size,
+               position:pos,
+               bottom:(pos+size),
+               mid:(size/2),
+               index:index
+            };
          };
 
          // Scroll the list up or down one element.
@@ -318,7 +343,7 @@
             while(i--) {
                element = this.elements[i];
                if( ((element.position - this.listPos) < position) && 
-                   ((element.bottom - this.listPos) >= position) ) {
+                  ((element.bottom - this.listPos) >= position) ) {
                   element.straddle = ((element.bottom - this.listPos) != position);
                   break;      
                }               
@@ -357,10 +382,14 @@
             
             if( tween ) {
                if( settings.vertical ) {
-                  this.list.animate({marginTop: -this.listPos + "px"}, (settings.scrollSpeed*10));
+                  this.list.animate({
+                     marginTop: -this.listPos + "px"
+                     }, (settings.scrollSpeed*10));
                }
                else {
-                  this.list.animate({marginLeft: -this.listPos + "px"}, (settings.scrollSpeed*10));
+                  this.list.animate({
+                     marginLeft: -this.listPos + "px"
+                     }, (settings.scrollSpeed*10));
                }
             }
             else {

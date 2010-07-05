@@ -39,7 +39,9 @@
    });   
    
    jQuery.fn.medianode = function( server, settings ) {
-      if( this.length === 0 ) { return null; }
+      if( this.length === 0 ) {
+         return null;
+      }
       return new (function( server, node, settings ) {
          settings = jQuery.media.utils.getSettings(settings);
          
@@ -97,11 +99,17 @@
                   return defaultNode;   
                }
                else {
-                  return defaultNode ? {nid:defaultNode, load:true} : null;
+                  return defaultNode ? {
+                     nid:defaultNode,
+                     load:true
+                  } : null;
                }
             }
             else if( isValue ) {
-               return {nid:_nodeInfo, load:true};
+               return {
+                  nid:_nodeInfo,
+                  load:true
+               };
             }
             else {
                _nodeInfo.load = false;
@@ -118,7 +126,7 @@
             // Refresh all images.
             var i=this.images.length;
             while(i--) {
-              this.images[i].refresh(); 
+               this.images[i].refresh();
             }
          };
          
@@ -228,7 +236,9 @@
                }
                
                // If they just provided a string, then still show the image.
-               image = (typeof image === "string") ? {path:image} : image;
+               image = (typeof image === "string") ? {
+                  path:image
+               } : image;
                image.path = image.path ? jQuery.trim(image.path) : ( settings.baseURL + jQuery.trim(image.filepath) );
                if( image && image.path ) {
                   image.path = image.path ? jQuery.trim(image.path) : ( settings.baseURL + jQuery.trim(image.filepath) );

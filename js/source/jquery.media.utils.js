@@ -79,13 +79,16 @@
          checkVisibility : function( display, invisibleParents ) {
             var isVisible = true;
             display.parents().each( function() {
-                var jObject = jQuery(this);
-                if( !jObject.is(':visible') ) {
-                    isVisible = false;
-                    var attrClass = jObject.attr("class");
-                    invisibleParents.push( {obj:jObject, attr:attrClass} );
-                    jObject.removeClass(attrClass);
-                }
+               var jObject = jQuery(this);
+               if( !jObject.is(':visible') ) {
+                  isVisible = false;
+                  var attrClass = jObject.attr("class");
+                  invisibleParents.push( {
+                     obj:jObject,
+                     attr:attrClass
+                  } );
+                  jObject.removeClass(attrClass);
+               }
             });
          },
 
@@ -94,7 +97,7 @@
             // Now iterate through all of the invisible objects and rehide them.
             var i = invisibleParents.length;
             while(i--){
-                invisibleParents[i].obj.addClass(invisibleParents[i].attr);
+               invisibleParents[i].obj.addClass(invisibleParents[i].attr);
             }
          },
          
@@ -172,7 +175,7 @@
                   function( swf ) {
                      onAdded( swf.ref );  
                   }
-               );
+                  );
             }
             else {            
                var flash = jQuery.media.utils.getFlash( player, id, width, height, flashvars, wmode );
