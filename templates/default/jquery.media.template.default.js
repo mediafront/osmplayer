@@ -309,13 +309,13 @@
              * 
              * @param - If the menu should be on (true) or off (false).
              */
-            this.onMenu = function( on, tween ) {
+            this.onMenu = function( on ) {
                if( mediaplayer.menu ) {
                   if( on ) {
-                     mediaplayer.menu.display.show( tween ? "normal" : null );
+                     mediaplayer.menu.display.show( "normal" );
                   }
                   else {
-                     mediaplayer.menu.display.hide( tween ? "normal" : null );
+                     mediaplayer.menu.display.hide( "normal" );
                   }   
                }
             };

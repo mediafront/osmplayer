@@ -86,7 +86,8 @@ class OSMPlayer {
     }
 
     $base_path = isset($_params['base_path']) ? $_params['base_path'] : trim( str_replace( realpath('.'), '', dirname(__FILE__)), '/' );
-    $this->settings['base_path'] = trim(str_replace('\\', '/', $base_path), '/');
+    $base_path = trim(str_replace('\\', '/', $base_path), '/');
+    $this->settings['base_path'] = $base_path;
     $this->settings['base_url'] = isset($_params['base_url']) ? $_params['base_url'] : $base_url . '/' . $this->settings['base_path'];
     $this->settings['playerurl'] = $this->settings['base_url'];
     
@@ -97,8 +98,10 @@ class OSMPlayer {
     }
 
     // Create our template.
+    $base_path = $base_path ? $base_path : '../..';
+    $templateClass = ucfirst( $this->settings['template'] ) . 'Template';
     include "templates/" . $this->settings['template'] . "/template.php";
-    $this->template = new Template( $this->settings );
+    $this->template = new $templateClass( $this->settings );
     
     // Make sure we set the Prefix.
     $this->setPrefix( isset($_params['prefix']) ? $_params['prefix'] : ($this->settings['id'] . '_') );
@@ -180,7 +183,8 @@ class OSMPlayer {
       'showScrollbar' => true,
       'controllerOnly' => false,
       'wmode' => 'transparent',
-      'forceOverflow' => false
+      'forceOverflow' => false,
+      'volumeVertical' => false
     );
   }
 
