@@ -148,19 +148,21 @@
          
          this.setVolume = function( vol ) {
             if( this.volumeBar ) {
-               var pos = (vol * this.volumeBar.trackSize);
                if( settings.volumeVertical ) {
-                  this.volumeUpdate.css( {"height":(pos + "px"), "margin-top":(-pos + "px")} );
+                  this.volumeUpdate.css({
+                     "marginTop":(this.volumeBar.handlePos + this.volumeBar.handleMid + this.volumeBar.handleOffset) + "px",
+                     "height":(this.volumeBar.trackSize - this.volumeBar.handlePos) + "px"
+                  });
                }
                else {
-                  this.volumeUpdate.css( "width", pos + "px" );
+                  this.volumeUpdate.css( "width", (vol * this.volumeBar.trackSize) + "px" );
                }  
             }
          };
          
          // Set up the volume bar.
          this.volumeUpdate = controlBar.find( settings.ids.volumeUpdate );
-         this.volumeBar = controlBar.find( settings.ids.volumeBar ).mediaslider( settings.ids.volumeHandle, settings.volumeVertical );
+         this.volumeBar = controlBar.find( settings.ids.volumeBar ).mediaslider( settings.ids.volumeHandle, settings.volumeVertical, settings.volumeVertical );
          if( this.volumeBar ) {
             this.volumeBar.display.bind("setvalue", function( event, data ) {
                _this.setVolume( data );
