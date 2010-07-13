@@ -33,18 +33,34 @@
          this.bytesTotal = 0;
          this.mediaType = "";    
          
+         this.getPlayer = function( mediaFile ) {
+            var playerId = options.id + '_' + this.mediaType;            
+            var html = '<' + this.mediaType + ' style="position:absolute" id="' + playerId + '"';
+            html += (this.mediaType == "video") ? ' width="' + this.display.width() + 'px" height="' + this.display.height() + 'px"' : '';
+            
+            if( typeof mediaFile === 'array' ) {
+               html += '>';
+               var i = mediaFile.length;
+               while( i-- ) {
+                  html += '<source src="' + mediaFile[i].path + '" type="' + mediaFile[i].mimetype + '">';
+               }
+            }
+            else {
+               html += ' src="' + mediaFile.path + '">Unable to display media.';
+            } 
+            
+            html += '</' + this.mediaType + '>';
+            this.display.append( html );
+            return this.display.find('#' + playerId).eq(0)[0];;           
+         };
+         
          // Create a new HTML5 player.
          this.createMedia = function( mediaFile, preview ) {
             // Remove any previous Flash players.
             jQuery.media.utils.removeFlash( this.display, options.id + "_media" );
             this.display.children().remove();    
-            this.mediaType = this.getMediaType( mediaFile.extension );            
-            var playerId = options.id + '_' + this.mediaType;     
-            var html = '<' + this.mediaType + ' style="position:absolute" id="' + playerId + '" src="' + mediaFile.path + '"';
-            html += (this.mediaType == "video") ? ' width="' + this.display.width() + 'px" height="' + this.display.height() + 'px"' : '';
-            html += '>Unable to display media.</' + this.mediaType + '>';
-            this.display.append( html );
-            this.player = this.display.find('#' + playerId).eq(0)[0];
+            this.mediaType = this.getMediaType( mediaFile );            
+            this.player = this.getPlayer( mediaFile );
 
             this.player.addEventListener( "abort", function() {
                onUpdate( {
@@ -101,8 +117,9 @@
             this.createMedia( mediaFile );
          };                       
          
-         this.getMediaType = function( ext ) {
-            switch( ext ) {
+         this.getMediaType = function( mediaFile ) {
+            var extension = (typeof mediaFile === 'array') ? mediaFile[0].extension : mediaFile.extension;
+            switch( extension ) {
                case "ogg": case "ogv": case "mp4": case "m4v":
                   return "video";
                   

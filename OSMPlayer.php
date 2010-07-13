@@ -354,7 +354,8 @@ class OSMPlayer {
         "js/source/jquery.media.voter.js",
         "js/source/jquery.media.youtube.js",
         "js/source/jquery.media.vimeo.js",
-        "js/source/jquery.media.dailymotion.js"
+        "js/source/jquery.media.dailymotion.js",
+        "js/source/jquery.media.file.js"
       ), $this->template->settings['jsFiles']['debug'] );
     }
     else {

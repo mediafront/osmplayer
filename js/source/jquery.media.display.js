@@ -64,35 +64,7 @@
             // Make sure that all parents have overflow visible so that
             // browser full screen will always work.
             this.display.parents().css("overflow", "visible");
-         }
-
-         this.checkPlayType = function( elem, playType ) {
-            if( (typeof elem.canPlayType) == 'function' ) { 
-               return ("no" != elem.canPlayType(playType)) && ("" != elem.canPlayType(playType));
-            }
-            else {
-               return false;   
-            }
-         };
-         
-         // Get all the types of media that this browser can play.
-         this.getPlayTypes = function() {
-            var types = {};
-            
-            // Check for video types...
-            var elem = document.createElement("video");
-            types.ogg  = this.checkPlayType( elem, "video/ogg");  
-            types.h264  = this.checkPlayType( elem, "video/mp4");
-            types.webm = this.checkPlayType( elem, "video/x-webm");
-               
-            // Now check for audio types...
-            elem = document.createElement("audio");
-            types.audioOgg = this.checkPlayType( elem, "audio/ogg");
-            types.mp3 = this.checkPlayType( elem, "audio/mpeg");  
-                            
-            return types;            
-         };
-         this.playTypes = this.getPlayTypes();    
+         }   
          
          // Set the size of this media display region.
          this.setSize = function( newWidth, newHeight ) {
@@ -130,14 +102,12 @@
          };
          
          // Adds a media file to the play queue.
-         this.addToQueue = function( file ) {
-            // Check to see if this file is an array... then we
-            // have several files to pick the best one to play.
-            if( (typeof file) == 'array' ) {
-               file = this.getPlayableMedia( file ); 
-            }
-            
+         this.addToQueue = function( file ) {            
             if( file ) {
+               if( file[0] ) {
+                  file = this.getPlayableMedia( file );
+               }
+
                this.playQueue.push( file );
             }
          };
@@ -148,7 +118,7 @@
             var mFile = null;
             var i = files.length;
             while(i--) {
-               var tempFile = this.getMediaFile( files[i] );
+               var tempFile = new jQuery.media.file( files[i], settings );
                if( !mFile || (tempFile.weight < mFile.weight) ) {
                   mFile = tempFile;
                }
@@ -178,7 +148,7 @@
          this.loadMedia = function( file ) {
             if( file ) {
                // Get the media file object.
-               file = this.getMediaFile( file );
+               file = new jQuery.media.file( file, settings );
                
                // Stop the current player.
                this.stopMedia();  
@@ -218,99 +188,6 @@
                });
             }
          };    
-
-         // Returns a media file object.
-         this.getMediaFile = function( file ) {
-            var mFile = {};
-            file = (typeof file === "string") ? {
-               path:file
-            } : file;
-            mFile.duration = file.duration ? file.duration : 0;
-            mFile.bytesTotal = file.bytesTotal ? file.bytesTotal : 0;
-            mFile.quality = file.quality ? file.quality : 0;
-            mFile.stream = settings.streamer ? settings.streamer : file.stream;
-            mFile.path = file.path ? jQuery.trim(file.path) : ( settings.baseURL + jQuery.trim(file.filepath) );
-            mFile.extension = file.extension ? file.extension : this.getFileExtension(mFile.path);
-            mFile.weight = file.weight ? file.weight : this.getWeight( mFile.extension );
-            mFile.player = file.player ? file.player : this.getPlayer(mFile.extension, mFile.path);
-            mFile.type = file.type ? file.type : this.getType(mFile.extension);
-            return mFile;       
-         };
-         
-         // Get the file extension.
-         this.getFileExtension = function( file ) {
-            return file.substring(file.lastIndexOf(".") + 1).toLowerCase();
-         };
-         
-         // Get the player for this media.
-         this.getPlayer = function( extension, path ) {
-            switch( extension )
-            {
-               case "ogg":case "ogv":
-                  return this.playTypes.ogg ? "html5" : "flash";
-               
-               case "mp4":case "m4v":
-                  return this.playTypes.h264 ? "html5" : "flash";               
-               
-               case "webm":
-                  return this.playTypes.webm ? "html5" : "flash";
-               
-               case "oga":
-                  return this.playTypes.audioOgg ? "html5" : "flash";
-                  
-               case "mp3":
-                  return this.playTypes.mp3 ? "html5" : "flash";
-                  
-               case "swf":case "flv":case "f4v":case "mov":case "3g2":case "m4a":case "aac":case "wav":case "aif":case "wma":
-                  return "flash"; 
-                   
-               default:
-                  if( extension.substring(0,3).toLowerCase() == "com" ) {
-                     // Is this a vimeo path...
-                     if( path.search(/^http(s)?\:\/\/(www\.)?vimeo\.com/i) == 0 ) {
-                        return "vimeo";
-                     }
-                     
-                     // This is a youtube path...
-                     else if( path.search(/^http(s)?\:\/\/(www\.)?youtube\.com/i) == 0 ) {
-                        return "youtube";
-                     }
-                  }
-            }           
-            return "";
-         };
-         
-         // Get the type of media this is...
-         this.getType = function( extension ) {
-            switch( extension ) {  
-               case"swf":case "webm":case "ogg":case "ogv":case "mp4":case "m4v":case "flv":case "f4v":case "mov":case "3g2":
-                  return "video";
-               case "oga":case "mp3":case "m4a":case "aac":case "wav":case "aif":case "wma":
-                  return "audio";
-            }
-         };
-
-         // Get the preference "weight" of this media type.  
-         // The lower the number, the higher the preference.
-         this.getWeight = function( extension ) {
-            switch( extension ) {  
-               case 'mp4':case 'm4v':case 'm4a':case'webm':
-                  return 5;
-               case 'ogg':case 'ogv':
-                  return this.playTypes.ogg ? 5 : 10;
-               case 'oga':
-                  return this.playTypes.audioOgg ? 5 : 10;               
-               case 'mp3':
-                  return 6;
-               case 'mov':case'swf':case 'flv':case 'f4v':case '3g2':
-                  return 7;
-               case 'wav':case 'aif':case 'aac':
-                  return 8;
-               case 'wma':
-                  return 9;
-                  
-            }
-         };
 
          this.onMediaUpdate = function( data ) {
             // Now trigger the media update message.
