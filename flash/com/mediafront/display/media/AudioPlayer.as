@@ -73,7 +73,7 @@ package com.mediafront.display.media
          request.requestHeaders.push( new URLRequestHeader("pragma", "no-cache") );
          try {
             super.load( request, context );
-            loadInterval = setInterval( loadHandler, 2000 );
+            loadInterval = setInterval( loadHandler, 200 );
          } catch (error:Error) {
             Utils.debug("Unable to load " + file);
          }
@@ -81,7 +81,9 @@ package com.mediafront.display.media
 
       // Make sure we load if they don't have meta data in their audio.
       private function loadHandler() {
-         onLoaded();  		
+         if(bytesLoaded >= bytesTotal && bytesLoaded > 0) {
+            onLoaded(); 
+         } 		
       }
 
       private function onLoaded() : void {

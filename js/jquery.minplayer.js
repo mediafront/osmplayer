@@ -1579,7 +1579,7 @@
          
          // The internal player controls.
          this.usePlayerControls = false;
-         this.busyVisible = true;
+         this.busyFlags = 0;
          this.playVisible = false;
          this.previewVisible = false;
          this.controllerVisible = true;
@@ -1607,9 +1607,14 @@
             this.showElement( this.play, show, tween );
          };
 
-         this.showBusy = function( show, tween ) {
-            this.busyVisible = show;
-            this.showElement( this.busy, show, tween );
+         this.showBusy = function( id, show, tween ) {
+            if( show ) {
+               this.busyFlags |= (1 << id);
+            }
+            else {
+               this.busyFlags &= ~(1 << id)
+            }
+            this.showElement( this.busy, (this.busyFlags > 0), tween );
          }; 
          
          this.showPreview = function( show, tween ) {
@@ -1693,23 +1698,23 @@
                case "paused":
                   this.playing = false;
                   this.showPlay(true);
-                  this.showBusy(false);
+                  this.showBusy(1, false);
                   break;
                case "playing":
                   this.playing = true;
                   this.showPlay(false);
-                  this.showBusy(false);
+                  this.showBusy(1, false);
                   this.showPreview((this.media.mediaFile.type == "audio"));
                   break;
                case "initialize":
                   this.playing = false;
                   this.showPlay(true);
-                  this.showBusy(true);
+                  this.showBusy(1, true);
                   this.showPreview(true);
                   break;
                case "buffering":
                   this.showPlay(true);
-                  this.showBusy(true);
+                  this.showBusy(1, true);
                   this.showPreview((this.media.mediaFile.type == "audio"));
                   break;
             }
@@ -1825,7 +1830,7 @@
                   }
                }
                else {
-                  this.showBusy( this.busyVisible );
+                  this.showBusy( 1, ((this.busyFlags & 0x2) == 0x2) );
                   this.showPlay( this.playVisible );
                   this.showPreview( this.previewVisible );
                   this.showController( this.controllerVisible );
@@ -1883,7 +1888,7 @@
             }
             this.showPlay(false);
             this.showPreview(false);
-            this.showBusy(true);
+            this.showBusy(1, true);
             
             if( this.media ) {
                this.media.reset();
