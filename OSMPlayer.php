@@ -85,19 +85,16 @@ class OSMPlayer {
        $base_url .= "/$dir";
     }
 
-    $base_path = isset($_params['base_path']) ? $_params['base_path'] : trim( str_replace( realpath('.'), '', dirname(__FILE__)), '/' );
-    $base_path = trim(str_replace('\\', '/', $base_path), '/');
-    $this->settings['base_path'] = $base_path;
-    $this->settings['base_url'] = isset($_params['base_url']) ? $_params['base_url'] : $base_url . '/' . $this->settings['base_path'];
-    $this->settings['playerurl'] = $this->settings['base_url'];
+    $this->settings['playerURL'] = isset($_params['playerURL']) ? $_params['playerURL'] : $base_url . '/' . $this->settings['playerPath'];
     
     // Set the correct flash player and logo url path.
     if( $_SERVER['HTTP_HOST'] ) {
-      $this->settings['flashplayer'] = isset($_params['flashplayer']) ? $_params['flashplayer'] : ($this->settings['base_url'] . '/flash/mediafront.swf');
-      $this->settings['logo'] = isset($_params['logo']) ? $_params['logo'] : ($this->settings['base_url'] . '/logo.png');
+      $this->settings['flashplayer'] = isset($_params['flashplayer']) ? $_params['flashplayer'] : ($this->settings['playerURL'] . '/flash/mediafront.swf');
+      $this->settings['logo'] = isset($_params['logo']) ? $_params['logo'] : ($this->settings['playerURL'] . '/logo.png');
     }
 
     // Create our template.
+    $base_path = $this->settings['playerPath'];
     $templateClass = ucfirst( $this->settings['template'] ) . 'Template';
     include "templates/" . $this->settings['template'] . "/template.php";
     $this->template = new $templateClass( $this->settings );
@@ -111,6 +108,14 @@ class OSMPlayer {
    * Returns the player settings.
    */
   public static function getPlayerSettings() {
+    static $playerPath;
+
+    // Get the player path.
+    if( !$playerPath ) {
+      $playerPath = trim( str_replace( realpath('.'), '', dirname(__FILE__) ), '/' );
+      $playerPath = trim(str_replace('\\', '/', $playerPath), '/');
+    }
+
     return array(
       'width' => OSMPLAYER_DEFAULT_WIDTH,
       'height' => OSMPLAYER_DEFAULT_HEIGHT,
@@ -121,7 +126,8 @@ class OSMPlayer {
       'playlistOnly' => false,
       'showNodeVoter' => true,
       'showTeaserVoter' => true,
-      'showTitleBar' => true
+      'showTitleBar' => true,
+      'playerPath' => $playerPath
     );
   }
 
@@ -291,12 +297,12 @@ class OSMPlayer {
    */
   public function getJSHeader() {
     $header = '';
-    $base_path = $this->settings['base_path'] ? $this->settings['base_path'] . '/' : '';
+    $playerPath = $this->settings['playerPath'] ? $this->settings['playerPath'] . '/' : '';
 
     // Add all of the javascript files.
     $jsfiles = $this->getJSFiles();
     foreach( $jsfiles as $file ) {
-      $header .= '<script type="text/javascript" src="' . $base_path . $file .'"></script>';
+      $header .= '<script type="text/javascript" src="' . $playerPath . $file .'"></script>';
       $header .= "\n";
     }
 
