@@ -101,7 +101,6 @@
 #mediacontrol {
    position: absolute;
    z-index:1004;	
-   min-width:350px;
 }
 
 #mediatitlelinks {
