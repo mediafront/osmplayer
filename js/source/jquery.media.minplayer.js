@@ -397,8 +397,7 @@
             if( this.activeController ) {
                this.activeController.reset();   
             }
-            this.showPlay(false);
-            this.showPreview(false);
+
             this.showBusy(1, true);
             
             if( this.media ) {

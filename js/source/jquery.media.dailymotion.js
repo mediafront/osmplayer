@@ -45,10 +45,10 @@
             this.ready = false;
             var playerId = (options.id + "_media");
             var rand = Math.floor(Math.random() * 1000000);  
-            var flashplayer = 'http://www.dailymotion.com/swf/' + videoFile.path + '?rand=' + rand + '&amp;enablejsapi=1&amp;playerapiid=' + playerId;            
+            var flashPlayer = 'http://www.dailymotion.com/swf/' + videoFile.path + '?rand=' + rand + '&amp;enablejsapi=1&amp;playerapiid=' + playerId;
             jQuery.media.utils.insertFlash( 
                this.display, 
-               flashplayer, 
+               flashPlayer,
                playerId, 
                this.display.width(), 
                this.display.height(),

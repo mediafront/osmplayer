@@ -78,21 +78,6 @@ class OSMPlayer {
       $this->settings = array_merge( $this->settings, $_params );
     }
 
-    // Set the base path and url of this class.
-    $base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
-    $base_url = $base_root .= '://'. $_SERVER['HTTP_HOST'];
-    if ($dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/')) {
-       $base_url .= "/$dir";
-    }
-
-    $this->settings['playerURL'] = isset($_params['playerURL']) ? $_params['playerURL'] : $base_url . '/' . $this->settings['playerPath'];
-    
-    // Set the correct flash player and logo url path.
-    if( $_SERVER['HTTP_HOST'] ) {
-      $this->settings['flashplayer'] = isset($_params['flashplayer']) ? $_params['flashplayer'] : ($this->settings['playerURL'] . '/flash/mediafront.swf');
-      $this->settings['logo'] = isset($_params['logo']) ? $_params['logo'] : ($this->settings['playerURL'] . '/logo.png');
-    }
-
     // Create our template.
     $base_path = $this->settings['playerPath'];
     $templateClass = ucfirst( $this->settings['template'] ) . 'Template';
@@ -101,21 +86,38 @@ class OSMPlayer {
     
     // Make sure we set the Prefix.
     $this->setPrefix( isset($_params['prefix']) ? $_params['prefix'] : ($this->settings['id'] . '_') );
+  }
 
+  /**
+   * Returns the paths to this player library.
+   */
+  public static function getPaths() {
+    static $playerPath, $playerURL;
+
+    // Get the player path.
+    if( !$playerPath ) {
+      $playerPath = trim( str_replace( realpath('.'), '', dirname(__FILE__) ), '/' );
+      $playerPath = trim( str_replace('\\', '/', $playerPath), '/' );
+    }
+    
+    // Get the player URL.
+    if( !$playerURL ) {
+      $base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+      $base_url = $base_root .= '://'. $_SERVER['HTTP_HOST'];
+      if ($dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/')) {
+        $base_url .= "/$dir";
+      }
+      $playerURL = $base_url . '/' . $playerPath;
+    }   
+    
+    return array('playerPath' => $playerPath, 'playerURL' => $playerURL);
   }
 
   /**
    * Returns the player settings.
    */
-  public static function getPlayerSettings() {
-    static $playerPath;
-
-    // Get the player path.
-    if( !$playerPath ) {
-      $playerPath = trim( str_replace( realpath('.'), '', dirname(__FILE__) ), '/' );
-      $playerPath = trim(str_replace('\\', '/', $playerPath), '/');
-    }
-
+  public static function getPlayerSettings( $paths = null ) {
+    $paths = $paths ? $paths : self::getPaths();
     return array(
       'width' => OSMPLAYER_DEFAULT_WIDTH,
       'height' => OSMPLAYER_DEFAULT_HEIGHT,
@@ -127,19 +129,20 @@ class OSMPlayer {
       'showNodeVoter' => true,
       'showTeaserVoter' => true,
       'showTitleBar' => true,
-      'playerPath' => $playerPath
+      'playerPath' => $paths['playerPath'],
+      'playerURL' => $paths['playerURL']
     );
   }
 
   /**
    * Returns the player parameters.
    */
-  public static function getPlayerParams() {
+  public static function getPlayerParams( $paths = null ) {
     return array(
       'id' => 'player',
       'showPlaylist' => true,
       'file' => '',
-      'flashplayer' => 'flash/mediafront.swf',
+      'flashPlayer' => 'flash/mediafront.swf',
       'image' => '',
       'volume' => 80,
       'autostart' => false,

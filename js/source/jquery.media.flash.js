@@ -38,7 +38,7 @@
 
    // Set up our defaults for this component.
    jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
-      flashplayer:"./flash/mediafront.swf",
+      flashPlayer:"./flash/mediafront.swf",
       skin:"default",
       config:"nocontrols"
    });    
@@ -70,7 +70,7 @@
             this.ready = false;
             var playerId = (settings.id + "_media");            
             var rand = Math.floor(Math.random() * 1000000); 
-            var flashplayer = settings.flashplayer + "?rand=" + rand;
+            var flashPlayer = settings.flashPlayer + "?rand=" + rand;
             var flashvars = {
                config:settings.config,
                id:settings.id,
@@ -86,7 +86,7 @@
             }
             jQuery.media.utils.insertFlash( 
                this.display, 
-               flashplayer, 
+               flashPlayer,
                playerId, 
                this.display.width(), 
                this.display.height(),
@@ -193,7 +193,7 @@
                flashVars.stream = this.videoFile.stream;
             }                    
             return jQuery.media.utils.getFlash( 
-               settings.flashplayer,
+               settings.flashPlayer,
                "mediafront_player", 
                settings.embedWidth, 
                settings.embedHeight,

@@ -44,10 +44,10 @@
             this.ready = false;
             var playerId = (options.id + "_media");            
             var rand = Math.floor(Math.random() * 1000000);             
-            var flashplayer = 'http://www.youtube.com/apiplayer?rand=' + rand + '&amp;version=3&amp;enablejsapi=1&amp;playerapiid=' + playerId;            
+            var flashPlayer = 'http://www.youtube.com/apiplayer?rand=' + rand + '&amp;version=3&amp;enablejsapi=1&amp;playerapiid=' + playerId;
             jQuery.media.utils.insertFlash( 
                this.display, 
-               flashplayer, 
+               flashPlayer,
                playerId, 
                this.display.width(), 
                this.display.height(),
