@@ -286,7 +286,7 @@
          this.onMediaUpdate = function( data ) {
             // When the media completes, have the active playlist load the next item.
             if( settings.autoNext && this.activePlaylist && (data.type == "complete") ) {
-               this.activePlaylist.pager.loadNext( true );              
+               this.activePlaylist.loadNext();
             }                   
             
             // Set the media information in the menu.
