@@ -418,7 +418,7 @@
                }
                
                // Trigger an even that the teaser has been activated.
-               jQuery.event.trigger( "playlistload", teaser.node.nodeInfo ); 
+               this.display.trigger( "playlistload", teaser.node.nodeInfo );
             }
          };
       })( server, this, settings );
