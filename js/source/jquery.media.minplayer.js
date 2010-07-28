@@ -123,7 +123,7 @@
                this.busyFlags |= (1 << id);
             }
             else {
-               this.busyFlags &= ~(1 << id)
+               this.busyFlags &= ~(1 << id);
             }
             this.showElement( this.busy, (this.busyFlags > 0), tween );
          }; 
@@ -227,7 +227,7 @@
                   this.showPlay(true);
                   this.showBusy(1, true);
                   this.showPreview((this.media.mediaFile.type == "audio"));
-                  break;
+                  break;                 
             }
             
             // Update our controller.

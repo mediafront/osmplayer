@@ -184,7 +184,7 @@
                               console.dir( xml.error );
                            }
                         }
-                        else {
+                        else if( onSuccess ) {
                            onSuccess( xml.result );
                         }
                      },
@@ -192,7 +192,7 @@
                      "contentType": "text/xml"
                   });
                }
-               else {
+               else if( onSuccess ) {
                   onSuccess( null ); 
                }
             };

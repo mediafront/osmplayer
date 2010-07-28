@@ -192,7 +192,9 @@ class OSMPlayer {
       'controllerOnly' => false,
       'wmode' => 'transparent',
       'forceOverflow' => false,
-      'volumeVertical' => false
+      'volumeVertical' => false,
+      'incrementTime' => 5,
+      'quality' => 'default'
     );
   }
 
