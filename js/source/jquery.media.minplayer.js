@@ -75,12 +75,6 @@
          
          // Store the play overlay.
          this.play = player.find( settings.ids.play );
-         this.play.bind("click", function() {
-            _this.showPlay(false);
-            if( _this.media && _this.media.playerReady ) {
-               _this.media.player.playMedia();
-            }
-         });
          this.playImg = this.play.find("img");
          this.playWidth = this.playImg.width();
          this.playHeight = this.playImg.height();
@@ -100,6 +94,11 @@
          // Cache the width and height.
          this.width = this.display.width();
          this.height = this.display.height();
+
+         // Toggle the play/pause state if they click on the display.
+         this.display.bind("click", function() {
+            _this.togglePlayPause();
+         });
          
          // Hide or show an element.
          this.showElement = function( element, show, tween ) {
@@ -402,6 +401,20 @@
             
             if( this.media ) {
                this.media.reset();
+            }
+         };
+         
+         // Toggle the play/pause state.
+         this.togglePlayPause = function() {
+            if( this.media && this.media.playerReady ) {
+               if( this.playing ) {
+                  this.showPlay(true);
+                  this.media.player.pauseMedia();  
+               }
+               else {
+                  this.showPlay(false);
+                  this.media.player.playMedia(); 
+               }
             }
          };
          
