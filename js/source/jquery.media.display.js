@@ -246,7 +246,7 @@
             if( data.type=="playing" && !this.loaded ) {
                this.loaded = true;
                this.player.setVolume( (settings.volume / 100) );
-               if( !settings.autostart ) {
+               if( settings.autoLoad && !settings.autostart ) {
                   this.player.pauseMedia();
                   settings.autostart = true;
                }
