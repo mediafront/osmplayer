@@ -75,6 +75,10 @@
          
          // Store the play overlay.
          this.play = player.find( settings.ids.play );
+         // Toggle the play/pause state if they click on the play button.
+         this.play.bind("click", function() {
+            _this.togglePlayPause();
+         });
          this.playImg = this.play.find("img");
          this.playWidth = this.playImg.width();
          this.playHeight = this.playImg.height();
@@ -94,12 +98,7 @@
          // Cache the width and height.
          this.width = this.display.width();
          this.height = this.display.height();
-
-         // Toggle the play/pause state if they click on the display.
-         this.display.bind("click", function() {
-            _this.togglePlayPause();
-         });
-         
+      
          // Hide or show an element.
          this.showElement = function( element, show, tween ) {
             if( element && !this.usePlayerControls ) {
@@ -265,7 +264,12 @@
          if( this.media ) {
             this.media.display.bind( "mediaupdate", function( event, data ) {
                _this.onMediaUpdate( data );            
-            });  
+            });
+
+            // Toggle the play/pause state if they click on the display.
+            this.media.display.bind("click", function() {
+               _this.togglePlayPause();
+            });
          }
          
          // Add the control bar to the media.
