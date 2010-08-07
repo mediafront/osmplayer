@@ -205,9 +205,18 @@
                else {
                   this[indexVar]++;
                   if ( this[indexVar] >= this.numItems ) {
-                     this[indexVar] = (this.numItems - 1);
-                     this.loadState = this.loadState ? this.loadState : "first";
-                     this.nextPage( setActive );
+                     if( this.numPages > 1 ) {
+                        this[indexVar] = (this.numItems - 1);
+                        this.loadState = this.loadState ? this.loadState : "first";
+                        this.nextPage( setActive );
+                     }
+                     else if( !setActive || settings.loop ) {
+                        this[indexVar] = 0;
+                        this.display.trigger("loadindex", {
+                           index:this[indexVar],
+                           active:setActive
+                        });
+                     }
                   }
                   else {
                      this.display.trigger("loadindex", {
@@ -233,9 +242,18 @@
             else {
                this[indexVar]--;
                if ( this[indexVar] < 0 ) {
-                  this[indexVar] = 0;
-                  this.loadState = this.loadState ? this.loadState : "last";
-                  this.prevPage( setActive );
+                  if( this.numPages > 1 ) {
+                     this[indexVar] = 0;
+                     this.loadState = this.loadState ? this.loadState : "last";
+                     this.prevPage( setActive );
+                  }
+                  else if( !setActive || settings.loop ) {
+                     this[indexVar] = (this.numItems - 1);
+                     this.display.trigger("loadindex", {
+                        index:this[indexVar],
+                        active:setActive
+                     });
+                  }
                }
                else {
                   this.display.trigger( "loadindex", {

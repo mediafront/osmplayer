@@ -106,7 +106,7 @@
          };         
          
          this.loadNode = function( _nodeInfo ) {
-            this.getNode( this.translateNode( _nodeInfo ) );
+            return this.getNode( this.translateNode( _nodeInfo ) );
          };
 
          this.translateNode = function( _nodeInfo ) {
@@ -159,7 +159,13 @@
                else {
                   this.setNode( _nodeInfo ); 
                }
+
+               // Return that the node was loaded.
+               return true;
             }
+
+            // Return that there was no node loaded.
+            return false;
          };
 
          this.setNode = function( _nodeInfo ) {

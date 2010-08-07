@@ -164,6 +164,7 @@ class OSMPlayer {
       'node' => "",
       'shuffle' => false,
       'loop' => false,
+      'repeat' => false,
       'pageLimit' => 10,
       'protocol' => "auto",
       'server' => "drupal",

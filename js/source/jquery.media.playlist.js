@@ -248,7 +248,13 @@
                      }, null, playlistArgs.playlist, playlistArgs.pageLimit, playlistArgs.pageIndex, this.args );
                   }
                }
+
+               // Return that the playlist was loaded.
+               return true;
             }
+
+            // Return that the playlist was not loaded.
+            return false;
          };
 
          // Set this playlist.

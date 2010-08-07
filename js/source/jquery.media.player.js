@@ -267,7 +267,7 @@
                });            
             }
          }         
-         
+
          // Get the node and register for events.
          this.node = this.display.find( settings.ids.node ).medianode( this.server, settings );
          if( this.node ) {
@@ -413,10 +413,19 @@
 
          // Load the content into the player.
          this.loadContent = function() {
+            var playlistLoaded = false;
+
             if( this.playlist ) {
-               this.playlist.loadPlaylist();
+               playlistLoaded = this.playlist.loadPlaylist();
             }
-            if( this.node ) {
+
+            // Don't load the node if there is a plalist loaded.
+            if( !playlistLoaded && this.node ) {
+               // Make sure to transfer any playlist settings over to the node.
+               if( this.node.player && this.node.player.media ) {
+                  this.node.player.media.settings.repeat = (settings.loop || settings.repeat);
+               }
+
                this.node.loadNode(); 
             }
          }; 
