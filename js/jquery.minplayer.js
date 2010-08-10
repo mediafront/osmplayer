@@ -1029,7 +1029,7 @@
                }
             }
       }           
-      return "";
+      return "flash";
    };
    
    // Get the type of media this is...
@@ -1776,11 +1776,6 @@
          if( this.media ) {
             this.media.display.bind( "mediaupdate", function( event, data ) {
                _this.onMediaUpdate( data );            
-            });
-
-            // Toggle the play/pause state if they click on the display.
-            this.media.display.bind("click", function() {
-               _this.togglePlayPause();
             });
          }
          

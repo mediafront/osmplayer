@@ -109,13 +109,7 @@
             } 
 
             // Convert the flashvars object to a string...
-            var flashVarsString = "";
-            for( var key in flashvars ) {
-               if( flashvars.hasOwnProperty(key) ) {
-                  flashVarsString += key + "=" + encodeURIComponent(flashvars[key]) + "&";
-               }
-            }
-            flashVarsString = flashVarsString.replace(/&$/, '');
+            var flashVarsString = jQuery.param(flashvars);
 
             // Get the HTML flash object string.
             var flash = '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" ';
