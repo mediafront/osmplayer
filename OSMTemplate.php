@@ -100,7 +100,7 @@ class OSMTemplate
   /**
    * Constructor for the OSMTempalate class.
    */
-  public function OSMTemplate( $playerSettings ) {
+  public function __construct( $playerSettings ) {
     // Set the player settings, which can be used in this template.
     $this->playerSettings = $playerSettings;
 

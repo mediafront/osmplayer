@@ -68,7 +68,7 @@ class OSMPlayer {
    *       'playlist' => 'http://www.mysite.com/playlist.xml'
    *    ));
    */
-  public function OSMPlayer( $_params = array() ) {
+  public function __construct( $_params = array() ) {
     // First set the defaults.
     $this->playerParams = OSMPlayer::getPlayerParams();
     $this->settings = array_merge( $this->playerParams, OSMPlayer::getPlayerSettings() );
