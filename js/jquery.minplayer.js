@@ -1609,13 +1609,15 @@
                }           
                
                // Resize the busy symbol.
+               var busyMLeft = Math.ceil((this.width - this.busyWidth)/2);
+               var busyMTop = Math.ceil((this.height - this.busyHeight)/2);
                this.busy.css({
                   width:this.width,
                   height:this.height
                   });
                this.busyImg.css({
-                  marginLeft:((this.width - this.busyWidth)/2) + "px", 
-                  marginTop:((this.height - this.busyHeight)/2) + "px" 
+                  marginLeft:busyMLeft + "px",
+                  marginTop:busyMTop + "px"
                });
 
                // Resize the play symbol.
