@@ -127,8 +127,8 @@
          });
          
          // Set up the seek bar...
-         this.seekUpdate = controlBar.find( settings.ids.seekUpdate ).css("width", "0px");
-         this.seekProgress = controlBar.find( settings.ids.seekProgress ).css("width", "0px");
+         this.seekUpdate = controlBar.find( settings.ids.seekUpdate ).css("width", 0);
+         this.seekProgress = controlBar.find( settings.ids.seekProgress ).css("width", 0);
          this.seekBar = controlBar.find( settings.ids.seekBar ).mediaslider( settings.ids.seekHandle, false );
          this.seekBar.display.bind( "setvalue", function( event, data ) {
             _this.updateSeek( data );
@@ -142,7 +142,7 @@
          });
 
          this.updateSeek = function( value ) {
-            this.seekUpdate.css( "width", (value * this.seekBar.trackSize) + "px" );
+            this.seekUpdate.css( "width", (value * this.seekBar.trackSize) );
             this.currentTime.text( this.formatTime( value * this.duration ).time );
          };
          
@@ -150,12 +150,12 @@
             if( this.volumeBar ) {
                if( settings.volumeVertical ) {
                   this.volumeUpdate.css({
-                     "marginTop":(this.volumeBar.handlePos + this.volumeBar.handleMid + this.volumeBar.handleOffset) + "px",
-                     "height":(this.volumeBar.trackSize - this.volumeBar.handlePos) + "px"
+                     "marginTop":(this.volumeBar.handlePos + this.volumeBar.handleMid + this.volumeBar.handleOffset),
+                     "height":(this.volumeBar.trackSize - this.volumeBar.handlePos)
                   });
                }
                else {
-                  this.volumeUpdate.css( "width", (vol * this.volumeBar.trackSize) + "px" );
+                  this.volumeUpdate.css( "width", (vol * this.volumeBar.trackSize) );
                }  
             }
          };
@@ -195,7 +195,7 @@
 
          this.setProgress = function( percent ) {
             if( this.seekProgress ) {
-               this.seekProgress.css( "width", (percent * (this.seekBar.trackSize + this.seekBar.handleSize)) + "px" );
+               this.seekProgress.css( "width", (percent * (this.seekBar.trackSize + this.seekBar.handleSize)) );
             }
          };
 
@@ -596,8 +596,8 @@
             
             // Set the width and height of this media region.
             this.display.css({
-               height:this.height + "px",
-               width:this.width + "px"
+               height:this.height,
+               width:this.width
             });
             
             // Now resize the player.
@@ -1616,8 +1616,8 @@
                   height:this.height
                   });
                this.busyImg.css({
-                  marginLeft:busyMLeft + "px",
-                  marginTop:busyMTop + "px"
+                  marginLeft:busyMLeft,
+                  marginTop:busyMTop
                });
 
                // Resize the play symbol.
@@ -1628,8 +1628,8 @@
                   height:this.height
                   });
                this.playImg.css({
-                  marginLeft:playMLeft + "px",
-                  marginTop:playMTop + "px"
+                  marginLeft:playMLeft,
+                  marginTop:playMTop
                });            
                
                // Resize the media.

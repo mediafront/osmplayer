@@ -206,7 +206,7 @@
             this.scrolling = false;
             this.elements = [];
             this.listSize = 0;
-            this.list.css( this.margin, "0px" );
+            this.list.css( this.margin, 0 );
             this.list.children().unbind();
             clearInterval( this.scrollInterval );
             this.list.empty();     
@@ -383,17 +383,17 @@
             if( tween ) {
                if( settings.vertical ) {
                   this.list.animate({
-                     marginTop: -this.listPos + "px"
+                     marginTop: -this.listPos
                      }, (settings.scrollSpeed*10));
                }
                else {
                   this.list.animate({
-                     marginLeft: -this.listPos + "px"
+                     marginLeft: -this.listPos
                      }, (settings.scrollSpeed*10));
                }
             }
             else {
-               this.list.css( this.margin, -this.listPos + "px" );
+               this.list.css( this.margin, -this.listPos );
             }
          };               
       })( this, settings );
