@@ -544,367 +544,368 @@
  *  THE SOFTWARE.
  */
 
-        
+  
    
-   // Set up our defaults for this component.
-   jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
-      volume:80,
-      autostart:false,
-      streamer:"",
-      embedWidth:450,
-      embedHeight:337,
-      wmode:"transparent",
-      forceOverflow:false,
-      quality:"default",
-      repeat:false
-   }); 
+  // Set up our defaults for this component.
+  jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
+    volume:80,
+    autostart:false,
+    streamer:"",
+    embedWidth:450,
+    embedHeight:337,
+    wmode:"transparent",
+    forceOverflow:false,
+    quality:"default",
+    repeat:false
+  });
 
-   jQuery.fn.mediadisplay = function( options ) {
-      if( this.length === 0 ) {
-         return null;
+  jQuery.fn.mediadisplay = function( options ) {
+    if( this.length === 0 ) {
+      return null;
+    }
+    return new (function( mediaWrapper, options ) {
+      this.settings = jQuery.media.utils.getSettings( options );
+      this.display = mediaWrapper;
+      var _this = this;
+      this.volume = 0;
+      this.player = null;
+      this.preview = '';
+      this.reflowInterval = null;
+      this.updateInterval = null;
+      this.progressInterval = null;
+      this.playQueue = [];
+      this.playIndex = 0;
+      this.playerReady = false;
+      this.loaded = false;
+      this.mediaFile = null;
+      this.width = 0;
+      this.height = 0;
+
+      // If they provide the forceOverflow variable, then that means they
+      // wish to force the media player to override all parents overflow settings.
+      if( this.settings.forceOverflow ) {
+        // Make sure that all parents have overflow visible so that
+        // browser full screen will always work.
+        this.display.parents().css("overflow", "visible");
       }
-      return new (function( mediaWrapper, options ) {
-         this.settings = jQuery.media.utils.getSettings( options );
-         this.display = mediaWrapper;
-         var _this = this;
-         this.volume = 0;
-         this.player = null;
-         this.preview = '';
-         this.reflowInterval = null;
-         this.updateInterval = null;
-         this.progressInterval = null;
-         this.playQueue = [];
-         this.playIndex = 0;
-         this.playerReady = false;
-         this.loaded = false;
-         this.mediaFile = null; 
-         this.width = 0;
-         this.height = 0;
-
-         // If they provide the forceOverflow variable, then that means they
-         // wish to force the media player to override all parents overflow settings.
-         if( this.settings.forceOverflow ) {
-            // Make sure that all parents have overflow visible so that
-            // browser full screen will always work.
-            this.display.parents().css("overflow", "visible");
-         }   
          
-         // Set the size of this media display region.
-         this.setSize = function( newWidth, newHeight ) {
-            this.width = newWidth ? newWidth : this.width;
-            this.height = newHeight ? newHeight : this.height;
+      // Set the size of this media display region.
+      this.setSize = function( newWidth, newHeight ) {
+        this.width = newWidth ? newWidth : this.width;
+        this.height = newHeight ? newHeight : this.height;
             
-            // Set the width and height of this media region.
-            this.display.css({
-               height:this.height,
-               width:this.width
-            });
+        // Set the width and height of this media region.
+        this.display.css({
+          height:this.height,
+          width:this.width
+        });
             
-            // Now resize the player.
-            if( this.playerReady && this.width && this.height ) {
-               this.player.player.width = this.width;
-               this.player.player.height = this.height;               
-               this.player.setSize( newWidth, this.height );
-            }                       
-         };    
+        // Now resize the player.
+        if( this.playerReady && this.width && this.height ) {
+          this.player.player.width = this.width;
+          this.player.player.height = this.height;
+          this.player.setSize( newWidth, this.height );
+        }
+      };
          
-         this.reset = function() {
-            this.loaded = false;
-            clearInterval( this.progressInterval );
-            clearInterval( this.updateInterval );
-            clearTimeout( this.reflowInterval );  
-            this.playQueue.length = 0;                                  
-            this.playQueue = [];
-            this.playIndex = 0;
-            this.playerReady = false;
-            this.mediaFile = null;             
-         };         
+      this.reset = function() {
+        this.loaded = false;
+        clearInterval( this.progressInterval );
+        clearInterval( this.updateInterval );
+        clearTimeout( this.reflowInterval );
+        this.playQueue.length = 0;
+        this.playQueue = [];
+        this.playIndex = 0;
+        this.playerReady = false;
+        this.mediaFile = null;
+      };
          
-         this.resetContent = function() {
-            this.display.empty();
-            this.display.append( this.template );
-         };
+      this.resetContent = function() {
+        this.display.empty();
+        this.display.append( this.template );
+      };
          
-         // Returns the media that has the lowest weight value, which means
-         // this player prefers that media over the others.
-         this.getPlayableMedia = function( files ) {
-            var mFile = null;
-            var i = files.length;
-            while(i--) {
-               var tempFile = new jQuery.media.file( files[i], this.settings );
-               if( !mFile || (tempFile.weight < mFile.weight) ) {
-                  mFile = tempFile;
-               }
-            }
-            return mFile;
-         };
+      // Returns the media that has the lowest weight value, which means
+      // this player prefers that media over the others.
+      this.getPlayableMedia = function( files ) {
+        var mFile = null;
+        var i = files.length;
+        while(i--) {
+          var tempFile = new jQuery.media.file( files[i], this.settings );
+          if( !mFile || (tempFile.weight < mFile.weight) ) {
+            mFile = tempFile;
+          }
+        }
+        return mFile;
+      };
          
-         // Returns a valid media file for this browser.
-         this.getMediaFile = function( file ) {
-            if( file ) {
-               var type = typeof file;
-               if( ((type === 'object') || (type === 'array')) && file[0] ) {
-                  file = this.getPlayableMedia( file );
-               }               
-            }
-            return file;
-         };         
+      // Returns a valid media file for this browser.
+      this.getMediaFile = function( file ) {
+        if( file ) {
+          var type = typeof file;
+          if( ((type === 'object') || (type === 'array')) && file[0] ) {
+            file = this.getPlayableMedia( file );
+          }
+        }
+        return file;
+      };
          
-         // Adds a media file to the play queue.
-         this.addToQueue = function( file ) {            
-            if( file ) {
-               this.playQueue.push( this.getMediaFile( file ) );
-            }
-         };
+      // Adds a media file to the play queue.
+      this.addToQueue = function( file ) {
+        if( file ) {
+          this.playQueue.push( this.getMediaFile( file ) );
+        }
+      };
                  
-         this.loadFiles = function( files ) {
-            if( files ) {
-               this.playQueue.length = 0;                                  
-               this.playQueue = [];
-               this.playIndex = 0;
-               this.addToQueue( files.intro );
-               this.addToQueue( files.commercial );
-               this.addToQueue( files.prereel );
-               this.addToQueue( files.media );
-               this.addToQueue( files.postreel ); 
-            }
-            return (this.playQueue.length > 0);
-         };        
+      this.loadFiles = function( files ) {
+        if( files ) {
+          this.playQueue.length = 0;
+          this.playQueue = [];
+          this.playIndex = 0;
+          this.addToQueue( files.intro );
+          this.addToQueue( files.commercial );
+          this.addToQueue( files.prereel );
+          this.addToQueue( files.media );
+          this.addToQueue( files.postreel );
+        }
+        return (this.playQueue.length > 0);
+      };
          
-         this.playNext = function() {
-            if( this.playQueue.length > this.playIndex ) {
-               this.loadMedia( this.playQueue[this.playIndex] );
-               this.playIndex++;
-            }
-            else if( this.settings.repeat ) {
-               this.playIndex = 0;
-               this.playNext();
-            }
-            else {
-               this.reset();
-            }
-         };
+      this.playNext = function() {
+        if( this.playQueue.length > this.playIndex ) {
+          this.loadMedia( this.playQueue[this.playIndex] );
+          this.playIndex++;
+        }
+        else if( this.settings.repeat ) {
+          this.playIndex = 0;
+          this.playNext();
+        }
+        else {
+          this.reset();
+        }
+      };
          
-         this.loadMedia = function( file ) {
-            if( file ) {
-               // Get the media file object.
-               file = new jQuery.media.file( this.getMediaFile( file ), this.settings );
+      this.loadMedia = function( file ) {
+        if( file ) {
+          // Get the media file object.
+          file = new jQuery.media.file( this.getMediaFile( file ), this.settings );
                
-               // Stop the current player.
-               this.stopMedia();  
+          // Stop the current player.
+          this.stopMedia();
                
-               if( !this.mediaFile || (this.mediaFile.player != file.player) ) {
-                  // Reset our player variables.
-                  this.player = null;                                  
-                  this.playerReady = false;                
+          if( !this.mediaFile || (this.mediaFile.player != file.player) ) {
+            // Reset our player variables.
+            this.player = null;
+            this.playerReady = false;
                   
-                  // Create a new media player.
-                  if( file.player ) {                 
-                     // Set the new media player.
-                     this.player = this.display["media" + file.player]( this.settings, function( data ) {
-                        _this.onMediaUpdate( data );                      
-                     });
-                  }
+            // Create a new media player.
+            if( file.player ) {
+              // Set the new media player.
+              this.player = this.display["media" + file.player]( this.settings, function( data ) {
+                _this.onMediaUpdate( data );
+              });
+            }
                   
-                  if( this.player ) {
-                     // Create our media player.                     
-                     this.player.createMedia( file, this.preview );
+            if( this.player ) {
+              // Create our media player.
+              this.player.createMedia( file, this.preview );
                      
-                     // Reflow the player if it does not show up.
-                     this.startReflow();
-                  }
-               }   
-               else if( this.player ) {
-                  // Load our file into the current player.
-                  this.player.loadMedia( file );                
-               }
+              // Reflow the player if it does not show up.
+              this.startReflow();
+            }
+          }
+          else if( this.player ) {
+            // Load our file into the current player.
+            this.player.loadMedia( file );
+          }
                
-               // Save this file.
-               this.mediaFile = file;
+          // Save this file.
+          this.mediaFile = file;
                
-               // Send out an update about the initialize.
-               this.onMediaUpdate({
-                  type:"initialize"
-               });
-            }
-         };    
+          // Send out an update about the initialize.
+          this.onMediaUpdate({
+            type:"initialize"
+          });
+        }
+      };
 
-         this.onMediaUpdate = function( data ) {
-            // Now trigger the media update message.
-            switch( data.type ) {
-               case "playerready":
-                  this.playerReady = true;
-                  clearTimeout( this.reflowInterval );
-                  this.player.setVolume(0);
-                  this.startProgress();
-                  break;
-               case "buffering":
-                  this.startProgress();
-                  break;
-               case "stopped":
-                  clearInterval( this.progressInterval );
-                  clearInterval( this.updateInterval );
-                  break;                 
-               case "paused":
-                  clearInterval( this.updateInterval );
-                  break;                  
-               case "playing":
-                  this.startUpdate();
-                  break;
-               case "progress":
-                  var percentLoaded = this.getPercentLoaded();
-                  jQuery.extend( data, {
-                     percentLoaded:percentLoaded
-                  });   
-                  if( percentLoaded >= 1 ) {
-                     clearInterval( this.progressInterval );
-                  }   
-                  break;
-               case "update":
-               case "meta":
-                  jQuery.extend( data, {
-                     currentTime:this.player.getCurrentTime(), 
-                     totalTime:this.getDuration(),
-                     volume: this.player.getVolume(),
-                     quality: this.getQuality()
-                  });
-                  break;
-               case "complete":
-                  this.playNext();
-                  break;                   
-            }
-            
-            // If this is the playing state, we want to pause the video.
-            if( data.type=="playing" && !this.loaded ) {
-               this.loaded = true;
-               this.player.setVolume( (this.settings.volume / 100) );
-               if( this.settings.autoLoad && !this.settings.autostart ) {
-                  this.player.pauseMedia();
-                  this.settings.autostart = true;
-               }
-               else {
-                  this.display.trigger( "mediaupdate", data ); 
-               }
-            } 
-            else {
-               this.display.trigger( "mediaupdate", data );  
-            }
-         };
-
-         this.reflowPlayer = function() {
-            // Store the CSS state before the reflow...
-            var displayCSS = {
-               marginLeft:parseInt( this.display.css("marginLeft"), 10 ),
-               height:this.display.css("height")
-            };
-
-            // Is the margin-left positive?
-            var isPositive = (displayCSS.marginLeft >=0);
-
-            // Now reflow the player by setting the margin-left value.  If the player
-            // has a margin-left value ( typically means it is off the screen ), then
-            // we need to give it a positive CSS value to trigger a reflow event.
-            this.display.css({
-               marginLeft:(isPositive ? (displayCSS.marginLeft+1) : 0),
-               height:(isPositive ? displayCSS.height : 0)
-            });
-
-            // Now set a timeout to set everything back 1ms later.
-            setTimeout( function() {
-
-               // Restore the display state.
-               _this.display.css(displayCSS);
-            }, 1 );
-         };
-
-         this.startReflow = function() {
+      this.onMediaUpdate = function( data ) {
+        // Now trigger the media update message.
+        switch( data.type ) {
+          case "playerready":
+            this.playerReady = true;
             clearTimeout( this.reflowInterval );
-            this.reflowInterval = setTimeout( function() {
-               // If the player does not register after two seconds, try a reflow.
-               _this.reflowPlayer();
-            }, 2000 );      
-         };         
-         
-         this.startProgress = function() {
-            if( this.playerReady ) {
-               clearInterval( this.progressInterval );
-               this.progressInterval = setInterval( function() {
-                  _this.onMediaUpdate( {
-                     type:"progress"
-                  } );
-               }, 500 ); 
-            }        
-         };
-
-         this.startUpdate = function() {
-            if( this.playerReady ) {
-               clearInterval( this.updateInterval );
-               this.updateInterval = setInterval( function() {
-                  if( _this.playerReady ) {
-                     _this.onMediaUpdate( {
-                        type:"update"
-                     } );
-                  }
-               }, 1000 );   
-            }
-         };
-
-         this.stopMedia = function() { 
-            this.loaded = false;
+            this.player.setVolume(0);
+            this.player.setQuality(this.settings.quality);
+            this.startProgress();
+            break;
+          case "buffering":
+            this.startProgress();
+            break;
+          case "stopped":
             clearInterval( this.progressInterval );
             clearInterval( this.updateInterval );
-            clearTimeout( this.reflowInterval );             
-            if( this.playerReady ) {
-               this.player.stopMedia();
-            }              
-         };        
-         
-         this.mute = function( on ) {
-            if( on ) {
-               this.volume = this.player.getVolume();   
-               this.player.setVolume( 0 );
+            break;
+          case "paused":
+            clearInterval( this.updateInterval );
+            break;
+          case "playing":
+            this.startUpdate();
+            break;
+          case "progress":
+            var percentLoaded = this.getPercentLoaded();
+            jQuery.extend( data, {
+              percentLoaded:percentLoaded
+            });
+            if( percentLoaded >= 1 ) {
+              clearInterval( this.progressInterval );
             }
-            else {
-               this.player.setVolume( this.volume );
+            break;
+          case "update":
+          case "meta":
+            jQuery.extend( data, {
+              currentTime:this.player.getCurrentTime(),
+              totalTime:this.getDuration(),
+              volume: this.player.getVolume(),
+              quality: this.getQuality()
+            });
+            break;
+          case "complete":
+            this.playNext();
+            break;
+        }
+            
+        // If this is the playing state, we want to pause the video.
+        if( data.type=="playing" && !this.loaded ) {
+          this.loaded = true;
+          this.player.setVolume( (this.settings.volume / 100) );
+          if( this.settings.autoLoad && !this.settings.autostart ) {
+            this.player.pauseMedia();
+            this.settings.autostart = true;
+          }
+          else {
+            this.display.trigger( "mediaupdate", data );
+          }
+        }
+        else {
+          this.display.trigger( "mediaupdate", data );
+        }
+      };
+
+      this.reflowPlayer = function() {
+        // Store the CSS state before the reflow...
+        var displayCSS = {
+          marginLeft:parseInt( this.display.css("marginLeft"), 10 ),
+          height:this.display.css("height")
+        };
+
+        // Is the margin-left positive?
+        var isPositive = (displayCSS.marginLeft >=0);
+
+        // Now reflow the player by setting the margin-left value.  If the player
+        // has a margin-left value ( typically means it is off the screen ), then
+        // we need to give it a positive CSS value to trigger a reflow event.
+        this.display.css({
+          marginLeft:(isPositive ? (displayCSS.marginLeft+1) : 0),
+          height:(isPositive ? displayCSS.height : 0)
+        });
+
+        // Now set a timeout to set everything back 1ms later.
+        setTimeout( function() {
+
+          // Restore the display state.
+          _this.display.css(displayCSS);
+        }, 1 );
+      };
+
+      this.startReflow = function() {
+        clearTimeout( this.reflowInterval );
+        this.reflowInterval = setTimeout( function() {
+          // If the player does not register after two seconds, try a reflow.
+          _this.reflowPlayer();
+        }, 2000 );
+      };
+         
+      this.startProgress = function() {
+        if( this.playerReady ) {
+          clearInterval( this.progressInterval );
+          this.progressInterval = setInterval( function() {
+            _this.onMediaUpdate( {
+              type:"progress"
+            } );
+          }, 500 );
+        }
+      };
+
+      this.startUpdate = function() {
+        if( this.playerReady ) {
+          clearInterval( this.updateInterval );
+          this.updateInterval = setInterval( function() {
+            if( _this.playerReady ) {
+              _this.onMediaUpdate( {
+                type:"update"
+              } );
             }
-         };
+          }, 1000 );
+        }
+      };
+
+      this.stopMedia = function() {
+        this.loaded = false;
+        clearInterval( this.progressInterval );
+        clearInterval( this.updateInterval );
+        clearTimeout( this.reflowInterval );
+        if( this.playerReady ) {
+          this.player.stopMedia();
+        }
+      };
          
-         this.getPercentLoaded = function() {
-            var bytesLoaded = this.player.getBytesLoaded();
-            var bytesTotal = this.mediaFile.bytesTotal ? this.mediaFile.bytesTotal : this.player.getBytesTotal();
-            return bytesTotal ? (bytesLoaded / bytesTotal) : 0;       
-         };
+      this.mute = function( on ) {
+        if( on ) {
+          this.volume = this.player.getVolume();
+          this.player.setVolume( 0 );
+        }
+        else {
+          this.player.setVolume( this.volume );
+        }
+      };
          
-         this.showControls = function(show) {
-            if( this.playerReady ) {
-               this.player.showControls(show);   
-            }
-         };
+      this.getPercentLoaded = function() {
+        var bytesLoaded = this.player.getBytesLoaded();
+        var bytesTotal = this.mediaFile.bytesTotal ? this.mediaFile.bytesTotal : this.player.getBytesTotal();
+        return bytesTotal ? (bytesLoaded / bytesTotal) : 0;
+      };
          
-         this.hasControls = function() {
-            if( this.player ) {
-               return this.player.hasControls();
-            }
-            return false;
-         };
+      this.showControls = function(show) {
+        if( this.playerReady ) {
+          this.player.showControls(show);
+        }
+      };
          
-         this.getDuration = function() {
-            if( !this.mediaFile.duration ) {
-               this.mediaFile.duration = this.player.getDuration();
-            } 
-            return this.mediaFile.duration;           
-         };                
+      this.hasControls = function() {
+        if( this.player ) {
+          return this.player.hasControls();
+        }
+        return false;
+      };
          
-         this.getQuality = function() {
-            if( !this.mediaFile.quality ) {
-               this.mediaFile.quality = this.player.getQuality();
-            }
-            return this.mediaFile.quality;      
-         };  
+      this.getDuration = function() {
+        if( !this.mediaFile.duration ) {
+          this.mediaFile.duration = this.player.getDuration();
+        }
+        return this.mediaFile.duration;
+      };
          
-         this.setSize( this.display.width(), this.display.height() );
-      })( this, options );
-   };
+      this.getQuality = function() {
+        if( !this.mediaFile.quality ) {
+          this.mediaFile.quality = this.player.getQuality();
+        }
+        return this.mediaFile.quality;
+      };
+         
+      this.setSize( this.display.width(), this.display.height() );
+    })( this, options );
+  };
 /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
@@ -2057,234 +2058,238 @@
  *  THE SOFTWARE.
  */
 
-      
+  
 
-   // Called when the YouTube player is ready.
-   window.onYouTubePlayerReady = function( playerId ) {
-      playerId = playerId.replace("_media", "");
-      jQuery.media.players[playerId].node.player.media.player.onReady();   
-   };
+  // Called when the YouTube player is ready.
+  window.onYouTubePlayerReady = function( playerId ) {
+    playerId = playerId.replace("_media", "");
+    jQuery.media.players[playerId].node.player.media.player.onReady();
+  };
 
-   // Tell the media player how to determine if a file path is a YouTube media type.
-   jQuery.media.playerTypes = jQuery.extend( jQuery.media.playerTypes, {
-      "youtube":function( file ) {
-         return (file.search(/^http(s)?\:\/\/(www\.)?youtube\.com/i) === 0);      
-      }
-   });
+  // Tell the media player how to determine if a file path is a YouTube media type.
+  jQuery.media.playerTypes = jQuery.extend( jQuery.media.playerTypes, {
+    "youtube":function( file ) {
+      return (file.search(/^http(s)?\:\/\/(www\.)?youtube\.com/i) === 0);
+    }
+  });
 
-   jQuery.fn.mediayoutube = function( options, onUpdate ) {  
-      return new (function( video, options, onUpdate ) {
-         this.display = video;
-         var _this = this;
-         this.player = null;
-         this.videoFile = null;
-         this.loaded = false;
-         this.ready = false;
+  jQuery.fn.mediayoutube = function( options, onUpdate ) {
+    return new (function( video, options, onUpdate ) {
+      this.display = video;
+      var _this = this;
+      this.player = null;
+      this.videoFile = null;
+      this.loaded = false;
+      this.ready = false;
+      this.qualities = [];
+
+      this.createMedia = function( videoFile, preview ) {
+        this.videoFile = videoFile;
+        this.ready = false;
+        var playerId = (options.id + "_media");
+        var rand = Math.floor(Math.random() * 1000000);
+        var flashPlayer = 'http://www.youtube.com/apiplayer?rand=' + rand + '&amp;version=3&amp;enablejsapi=1&amp;playerapiid=' + playerId;
+        jQuery.media.utils.insertFlash(
+          this.display,
+          flashPlayer,
+          playerId,
+          this.display.width(),
+          this.display.height(),
+          {},
+          options.wmode,
+          function( obj ) {
+            _this.player = obj;
+            _this.loadPlayer();
+          }
+          );
+      };
          
-         this.createMedia = function( videoFile, preview ) {
-            this.videoFile = videoFile;
-            this.ready = false;
-            var playerId = (options.id + "_media");            
-            var rand = Math.floor(Math.random() * 1000000);             
-            var flashPlayer = 'http://www.youtube.com/apiplayer?rand=' + rand + '&amp;version=3&amp;enablejsapi=1&amp;playerapiid=' + playerId;
-            jQuery.media.utils.insertFlash( 
-               this.display, 
-               flashPlayer,
-               playerId, 
-               this.display.width(), 
-               this.display.height(),
-               {},
-               options.wmode,
-               function( obj ) {
-                  _this.player = obj; 
-                  _this.loadPlayer();  
-               }
-               );
-         };      
+      this.getId = function( path ) {
+        var regex = /^http[s]?\:\/\/(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9]+)/i;
+        return (path.search(regex) == 0) ? path.replace(regex, "$2") : path;
+      };
          
-         this.getId = function( path ) {
-            var regex = /^http[s]?\:\/\/(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9]+)/i;
-            return (path.search(regex) == 0) ? path.replace(regex, "$2") : path;
-         };         
-         
-         this.loadMedia = function( videoFile ) {
-            if( this.player ) {
-               this.loaded = false;            
-               this.videoFile = videoFile;
+      this.loadMedia = function( videoFile ) {
+        if( this.player ) {
+          this.loaded = false;
+          this.videoFile = videoFile;
                
-               // Let them know the player is ready.          
-               onUpdate( {
-                  type:"playerready"
-               } );
+          // Let them know the player is ready.
+          onUpdate( {
+            type:"playerready"
+          } );
                
-               // Load our video.
-               this.player.loadVideoById( this.getId( this.videoFile.path ), 0, options.quality );
-            }
-         };
+          // Load our video.
+          this.player.loadVideoById( this.getId( this.videoFile.path ), 0, options.quality );
+        }
+      };
          
-         // Called when the player has finished loading.
-         this.onReady = function() {
-            this.ready = true;  
-            this.loadPlayer();
-         };
+      // Called when the player has finished loading.
+      this.onReady = function() {
+        this.ready = true;
+        this.loadPlayer();
+      };
          
-         // Try to load the player.
-         this.loadPlayer = function() {
-            if( this.ready && this.player ) {         
-               // Create our callback functions.
-               window[options.id + 'StateChange'] = function( newState ) {
-                  _this.onStateChange( newState );   
-               };
+      // Try to load the player.
+      this.loadPlayer = function() {
+        if( this.ready && this.player ) {
+          // Create our callback functions.
+          window[options.id + 'StateChange'] = function( newState ) {
+            _this.onStateChange( newState );
+          };
    
-               window[options.id + 'PlayerError'] = function( errorCode ) {
-                  _this.onError( errorCode );
-               };
+          window[options.id + 'PlayerError'] = function( errorCode ) {
+            _this.onError( errorCode );
+          };
                
-               window[options.id + 'QualityChange'] = function( newQuality ) {
-                  _this.quality = newQuality;  
-               };            
+          window[options.id + 'QualityChange'] = function( newQuality ) {
+            _this.quality = newQuality;
+          };
                
-               // Add our event listeners.
-               this.player.addEventListener('onStateChange', options.id + 'StateChange');
-               this.player.addEventListener('onError', options.id + 'PlayerError');
-               this.player.addEventListener('onPlaybackQualityChange', options.id + 'QualityChange');
+          // Add our event listeners.
+          this.player.addEventListener('onStateChange', options.id + 'StateChange');
+          this.player.addEventListener('onError', options.id + 'PlayerError');
+          this.player.addEventListener('onPlaybackQualityChange', options.id + 'QualityChange');
+
+          // Get all of the quality levels.
+          this.qualities = this.player.getAvailableQualityLevels();
+
+          // Let them know the player is ready.
+          onUpdate( {
+            type:"playerready"
+          } );
                
-               // Let them know the player is ready.          
-               onUpdate( {
-                  type:"playerready"
-               } );
-               
-               // Load our video.
-               this.player.loadVideoById( this.getId( this.videoFile.path ), 0 );  
-            }         
-         };
+          // Load our video.
+          this.player.loadVideoById( this.getId( this.videoFile.path ), 0 );
+        }
+      };
          
-         // Called when the YouTube player state changes.
-         this.onStateChange = function( newState ) {
-            var playerState = this.getPlayerState( newState );
-            onUpdate( {
-               type:playerState
-            } );
+      // Called when the YouTube player state changes.
+      this.onStateChange = function( newState ) {
+        var playerState = this.getPlayerState( newState );
+        onUpdate( {
+          type:playerState
+        } );
             
-            if( !this.loaded && playerState == "playing" ) {
-               // Set this player to loaded.
-               this.loaded = true;
+        if( !this.loaded && playerState == "playing" ) {
+          // Set this player to loaded.
+          this.loaded = true;
                
-               // Update our meta data.
-               onUpdate( {
-                  type:"meta"
-               } );
-            }          
-         };
+          // Update our meta data.
+          onUpdate( {
+            type:"meta"
+          } );
+        }
+      };
          
-         // Called when the YouTube player has an error.
-         this.onError = function( errorCode ) {
-            var errorText = "An unknown error has occured: " + errorCode;
-            if( errorCode == 100 ) {
-               errorText = "The requested video was not found.  ";
-               errorText += "This occurs when a video has been removed (for any reason), ";
-               errorText += "or it has been marked as private.";
-            } else if( (errorCode == 101) || (errorCode == 150) ) {     
-               errorText = "The video requested does not allow playback in an embedded player.";
-            }
-            console.log(errorText);
-            onUpdate( {
-               type:"error",
-               data:errorText
-            } );
-         };
+      // Called when the YouTube player has an error.
+      this.onError = function( errorCode ) {
+        var errorText = "An unknown error has occured: " + errorCode;
+        if( errorCode == 100 ) {
+          errorText = "The requested video was not found.  ";
+          errorText += "This occurs when a video has been removed (for any reason), ";
+          errorText += "or it has been marked as private.";
+        } else if( (errorCode == 101) || (errorCode == 150) ) {
+          errorText = "The video requested does not allow playback in an embedded player.";
+        }
+        console.log(errorText);
+        onUpdate( {
+          type:"error",
+          data:errorText
+        } );
+      };
          
-         // Translates the player state for the YouTube API player.
-         this.getPlayerState = function( playerState ) {
-            switch (playerState) {
-               case 5:
-                  return 'ready';
-               case 3:
-                  return 'buffering';
-               case 2:
-                  return 'paused';
-               case 1:
-                  return 'playing';
-               case 0:
-                  return 'complete';
-               case -1:
-                  return 'stopped';
-               default:
-                  return 'unknown';
-            }
+      // Translates the player state for the YouTube API player.
+      this.getPlayerState = function( playerState ) {
+        switch (playerState) {
+          case 5:
+            return 'ready';
+          case 3:
+            return 'buffering';
+          case 2:
+            return 'paused';
+          case 1:
+            return 'playing';
+          case 0:
+            return 'complete';
+          case -1:
+            return 'stopped';
+          default:
             return 'unknown';
-         };                  
+        }
+        return 'unknown';
+      };
          
-         this.setSize = function( newWidth, newHeight ) {                
-         //this.player.setSize(newWidth, newHeight);
-         };           
+      this.setSize = function( newWidth, newHeight ) {
+      //this.player.setSize(newWidth, newHeight);
+      };
          
-         this.playMedia = function() {
-            onUpdate({
-               type:"buffering"
-            });
-            this.player.playVideo();
-         };
+      this.playMedia = function() {
+        onUpdate({
+          type:"buffering"
+        });
+        this.player.playVideo();
+      };
          
-         this.pauseMedia = function() {
-            this.player.pauseVideo();           
-         };
+      this.pauseMedia = function() {
+        this.player.pauseVideo();
+      };
          
-         this.stopMedia = function() {
-            this.player.stopVideo();              
-         };
+      this.stopMedia = function() {
+        this.player.stopVideo();
+      };
          
-         this.seekMedia = function( pos ) {
-            onUpdate({
-               type:"buffering"
-            });
-            this.player.seekTo( pos, true );           
-         };
+      this.seekMedia = function( pos ) {
+        onUpdate({
+          type:"buffering"
+        });
+        this.player.seekTo( pos, true );
+      };
          
-         this.setVolume = function( vol ) {
-            this.player.setVolume( vol * 100 );
-         };
+      this.setVolume = function( vol ) {
+        this.player.setVolume( vol * 100 );
+      };
          
-         this.setQuality = function( quality ) {
-            this.player.setPlaybackQuality( quality );           
-         };
+      this.setQuality = function( quality ) {
+        this.player.setPlaybackQuality( quality );
+      };
          
-         this.getVolume = function() { 
-            return (this.player.getVolume() / 100);       
-         };
+      this.getVolume = function() {
+        return (this.player.getVolume() / 100);
+      };
          
-         this.getDuration = function() {
-            return this.player.getDuration();           
-         };
+      this.getDuration = function() {
+        return this.player.getDuration();
+      };
          
-         this.getCurrentTime = function() {
-            return this.player.getCurrentTime();
-         };
+      this.getCurrentTime = function() {
+        return this.player.getCurrentTime();
+      };
          
-         this.getQuality = function() {
-            return this.player.getPlaybackQuality();      
-         };
+      this.getQuality = function() {
+        return this.player.getPlaybackQuality();
+      };
 
-         this.getEmbedCode = function() {
-            return this.player.getVideoEmbedCode();
-         };
+      this.getEmbedCode = function() {
+        return this.player.getVideoEmbedCode();
+      };
          
-         this.getMediaLink = function() {
-            return this.player.getVideoUrl();   
-         };
+      this.getMediaLink = function() {
+        return this.player.getVideoUrl();
+      };
 
-         this.getBytesLoaded = function() {
-            return this.player.getVideoBytesLoaded();
-         };
+      this.getBytesLoaded = function() {
+        return this.player.getVideoBytesLoaded();
+      };
          
-         this.getBytesTotal = function() {
-            return this.player.getVideoBytesTotal();
-         };  
+      this.getBytesTotal = function() {
+        return this.player.getVideoBytesTotal();
+      };
          
-         this.hasControls = function() {
-            return false;
-         };
-         this.showControls = function(show) {};           
-      })( this, options, onUpdate );
-   };
+      this.hasControls = function() {
+        return false;
+      };
+      this.showControls = function(show) {};
+    })( this, options, onUpdate );
+  };
 })(jQuery);         
