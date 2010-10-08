@@ -1,0 +1,135 @@
+<html>
+   <head>
+      <title>Open Standard Media (OSM) Player: Template Development</title>
+      <script type="text/javascript" src="../../jquery-ui/js/jquery.js"></script>
+      <script type="text/javascript" src="../../js/source/jquery.media.drupal.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.parser.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.auto.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.rpc.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.json.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.sha256.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.utils.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.control.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.flash.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.html5.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.image.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.link.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.links.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.display.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.minplayer.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.menu.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.node.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.pager.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.player.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.playlist.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.playlistlink.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.rotator.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.slider.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.teaser.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.titlebar.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.scroll.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.voter.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.youtube.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.vimeo.js"></script>
+<script type="text/javascript" src="../../js/source/jquery.media.dailymotion.js"></script>
+<script type="text/javascript" src="../../templates/simpleblack/jquery.media.template.simpleblack.js"></script>
+<link rel="stylesheet" type="text/css" href="../../templates/simpleblack/css/style.css" />
+   </head>
+   <body>
+      <script type="text/javascript">jQuery(document).ready(function() {var player = jQuery("#player").mediaplayer({template:"simpleblack",debug:true,ids:{menu:"#mediafront_informationbox",node:"#mediafront_playerWrap",currentTime:"#mediafront_playtime",totalTime:"#mediafront_totaltime",playPause:"#mediafront_play_pause",seekUpdate:"#mediafront_progressBar_update",seekProgress:"#mediafront_progressBar_controler",seekBar:"#mediafront_progressBar",volumeBar:"#mediafront_audioBarWrap",volumeHandle:"#mediafront_audioControler",mute:"#mediafront_audioButton",close:"#mediafront_inforboxClose",embed:"#mediafront_embed",elink:"#mediafront_link",preview:"#mediafront_bigPlay",play:"#mediafront_bigPlay",control:"#mediafront_controlerBarWrap",mediaRegion:"#mediafront_movieFrame"}});jQuery("#player_loading").hide();});</script>
+<div id="player">
+  <div id="mediaplayer">
+    <div id="mediafront_playerWrap">
+      <!--bof information box-->
+      <div id="mediafront_informationbox">
+        <!--bof infomation box top menus-->
+        <div id="mediafront_infoboxTopMenuWrap">
+          <ul id="mediafront_infoboxTopMenu">
+            <li class="active"><a href="#mediafront_embed">embed</a></li>
+            <li><a href="#mediafront_link">link</a></li>
+            <li><a href="#mediafront_info">info</a></li>
+            <li id="mediafront_inforboxClose"><img src="images/mediafront_close.png" alt="X" /></li>
+          </ul>
+          <div class="br"><!----></div>
+        </div>
+        <!--eof infomation box top menus-->
+        <!--bof infomation box info-->
+        <div id="mediafront_embed" class="mediafront_infoboxDetail">
+          <form action="" id="mediaembedForm" name="mediaembedForm">
+            <label for="mediaembedCode">Embed</label>
+            <input id="mediaembedCode" name="mediaembedCode" type="text" value="" readonly />
+          </form>
+        </div>
+        <div id="mediafront_link" class="mediafront_infoboxDetail">
+          <form action="" id="mediaelinkForm" name="mediaelinkForm">
+            <label for="mediaelinkCode">URL</label>
+            <input id="mediaelinkCode" name="mediaelinkCode" type="text" value="" readonly />
+          </form>
+        </div>
+        <div id="mediafront_info" class="mediafront_infoboxDetail">
+          <p>
+            <a target="_blank" href="http://www.mediafront.org">Open Standard Media Player</a> version 0.01<br/><br/>
+            Built by <a target="_blank" href="http://www.alethia-inc.com">Alethia Inc.</a>
+          </p>
+        </div>
+        <!--eof infomation box info-->
+      </div>
+      <!--eof information box-->
+
+      <div id="mediafront_movieFrame">
+        <!--bof big play button-->
+        <div id="mediafront_bigPlay"><img src="images/mediafront_bigplay.png" width="174" height="174" /></div>
+        <!--eof big play button-->
+        <!--bof logo-->
+        <div id="mediafront_logo"><img src="images/mediafront_logo.png" width="69" height="50" /></div>
+        <!--eof logo-->
+        <!--bof controler bar-->
+        <div id="mediafront_controlerBarWrap">
+          <div id="mediafront_controlerBar">
+            <!--bof play time-->
+            <div id="mediafront_playtime">00:00</div>
+            <div id="mediafront_separator">&nbsp;/&nbsp;</div>
+            <div id="mediafront_totaltime">00:00</div>
+            <!--eof play time-->
+            <!--bof play pause buttons-->
+            <div id="mediafront_play_pause">
+              <div id="mediafront_play" class="on"><a href="#"><span>play</span></a></div>
+              <div id="mediafront_pause" class="off"><a href="#"><span>pause</span></a></div>
+            </div>
+            <!--bof play pause buttons-->
+            <!--bof progress bar-->
+            <div id="mediafront_progressBar">
+              <div id="mediafront_progressBar_update"></div>
+              <div id="mediafront_progressBar_controler"></div>
+              <div id="mediaseekhandle"><img src="images/mediafront_buttoncontroler.png" width="8" height="27" /></div>
+            </div>
+            <!--eof progress bar-->
+            <!--bof resize screen-->
+            <div id="mediafront_resizeScreen">
+              <div id="mediafront_resize_to_fullScreen"><a href="#fullscreen"><span>make full screen</span></a></div>
+              <div id="mediafront_resize_to_normalScreen"><a href="#fullscreen"><span>make normal screen</span></a></div>
+            </div>
+            <!--eof resize screen-->
+            <!--bof information button-->
+            <div id="mediafront_information"><a class="mediaplayerlink" href="#menu"><span>information</span></a></div>
+            <!--eof information button-->
+            <!--bof audio-->
+            <div id="mediafront_audio">
+               <a href="#" id="mediafront_audioButton">&nbsp;</a>
+               <div id="mediafront_audioBarWrap">
+                  <div id="mediafront_audioControler"><img src="images/mediafront_buttonaudioslidebar.png" width="27" height="8" /></div>
+                  <div id="mediavolumeupdate">&nbsp;</div>
+               </div>
+            </div>
+            <!--eof audio-->
+          </div>
+        </div>
+        <!--eof controler bar-->
+        <div id="mediadisplay"><img src="images/movie640x360.png" id="mediafront_movie"/></div>
+        <div class="br"><!----></div>
+      </div>
+    </div>
+    <!--eof Mediafront player-->
+  </div>
+</div>   </body>
+</html>
