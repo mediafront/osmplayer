@@ -292,7 +292,7 @@
         this.width = newWidth ? newWidth : this.width;
         this.height = newHeight ? newHeight : this.height;
 
-        if( this.width && this.height ) {
+        if( (this.width > 0) && (this.height > 0) ) {
           // Set the position of the logo.
           this.setLogoPos();
 
