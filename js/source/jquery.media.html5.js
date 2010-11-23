@@ -31,7 +31,8 @@
          this.player = null;
          this.bytesLoaded = 0;
          this.bytesTotal = 0;
-         this.mediaType = "";    
+         this.mediaType = "";
+         this.loaded = false;
          
          this.getPlayer = function( mediaFile, preview ) {
             var playerId = options.id + '_' + this.mediaType;            
@@ -62,6 +63,7 @@
             this.display.children().remove();    
             this.mediaType = this.getMediaType( mediaFile );            
             this.player = this.getPlayer( mediaFile, preview );
+            this.loaded = false;
 
             this.player.addEventListener( "abort", function() {
                onUpdate( {
@@ -72,6 +74,8 @@
                onUpdate( {
                   type:"ready"
                } );
+
+               _this.onReady();
             }, true);
             this.player.addEventListener( "loadedmetadata", function() {
                onUpdate( {
@@ -112,7 +116,15 @@
                type:"playerready"
             } );
          };      
-         
+
+         // Called when the media has started loading.
+         this.onReady = function() {
+           if( !this.loaded ) {
+             this.loaded = true;
+             this.playMedia();
+           }
+         };
+
          // Load new media into the HTML5 player.
          this.loadMedia = function( mediaFile ) {
             this.createMedia( mediaFile );
