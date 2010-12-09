@@ -73,7 +73,7 @@
             this.player.addEventListener( "loadstart", function() {
                onUpdate( {
                   type:"ready"
-               } );
+               });
 
                _this.onReady();
             }, true);
@@ -112,9 +112,9 @@
             this.player.autoplay = true;
             this.player.autobuffer = true;   
             
-            onUpdate( {
+            onUpdate({
                type:"playerready"
-            } );
+            });
          };      
 
          // Called when the media has started loading.

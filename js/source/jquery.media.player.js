@@ -37,7 +37,8 @@
     resizable:false,
     showPlaylist:true,
     autoNext:true,
-    prefix:""
+    prefix:"",
+    zIndex:400
   });
 
   jQuery.media.ids = jQuery.extend( jQuery.media.ids, {

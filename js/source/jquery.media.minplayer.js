@@ -366,7 +366,7 @@
         this.logo = this.display.find(".medialogo").mediaimage( settings.link );
         this.logo.display.css({
           position:"absolute",
-          zIndex:490
+          zIndex:(settings.zIndex + 90)
         });
         this.logo.width = settings.logoWidth;
         this.logo.height = settings.logoHeight;
