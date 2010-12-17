@@ -129,6 +129,7 @@ class OSMPlayer {
       'showNodeVoter' => true,
       'showTeaserVoter' => true,
       'showTitleBar' => true,
+      'showWhenEmpty' => true,
       'playerPath' => $paths['playerPath'],
       'playerURL' => $paths['playerURL']
     );
