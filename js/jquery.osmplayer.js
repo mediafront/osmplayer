@@ -3203,6 +3203,11 @@
       jQuery.media.players[playerId].node.player.media.player.onPaused();   
    };
 
+   window.onVimeoProgress = function( time, playerId ) {
+     playerId = playerId.replace("_media", "");
+     jQuery.media.players[playerId].node.player.media.player.onProgress(time);
+   }
+
    // Tell the media player how to determine if a file path is a YouTube media type.
    jQuery.media.playerTypes = jQuery.extend( jQuery.media.playerTypes, {
       "vimeo":function( file ) {
@@ -3247,7 +3252,7 @@
                   _this.player = obj; 
                   _this.loadPlayer();  
                }
-               );
+            );
          };      
          
          this.getId = function( path ) {
@@ -3271,24 +3276,25 @@
          this.loadPlayer = function() {
             if( this.ready && this.player ) {                              
                // Add our event listeners.
+               this.player.api_addEventListener('onProgress', 'onVimeoProgress');
                this.player.api_addEventListener('onFinish', 'onVimeoFinish');
                this.player.api_addEventListener('onLoading', 'onVimeoLoading');
                this.player.api_addEventListener('onPlay', 'onVimeoPlay');
                this.player.api_addEventListener('onPause', 'onVimeoPause');
                
                // Let them know the player is ready.          
-               onUpdate( {
+               onUpdate({
                   type:"playerready"
-               } );
+               });
                
                this.playMedia();
             }         
          };
          
          this.onFinished = function() {
-            onUpdate( {
+            onUpdate({
                type:"complete"
-            } );
+            });
          };
 
          this.onLoading = function( data ) {
@@ -3297,25 +3303,34 @@
          };
          
          this.onPlaying = function() {
-            onUpdate( {
+            onUpdate({
                type:"playing"
-            } );
+            });
          };                 
 
          this.onPaused = function() {
-            onUpdate( {
+            onUpdate({
                type:"paused"
-            } );
+            });
          };                  
          
          this.playMedia = function() {
             onUpdate({
-               type:"buffering"
+               type:"playing"
             });
             this.player.api_play();
          };
+
+         this.onProgress = function( time ) {
+           onUpdate({
+             type:"progress"
+           });
+         };
          
          this.pauseMedia = function() {
+            onUpdate({
+               type:"paused"
+            });
             this.player.api_pause();           
          };
          
@@ -5771,9 +5786,9 @@
           clearInterval( this.updateInterval );
           this.updateInterval = setInterval( function() {
             if( _this.playerReady ) {
-              _this.onMediaUpdate( {
+              _this.onMediaUpdate({
                 type:"update"
-              } );
+              });
             }
           }, 1000 );
         }
