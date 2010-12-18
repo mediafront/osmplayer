@@ -67,7 +67,7 @@
             _this.player = obj;
             _this.loadPlayer();
           }
-          );
+        );
       };
          
       this.getId = function( path ) {
