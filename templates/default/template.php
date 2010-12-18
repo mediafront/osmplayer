@@ -24,7 +24,6 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-require_once( $base_path . '/OSMTemplate.php');
 
 class DefaultTemplate extends OSMTemplate {
   /**
