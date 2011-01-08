@@ -47,7 +47,8 @@
     menu:"#mediamenu",
     titleBar:"#mediatitlebar",
     node:"#medianode",
-    playlist:"#mediaplaylist"
+    playlist:"#mediaplaylist",
+    control:"#mediacontrol"
   });
    
   // Initialize our players, playlists, and controllers.
@@ -70,44 +71,41 @@
     }
   };
 
-  // To add a new controller to any existing or future-included players.
-  jQuery.media.addController = function( playerId, fromPlayer ) {
-    // Check to make sure the fromPlayer has a controller.
-    if( fromPlayer && fromPlayer.node && fromPlayer.node.player && fromPlayer.node.player.controller ) {
-      // If the player already exists, then add it directly to the player.
-      var toPlayer = jQuery.media.players[playerId];
-      if( toPlayer && toPlayer.node && toPlayer.node.player ) {
-        toPlayer.node.player.addController( fromPlayer.node.player.controller );
+  // Adds a new element to the media player.
+  jQuery.media.addElement = function( playerId, fromPlayer, name ) {
+    if( fromPlayer && fromPlayer[name] ) {
+      var pName = name + "s";
+      var toPlayer = jQuery.media[pName][playerId];
+      if( toPlayer ) {
+        switch( name ) {
+          case "playlist":
+            toPlayer.addPlaylist( fromPlayer.playlist );
+            break;
+          case "controller":
+            toPlayer.addController( fromPlayer.controller );
+            break;
+        }
       }
       else {
         // Otherwise, cache it for inclusion when the player is created.
-        if( !jQuery.media.controllers[playerId] ) {
-          jQuery.media.controllers[playerId] = [];
+        if( !jQuery.media[pName][playerId] ) {
+          jQuery.media[pName][playerId] = [];
         }
-        jQuery.media.controllers[playerId].push( fromPlayer.node.player.controller );
+        jQuery.media[pName][playerId].push( fromPlayer[name] );
       }
     }
+  }
+
+  // To add a new controller to any existing or future-included players.
+  jQuery.media.addController = function( playerId, fromPlayer ) {
+    jQuery.media.addElement( playerId, fromPlayer, "controller" );
   };
    
   // To add a new playlist to any existing or future-included players.
   jQuery.media.addPlaylist = function( playerId, fromPlayer ) {
-    // Make sure the fromPlayer has a playlist.
-    if( fromPlayer && fromPlayer.playlist ) {
-      // If the player already exists, then add it directly to the player.
-      var toPlayer = jQuery.media.players[playerId];
-      if( toPlayer ) {
-        toPlayer.addPlaylist( fromPlayer.playlist );
-      }
-      else {
-        // Otherwise, cache it for inclusion when the player is created.
-        if( !jQuery.media.playlists[playerId] ) {
-          jQuery.media.playlists[playerId] = [];
-        }
-        jQuery.media.playlists[playerId].push( fromPlayer.playlist );
-      }
-    }
+    jQuery.media.addElement( playerId, fromPlayer, "player" );
   };
-   
+  
   // The main entry point into the player.
   jQuery.fn.mediaplayer = function( settings ) {
     if( this.length === 0 ) {
@@ -144,6 +142,9 @@
 
       // Variable to keep track if this player has finished loading.
       this.loaded = false;
+
+      // Store the index variable.
+      var i = 0;
          
       // Set the template object.
       settings.template = jQuery.media.templates[settings.template]( this, settings );
@@ -176,12 +177,8 @@
         this.server = jQuery.media[settings.server]( this.protocol, settings );
       }
 
-      // Set the width and height properties.
-      this.width = this.dialog.width();
-      this.height = this.dialog.height();
-
       // Get the menu.
-      this.menu = this.display.find( settings.ids.menu ).mediamenu( this.server, settings );
+      this.menu = this.dialog.find( settings.ids.menu ).mediamenu( this.server, settings );
       if( this.menu ) {
         this.menu.display.bind( "menuclose", function() {
           _this.showMenu( false );
@@ -198,6 +195,12 @@
          
       // The active playlist.
       this.activePlaylist = null;
+
+      // Our attached controller.
+      this.controller = null;
+
+      // The active controller.
+      this.activeController = null;
          
       // Hide or Show the menu.
       this.showMenu = function( show ) {
@@ -264,18 +267,15 @@
             alsoResize: this.display,
             containment: 'document',
             resize: function(event) {
-              _this.setSize( _this.dialog.width(), _this.dialog.height() );
+              _this.onResize();
             }
           });
         }
       }
 
       // Get the node and register for events.
-      this.node = this.display.find( settings.ids.node ).medianode( this.server, settings );
+      this.node = this.dialog.find( settings.ids.node ).medianode( this.server, settings );
       if( this.node ) {
-        // Add the player events to the node.
-        this.addPlayerEvents( this.node );
-
         this.node.display.bind( "nodeload", function( event, data ) {
           _this.onNodeLoad( data );
         });
@@ -300,6 +300,16 @@
         // When the media completes, have the active playlist load the next item.
         if( settings.autoNext && this.activePlaylist && (data.type == "complete") ) {
           this.activePlaylist.loadNext();
+        }
+
+        // Update our controller.
+        if( this.controller ) {
+          this.controller.onMediaUpdate( data );
+        }
+
+        // Update our active controller.
+        if( this.activeController ) {
+          this.activeController.onMediaUpdate( data );
         }
             
         // Set the media information in the menu.
@@ -333,25 +343,7 @@
           settings.template.onNodeLoad( data );
         }
       };
-
-      // Called when the player resizes.
-      this.onResize = function( deltaX, deltaY ) {
-        // Call the template resize function.
-        if( settings.template.onResize ) {
-          settings.template.onResize( deltaX, deltaY );
-        }
-            
-        // Only resize the connected playlist.
-        if( this.playlist ) {
-          this.playlist.onResize( deltaX, deltaY );
-        }
-            
-        // Resize the node.
-        if( this.node ) {
-          this.node.onResize( deltaX, deltaY );
-        }
-      };
-
+      
       // Maximize the player.
       this.maximize = function( on ) {
         // Don't want to maximize in fullscreen mode.
@@ -383,38 +375,94 @@
       };
 
       // Add the default playlist.
-      this.playlist = this.addPlaylist( this.display.find( settings.ids.playlist ).mediaplaylist( this.server, settings ) );
+      this.playlist = this.addPlaylist( this.dialog.find( settings.ids.playlist ).mediaplaylist( this.server, settings ) );
          
       // Now add any queued playlists...
       if( jQuery.media.playlists[settings.id] ) {
         var playlists = jQuery.media.playlists[settings.id];
-        var i = playlists.length;
+        i = playlists.length;
         while(i--) {
           this.addPlaylist( playlists[i] );
         }
       }
-         
-      // Allow the player to be resized.
-      this.setSize = function( newWidth, newHeight ) {
-        // Only call onResize if the width or height changes.
-        newWidth = newWidth ? newWidth : this.width;
-        newHeight = newHeight ? newHeight : this.height;
-        if( (newWidth != this.width) || (newHeight != this.height) ) {
-          // Determine the delta's
-          var deltaX = (newWidth - this.width);
-          var deltaY = (newHeight - this.height);
-               
-          // Set the width and height properties.
-          this.width = newWidth;
-          this.height = newHeight;
-               
-          this.dialog.css({
-            width:this.width,
-            height:this.height
+
+      // Allow mulitple controllers to control this media.
+      this.addController = function( newController, active ) {
+        if( newController ) {
+          newController.display.bind( "controlupdate", newController, function( event, data ) {
+            _this.activeController = event.data;
+            if( _this.node && _this.node.player ) {
+              _this.node.player.onControlUpdate( data );
+            }
           });
-               
-          // Call the resize function.
-          this.onResize( deltaX, deltaY );
+
+          if( active && !this.activeController ) {
+            this.activeController = newController;
+          }
+          
+          this.addPlayerEvents( newController );
+        }
+        return newController;
+      };
+
+      // Add the control bar to the media.
+      this.controller = this.addController( this.dialog.find( settings.ids.control ).mediacontrol( settings ), false );
+      if( this.controller && this.node ) {
+        // Add any voters to the node.
+        this.node.addVoters( this.controller.display );
+      }
+
+      // Now add any queued controllers...
+      if( jQuery.media.controllers[settings.id] ) {
+        var controllers = jQuery.media.controllers[settings.id];
+        i = controllers.length;
+        while(i--) {
+          this.addController( controllers[i], true );
+        }
+      }
+
+      // Called when the player resizes.
+      this.onResize = function() {
+        // Call the template resize function.
+        if( settings.template.onResize ) {
+          settings.template.onResize();
+        }
+
+        // Resize the node.
+        if( this.node ) {
+          this.node.onResize();
+        }
+
+        // Resize the attached control region.
+        if( this.controller ) {
+          this.controller.onResize();
+        }
+      };
+
+      // Function to show the built in controls or not.
+      this.showNativeControls = function( show ) {
+        var player = this.node ? this.node.player : null;
+        if( player && player.hasControls() ) {
+          player.usePlayerControls = show;
+          if( show ) {
+            player.busy.hide();
+            player.play.hide();
+            if( player.preview ) {
+              player.preview.display.hide();
+            }
+            if( this.controller ) {
+              this.controller.display.hide();
+            }
+          }
+          else {
+            player.showBusy( 1, ((this.busyFlags & 0x2) == 0x2) );
+            player.showPlay( this.playVisible );
+            player.showPreview( this.previewVisible );
+            if( this.controller ) {
+              this.controller.display.show();
+            }
+          }
+          player.showControls( show );
         }
       };
 
@@ -451,9 +499,6 @@
         // Initialize our template.
         this.initializeTemplate();
             
-        // Resize the player.
-        this.onResize( 0, 0 );
-            
         // The player looks good now.  Move the dialog back.
         this.dialog.css("position","relative");
         this.dialog.css("marginLeft",0);
@@ -477,7 +522,7 @@
           _this.loadContent();
         });
       };
-         
+        
       this.load();
     })( this, settings );
   };

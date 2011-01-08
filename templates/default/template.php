@@ -37,7 +37,7 @@ class DefaultTemplate extends OSMTemplate {
        * generate new CSS files so that multiple themes on the same page will not collide with each
        * other.
        */
-      'useThemeRoller' => true,
+      'generateCSS' => false,
 
       /**
        * The template specific JavaScript files required for this template.

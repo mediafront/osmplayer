@@ -24,83 +24,77 @@
  *  THE SOFTWARE.
  */
 (function($) {
-   /**
+  /**
     * Load and scale an image while maintining original aspect ratio.
     */
-   jQuery.fn.mediaimage = function( link, fitToImage ) {
-      if( this.length === 0 ) {
-         return null;
-      }
-      return new (function( container, link, fitToImage ) {
-         this.display = container;
-         var _this = this;
+  jQuery.fn.mediaimage = function( link, fitToImage ) {
+    if( this.length === 0 ) {
+      return null;
+    }
+    return new (function( container, link, fitToImage ) {
+      this.display = container;
+      var _this = this;
          
-         var ratio = 0;                  
-         var loaded = false;
-         this.width = this.display.width();
-         this.height = this.display.height();
+      var ratio = 0;
+      var loaded = false;
          
-         // Now create the image loader, and add the loaded handler.
-         this.imgLoader = new Image();
-         this.imgLoader.onload = function() {
-            loaded = true;
-            ratio = (_this.imgLoader.width / _this.imgLoader.height);
-            _this.resize();
-            _this.display.trigger( "imageLoaded" );
-         }; 
+      // Now create the image loader, and add the loaded handler.
+      this.imgLoader = new Image();
+      this.imgLoader.onload = function() {
+        loaded = true;
+        ratio = (_this.imgLoader.width / _this.imgLoader.height);
+        _this.resize();
+        _this.display.trigger( "imageLoaded" );
+      };
          
-         // Now add the image object.
-         var code = link ? '<a target="_blank" href="' + link + '"><img src=""></img></a>' : '<img src=""></img>';
-         this.image = container.append( code ).find("img");    
+      // Now add the image object.
+      var code = link ? '<a target="_blank" href="' + link + '"><img src=""></img></a>' : '<img src=""></img>';
+      this.image = container.append( code ).find("img");
          
-         // Set the container to not show any overflow...       
-         container.css("overflow", "hidden");
+      // Set the container to not show any overflow...
+      container.css("overflow", "hidden");
          
-         // Resize the image.
-         this.resize = function( newWidth, newHeight ) {
-            this.width = fitToImage ? this.imgLoader.width : (newWidth ? newWidth : this.width ? this.width : this.display.width());
-            this.height = fitToImage ? this.imgLoader.height : (newHeight ? newHeight : this.height ? this.height : this.display.height());
-            if( this.width && this.height && loaded ) {  
-               // Resize the wrapper.
-               this.display.css({
-                 width:this.width,
-                 height:this.height
-               });
-               
-               // Now resize the image in the container...
-               var rect = jQuery.media.utils.getScaledRect( ratio, {
-                 width:this.width,
-                 height:this.height
-               });
-               this.image.attr( "src", this.imgLoader.src ).css({
-                 marginLeft:rect.x, 
-                 marginTop:rect.y, 
-                 width:rect.width, 
-                 height:rect.height
-               }).show();
-            }
-         };
+      // Resize the image.
+      this.resize = function( newWidth, newHeight ) {
+        var rectWidth = fitToImage ? this.imgLoader.width : (newWidth ? newWidth : this.display.width());
+        var rectHeight = fitToImage ? this.imgLoader.height : (newHeight ? newHeight : this.display.height());
+        if( rectWidth && rectHeight && loaded ) {               
+          // Now resize the image in the container...
+          var rect = jQuery.media.utils.getScaledRect( ratio, {
+            width:rectWidth,
+            height:rectHeight
+          });
+
+          // Now set this image to the new size.
+          this.image.attr( "src", this.imgLoader.src ).css({
+            marginLeft:rect.x,
+            marginTop:rect.y,
+            width:rect.width,
+            height:rect.height
+          }).show();
+        }
+      };
          
-         // Clears the image.
-         this.clear = function() {
-            loaded = false;
-            if( this.image ) {
-               this.image.hide();               
-               this.image.attr( "src", "" );
-            }
-            container.empty();
-         };
+      // Clears the image.
+      this.clear = function() {
+        loaded = false;
+        if( this.image ) {
+          this.image.hide();
+          this.image.attr( "src", "" );
+        }
+        container.empty();
+      };
          
-         // Refreshes the image.
-         this.refresh = function() {
-            this.resize();
-         };
+      // Refreshes the image.
+      this.refresh = function() {
+        this.resize();
+      };
          
-         // Load the image.
-         this.loadImage = function( src ) {
-            this.image.hide();
-            this.imgLoader.src = src;
-         };
-      })( this, link, fitToImage );     
-   };
+      // Load the image.
+      this.loadImage = function( src ) {
+        this.image.hide();
+        this.imgLoader.src = src;
+      };
+    })( this, link, fitToImage );
+  };
 })(jQuery);

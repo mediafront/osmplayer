@@ -155,7 +155,7 @@ class OSMTemplate
     // We only want to set this if we are using themeroller since
     // this directory can change to a cached directory when the
     // themeroller file is created.
-    if( $this->settings['useThemeRoller'] ) {
+    if( $this->settings['generateCSS'] ) {
       $this->css_dir = $dir;
     }
   }
@@ -194,7 +194,7 @@ class OSMTemplate
     $files = array();
 
     // If they are using theme roller, then we will use the cached CSS files.
-    if( $this->settings['useThemeRoller'] ) {
+    if( $this->settings['generateCSS'] ) {
       // Get the CSS path.
       $css_path = $this->css_dir ? $this->css_dir : dirname(__FILE__);
       $css_local_path = $this->css_dir ? '' : 'css/';
@@ -277,7 +277,7 @@ class OSMTemplate
    */
   public function createCSS() {
     // This is only necessary if they are using Theme Roller.
-    if( $this->settings['useThemeRoller'] ) {
+    if( $this->settings['generateCSS'] ) {
       // Store the CSS directory for later usage.
       $dir = $this->css_dir ? $this->css_dir : dirname(__FILE__) . '/css';
 
@@ -297,11 +297,11 @@ class OSMTemplate
       // Setup the files array.
       $files = array();
       $files[$to_css] = array();
-      if( $this->settings['cssFiles']['template'] ) {
-        $files[$to_css][] = $this->settings['cssFiles']['template'];
-      }
       if( $this->settings['cssFiles']['theme'] ) {
         $files[$to_css][] = $this->settings['cssFiles']['theme'];
+      }
+      if( $this->settings['cssFiles']['template'] ) {
+        $files[$to_css][] = $this->settings['cssFiles']['template'];
       }
       if( $this->settings['cssFiles']['template_ie'] ) {
         $files[$to_path . '_ie.css'] = array( $this->settings['cssFiles']['template_ie'] );
@@ -336,7 +336,7 @@ class OSMTemplate
    */
   public function deleteCSS() {
     // This is only necessary if they user Theme Roller.
-    if( $this->settings['useThemeRoller'] ) {
+    if( $this->settings['generateCSS'] ) {
       $css_path = $this->css_dir ? $this->css_dir : dirname(__FILE__) . '/css';
       $css_path .= '/' . $this->playerSettings['id'];
       $css = $css_path . '.css';
@@ -361,7 +361,7 @@ class OSMTemplate
     $ids = array();
 
     // Only add the prefix if the template is using themeroller.
-    if( $this->settings['useThemeRoller'] ) {
+    if( $this->settings['generateCSS'] ) {
       // Iterate through all the id's and add the id.
       foreach( $this->settings['ids'] as $index => $id ) {
         $ids[$index] = $id[0] . $this->prefix . substr( $id, 1 );

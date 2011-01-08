@@ -24,33 +24,33 @@
  *  THE SOFTWARE.
  */
 (function($) {
-   jQuery.media = jQuery.media ? jQuery.media : {};     
+  jQuery.media = jQuery.media ? jQuery.media : {};
    
-   // Set up our defaults for this component.
-   jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      linkText:"#medialinktext"
-   });    
+  // Set up our defaults for this component.
+  jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
+    linkText:"#medialinktext"
+  });
    
-   jQuery.fn.playlistlink = function( settings, linkInfo ) {  
-      return new (function( link, settings, linkInfo ) {
-         settings = jQuery.media.utils.getSettings(settings);           
-         this.display = link;
-         this.arg = linkInfo.arg;
-         this.text = linkInfo.text;
-         this.index = linkInfo.index;        
+  jQuery.fn.playlistlink = function( settings, linkInfo ) {
+    return new (function( link, settings, linkInfo ) {
+      settings = jQuery.media.utils.getSettings(settings);
+      this.display = link;
+      this.arg = linkInfo.arg;
+      this.text = linkInfo.text;
+      this.index = linkInfo.index;
          
-         // Call the setLink when clicked.
-         this.display.medialink( settings, function( event ) {
-            _this.display.trigger( "linkclick", event.data ); 
-         }, this );      
+      // Call the setLink when clicked.
+      this.display.medialink( settings, function( event ) {
+        _this.display.trigger( "linkclick", event.data );
+      }, this );
          
-         this.setActive = function( active ) {
-            if( settings.template.onLinkSelect ) {             
-               settings.template.onLinkSelect( _this, active );
-            }
-         };
+      this.setActive = function( active ) {
+        if( settings.template.onLinkSelect ) {
+          settings.template.onLinkSelect( _this, active );
+        }
+      };
          
-         this.display.find( settings.ids.linkText ).html( this.text );
-      })( this, settings, linkInfo );
-   };
+      this.display.find( settings.ids.linkText ).html( this.text );
+    })( this, settings, linkInfo );
+  };
 })(jQuery);

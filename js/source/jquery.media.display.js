@@ -69,26 +69,7 @@
         // browser full screen will always work.
         this.display.parents().css("overflow", "visible");
       }
-         
-      // Set the size of this media display region.
-      this.setSize = function( newWidth, newHeight ) {
-        this.width = newWidth ? newWidth : this.width;
-        this.height = newHeight ? newHeight : this.height;
-            
-        // Set the width and height of this media region.
-        this.display.css({
-          height:this.height,
-          width:this.width
-        });
-            
-        // Now resize the player.
-        if( this.playerReady && this.width && this.height ) {
-          this.player.player.width = this.width;
-          this.player.player.height = this.height;
-          this.player.setSize( newWidth, this.height );
-        }
-      };
-         
+
       this.reset = function() {
         this.loaded = false;
         clearInterval( this.progressInterval );
@@ -199,8 +180,8 @@
               // Create our media player.
               this.player.createMedia( file, this.preview );
                      
-              // Reflow the player if it does not show up.
-              this.startReflow();
+            // Reflow the player if it does not show up.
+            // this.startReflow();
             }
           }
           else if( this.player ) {
@@ -226,7 +207,7 @@
             clearTimeout( this.reflowInterval );
             this.player.setVolume(0);
             this.player.setQuality(this.settings.quality);
-            this.display.css('marginLeft', -10000);
+            //this.display.css('marginLeft', -10000);
             this.startProgress();
             break;
           case "buffering":
@@ -272,7 +253,7 @@
               _this.player.setVolume( (_this.settings.volume / 100) );
               _this.player.pauseMedia();
               _this.settings.autostart = true;
-              _this.display.css('marginLeft', 0);
+              //_this.display.css('marginLeft', 0);
               _this.loaded = true;
             }, 100 );
           }
@@ -280,7 +261,7 @@
             this.loaded = true;
             this.player.setVolume( (this.settings.volume / 100) );
             this.display.trigger( "mediaupdate", data );
-            this.display.css('marginLeft', 0);
+          //this.display.css('marginLeft', 0);
           }
         }
         else {
@@ -399,7 +380,7 @@
         return this.mediaFile.quality;
       };
          
-      this.setSize( this.display.width(), this.display.height() );
+    //this.setSize( this.display.width(), this.display.height() );
     })( this, options );
   };
 })(jQuery);

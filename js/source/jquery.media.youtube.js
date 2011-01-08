@@ -59,15 +59,15 @@
           this.display,
           flashPlayer,
           playerId,
-          this.display.width(),
-          this.display.height(),
+          "100%",
+          "100%",
           {},
           options.wmode,
           function( obj ) {
             _this.player = obj;
             _this.loadPlayer();
           }
-        );
+          );
       };
          
       this.getId = function( path ) {
@@ -185,11 +185,11 @@
         }
         return 'unknown';
       };
-         
+      /*
       this.setSize = function( newWidth, newHeight ) {
       //this.player.setSize(newWidth, newHeight);
       };
-         
+      */
       this.playMedia = function() {
         onUpdate({
           type:"buffering"

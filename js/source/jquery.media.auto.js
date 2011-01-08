@@ -24,25 +24,25 @@
  *  THE SOFTWARE.
  */
 (function($) {
-   jQuery.media = jQuery.media ? jQuery.media : {};     
+  jQuery.media = jQuery.media ? jQuery.media : {};
   
-   // Extend the media namespace
-   jQuery.media = jQuery.extend( {}, {
-      // Add the auto server object.
-      auto : function( settings ) {
-         // Return a new function for this object
-         return new (function( settings ) {   
-            this.json = jQuery.media.json( settings );
-            this.rpc = jQuery.media.rpc( settings );  
-            this.call = function( method, onSuccess, onFailed, params, protocol ) {
-               if( protocol == "json" ) {
-                  this.json.call( method, onSuccess, onFailed, params, protocol );
-               }
-               else {
-                  this.rpc.call( method, onSuccess, onFailed, params, protocol );
-               }     
-            };
-         })( settings );
-      }
-   }, jQuery.media );
+  // Extend the media namespace
+  jQuery.media = jQuery.extend( {}, {
+    // Add the auto server object.
+    auto : function( settings ) {
+      // Return a new function for this object
+      return new (function( settings ) {
+        this.json = jQuery.media.json( settings );
+        this.rpc = jQuery.media.rpc( settings );
+        this.call = function( method, onSuccess, onFailed, params, protocol ) {
+          if( protocol == "json" ) {
+            this.json.call( method, onSuccess, onFailed, params, protocol );
+          }
+          else {
+            this.rpc.call( method, onSuccess, onFailed, params, protocol );
+          }
+        };
+      })( settings );
+    }
+  }, jQuery.media );
 })(jQuery);
