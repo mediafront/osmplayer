@@ -39,12 +39,20 @@
   height:152px;
 }
 
+.mediaplayerdialog.controlleronly {
+  height:22px;
+}
+
 #mediaplayer {
   position:absolute;
   left:0;
   right:0;
-  top:22px;
+  top:0px;
   bottom:0px;
+}
+
+.mediaplayerdialog.mediashowtitle #mediaplayer {
+  top:22px;
 }
 
 .mediaplayerdialog.mediashowplaylist #mediaplayer {
@@ -355,9 +363,13 @@
   position:absolute;
   z-index:1;
   width:150px;
-  top:22px;
+  top:0px;
   bottom:0px;
   right:0;
+}
+
+.mediaplayerdialog.mediashowtitle #mediaplaylist {
+  top:22px;
 }
 
 .mediaplayerdialog.playlisthorizontal #mediaplaylist {

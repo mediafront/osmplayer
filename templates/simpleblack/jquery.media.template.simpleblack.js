@@ -65,24 +65,24 @@
           this.fullScreenButton.find(".off").hide();
 
           // Show the control bar, and then hide it after 5 seconds of inactivity.
-          jQuery.media.utils.showThenHide( this.controlBar.display, "fast", "slow" );
-          jQuery.media.utils.showThenHide( this.logo.display, "fast", "slow" );
+          jQuery.media.utils.showThenHide( this.controlBar.display, "display", null, "slow" );
+          jQuery.media.utils.showThenHide( this.logo.display, "logo", null, "slow" );
 
           // Make sure that we show the volume bar when they hover over the mute button.
           // Add a timer to the mouse move of the display to show the control bar and logo on mouse move.
           mediaplayer.display.bind("mousemove", function() {
-            jQuery.media.utils.showThenHide( _this.controlBar.display, "fast", "slow" );
-            jQuery.media.utils.showThenHide( _this.logo.display, "fast", "slow" );
+            jQuery.media.utils.showThenHide( _this.controlBar.display, "display", "fast", "slow" );
+            jQuery.media.utils.showThenHide( _this.logo.display, "logo", "fast", "slow" );
           });
 
           // Show the volume bar when they hover over the mute button.
           this.controlBar.mute.display.bind("mousemove", function() {
-            jQuery.media.utils.showThenHide( _this.controlBar.volumeBar.display, "fast", "fast" );
+            jQuery.media.utils.showThenHide( _this.controlBar.volumeBar.display, "volumeBar", "fast", "fast" );
           });
-          
+
           // Stop the hide on both the control bar and the volumeBar.
-          jQuery.media.utils.stopHideOnOver( this.controlBar.display );
-          jQuery.media.utils.stopHideOnOver( this.controlBar.volumeBar.display );
+          jQuery.media.utils.stopHideOnOver( this.controlBar.display, "display" );
+          jQuery.media.utils.stopHideOnOver( this.controlBar.volumeBar.display, "volumeBar" );
         };
 
         /**

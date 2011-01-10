@@ -1,6 +1,6 @@
 <?php
   $hasPlayist = (!$params['disablePlaylist'] && !$params['controllerOnly']);
-  $hasControl = ($params['showController'] && !$params['playlistOnly']);
+  $hasControl = ($params['controllerOnly'] || ($params['showController'] && !$params['playlistOnly']));
   $hasMenu = (!$params['playlistOnly'] && !$params['controllerOnly']);
   $hasTitleBar = ($params['showTitleBar'] && !$params['controllerOnly']);
 
@@ -10,13 +10,14 @@
   $showVoter = $params['showNodeVoter'] ? $params['prefix'] . 'mediashowvoter ' : '';
   $playlistHorizontal = !$params['vertical'] ? $params['prefix'] . 'playlisthorizontal ' : '';
   $playlistOnly = $params['playlistOnly'] ? $params['prefix'] . 'playlistonly ' : '';
+  $controllerOnly = $params['controllerOnly'] ? $params['prefix'] . 'controlleronly ' : '';
 
-  $showCSS = $showPlaylist . $showTitleBar . $showScrollBar . $showVoter . $playlistHorizontal . $playlistOnly;
+  $showCSS = $showPlaylist . $showTitleBar . $showScrollBar . $showVoter . $playlistHorizontal . $playlistOnly . $controllerOnly;
   
   $width = ($params['playlistOnly'] && $params['vertical']) ? '' : ('width:' . $params['width'] . 'px;');
-  $height = ($params['playlistOnly'] && !$params['vertical']) ? '' : ('height:' . $params['height'] . 'px;');
+  $height = (($params['playlistOnly'] && !$params['vertical']) || $params['controllerOnly']) ? '' : ('height:' . $params['height'] . 'px;');
 ?>
-<?php if( !$params['playlistOnly'] ) { ?>
+<?php if( !$params['playlistOnly'] && !$params['controllerOnly'] ) { ?>
 <div id="<?php print $params['prefix']; ?>mediaplayerloading" style="<?php print $width; ?><?php print $height; ?>">
   <img src="<?php print $params['playerURL']; ?>/templates/default/images/busy.gif" />
 </div>
@@ -25,7 +26,7 @@
   <?php if ($hasTitleBar) { print $templates['titlebar']; } ?>
   <div id="<?php print $params['prefix']; ?>mediaplayer" class="<?php print $params['prefix']; ?>ui-helper-clearfix">
     <?php if ($hasMenu) { print $templates['menu']; } ?>
-    <?php if (!$params['playlistOnly']) { print $templates['node']; } ?>
+    <?php if (!$params['playlistOnly'] && !$params['controllerOnly']) { print $templates['node']; } ?>
     <?php if ($hasControl) { print $templates['controlBar']; } ?>
   </div>
   <?php if ($hasPlayist) { print $templates['playlist']; } ?>
