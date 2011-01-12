@@ -8,16 +8,16 @@
     <li class="<?php print $params['prefix']; ?>ui-state-default <?php print $params['prefix']; ?>ui-corner-top"><a href="#<?php print $params['prefix']; ?>mediainfo">info</a></li>
   </ul>
   <div id="<?php print $params['prefix']; ?>mediaembed" class="<?php print $params['prefix']; ?>menucontent <?php print $params['prefix']; ?>ui-tabs-panel <?php print $params['prefix']; ?>ui-widget-content <?php print $params['prefix']; ?>ui-corner-bottom" id="<?php print $params['prefix']; ?>mediaembed">
-    <form action="" id="<?php print $params['prefix']; ?>mediaembedForm" name="<?php print $params['prefix']; ?>mediaembedForm">
+    <div id="<?php print $params['prefix']; ?>mediaembedForm" name="<?php print $params['prefix']; ?>mediaembedForm">
       <label for="<?php print $params['prefix']; ?>mediaembedCode">Embed</label>
       <input id="<?php print $params['prefix']; ?>mediaembedCode" name="<?php print $params['prefix']; ?>mediaembedCode" type="text" value="" readonly />
-    </form>
+    </div>
   </div>
   <div id="<?php print $params['prefix']; ?>mediaelink" class="<?php print $params['prefix']; ?>menucontent <?php print $params['prefix']; ?>ui-tabs-panel <?php print $params['prefix']; ?>ui-widget-content <?php print $params['prefix']; ?>ui-corner-bottom" id="<?php print $params['prefix']; ?>mediaelink">
-    <form action="" id="<?php print $params['prefix']; ?>mediaelinkForm" name="<?php print $params['prefix']; ?>mediaelinkForm">
+    <div id="<?php print $params['prefix']; ?>mediaelinkForm" name="<?php print $params['prefix']; ?>mediaelinkForm">
       <label for="<?php print $params['prefix']; ?>mediaelinkCode">URL</label>
       <input id="<?php print $params['prefix']; ?>mediaelinkCode" name="<?php print $params['prefix']; ?>mediaelinkCode" type="text" value="" readonly />
-    </form>
+    </div>
   </div>
   <div id="<?php print $params['prefix']; ?>mediainfo" class="<?php print $params['prefix']; ?>menucontent <?php print $params['prefix']; ?>ui-tabs-panel <?php print $params['prefix']; ?>ui-widget-content <?php print $params['prefix']; ?>ui-corner-bottom" id="<?php print $params['prefix']; ?>mediainfo">
     <p>
