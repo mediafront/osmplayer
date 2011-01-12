@@ -22,8 +22,10 @@
           </div>
         </div>
         <div id="mediaplayer_info" class="mediaplayer_info">
+          <p>
             <a target="_blank" href="http://www.mediafront.org">Open Standard Media Player</a> version <?php print $params['version']; ?><br/><br/>
             Built by <a target="_blank" href="http://www.alethia-inc.com">Alethia Inc.</a>
+          </p>
         </div>
       </div>
       <div id="mediaplayer_minplayer">
