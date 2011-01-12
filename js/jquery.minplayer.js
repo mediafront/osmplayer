@@ -688,7 +688,6 @@
       this.volume = 0;
       this.player = null;
       this.preview = '';
-      this.reflowInterval = null;
       this.updateInterval = null;
       this.progressInterval = null;
       this.playQueue = [];
@@ -712,7 +711,6 @@
         this.loaded = false;
         clearInterval( this.progressInterval );
         clearInterval( this.updateInterval );
-        clearTimeout( this.reflowInterval );
         this.playQueue.length = 0;
         this.playQueue = [];
         this.playIndex = 0;
@@ -817,9 +815,6 @@
             if( this.player ) {
               // Create our media player.
               this.player.createMedia( file, this.preview );
-                     
-            // Reflow the player if it does not show up.
-            // this.startReflow();
             }
           }
           else if( this.player ) {
@@ -842,10 +837,9 @@
         switch( data.type ) {
           case "playerready":
             this.playerReady = true;
-            clearTimeout( this.reflowInterval );
             this.player.setVolume(0);
             this.player.setQuality(this.settings.quality);
-            //this.display.css('marginLeft', -10000);
+            this.display.css('marginLeft', -10000);
             this.startProgress();
             break;
           case "buffering":
@@ -891,7 +885,7 @@
               _this.player.setVolume( (_this.settings.volume / 100) );
               _this.player.pauseMedia();
               _this.settings.autostart = true;
-              //_this.display.css('marginLeft', 0);
+              _this.display.css('marginLeft', 0);
               _this.loaded = true;
             }, 100 );
           }
@@ -899,46 +893,12 @@
             this.loaded = true;
             this.player.setVolume( (this.settings.volume / 100) );
             this.display.trigger( "mediaupdate", data );
-          //this.display.css('marginLeft', 0);
+            this.display.css('marginLeft', 0);
           }
         }
         else {
           this.display.trigger( "mediaupdate", data );
         }
-      };
-
-      this.reflowPlayer = function() {
-        // Store the CSS state before the reflow...
-        var displayCSS = {
-          marginLeft:parseInt( this.display.css("marginLeft"), 10 ),
-          height:this.display.css("height")
-        };
-
-        // Is the margin-left positive?
-        var isPositive = (displayCSS.marginLeft >=0);
-
-        // Now reflow the player by setting the margin-left value.  If the player
-        // has a margin-left value ( typically means it is off the screen ), then
-        // we need to give it a positive CSS value to trigger a reflow event.
-        this.display.css({
-          marginLeft:(isPositive ? (displayCSS.marginLeft+1) : 0),
-          height:(isPositive ? displayCSS.height : 0)
-        });
-
-        // Now set a timeout to set everything back 1ms later.
-        setTimeout( function() {
-
-          // Restore the display state.
-          _this.display.css(displayCSS);
-        }, 1 );
-      };
-
-      this.startReflow = function() {
-        clearTimeout( this.reflowInterval );
-        this.reflowInterval = setTimeout( function() {
-          // If the player does not register after two seconds, try a reflow.
-          _this.reflowPlayer();
-        }, 2000 );
       };
          
       this.startProgress = function() {
@@ -969,7 +929,6 @@
         this.loaded = false;
         clearInterval( this.progressInterval );
         clearInterval( this.updateInterval );
-        clearTimeout( this.reflowInterval );
         if( this.playerReady ) {
           this.player.stopMedia();
         }
