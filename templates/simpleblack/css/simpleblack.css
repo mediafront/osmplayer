@@ -108,6 +108,7 @@
 #mediaplayer_minplayer.fullscreen #mediaplayer_control {
   position: fixed;
   left:0;
+  z-index:1010;
 }
 
 #mediaplayer_control span {
