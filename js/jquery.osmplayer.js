@@ -901,7 +901,7 @@
       this.playHeight = this.playImg.height();
          
       // Store the preview image.
-      this.preview = null;
+      this.preview = player.find( settings.ids.preview ).mediaimage();;
          
       // The internal player controls.
       this.usePlayerControls = false;
@@ -1121,8 +1121,6 @@
          
       // Loads an image...
       this.loadImage = function( image ) {
-        this.preview = player.find( settings.ids.preview ).mediaimage();
-
         if( this.preview ) {
           // Bind to the image loaded event.
           this.preview.display.bind("imageLoaded", function() {
