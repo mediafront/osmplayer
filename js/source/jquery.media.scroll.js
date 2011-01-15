@@ -186,14 +186,10 @@
         this.listSize += element.size;
         if( settings.vertical ) {
           this.list.css({
-            height:this.listSize,
-            marginTop:this.listSize
+            height:this.listSize
           });
         }
         else {
-          element.obj.css({
-            "float":"left"
-          });
           this.list.css({
             width:this.listSize
           });
@@ -206,10 +202,6 @@
       this.getElement = function( element, index ) {
         var size = this.elementSize;
         var pos = this.listSize;
-        element.css({
-          width:this.elementWidth,
-          height:this.elementHeight
-        });
         return {
           obj:element,
           size:size,
