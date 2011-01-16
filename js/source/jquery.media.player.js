@@ -74,8 +74,7 @@
   // Adds a new element to the media player.
   jQuery.media.addElement = function( playerId, fromPlayer, name ) {
     if( fromPlayer && fromPlayer[name] ) {
-      var pName = name + "s";
-      var toPlayer = jQuery.media[pName][playerId];
+      var toPlayer = jQuery.media.players[playerId];
       if( toPlayer ) {
         switch( name ) {
           case "playlist":
@@ -88,6 +87,7 @@
       }
       else {
         // Otherwise, cache it for inclusion when the player is created.
+        var pName = name + "s";
         if( !jQuery.media[pName][playerId] ) {
           jQuery.media[pName][playerId] = [];
         }
@@ -103,7 +103,7 @@
    
   // To add a new playlist to any existing or future-included players.
   jQuery.media.addPlaylist = function( playerId, fromPlayer ) {
-    jQuery.media.addElement( playerId, fromPlayer, "player" );
+    jQuery.media.addElement( playerId, fromPlayer, "playlist" );
   };
   
   // The main entry point into the player.
