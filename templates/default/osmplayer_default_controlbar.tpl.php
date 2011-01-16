@@ -23,29 +23,21 @@
         <span class="<?php print $params['prefix']; ?>ui-icon <?php print $params['prefix']; ?>ui-icon-volume-on"></span>
       </div>
     </div>
-    <div id="<?php print $params['prefix']; ?>mediavolumebar">
-      <div id="<?php print $params['prefix']; ?>mediavolume" class="<?php print $params['prefix']; ?>ui-state-default">
-        <div id="<?php print $params['prefix']; ?>mediavolumeupdate">
-          <div id="<?php print $params['prefix']; ?>mediavolumehandle">
-            <span class="<?php print $params['prefix']; ?>ui-icon <?php print $params['prefix']; ?>ui-icon-triangle-1-s"></span>
-          </div>
-          <div class="<?php print $params['prefix']; ?>ui-state-active"></div>
-        </div>
+    <div id="<?php print $params['prefix']; ?>mediavolumebar" class="<?php print $params['prefix']; ?>ui-state-default">
+      <div id="<?php print $params['prefix']; ?>mediavolumehandle">
+        <span class="<?php print $params['prefix']; ?>ui-icon <?php print $params['prefix']; ?>ui-icon-bullet"></span>
       </div>
+      <div id="<?php print $params['prefix']; ?>mediavolumeupdate" class="<?php print $params['prefix']; ?>ui-state-active"></div>
     </div>
     <?php if ($params['showNodeVoter']) { print $templates['voter']; } ?>
   </div>
   <div id="<?php print $params['prefix']; ?>mediacontrolcenter">
-    <div id="<?php print $params['prefix']; ?>mediaseekbar">
-      <div id="<?php print $params['prefix']; ?>mediaseek" class="<?php print $params['prefix']; ?>ui-state-default">
-        <div id="<?php print $params['prefix']; ?>mediaseekupdate">
-          <div id="<?php print $params['prefix']; ?>mediaseekhandle">
-            <span class="<?php print $params['prefix']; ?>ui-icon <?php print $params['prefix']; ?>ui-icon-triangle-1-s"></span>
-          </div>
-          <div class="<?php print $params['prefix']; ?>ui-state-active"></div>
-        </div>
-        <div id="<?php print $params['prefix']; ?>mediaseekprogress"><div class="<?php print $params['prefix']; ?>ui-state-hover"></div></div>
+    <div id="<?php print $params['prefix']; ?>mediaseekbar" class="<?php print $params['prefix']; ?>ui-state-default">
+      <div id="<?php print $params['prefix']; ?>mediaseekhandle">
+        <span class="<?php print $params['prefix']; ?>ui-icon <?php print $params['prefix']; ?>ui-icon-bullet"></span>
       </div>
+      <div id="<?php print $params['prefix']; ?>mediaseekupdate" class="<?php print $params['prefix']; ?>ui-state-active"></div>
+      <div id="<?php print $params['prefix']; ?>mediaseekprogress" class="<?php print $params['prefix']; ?>ui-state-hover"></div>
     </div>
   </div>
 </div>

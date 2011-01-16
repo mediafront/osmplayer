@@ -37,7 +37,7 @@
          
       var ratio = 0;
       var loaded = false;
-         
+        
       // Now create the image loader, and add the loaded handler.
       this.imgLoader = new Image();
       this.imgLoader.onload = function() {
@@ -46,10 +46,6 @@
         _this.resize();
         _this.display.trigger( "imageLoaded" );
       };
-         
-      // Now add the image object.
-      var code = link ? '<a target="_blank" href="' + link + '"><img src=""></img></a>' : '<img src=""></img>';
-      this.image = container.append( code ).find("img");
          
       // Set the container to not show any overflow...
       container.css("overflow", "hidden");
@@ -64,14 +60,19 @@
             width:rectWidth,
             height:rectHeight
           });
-
+          
           // Now set this image to the new size.
-          this.image.attr( "src", this.imgLoader.src ).css({
-            marginLeft:rect.x,
-            marginTop:rect.y,
-            width:rect.width,
-            height:rect.height
-          }).show();
+          if( this.image ) {
+            this.image.attr( "src", this.imgLoader.src ).css({
+              marginLeft:rect.x,
+              marginTop:rect.y,
+              width:rect.width,
+              height:rect.height
+            });
+          }
+
+          // Show the container.
+          this.image.fadeIn();
         }
       };
          
@@ -79,10 +80,17 @@
       this.clear = function() {
         loaded = false;
         if( this.image ) {
-          this.image.hide();
-          this.image.attr( "src", "" );
+          this.image.attr("src", "");
+          this.imgLoader.src = '';
+          this.image.fadeOut( function() {
+            if( link ) {
+              $(this).parent().remove();
+            }
+            else {
+              $(this).remove();
+            }
+          });
         }
-        container.empty();
       };
          
       // Refreshes the image.
@@ -92,7 +100,20 @@
          
       // Load the image.
       this.loadImage = function( src ) {
-        this.image.hide();
+        // Now add the image object.
+        this.clear();
+        this.image = $(document.createElement('img')).attr({
+          src:""
+        }).hide();
+        if( link ) {
+          this.display.append($(document.createElement('a')).attr({
+            target:"_blank",
+            href:link
+          }).append(this.image));
+        }
+        else {
+          this.display.append(this.image);
+        }
         this.imgLoader.src = src;
       };
     })( this, link, fitToImage );

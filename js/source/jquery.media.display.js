@@ -71,6 +71,7 @@
 
       this.reset = function() {
         this.loaded = false;
+        this.stopMedia();
         clearInterval( this.progressInterval );
         clearInterval( this.updateInterval );
         this.playQueue.length = 0;
@@ -78,11 +79,7 @@
         this.playIndex = 0;
         this.playerReady = false;
         this.mediaFile = null;
-      };
-         
-      this.resetContent = function() {
-        this.display.empty();
-        this.display.append( this.template );
+        this.display.empty().trigger( "mediaupdate", {type:"reset"} );
       };
          
       // Returns the media that has the lowest weight value, which means
@@ -128,7 +125,11 @@
           this.addToQueue( files.media );
           this.addToQueue( files.postreel );
         }
-        return (this.playQueue.length > 0);
+        var hasMedia = (this.playQueue.length > 0);
+        if( !hasMedia ) {
+          this.display.trigger( "mediaupdate", {type:"nomedia"} );
+        }
+        return hasMedia;
       };
          
       this.playNext = function() {

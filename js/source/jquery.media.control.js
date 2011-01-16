@@ -205,6 +205,13 @@
       // Handle the media events...
       this.onMediaUpdate = function( data ) {
         switch( data.type ) {
+          case "nomedia":
+            this.display.hide();
+            break;
+          case "reset":
+            this.display.show();
+            this.reset();
+            break;
           case "paused":
             this.playState = true;
             this.setToggle( this.playPauseButton.display, this.playState );
@@ -235,10 +242,13 @@
          
       // Call to reset all controls...
       this.reset = function() {
-        this.totalTime.text( this.formatTime( 0 ).time );
+        this.totalTime.text( this.formatTime(0).time );
+        this.currentTime.text( this.formatTime(0).time );
         if( this.seekBar ) {
           this.seekBar.updateValue(0);
         }
+        this.seekUpdate.css( "width", "0px" );
+        this.seekProgress.css( "width", "0px" );
       };
          
       this.timeUpdate = function( cTime, tTime ) {
