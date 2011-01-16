@@ -914,6 +914,7 @@
       this.previewVisible = false;
       this.playing = false;
       this.hasMedia = false;
+      this.timeoutId = 0;
          
       // Cache the width and height.
       this.width = this.display.width();
@@ -1149,7 +1150,8 @@
           this.showPlay(false);
 
           // Add a timeout
-          setTimeout( function() {
+          clearTimeout( this.timeoutId );
+          this.timeoutId = setTimeout( function() {
             _this.media.display.trigger( "mediaupdate", {type:"complete"} );
           }, (settings.timeout * 1000) );
         }
