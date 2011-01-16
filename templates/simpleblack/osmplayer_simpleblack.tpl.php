@@ -1,4 +1,3 @@
-<div id="mediaplayerloading"><img src="<?php print $params['playerURL']; ?>/templates/simpleblack/images/busy.gif" /></div>
 <div id="<?php print $params['id']; ?>">
   <div id="mediaplayer" style="width:<?php print $params['width']; ?>px;height:<?php print $params['height']; ?>px;">
     <div id="mediaplayer_node" style="height:<?php print $params['height']; ?>px;">

@@ -37,10 +37,10 @@
         var _this = this;
 
         this.mediaDisplay = null;
-        this.controlBar = null;
         this.player = null;
         this.logo = null;
         this.fullScreenButton = null;
+        this.showController = true;
 
         /**
          * Called just before the mediaplayer is ready to show this template to the user.
@@ -55,34 +55,41 @@
                
           // Get the player elements.
           this.mediaDisplay = mediaplayer.node.player.media;
-          this.controlBar = mediaplayer.controller;
           this.player = mediaplayer.node.player;
           this.logo = this.player.logo;
-          this.fullScreenButton = this.controlBar.display.find("#mediafront_resizeScreen");
+          this.fullScreenButton = mediaplayer.controller.display.find("#mediafront_resizeScreen");
 
           // Hide the volume bar by default.
-          this.controlBar.volumeBar.display.hide();
+          mediaplayer.controller.volumeBar.display.hide();
           this.fullScreenButton.find(".off").hide();
 
           // Show the control bar, and then hide it after 5 seconds of inactivity.
-          jQuery.media.utils.showThenHide( this.controlBar.display, "display", null, "slow" );
+          if( this.showController ) {
+            jQuery.media.utils.showThenHide( mediaplayer.controller.display, "display", null, "slow" );
+          }
           jQuery.media.utils.showThenHide( this.logo.display, "logo", null, "slow" );
 
           // Make sure that we show the volume bar when they hover over the mute button.
           // Add a timer to the mouse move of the display to show the control bar and logo on mouse move.
           mediaplayer.display.bind("mousemove", function() {
-            jQuery.media.utils.showThenHide( _this.controlBar.display, "display", "fast", "slow" );
+            if( _this.showController ) {
+              jQuery.media.utils.showThenHide( mediaplayer.controller.display, "display", "fast", "slow" );
+            }
             jQuery.media.utils.showThenHide( _this.logo.display, "logo", "fast", "slow" );
           });
 
           // Show the volume bar when they hover over the mute button.
-          this.controlBar.mute.display.bind("mousemove", function() {
-            jQuery.media.utils.showThenHide( _this.controlBar.volumeBar.display, "volumeBar", "fast", "fast" );
+          mediaplayer.controller.mute.display.bind("mousemove", function() {
+            if( _this.showController ) {
+              jQuery.media.utils.showThenHide( mediaplayer.controller.volumeBar.display, "volumeBar", "fast", "fast" );
+            }
           });
 
           // Stop the hide on both the control bar and the volumeBar.
-          jQuery.media.utils.stopHideOnOver( this.controlBar.display, "display" );
-          jQuery.media.utils.stopHideOnOver( this.controlBar.volumeBar.display, "volumeBar" );
+          if( this.showController ) {
+            jQuery.media.utils.stopHideOnOver( mediaplayer.controller.display, "display" );
+            jQuery.media.utils.stopHideOnOver( mediaplayer.controller.volumeBar.display, "volumeBar" );
+          }
         };
 
         /**
@@ -157,6 +164,17 @@
           else {
             contents.hide("normal");
             link.removeClass('active');
+          }
+        };
+
+        this.onMediaUpdate = function( data ) {
+          if( mediaplayer.controller && mediaplayer.node ) {
+            if( data.type == "reset" ) {
+              this.showController = true;
+            }
+            else if( data.type == "nomedia" ) {
+              this.showController = false;
+            }
           }
         };
 
