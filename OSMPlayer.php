@@ -198,7 +198,9 @@ class OSMPlayer {
       'incrementTime' => 5,
       'quality' => 'default',
       'zIndex' => 400,
-      'timeout' => 4
+      'timeout' => 4,
+      'fluidWidth' => false,
+      'fluidHeight' => false
     );
   }
 

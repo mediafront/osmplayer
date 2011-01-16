@@ -13,9 +13,6 @@
   $controllerOnly = $params['controllerOnly'] ? $params['prefix'] . 'controlleronly ' : '';
 
   $showCSS = $showPlaylist . $showTitleBar . $showScrollBar . $showVoter . $playlistHorizontal . $playlistOnly . $controllerOnly;
-  
-  $width = ($params['playlistOnly'] && $params['vertical']) ? '' : ('width:' . $params['width'] . 'px;');
-  $height = (($params['playlistOnly'] && !$params['vertical']) || $params['controllerOnly']) ? '' : ('height:' . $params['height'] . 'px;');
 ?>
 <?php if( !$params['playlistOnly'] && !$params['controllerOnly'] ) { ?>
 <div id="<?php print $params['prefix']; ?>mediaplayerloading" style="<?php print $width; ?><?php print $height; ?>">
