@@ -23,7 +23,7 @@
   <?php if ($hasTitleBar) { print $templates['titlebar']; } ?>
   <div id="<?php print $params['prefix']; ?>mediaplayer" class="<?php print $params['prefix']; ?>ui-helper-clearfix">
     <?php if ($hasMenu) { print $templates['menu']; } ?>
-    <?php if (!$params['playlistOnly'] && !$params['controllerOnly']) { print $templates['node']; } ?>
+    <?php if (!$params['playlistOnly']) { print $templates['node']; } ?>
     <?php if ($hasControl) { print $templates['controlBar']; } ?>
   </div>
   <?php if ($hasPlayist) { print $templates['playlist']; } ?>
