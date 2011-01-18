@@ -1,4 +1,4 @@
-Open Standard Media Player - Build by Alethia Inc. (c) 2010.  
+Open Standard Media Player - Build by Alethia Inc. (c) 2011.  
  
 http://www.mediafront.org - For documentaion, implementations, and examples...
 http://www.alethia-inc.com - For customization inquiries and business prospects.
