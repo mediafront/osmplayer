@@ -245,7 +245,9 @@ class OSMTemplate
     $matches = array();
     preg_match_all('/\{.*\}/sU', $contents, $matches, PREG_OFFSET_CAPTURE);
 
-    $match_len = strlen( $matches[0][$match][0] );
+    if( count($matches[0]) > 0 ) {
+      $match_len = strlen( $matches[0][$match][0] );
+    }
 
     // Iterate through all the characters.
     for( $i=0; $i<$len; $i++ ) {
