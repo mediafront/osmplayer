@@ -381,7 +381,7 @@
 .mediaplayerdialog.playlisthorizontal #mediaplaylist {
   width:100%;
   height:136px;
-  top:inherit;
+  top:auto;
   bottom:0px;
   right:0;
 }

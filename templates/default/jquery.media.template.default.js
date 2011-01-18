@@ -59,6 +59,24 @@
           this.controlHeight = mediaplayer.controller ? mediaplayer.controller.display.height() : 0;
           this.player = mediaplayer.node ? mediaplayer.node.player : null;
           this.titleLinks = mediaplayer.titleBar ? mediaplayer.titleBar.titleLinks : null;
+
+          // Set the playlist height for IE.
+          this.setPlaylistHeight();
+        };
+
+        this.setPlaylistHeight = function() {
+          // Stupid IE hack.
+          if( settings.vertical && mediaplayer.playlist && mediaplayer.playlist.scrollRegion ) {
+            var pHeight = mediaplayer.playlist.display.height();
+            if( pHeight ) {
+              var pagerHeight = mediaplayer.playlist.pager ? mediaplayer.playlist.pager.display.height() : 0;
+              mediaplayer.playlist.scrollRegion.display.height( pHeight - pagerHeight );
+            }
+          }
+        };
+
+        this.onResize = function() {
+          this.setPlaylistHeight();
         };
 
         this.onMenu = function( on ) {

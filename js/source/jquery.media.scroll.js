@@ -135,7 +135,6 @@
       this.setScrollSize = function( newSize ) {
         if( newSize ) {
           this.scrollSize = newSize;
-          this.listMask.css( settings.vertical ? "height" : "width", this.scrollSize );
           this.scrollMid = this.scrollSize / 2;
           var activeSize = this.scrollSize - (settings.hysteresis*2);
           this.bottomPos = (this.listSize - this.scrollSize);
@@ -170,12 +169,7 @@
         this.setScrollSize( settings.vertical ? this.listMask.height() : this.listMask.width() );
 
         // Now reset the list position.
-        this.setScrollPos( /*this.listPos*/0, true );
-      };
-         
-      // Refreshes the scroll region.
-      this.refresh = function() {
-        this.setScrollSize( this.scrollSize );
+        this.setScrollPos( 0, true );
       };
 
       // Add an item to this scroll region.
@@ -316,7 +310,8 @@
 
         // Set the position of the scroll bar.
         if( this.scrollBar ) {
-          this.scrollBar.setPosition( this.listPos / this.bottomPos );
+          var newPos = this.bottomPos ? (this.listPos / this.bottomPos) : 0;
+          this.scrollBar.setPosition( newPos );
         }
             
         if( tween ) {

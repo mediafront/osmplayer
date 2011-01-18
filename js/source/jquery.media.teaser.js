@@ -79,12 +79,6 @@
         }
       };
 
-      this.refresh = function() {
-        if( this.node ) {
-          this.node.onResize();
-        }
-      };
-
       this.setActive = function( _active ) {
         if( settings.template.onTeaserActivate ) {
           settings.template.onTeaserActivate(this, _active);
