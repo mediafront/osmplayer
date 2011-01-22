@@ -5786,27 +5786,17 @@
 
       // Add the logo.
       if( !settings.controllerOnly ) {
-        this.display.prepend('<div class="medialogo"></div>');
-        this.logo = this.display.find(".medialogo").mediaimage( settings.link );
-        this.logo.display.css("zIndex", (settings.zIndex + 90));
-        this.logo.width = settings.logoWidth;
-        this.logo.height = settings.logoHeight;
-        this.logo.loadImage( settings.logo );
-      }
-
-      // Sets the logo position.
-      this.setLogoPos = function() {
+        this.display.prepend('<div class="' + settings.prefix + 'medialogo"></div>');
+        this.logo = this.display.find("." + settings.prefix + "medialogo").mediaimage( settings.link );
         if( this.logo ) {
-          var mediaTop = parseInt(this.media.display.css("marginTop"), 0);
-          var mediaLeft = parseInt(this.media.display.css("marginLeft"), 0);
-          var marginTop = (settings.logopos=="se" || settings.logopos=="sw") ? (mediaTop + this.height - this.logo.height - settings.logoy) : mediaTop + settings.logoy;
-          var marginLeft = (settings.logopos=="ne" || settings.logopos=="se") ? (mediaLeft + this.width - this.logo.width - settings.logox) : mediaLeft + settings.logox;
           this.logo.display.css({
-            marginTop:marginTop,
-            marginLeft:marginLeft
+            zIndex:(settings.zIndex + 90),
+            width:settings.logoWidth,
+            height:settings.logoHeight
           });
+          this.logo.loadImage( settings.logo );
         }
-      };
+      }
 
       // Reset to previous state...
       this.reset = function() {
