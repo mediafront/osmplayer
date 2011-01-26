@@ -241,7 +241,6 @@
         this.logo = this.display.find("." + settings.prefix + "medialogo").mediaimage( settings.link );
         if( this.logo ) {
           this.logo.display.css({
-            zIndex:(settings.zIndex + 90),
             width:settings.logoWidth,
             height:settings.logoHeight
           });
