@@ -42,7 +42,9 @@
               _this.parseXML( xml );
             },
             error: function( XMLHttpRequest, textStatus, errorThrown ) {
-              console.log( "Error: " + textStatus );
+              if( console ) {
+                console.log( "Error: " + textStatus );
+              }
             }
           });
         };

@@ -158,7 +158,9 @@
         } else if( (errorCode == 101) || (errorCode == 150) ) {
           errorText = "The video requested does not allow playback in an embedded player.";
         }
-        console.log(errorText);
+        if( console ) {
+          console.log(errorText);
+        }
         onUpdate( {
           type:"error",
           data:errorText
