@@ -507,7 +507,8 @@ class OSMPlayer {
     }
 
     // Return the script.
-    return 'jQuery(document).ready(function() {' . $js . '});';
+    // We need to use setTimeout since some browsers jump the gun on when they are really ready.
+    return '$(function() { setTimeout( function() {' . $js . '}, 10 ); });';
   }
 
   /**
