@@ -527,6 +527,9 @@ class OSMPlayer {
     $height = (($this->settings['playlistOnly'] && !$this->settings['vertical']) || $this->settings['controllerOnly']) ? '' : ('height:' . $this->settings['height'] . 'px;');
     $height = $this->settings['fluidHeight'] ? 'height:100%;' : $height;
 
+    // Set the version.
+    $this->settings['version'] = $this->template->getVersion();
+
     // Get the output from the template.
     $output .= $this->template->theme( array(
         'params' => $this->settings,
