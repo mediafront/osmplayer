@@ -286,11 +286,11 @@ class OSMTemplate
       // Make sure this directory exists.
       if( !is_dir( $dir ) ) {
         // Create the directory.
-        mkdir( $dir, 0775, true );
+        mkdir( $dir, 0777, true );
       }
 
       // Now make sure the directory has the right permissions.
-      @chmod( $dir, 0775 );
+      @chmod( $dir, 0777 );
 
       // Store the to path and to css.
       $to_path = $dir . '/' . $this->playerSettings['id'];
@@ -328,7 +328,7 @@ class OSMTemplate
         }
 
         // Now set the file permissions to 775.
-        @chmod( $file, 0775 );
+        @chmod( $file, 0777 );
       }
     }
   }
