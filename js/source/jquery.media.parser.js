@@ -42,7 +42,7 @@
               _this.parseXML( xml );
             },
             error: function( XMLHttpRequest, textStatus, errorThrown ) {
-              if( console ) {
+              if( window.console && console.log ) {
                 console.log( "Error: " + textStatus );
               }
             }

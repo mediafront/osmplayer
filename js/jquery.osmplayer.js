@@ -170,7 +170,7 @@
                 if( onFailed ) {
                   onFailed( textStatus );
                 }
-                else if( console ) {
+                else if( window.console && console.log ) {
                   console.log( "Error: " + textStatus );
                 }
               },
@@ -180,7 +180,7 @@
                   if( onFailed ) {
                     onFailed( xml.error );
                   }
-                  else if( console ) {
+                  else if( window.console && console.log ) {
                     console.dir( xml.error );
                   }
                 }
@@ -3374,7 +3374,7 @@
                 if( onFailed ) {
                   onFailed( textStatus );
                 }
-                else if( console ) {
+                else if( window.console && console.log ) {
                   console.log( "Error: " + textStatus );
                 }
               },
@@ -4073,7 +4073,7 @@
   };
    
   window.onFlashPlayerDebug = function( debug ) {
-    if( console ) {
+    if( window.console && console.log ) {
       console.log( debug );
     }
   };
@@ -5181,7 +5181,7 @@
         } else if( (errorCode == 101) || (errorCode == 150) ) {
           errorText = "The video requested does not allow playback in an embedded player.";
         }
-        if( console ) {
+        if( window.console && console.log ) {
           console.log(errorText);
         }
         onUpdate( {
@@ -5601,7 +5601,7 @@
               _this.parseXML( xml );
             },
             error: function( XMLHttpRequest, textStatus, errorThrown ) {
-              if( console ) {
+              if( window.console && console.log ) {
                 console.log( "Error: " + textStatus );
               }
             }

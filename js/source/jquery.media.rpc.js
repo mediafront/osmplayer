@@ -170,7 +170,7 @@
                 if( onFailed ) {
                   onFailed( textStatus );
                 }
-                else if( console ) {
+                else if( window.console && console.log ) {
                   console.log( "Error: " + textStatus );
                 }
               },
@@ -180,7 +180,7 @@
                   if( onFailed ) {
                     onFailed( xml.error );
                   }
-                  else if( console ) {
+                  else if( window.console && console.log ) {
                     console.dir( xml.error );
                   }
                 }
