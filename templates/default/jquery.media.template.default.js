@@ -121,7 +121,7 @@
             if( this.player ) {
               // Make sure
               $(window).bind("mousemove", function() {
-                if( !_this.player.hasControls() && this.showController ) {
+                if( !_this.player.hasControls() && _this.showController ) {
                   jQuery.media.utils.showThenHide( mediaplayer.controller.display, "display", "fast", "slow" );
                 }
                 jQuery.media.utils.showThenHide( _this.titleLinks, "links", "fast", "slow" );
