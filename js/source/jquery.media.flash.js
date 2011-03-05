@@ -51,7 +51,7 @@
       this.display = video;
       var _this = this;
       this.player = null;
-      this.videoFile = null;
+      this.mediaFile = null;
       this.preview = '';
       this.ready = false;
          
@@ -66,8 +66,8 @@
         "mediaMeta":"meta"
       };
          
-      this.createMedia = function( videoFile, preview ) {
-        this.videoFile = videoFile;
+      this.createMedia = function( mediaFile, preview ) {
+        this.mediaFile = mediaFile;
         this.preview = preview;
         this.ready = false;
         var playerId = (settings.id + "_media");
@@ -76,12 +76,12 @@
         var flashvars = {
           config:settings.config,
           id:settings.id,
-          file:videoFile.path,
+          file:mediaFile.path,
           skin:settings.skin,
           autostart:(settings.autostart || !settings.autoLoad)
         };
-        if( videoFile.stream ) {
-          flashvars.stream = videoFile.stream;
+        if( mediaFile.stream ) {
+          flashvars.stream = mediaFile.stream;
         }
         if( settings.debug ) {
           flashvars.debug = "1";
@@ -101,12 +101,12 @@
           );
       };
          
-      this.loadMedia = function( videoFile ) {
+      this.loadMedia = function( mediaFile ) {
         if( this.player ) {
-          this.videoFile = videoFile;
+          this.mediaFile = mediaFile;
                
           // Load the new media file into the Flash player.
-          this.player.loadMedia( videoFile.path, videoFile.stream );
+          this.player.loadMedia( mediaFile.path, mediaFile.stream );
                
           // Let them know the player is ready.
           onUpdate( {
@@ -187,12 +187,12 @@
         var flashVars = {
           config:"config",
           id:"mediafront_player",
-          file:this.videoFile.path,
+          file:this.mediaFile.path,
           image:this.preview,
           skin:settings.skin
         };
-        if( this.videoFile.stream ) {
-          flashVars.stream = this.videoFile.stream;
+        if( this.mediaFile.stream ) {
+          flashVars.stream = this.mediaFile.stream;
         }
         return jQuery.media.utils.getFlash(
           settings.flashPlayer,
