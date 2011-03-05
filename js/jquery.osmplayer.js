@@ -3220,7 +3220,23 @@
       this.showControls = function(show) {};
       //this.setSize = function( newWidth, newHeight ) {};
       this.getEmbedCode = function() {
-        return "This media cannot be embedded.";
+        var flashVars = {
+          config:"config",
+          id:"mediafront_player",
+          file:this.videoFile.path,
+          image:this.preview,
+          skin:settings.skin
+        };
+        if( this.videoFile.stream ) {
+          flashVars.stream = this.videoFile.stream;
+        }
+        return jQuery.media.utils.getFlash(
+          settings.flashPlayer,
+          "mediafront_player",
+          settings.embedWidth,
+          settings.embedHeight,
+          flashVars,
+          settings.wmode );
       };
       this.getMediaLink = function() {
         return "This media currently does not have a link.";
