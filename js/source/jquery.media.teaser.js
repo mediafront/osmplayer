@@ -42,14 +42,14 @@
       this.display = teaser;
          
       // If they hover over the teaser...
-      this.display.bind( "mouseenter", function(event) {
+      this.display.unbind("mouseenter").bind( "mouseenter", function(event) {
         if( settings.template.onTeaserOver ) {
           settings.template.onTeaserOver( _this );
         }
       });
          
       // If they hover away from the teaser...
-      this.display.bind( "mouseleave", function(event) {
+      this.display.unbind("mouseleave").bind( "mouseleave", function(event) {
         if( settings.template.onTeaserOut ) {
           settings.template.onTeaserOut( _this );
         }

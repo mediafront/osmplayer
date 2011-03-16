@@ -130,14 +130,14 @@
       this.seekProgress = controlBar.find( settings.ids.seekProgress ).css("width", 0);
       this.seekBar = controlBar.find( settings.ids.seekBar ).mediaslider( settings.ids.seekHandle, false );
       if( this.seekBar ) {
-        this.seekBar.display.bind( "setvalue", function( event, data ) {
+        this.seekBar.display.unbind("setvalue").bind( "setvalue", function( event, data ) {
           _this.seekUpdate.css( "width", (data * _this.seekBar.trackSize) + "px" );
           _this.display.trigger( "controlupdate", {
             type:"seek",
             value:(data * _this.duration)
           });
         });
-        this.seekBar.display.bind( "updatevalue", function( event, data ) {
+        this.seekBar.display.unbind("updatevalue").bind( "updatevalue", function( event, data ) {
           _this.seekUpdate.css( "width", (data * _this.seekBar.trackSize) + "px" );
         });
       }
@@ -160,14 +160,14 @@
       this.volumeUpdate = controlBar.find( settings.ids.volumeUpdate );
       this.volumeBar = controlBar.find( settings.ids.volumeBar ).mediaslider( settings.ids.volumeHandle, settings.volumeVertical, settings.volumeVertical );
       if( this.volumeBar ) {
-        this.volumeBar.display.bind("setvalue", function( event, data ) {
+        this.volumeBar.display.unbind("setvalue").bind("setvalue", function( event, data ) {
           _this.setVolume( data );
           _this.display.trigger( "controlupdate", {
             type:"volume",
             value:data
           });
         });
-        this.volumeBar.display.bind("updatevalue", function( event, data ) {
+        this.volumeBar.display.unbind("updatevalue").bind("updatevalue", function( event, data ) {
           _this.setVolume( data );
           _this.volume = data;
         });

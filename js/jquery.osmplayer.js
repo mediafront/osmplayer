@@ -274,7 +274,7 @@
       // Store the play overlay.
       this.play = player.find( settings.ids.play );
       // Toggle the play/pause state if they click on the play button.
-      this.play.bind("click", function() {
+      this.play.unbind("click").bind("click", function() {
         _this.togglePlayPause();
       });
       this.playImg = this.play.find("img");
@@ -284,7 +284,7 @@
       // Store the preview image.
       this.preview = player.find( settings.ids.preview ).mediaimage();
       if( this.preview ) {
-        this.preview.display.bind("imageLoaded", function() {
+        this.preview.display.unbind("imageLoaded").bind("imageLoaded", function() {
           _this.onPreviewLoaded();
         });
       }
@@ -400,7 +400,7 @@
           case "paused":
             this.playing = false;
             this.showPlay(true);
-            this.showBusy(1, false);
+            //this.showBusy(1, false);
             if( !this.media.loaded ) {
               this.showPreview(true);
             }
@@ -409,7 +409,6 @@
           case "playing":
             this.playing = true;
             this.showPlay(false);
-            this.showBusy(1, false);
             this.showPreview((this.media.mediaFile.type == "audio"));
             break;
           case "initialize":
@@ -420,9 +419,15 @@
             break;
           case "buffering":
             this.showPlay(true);
-            this.showBusy(1, true);
             this.showPreview((this.media.mediaFile.type == "audio"));
             break;
+          default:
+            break;
+        }
+
+        // If they provide a busy cursor.
+        if( data.busy ) {
+          this.showBusy(1, (data.busy == "show"));
         }
       };
 
@@ -619,10 +624,10 @@
       this.display.find("div").each( function() {
         if( userVote ) {
           $(this).css("cursor", "pointer");
-          $(this).bind( "click", function( event ) {
+          $(this).unbind("click").bind( "click", function( event ) {
             _this.setVote( parseInt($(this).attr("vote"), 10) );
           });
-          $(this).bind( "mouseenter", function( event ) {
+          $(this).unbind("mouseenter").bind( "mouseenter", function( event ) {
             _this.updateVote( {
               value: parseInt($(this).attr("vote"), 10)
             }, true );
@@ -641,7 +646,7 @@
          
       // If this is a uservoter, then add the mouse leave event.
       if( userVote ) {
-        this.display.bind( "mouseleave", function( event ) {
+        this.display.unbind("mouseleave").bind( "mouseleave", function( event ) {
           _this.updateVote( {
             value:0
           }, true );
@@ -758,8 +763,8 @@
          
       // Add the min player as the player for this node.
       this.player = this.display.find(settings.ids.mediaRegion).minplayer( settings );
-      if( this.player && this.player.media && (settings.incrementTime !== 0)) {
-        this.player.media.display.bind( "mediaupdate", function( event, data ) {
+      if( this.player && (settings.incrementTime !== 0)) {
+        this.player.display.unbind("mediaupdate").bind( "mediaupdate", function( event, data ) {
           _this.onMediaUpdate( data );
         });
       }
@@ -771,13 +776,13 @@
         this.voter = element.find(settings.ids.voter).mediavoter( settings, server, false );
         this.uservoter = element.find(settings.ids.uservoter).mediavoter( settings, server, true );
         if( this.uservoter && this.voter ) {
-          this.uservoter.display.bind( "processing", function() {
+          this.uservoter.display.unbind("processing").bind( "processing", function() {
             _this.player.showBusy(2, true);
           });
-          this.uservoter.display.bind( "voteGet", function() {
+          this.uservoter.display.unbind("voteGet").bind( "voteGet", function() {
             _this.player.showBusy(2, false);
           });
-          this.uservoter.display.bind( "voteSet", function( event, vote ) {
+          this.uservoter.display.unbind("voteSet").bind( "voteSet", function( event, vote ) {
             _this.player.showBusy(2, false);
             _this.voter.updateVote( vote );
           });
@@ -804,6 +809,8 @@
                 this.incremented = true;
                 server.call( jQuery.media.commands.incrementCounter, null, null, _this.nodeInfo.nid );
               }
+              break;
+            default:
               break;
           }
         }
@@ -1242,17 +1249,14 @@
 
       stopHide : function( element, id ) {
         jQuery.media.utils.stopElementHide[id] = true;
-        if( element ) {
-          element.unbind("mouseover").unbind("mouseout");
-        }
       },
 
       stopHideOnOver : function( element, id ) {
         if( element ) {
           jQuery.media.utils.stopElementHide[id] = false;
-          element.bind("mouseover", {id:id}, function( event ) {
+          element.unbind("mouseover").bind("mouseover", {id:id}, function( event ) {
             jQuery.media.utils.stopElementHide[event.data.id] = true;
-          }).bind("mouseout", {id:id}, function( event ) {
+          }).unbind("mouseout").bind("mouseout", {id:id}, function( event ) {
             jQuery.media.utils.stopElementHide[event.data.id] = false;
           });
         }
@@ -1496,13 +1500,13 @@
       var _this = this;
       this.display = link;
           
-      this.display.css("cursor", "pointer").bind( "click", data, function( event ) {
+      this.display.css("cursor", "pointer").unbind("click").bind( "click", data, function( event ) {
         onClick( event, $(this) );
-      }).bind("mouseenter", function() {
+      }).unbind("mouseenter").bind("mouseenter", function() {
         if( settings.template.onLinkOver ) {
           settings.template.onLinkOver( $(this) );
         }
-      }).bind("mouseleave", function() {
+      }).unbind("mouseleave").bind("mouseleave", function() {
         if( settings.template.onLinkOut ) {
           settings.template.onLinkOut( $(this) );
         }
@@ -1829,19 +1833,22 @@
          
       this.onPlaying = function() {
         onUpdate({
-          type:"playing"
+          type:"playing",
+          busy:"hide"
         });
       };
 
       this.onPaused = function() {
         onUpdate({
-          type:"paused"
+          type:"paused",
+          busy:"hide"
         });
       };
          
       this.playMedia = function() {
         onUpdate({
-          type:"playing"
+          type:"playing",
+          busy:"hide"
         });
         this.player.api_play();
       };
@@ -1854,7 +1861,8 @@
          
       this.pauseMedia = function() {
         onUpdate({
-          type:"paused"
+          type:"paused",
+          busy:"hide"
         });
         this.player.api_pause();
       };
@@ -1977,13 +1985,13 @@
       // users to use the scroll bar.
       if( this.spanMode || (settings.scrollMode == "auto") ) {
         // Add our event callbacks.
-        this.listMask.bind( 'mouseenter', function( event ) {
+        this.listMask.unbind("mouseenter").bind( 'mouseenter', function( event ) {
           _this.onMouseOver( event );
         });
-        this.listMask.bind( 'mouseleave', function( event ) {
+        this.listMask.unbind("mouseleave").bind( 'mouseleave', function( event ) {
           _this.onMouseOut( event );
         });
-        this.listMask.bind( 'mousemove', function( event ) {
+        this.listMask.unbind("mousemove").bind( 'mousemove', function( event ) {
           _this.onMouseMove( event );
         });
       }
@@ -2036,12 +2044,12 @@
          
       if( this.scrollBar ) {
         // Handle the update value event.
-        this.scrollBar.display.bind("updatevalue", function( event, data ) {
+        this.scrollBar.display.unbind("updatevalue").bind("updatevalue", function( event, data ) {
           _this.setScrollPos( data * _this.bottomPos, false );
         });
             
         // Handle the set value event.
-        this.scrollBar.display.bind("setvalue", function( event, data ) {
+        this.scrollBar.display.unbind("setvalue").bind("setvalue", function( event, data ) {
           _this.setScrollPos( data * _this.bottomPos, true );
         });
       }
@@ -2301,7 +2309,7 @@
       };
          
       this.close = this.display.find( settings.ids.close );
-      this.close.bind( "click", function() {
+      this.close.unbind("click").bind( "click", function() {
         _this.display.trigger( "menuclose" );
       });
          
@@ -2336,8 +2344,7 @@
          
       this.setInputItem = function( id, value ) {
         var input = this.contents[id].find("input");
-        input.unbind();
-        input.bind("click", function() {
+        input.unbind("click").bind("click", function() {
           $(this).select().focus();
         });
         input.attr("value", value );
@@ -2352,7 +2359,7 @@
           var contents = _this.display.find(linkId);
           contents.hide();
           _this.contents[linkId] = contents;
-          link.bind("click", {
+          link.unbind("click").bind("click", {
             id:linkId,
             obj:link.parent()
           }, function( event ) {
@@ -2497,23 +2504,25 @@
         // Alright... Dailymotion's status updates are just crazy...
         // write some hacks to just make it work.
             
-        if( !(!this.meta && playerState =="stopped") ) {
+        if( !(!this.meta && playerState.state =="stopped") ) {
           onUpdate( {
-            type:playerState
+            type:playerState.state,
+            busy:playerState.busy
           } );
         }
             
-        if( !this.loaded && playerState == "buffering" ) {
+        if( !this.loaded && playerState.state == "buffering" ) {
           this.loaded = true;
           onUpdate( {
-            type:"paused"
+            type:"paused",
+            busy:"hide"
           } );
           if( options.autostart ) {
             this.playMedia();
           }
         }
             
-        if( !this.meta && playerState == "playing" ) {
+        if( !this.meta && playerState.state == "playing" ) {
           // Set this player to meta.
           this.meta = true;
                
@@ -2544,19 +2553,19 @@
       this.getPlayerState = function( playerState ) {
         switch (playerState) {
           case 5:
-            return 'ready';
+            return {state:'ready', busy:false};
           case 3:
-            return 'buffering';
+            return {state:'buffering', busy:"show"};
           case 2:
-            return 'paused';
+            return {state:'paused', busy:"hide"};
           case 1:
-            return 'playing';
+            return {state:'playing', busy:"hide"};
           case 0:
-            return 'complete';
+            return {state:'complete', busy:false};
           case -1:
-            return 'stopped';
+            return {state:'stopped', busy:false};
           default:
-            return 'unknown';
+            return {state:'unknown', busy:false};
         }
         return 'unknown';
       };
@@ -2568,7 +2577,8 @@
          */
       this.playMedia = function() {
         onUpdate({
-          type:"buffering"
+          type:"buffering",
+          busy:"show"
         });
         this.player.playVideo();
       };
@@ -2583,7 +2593,8 @@
          
       this.seekMedia = function( pos ) {
         onUpdate({
-          type:"buffering"
+          type:"buffering",
+          busy:"show"
         });
         this.player.seekTo( pos, true );
       };
@@ -2743,7 +2754,7 @@
       this.addPager = function( newPager, active ) {
         if( newPager ) {
           // Handler for the loadindex event.
-          newPager.display.bind( "loadindex", function( event, data ) {
+          newPager.display.unbind("loadindex").bind( "loadindex", function( event, data ) {
             if( data.active ) {
               _this.activateTeaser( _this.teasers[data.index] );
             }
@@ -2753,7 +2764,7 @@
           });
       
           // Handler for the loadpage event.
-          newPager.display.bind( "loadpage", function( event, data ) {
+          newPager.display.unbind("loadpage").bind( "loadpage", function( event, data ) {
             _this.setActive = data.active;
             _this.loadPlaylist( {
               pageIndex:data.index
@@ -2771,7 +2782,7 @@
       this.pager = this.addPager( playlist.find( settings.ids.pager ).mediapager( settings ), false );
 
       // Handler for when a link is clicked.
-      this.links.display.bind( "linkclick", function( event, link ) {
+      this.links.display.unbind("linkclick").bind( "linkclick", function( event, link ) {
         _this.onLinkClick( link );
       });
 
@@ -2922,7 +2933,7 @@
         var teaser = this.scrollRegion.newItem().mediateaser( server, nodeInfo, index, settings );
         if( teaser ) {
           // If they click on the teaser, then activate it.
-          teaser.display.bind( "click", teaser, function( event ) {
+          teaser.display.unbind("click").bind( "click", teaser, function( event ) {
             _this.activateTeaser( event.data );
           });
    
@@ -3088,57 +3099,101 @@
         this.mediaType = this.getMediaType( mediaFile );
         this.player = this.getPlayer( mediaFile, preview );
         this.loaded = false;
+        var timeupdated = false;
+        if( this.player ) {
+          this.player.addEventListener( "abort", function() {
+            onUpdate( {
+              type:"stopped"
+            } );
+          }, true);
+          this.player.addEventListener( "loadstart", function() {
+            onUpdate( {
+              type:"ready",
+              busy:"show"
+            });
 
-        this.player.addEventListener( "abort", function() {
-          onUpdate( {
-            type:"stopped"
-          } );
-        }, true);
-        this.player.addEventListener( "loadstart", function() {
-          onUpdate( {
-            type:"ready"
+            _this.onReady();
+          }, true);
+          this.player.addEventListener( "loadeddata", function() {
+            onUpdate( {
+              type:"loaded",
+              busy:"hide"
+            });
+          }, true);
+          this.player.addEventListener( "loadedmetadata", function() {
+            onUpdate( {
+              type:"meta"
+            } );
+          }, true);
+          this.player.addEventListener( "canplaythrough", function() {
+            onUpdate( {
+              type:"canplay",
+              busy:"hide"
+            });
+          }, true);
+          this.player.addEventListener( "ended", function() {
+            onUpdate( {
+              type:"complete"
+            } );
+          }, true);
+          this.player.addEventListener( "pause", function() {
+            onUpdate( {
+              type:"paused"
+            } );
+          }, true);
+          this.player.addEventListener( "play", function() {
+            onUpdate( {
+              type:"playing"
+            } );
+          }, true);
+          this.player.addEventListener( "playing", function() {
+            onUpdate( {
+              type:"playing",
+              busy:"hide"
+            });
+          }, true);
+          this.player.addEventListener( "error", function() {
+            onUpdate( {
+              type:"error"
+            } );
+          }, true);
+          this.player.addEventListener( "waiting", function() {
+            onUpdate( {
+              type:"waiting",
+              busy:"show"
+            });
+          }, true);
+          this.player.addEventListener( "timeupdate", function() {
+            if( timeupdated ) {
+              onUpdate( {
+                type:"timeupdate",
+                busy:"hide"
+              });
+            }
+            else {
+              timeupdated = true;
+            }
+          }, true);
+
+          // Now add the event for getting the progress indication.
+          this.player.addEventListener( "progress", function( event ) {
+            _this.bytesLoaded = event.loaded;
+            _this.bytesTotal = event.total;
+          }, true);
+
+          this.player.autoplay = true;
+
+          if (typeof this.player.hasAttribute == "function" && this.player.hasAttribute("preload") && this.player.preload != "none") {
+            this.player.autobuffer = true;
+          } else {
+            this.player.autobuffer = false;
+            this.player.preload = "none";
+          }
+
+          onUpdate({
+            type:"playerready"
           });
-
-          _this.onReady();
-        }, true);
-        this.player.addEventListener( "loadedmetadata", function() {
-          onUpdate( {
-            type:"meta"
-          } );
-        }, true);
-        this.player.addEventListener( "ended", function() {
-          onUpdate( {
-            type:"complete"
-          } );
-        }, true);
-        this.player.addEventListener( "pause", function() {
-          onUpdate( {
-            type:"paused"
-          } );
-        }, true);
-        this.player.addEventListener( "play", function() {
-          onUpdate( {
-            type:"playing"
-          } );
-        }, true);
-        this.player.addEventListener( "error", function() {
-          onUpdate( {
-            type:"error"
-          } );
-        }, true);
-
-        // Now add the event for getting the progress indication.
-        this.player.addEventListener( "progress", function( event ) {
-          _this.bytesLoaded = event.loaded;
-          _this.bytesTotal = event.total ? event.total : _this.bytesTotal;
-        }, true);
-
-        this.player.autoplay = true;
-        this.player.autobuffer = true;
-            
-        onUpdate({
-          type:"playerready"
-        });
+        }
       };
 
       // Called when the media has started loading.
@@ -3168,36 +3223,46 @@
       };
          
       this.playMedia = function() {
-        this.player.play();
+        if( this.player ) {
+          this.player.play();
+        }
       };
          
       this.pauseMedia = function() {
-        this.player.pause();
+        if( this.player ) {
+          this.player.pause();
+        }
       };
          
       this.stopMedia = function() {
         this.pauseMedia();
-        this.player.src = "";
+        if( this.player ) {
+          this.player.src = "";
+        }
       };
          
       this.seekMedia = function( pos ) {
-        this.player.currentTime = pos;
+        if( this.player ) {
+          this.player.currentTime = pos;
+        }
       };
          
       this.setVolume = function( vol ) {
-        this.player.volume = vol;
+        if( this.player ) {
+          this.player.volume = vol;
+        }
       };
          
       this.getVolume = function() {
-        return this.player.volume;
+        return this.player ? this.player.volume : 0;
       };
          
       this.getDuration = function() {
-        return this.player.duration;
+        return this.player ? this.player.duration : 0;
       };
          
       this.getCurrentTime = function() {
-        return this.player.currentTime;
+        return this.player ? this.player.currentTime : 0;
       };
 
       this.getPercentLoaded = function() {
@@ -3246,7 +3311,8 @@
       };
     })( this, options, onUpdate );
   };
-         /**
+         
+/**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
  *  Developed by Travis Tidwell | travist at alethia-inc.com 
@@ -3501,7 +3567,7 @@
         jQuery.each( _images, function( index ) {
           var image = _this.addImage();
           if( index === 0 ) {
-            image.display.bind("imageLoaded", function() {
+            image.display.unbind("imageLoaded").bind("imageLoaded", function() {
               _this.onImageLoaded();
             }).show();
           }
@@ -3510,9 +3576,9 @@
         });
             
         if( settings.rotatorHover ) {
-          this.display.bind( "mouseenter", function() {
+          this.display.unbind("mouseenter").bind( "mouseenter", function() {
             _this.startRotator();
-          }).bind( "mouseleave", function() {
+          }).unbind("mouseleave").bind( "mouseleave", function() {
             clearInterval( _this.imageInterval );
           });
         }
@@ -3819,7 +3885,6 @@
               clearInterval( this.progressInterval );
             }
             break;
-          case "update":
           case "meta":
             jQuery.extend( data, {
               currentTime:this.player.getCurrentTime(),
@@ -3830,6 +3895,8 @@
             break;
           case "complete":
             this.playNext();
+            break;
+          default:
             break;
         }
             
@@ -3871,7 +3938,11 @@
           this.updateInterval = setInterval( function() {
             if( _this.playerReady ) {
               _this.onMediaUpdate({
-                type:"update"
+                type:"update",
+                currentTime:_this.player.getCurrentTime(),
+                totalTime:_this.getDuration(),
+                volume:_this.player.getVolume(),
+                quality:_this.getQuality()
               });
             }
           }, 1000 );
@@ -3922,10 +3993,15 @@
       };
          
       this.getDuration = function() {
-        if( !this.mediaFile.duration ) {
-          this.mediaFile.duration = this.player.getDuration();
+        if( this.mediaFile ) {
+          if(!this.mediaFile.duration ) {
+            this.mediaFile.duration = this.player.getDuration();
+          }
+          return this.mediaFile.duration;
         }
-        return this.mediaFile.duration;
+        else {
+          return 0;
+        }
       };
          
       this.getQuality = function() {
@@ -4124,6 +4200,17 @@
         "mediaComplete":"complete",
         "mediaMeta":"meta"
       };
+
+      // When to show the busy cursor.
+      this.busy = {
+        "mediaConnected":false,
+        "mediaBuffering":"show",
+        "mediaPaused":"hide",
+        "mediaPlaying":"hide",
+        "mediaStopped":false,
+        "mediaComplete":false,
+        "mediaMeta":false
+      };
          
       this.createMedia = function( mediaFile, preview ) {
         this.mediaFile = mediaFile;
@@ -4189,8 +4276,9 @@
          
       this.onMediaUpdate = function( eventType ) {
         onUpdate( {
-          type:this.translate[eventType]
-        } );
+          type:this.translate[eventType],
+          busy:this.busy[eventType]
+        });
       };
          
       this.playMedia = function() {
@@ -4342,7 +4430,7 @@
           while(i--) {
             // Add this link to the scroll region.
             var link = this.scrollRegion.newItem().playlistlink( settings, settings.links[i] );
-            link.bind("linkclick", onLinkClick);
+            link.unbind("linkclick").bind("linkclick", onLinkClick);
           }
           // Activate the scroll region.
           this.scrollRegion.activate();
@@ -4497,14 +4585,14 @@
       this.seekProgress = controlBar.find( settings.ids.seekProgress ).css("width", 0);
       this.seekBar = controlBar.find( settings.ids.seekBar ).mediaslider( settings.ids.seekHandle, false );
       if( this.seekBar ) {
-        this.seekBar.display.bind( "setvalue", function( event, data ) {
+        this.seekBar.display.unbind("setvalue").bind( "setvalue", function( event, data ) {
           _this.seekUpdate.css( "width", (data * _this.seekBar.trackSize) + "px" );
           _this.display.trigger( "controlupdate", {
             type:"seek",
             value:(data * _this.duration)
           });
         });
-        this.seekBar.display.bind( "updatevalue", function( event, data ) {
+        this.seekBar.display.unbind("updatevalue").bind( "updatevalue", function( event, data ) {
           _this.seekUpdate.css( "width", (data * _this.seekBar.trackSize) + "px" );
         });
       }
@@ -4527,14 +4615,14 @@
       this.volumeUpdate = controlBar.find( settings.ids.volumeUpdate );
       this.volumeBar = controlBar.find( settings.ids.volumeBar ).mediaslider( settings.ids.volumeHandle, settings.volumeVertical, settings.volumeVertical );
       if( this.volumeBar ) {
-        this.volumeBar.display.bind("setvalue", function( event, data ) {
+        this.volumeBar.display.unbind("setvalue").bind("setvalue", function( event, data ) {
           _this.setVolume( data );
           _this.display.trigger( "controlupdate", {
             type:"volume",
             value:data
           });
         });
-        this.volumeBar.display.bind("updatevalue", function( event, data ) {
+        this.volumeBar.display.unbind("updatevalue").bind("updatevalue", function( event, data ) {
           _this.setVolume( data );
           _this.volume = data;
         });
@@ -5165,7 +5253,7 @@
           // Let them know the player is ready.
           onUpdate( {
             type:"playerready"
-          } );
+          });
                
           // Load our video.
           this.player.loadVideoById( this.getId( this.videoFile.path ), 0 );
@@ -5176,7 +5264,8 @@
       this.onStateChange = function( newState ) {
         var playerState = this.getPlayerState( newState );
         onUpdate( {
-          type:playerState
+          type:playerState.state,
+          busy:playerState.busy
         } );
             
         if( !this.loaded && playerState == "playing" ) {
@@ -5213,19 +5302,19 @@
       this.getPlayerState = function( playerState ) {
         switch (playerState) {
           case 5:
-            return 'ready';
+            return {state:'ready', busy:false};
           case 3:
-            return 'buffering';
+            return {state:'buffering', busy:"show"};
           case 2:
-            return 'paused';
+            return {state:'paused', busy:"hide"};
           case 1:
-            return 'playing';
+            return {state:'playing', busy:"hide"};
           case 0:
-            return 'complete';
+            return {state:'complete', busy:false};
           case -1:
-            return 'stopped';
+            return {state:'stopped', busy:false};
           default:
-            return 'unknown';
+            return {state:'unknown', busy:false};
         }
         return 'unknown';
       };
@@ -5236,7 +5325,8 @@
       */
       this.playMedia = function() {
         onUpdate({
-          type:"buffering"
+          type:"buffering",
+          busy:"show"
         });
         this.player.playVideo();
       };
@@ -5251,7 +5341,8 @@
          
       this.seekMedia = function( pos ) {
         onUpdate({
-          type:"buffering"
+          type:"buffering",
+          busy:"show"
         });
         this.player.seekTo( pos, true );
       };
@@ -5483,7 +5574,7 @@
         this.handle.css( (vertical ? "marginTop" : "marginLeft"), this.handlePos );
       };
          
-      this.display.bind("mousedown", function( event ) {
+      this.display.unbind("mousedown").bind("mousedown", function( event ) {
         event.preventDefault();
         _this.dragging = true;
       });
@@ -5501,14 +5592,14 @@
         return pos;
       };
          
-      this.display.bind("mousemove", function( event ) {
+      this.display.unbind("mousemove").bind("mousemove", function( event ) {
         event.preventDefault();
         if( _this.dragging ) {
           _this.updateValue( _this.getPosition( event[_this.pagePos] ) );
         }
       });
 
-      this.display.bind("mouseleave", function( event ) {
+      this.display.unbind("mouseleave").bind("mouseleave", function( event ) {
         event.preventDefault();
         if( _this.dragging ) {
           _this.dragging = false;
@@ -5516,7 +5607,7 @@
         }
       });
          
-      this.display.bind("mouseup", function( event ) {
+      this.display.unbind("mouseup").bind("mouseup", function( event ) {
         event.preventDefault();
         if( _this.dragging ) {
           _this.dragging = false;
@@ -5962,7 +6053,7 @@
       // Get the menu.
       this.menu = this.dialog.find( settings.ids.menu ).mediamenu( this.server, settings );
       if( this.menu ) {
-        this.menu.display.bind( "menuclose", function() {
+        this.menu.display.unbind("menuclose").bind( "menuclose", function() {
           _this.showMenu( false );
         });
       }
@@ -6013,15 +6104,15 @@
       // Adds the media player events to a given element.
       this.addPlayerEvents = function( element ) {
         // Trigger on the menu.
-        element.display.bind("menu", function(event) {
+        element.display.unbind("menu").bind("menu", function(event) {
           _this.showMenu( !_this.menuOn );
         });
 
-        element.display.bind("maximize", function( event ) {
+        element.display.unbind("maximize").bind("maximize", function( event ) {
           _this.maximize( !_this.maxOn );
         });
 
-        element.display.bind("fullscreen", function( event ) {
+        element.display.unbind("fullscreen").bind("fullscreen", function( event ) {
           _this.fullScreen = !_this.fullScreen;
           if( _this.node && _this.node.player ) {
             _this.node.player.fullScreen( _this.fullScreen );
@@ -6058,18 +6149,18 @@
       // Get the node and register for events.
       this.node = this.dialog.find( settings.ids.node ).medianode( this.server, settings );
       if( this.node ) {
-        this.node.display.bind( "nodeload", function( event, data ) {
+        this.node.display.unbind("nodeload").bind( "nodeload", function( event, data ) {
           _this.onNodeLoad( data );
         });
             
-        if( this.node.player && this.node.player.media ) {
-          this.node.player.media.display.bind( "mediaupdate", function( event, data ) {
+        if( this.node.player ) {
+          this.node.player.display.unbind("mediaupdate").bind( "mediaupdate", function( event, data ) {
             _this.onMediaUpdate( data );
           });
         }
             
         if( this.node.uservoter ) {
-          this.node.uservoter.display.bind( "voteSet", function( event, vote ) {
+          this.node.uservoter.display.unbind("voteSet").bind( "voteSet", function( event, vote ) {
             if( _this.activePlaylist ) {
               _this.activePlaylist.onVoteSet( vote );
             }
@@ -6148,7 +6239,7 @@
       // Allow multiple playlists to be associated with this single player using this API.
       this.addPlaylist = function( newPlaylist ) {
         if( newPlaylist ) {
-          newPlaylist.display.bind( "playlistload", newPlaylist, function( event, data ) {
+          newPlaylist.display.unbind("playlistload").bind( "playlistload", newPlaylist, function( event, data ) {
             // Set this as the active playlist.
             _this.activePlaylist = event.data;
             _this.onPlaylistLoad( data );
@@ -6179,7 +6270,7 @@
       // Allow mulitple controllers to control this media.
       this.addController = function( newController, active ) {
         if( newController ) {
-          newController.display.bind( "controlupdate", newController, function( event, data ) {
+          newController.display.unbind("controlupdate").bind( "controlupdate", newController, function( event, data ) {
             _this.activeController = event.data;
             if( _this.node && _this.node.player ) {
               _this.node.player.onControlUpdate( data );
@@ -6361,14 +6452,14 @@
       this.display = teaser;
          
       // If they hover over the teaser...
-      this.display.bind( "mouseenter", function(event) {
+      this.display.unbind("mouseenter").bind( "mouseenter", function(event) {
         if( settings.template.onTeaserOver ) {
           settings.template.onTeaserOver( _this );
         }
       });
          
       // If they hover away from the teaser...
-      this.display.bind( "mouseleave", function(event) {
+      this.display.unbind("mouseleave").bind( "mouseleave", function(event) {
         if( settings.template.onTeaserOut ) {
           settings.template.onTeaserOut( _this );
         }

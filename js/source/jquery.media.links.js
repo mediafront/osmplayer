@@ -67,7 +67,7 @@
           while(i--) {
             // Add this link to the scroll region.
             var link = this.scrollRegion.newItem().playlistlink( settings, settings.links[i] );
-            link.bind("linkclick", onLinkClick);
+            link.unbind("linkclick").bind("linkclick", onLinkClick);
           }
           // Activate the scroll region.
           this.scrollRegion.activate();

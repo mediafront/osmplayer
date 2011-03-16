@@ -124,23 +124,25 @@
         // Alright... Dailymotion's status updates are just crazy...
         // write some hacks to just make it work.
             
-        if( !(!this.meta && playerState =="stopped") ) {
+        if( !(!this.meta && playerState.state =="stopped") ) {
           onUpdate( {
-            type:playerState
+            type:playerState.state,
+            busy:playerState.busy
           } );
         }
             
-        if( !this.loaded && playerState == "buffering" ) {
+        if( !this.loaded && playerState.state == "buffering" ) {
           this.loaded = true;
           onUpdate( {
-            type:"paused"
+            type:"paused",
+            busy:"hide"
           } );
           if( options.autostart ) {
             this.playMedia();
           }
         }
             
-        if( !this.meta && playerState == "playing" ) {
+        if( !this.meta && playerState.state == "playing" ) {
           // Set this player to meta.
           this.meta = true;
                
@@ -171,19 +173,19 @@
       this.getPlayerState = function( playerState ) {
         switch (playerState) {
           case 5:
-            return 'ready';
+            return {state:'ready', busy:false};
           case 3:
-            return 'buffering';
+            return {state:'buffering', busy:"show"};
           case 2:
-            return 'paused';
+            return {state:'paused', busy:"hide"};
           case 1:
-            return 'playing';
+            return {state:'playing', busy:"hide"};
           case 0:
-            return 'complete';
+            return {state:'complete', busy:false};
           case -1:
-            return 'stopped';
+            return {state:'stopped', busy:false};
           default:
-            return 'unknown';
+            return {state:'unknown', busy:false};
         }
         return 'unknown';
       };
@@ -195,7 +197,8 @@
          */
       this.playMedia = function() {
         onUpdate({
-          type:"buffering"
+          type:"buffering",
+          busy:"show"
         });
         this.player.playVideo();
       };
@@ -210,7 +213,8 @@
          
       this.seekMedia = function( pos ) {
         onUpdate({
-          type:"buffering"
+          type:"buffering",
+          busy:"show"
         });
         this.player.seekTo( pos, true );
       };

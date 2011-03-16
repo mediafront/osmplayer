@@ -189,7 +189,7 @@
       // Get the menu.
       this.menu = this.dialog.find( settings.ids.menu ).mediamenu( this.server, settings );
       if( this.menu ) {
-        this.menu.display.bind( "menuclose", function() {
+        this.menu.display.unbind("menuclose").bind( "menuclose", function() {
           _this.showMenu( false );
         });
       }
@@ -240,15 +240,15 @@
       // Adds the media player events to a given element.
       this.addPlayerEvents = function( element ) {
         // Trigger on the menu.
-        element.display.bind("menu", function(event) {
+        element.display.unbind("menu").bind("menu", function(event) {
           _this.showMenu( !_this.menuOn );
         });
 
-        element.display.bind("maximize", function( event ) {
+        element.display.unbind("maximize").bind("maximize", function( event ) {
           _this.maximize( !_this.maxOn );
         });
 
-        element.display.bind("fullscreen", function( event ) {
+        element.display.unbind("fullscreen").bind("fullscreen", function( event ) {
           _this.fullScreen = !_this.fullScreen;
           if( _this.node && _this.node.player ) {
             _this.node.player.fullScreen( _this.fullScreen );
@@ -285,18 +285,18 @@
       // Get the node and register for events.
       this.node = this.dialog.find( settings.ids.node ).medianode( this.server, settings );
       if( this.node ) {
-        this.node.display.bind( "nodeload", function( event, data ) {
+        this.node.display.unbind("nodeload").bind( "nodeload", function( event, data ) {
           _this.onNodeLoad( data );
         });
             
-        if( this.node.player && this.node.player.media ) {
-          this.node.player.media.display.bind( "mediaupdate", function( event, data ) {
+        if( this.node.player ) {
+          this.node.player.display.unbind("mediaupdate").bind( "mediaupdate", function( event, data ) {
             _this.onMediaUpdate( data );
           });
         }
             
         if( this.node.uservoter ) {
-          this.node.uservoter.display.bind( "voteSet", function( event, vote ) {
+          this.node.uservoter.display.unbind("voteSet").bind( "voteSet", function( event, vote ) {
             if( _this.activePlaylist ) {
               _this.activePlaylist.onVoteSet( vote );
             }
@@ -375,7 +375,7 @@
       // Allow multiple playlists to be associated with this single player using this API.
       this.addPlaylist = function( newPlaylist ) {
         if( newPlaylist ) {
-          newPlaylist.display.bind( "playlistload", newPlaylist, function( event, data ) {
+          newPlaylist.display.unbind("playlistload").bind( "playlistload", newPlaylist, function( event, data ) {
             // Set this as the active playlist.
             _this.activePlaylist = event.data;
             _this.onPlaylistLoad( data );
@@ -406,7 +406,7 @@
       // Allow mulitple controllers to control this media.
       this.addController = function( newController, active ) {
         if( newController ) {
-          newController.display.bind( "controlupdate", newController, function( event, data ) {
+          newController.display.unbind("controlupdate").bind( "controlupdate", newController, function( event, data ) {
             _this.activeController = event.data;
             if( _this.node && _this.node.player ) {
               _this.node.player.onControlUpdate( data );

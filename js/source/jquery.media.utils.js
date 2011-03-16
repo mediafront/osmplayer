@@ -58,17 +58,14 @@
 
       stopHide : function( element, id ) {
         jQuery.media.utils.stopElementHide[id] = true;
-        if( element ) {
-          element.unbind("mouseover").unbind("mouseout");
-        }
       },
 
       stopHideOnOver : function( element, id ) {
         if( element ) {
           jQuery.media.utils.stopElementHide[id] = false;
-          element.bind("mouseover", {id:id}, function( event ) {
+          element.unbind("mouseover").bind("mouseover", {id:id}, function( event ) {
             jQuery.media.utils.stopElementHide[event.data.id] = true;
-          }).bind("mouseout", {id:id}, function( event ) {
+          }).unbind("mouseout").bind("mouseout", {id:id}, function( event ) {
             jQuery.media.utils.stopElementHide[event.data.id] = false;
           });
         }

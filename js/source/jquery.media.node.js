@@ -54,8 +54,8 @@
          
       // Add the min player as the player for this node.
       this.player = this.display.find(settings.ids.mediaRegion).minplayer( settings );
-      if( this.player && this.player.media && (settings.incrementTime !== 0)) {
-        this.player.media.display.bind( "mediaupdate", function( event, data ) {
+      if( this.player && (settings.incrementTime !== 0)) {
+        this.player.display.unbind("mediaupdate").bind( "mediaupdate", function( event, data ) {
           _this.onMediaUpdate( data );
         });
       }
@@ -67,13 +67,13 @@
         this.voter = element.find(settings.ids.voter).mediavoter( settings, server, false );
         this.uservoter = element.find(settings.ids.uservoter).mediavoter( settings, server, true );
         if( this.uservoter && this.voter ) {
-          this.uservoter.display.bind( "processing", function() {
+          this.uservoter.display.unbind("processing").bind( "processing", function() {
             _this.player.showBusy(2, true);
           });
-          this.uservoter.display.bind( "voteGet", function() {
+          this.uservoter.display.unbind("voteGet").bind( "voteGet", function() {
             _this.player.showBusy(2, false);
           });
-          this.uservoter.display.bind( "voteSet", function( event, vote ) {
+          this.uservoter.display.unbind("voteSet").bind( "voteSet", function( event, vote ) {
             _this.player.showBusy(2, false);
             _this.voter.updateVote( vote );
           });
@@ -100,6 +100,8 @@
                 this.incremented = true;
                 server.call( jQuery.media.commands.incrementCounter, null, null, _this.nodeInfo.nid );
               }
+              break;
+            default:
               break;
           }
         }

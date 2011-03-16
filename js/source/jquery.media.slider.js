@@ -75,7 +75,7 @@
         this.handle.css( (vertical ? "marginTop" : "marginLeft"), this.handlePos );
       };
          
-      this.display.bind("mousedown", function( event ) {
+      this.display.unbind("mousedown").bind("mousedown", function( event ) {
         event.preventDefault();
         _this.dragging = true;
       });
@@ -93,14 +93,14 @@
         return pos;
       };
          
-      this.display.bind("mousemove", function( event ) {
+      this.display.unbind("mousemove").bind("mousemove", function( event ) {
         event.preventDefault();
         if( _this.dragging ) {
           _this.updateValue( _this.getPosition( event[_this.pagePos] ) );
         }
       });
 
-      this.display.bind("mouseleave", function( event ) {
+      this.display.unbind("mouseleave").bind("mouseleave", function( event ) {
         event.preventDefault();
         if( _this.dragging ) {
           _this.dragging = false;
@@ -108,7 +108,7 @@
         }
       });
          
-      this.display.bind("mouseup", function( event ) {
+      this.display.unbind("mouseup").bind("mouseup", function( event ) {
         event.preventDefault();
         if( _this.dragging ) {
           _this.dragging = false;

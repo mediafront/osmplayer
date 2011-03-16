@@ -72,7 +72,7 @@
       // Store the play overlay.
       this.play = player.find( settings.ids.play );
       // Toggle the play/pause state if they click on the play button.
-      this.play.bind("click", function() {
+      this.play.unbind("click").bind("click", function() {
         _this.togglePlayPause();
       });
       this.playImg = this.play.find("img");
@@ -82,7 +82,7 @@
       // Store the preview image.
       this.preview = player.find( settings.ids.preview ).mediaimage();
       if( this.preview ) {
-        this.preview.display.bind("imageLoaded", function() {
+        this.preview.display.unbind("imageLoaded").bind("imageLoaded", function() {
           _this.onPreviewLoaded();
         });
       }
@@ -198,7 +198,7 @@
           case "paused":
             this.playing = false;
             this.showPlay(true);
-            this.showBusy(1, false);
+            //this.showBusy(1, false);
             if( !this.media.loaded ) {
               this.showPreview(true);
             }
@@ -207,7 +207,6 @@
           case "playing":
             this.playing = true;
             this.showPlay(false);
-            this.showBusy(1, false);
             this.showPreview((this.media.mediaFile.type == "audio"));
             break;
           case "initialize":
@@ -218,9 +217,15 @@
             break;
           case "buffering":
             this.showPlay(true);
-            this.showBusy(1, true);
             this.showPreview((this.media.mediaFile.type == "audio"));
             break;
+          default:
+            break;
+        }
+
+        // If they provide a busy cursor.
+        if( data.busy ) {
+          this.showBusy(1, (data.busy == "show"));
         }
       };
 

@@ -152,19 +152,22 @@
          
       this.onPlaying = function() {
         onUpdate({
-          type:"playing"
+          type:"playing",
+          busy:"hide"
         });
       };
 
       this.onPaused = function() {
         onUpdate({
-          type:"paused"
+          type:"paused",
+          busy:"hide"
         });
       };
          
       this.playMedia = function() {
         onUpdate({
-          type:"playing"
+          type:"playing",
+          busy:"hide"
         });
         this.player.api_play();
       };
@@ -177,7 +180,8 @@
          
       this.pauseMedia = function() {
         onUpdate({
-          type:"paused"
+          type:"paused",
+          busy:"hide"
         });
         this.player.api_pause();
       };

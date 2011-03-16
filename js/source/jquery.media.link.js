@@ -32,13 +32,13 @@
       var _this = this;
       this.display = link;
           
-      this.display.css("cursor", "pointer").bind( "click", data, function( event ) {
+      this.display.css("cursor", "pointer").unbind("click").bind( "click", data, function( event ) {
         onClick( event, $(this) );
-      }).bind("mouseenter", function() {
+      }).unbind("mouseenter").bind("mouseenter", function() {
         if( settings.template.onLinkOver ) {
           settings.template.onLinkOver( $(this) );
         }
-      }).bind("mouseleave", function() {
+      }).unbind("mouseleave").bind("mouseleave", function() {
         if( settings.template.onLinkOut ) {
           settings.template.onLinkOut( $(this) );
         }

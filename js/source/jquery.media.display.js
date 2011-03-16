@@ -224,7 +224,6 @@
               clearInterval( this.progressInterval );
             }
             break;
-          case "update":
           case "meta":
             jQuery.extend( data, {
               currentTime:this.player.getCurrentTime(),
@@ -235,6 +234,8 @@
             break;
           case "complete":
             this.playNext();
+            break;
+          default:
             break;
         }
             
@@ -276,7 +277,11 @@
           this.updateInterval = setInterval( function() {
             if( _this.playerReady ) {
               _this.onMediaUpdate({
-                type:"update"
+                type:"update",
+                currentTime:_this.player.getCurrentTime(),
+                totalTime:_this.getDuration(),
+                volume:_this.player.getVolume(),
+                quality:_this.getQuality()
               });
             }
           }, 1000 );
@@ -327,10 +332,15 @@
       };
          
       this.getDuration = function() {
-        if( !this.mediaFile.duration ) {
-          this.mediaFile.duration = this.player.getDuration();
+        if( this.mediaFile ) {
+          if(!this.mediaFile.duration ) {
+            this.mediaFile.duration = this.player.getDuration();
+          }
+          return this.mediaFile.duration;
         }
-        return this.mediaFile.duration;
+        else {
+          return 0;
+        }
       };
          
       this.getQuality = function() {
