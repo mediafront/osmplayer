@@ -52,6 +52,9 @@ class OSMPlayer {
   // The template for this osm player instance.
   public $template = null;
 
+  // Store the default settings.
+  public $defaults = null;
+
   // To store the player parameters.
   private $playerParams = null;
 
@@ -71,8 +74,8 @@ class OSMPlayer {
   public function __construct( $_params = array() ) {
     // First set the defaults.
     $this->playerParams = OSMPlayer::getPlayerParams();
-    $this->settings = array_merge( $this->playerParams, OSMPlayer::getPlayerSettings() );
-
+    $this->defaults = array_merge( $this->playerParams, OSMPlayer::getPlayerSettings() );
+    $this->settings = $this->defaults;
     if( $_params ) {
       // Set the parameters ( which will override the defaults ).
       $this->settings = array_merge( $this->settings, $_params );
@@ -436,7 +439,7 @@ class OSMPlayer {
     foreach( $this->settings as $param => $value ) {
       if( array_key_exists( $param, $this->playerParams ) &&
         ($this->playerParams[$param] != $value) ) {
-        switch( gettype($value) ) {
+        switch( gettype($this->defaults[$param]) ) {
           case 'array':
           case 'object':
             $params[] = $param . ':' . $this->osm_json_encode($value);
