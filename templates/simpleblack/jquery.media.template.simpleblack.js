@@ -171,9 +171,11 @@
           if( mediaplayer.controller && mediaplayer.node ) {
             if( data.type == "reset" ) {
               this.showController = true;
+              mediaplayer.controller.display.show();
             }
             else if( data.type == "nomedia" ) {
               this.showController = false;
+              mediaplayer.controller.display.hide();
             }
           }
         };
