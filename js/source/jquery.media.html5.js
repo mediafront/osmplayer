@@ -142,6 +142,12 @@
               timeupdated = true;
             }
           }, true);
+          this.player.addEventListener( "durationchange", function() {
+            onUpdate( {
+              type:"durationupdate",
+              duration:this.duration
+            });
+          }, true);
 
           // Now add the event for getting the progress indication.
           this.player.addEventListener( "progress", function( event ) {
@@ -226,7 +232,8 @@
       };
          
       this.getDuration = function() {
-        return this.player ? this.player.duration : 0;
+        var dur = this.player ? this.player.duration : 0;
+        return (dur === Infinity) ? 0 : dur;
       };
          
       this.getCurrentTime = function() {
