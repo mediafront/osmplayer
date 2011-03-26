@@ -368,6 +368,7 @@ class OSMPlayer {
         "js/source/jquery.media.display.js",
         "js/source/jquery.media.minplayer.js",
         "js/source/jquery.media.menu.js",
+        "js/source/jquery.media.mousewheel.js",
         "js/source/jquery.media.node.js",
         "js/source/jquery.media.pager.js",
         "js/source/jquery.media.player.js",
