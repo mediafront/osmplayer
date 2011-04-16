@@ -453,7 +453,7 @@ class OSMPlayer {
             $params[] = $param . ':' . ($value ? 'true' : 'false');
             break;
           default:
-            $params[] = $param . ':' . $value;
+            $params[] = $param . ':' . ($value ? $value : 0);
             break;
         }
       }
