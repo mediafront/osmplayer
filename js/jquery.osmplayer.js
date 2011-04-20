@@ -194,7 +194,7 @@
         if( this.volumeBar ) {
           if( settings.volumeVertical ) {
             this.volumeUpdate.css({
-              "marginTop":(this.volumeBar.handlePos + this.volumeBar.handleMid + this.volumeBar.handleOffset),
+              "marginTop":(this.volumeBar.handlePos + this.volumeBar.handleMid),
               "height":(this.volumeBar.trackSize - this.volumeBar.handlePos)
             });
           }
