@@ -67,9 +67,7 @@
           this.fullScreenButton.find(".off").hide();
 
           // Show the control bar, and then hide it after 5 seconds of inactivity.
-          jQuery.media.utils.showThenHide( mediaplayer.controller.display, "display", null, "slow", function() {
-            mediaplayer.node.player.play.css("bottom", "5px");
-          });
+          jQuery.media.utils.showThenHide( mediaplayer.controller.display, "display", null, "slow");
 
           jQuery.media.utils.showThenHide( this.fullScreenButton, "fullscreen" );
 
@@ -77,11 +75,8 @@
           // Add a timer to the mouse move of the display to show the control bar and logo on mouse move.
           mediaplayer.display.bind("mousemove", function() {
             jQuery.media.utils.showThenHide( _this.fullScreenButton, "fullscreen" );
-            mediaplayer.node.player.play.css("bottom", "45px");
             if( jQuery.media.hasMedia ) {
-              jQuery.media.utils.showThenHide( mediaplayer.controller.display, "display", "fast", "slow", function() {
-                mediaplayer.node.player.play.css("bottom", "5px");
-              });
+              jQuery.media.utils.showThenHide( mediaplayer.controller.display, "display", "fast", "slow");
             }
             jQuery.media.utils.showThenHide( _this.logo.display, "logo", "fast", "slow" );
           });
