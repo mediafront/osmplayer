@@ -58,6 +58,7 @@
 
       stopHide : function( element, id ) {
         jQuery.media.utils.stopElementHide[id] = true;
+        clearTimeout(jQuery.media.utils.timer[id]);
       },
 
       stopHideOnOver : function( element, id ) {

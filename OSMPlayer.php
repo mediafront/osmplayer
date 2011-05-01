@@ -203,7 +203,8 @@ class OSMPlayer {
       'zIndex' => 400,
       'timeout' => 4,
       'fluidWidth' => false,
-      'fluidHeight' => false
+      'fluidHeight' => false,
+      'fullscreen' => false
     );
   }
 

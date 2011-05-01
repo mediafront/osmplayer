@@ -3722,7 +3722,8 @@
     prefix:"",
     zIndex:400,
     fluidWidth:false,
-    fluidHeight:false
+    fluidHeight:false,
+    fullscreen:false
   });
 
   jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
@@ -4205,6 +4206,11 @@
         this.dialog.css("position","relative");
         this.dialog.css("marginLeft",0);
         this.dialog.css("overflow","visible");
+
+        // If they wish to default the player in fullscreen mode, do that now.
+        if( settings.fullscreen ) {
+          this.onFullScreen(true);
+        }
 
         // Set our loaded flag to true.
         this.loaded = true;
@@ -5794,6 +5800,7 @@
 
       stopHide : function( element, id ) {
         jQuery.media.utils.stopElementHide[id] = true;
+        clearTimeout(jQuery.media.utils.timer[id]);
       },
 
       stopHideOnOver : function( element, id ) {
