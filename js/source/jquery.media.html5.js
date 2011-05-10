@@ -39,7 +39,6 @@
         this.mediaFile = mediaFile;
         var playerId = options.id + '_' + this.mediaType;
         var html = '<' + this.mediaType + ' style="position:absolute" id="' + playerId + '"';
-        html += (this.mediaType == "video") ? ' width="100%" height="100%"' : '';
         html += preview ? ' poster="' + preview + '"' : '';
             
         if( typeof mediaFile === 'array' ) {
@@ -56,7 +55,16 @@
         html += '</' + this.mediaType + '>';
         this.display.append( html );
         this.bytesTotal = mediaFile.bytesTotal;
-        return this.display.find('#' + playerId).eq(0)[0];;
+        
+        var playerElement = this.display.find('#' + playerId);
+        
+        // If this is a video, set the width and height of the video element.
+        if( this.mediaType == "video" ) {
+          playerElement.css({width:this.display.width(), height:this.display.height()});
+        }
+        
+        // return the player object.
+        return playerElement.eq(0)[0];;
       };
          
       // Create a new HTML5 player.
@@ -199,13 +207,13 @@
       };
          
       this.playMedia = function() {
-        if( this.player ) {
+        if( this.player && this.player.play ) {
           this.player.play();
         }
       };
          
       this.pauseMedia = function() {
-        if( this.player ) {
+        if( this.player && this.player.pause ) {
           this.player.pause();
         }
       };
@@ -244,7 +252,7 @@
 
       this.getPercentLoaded = function() {
         if( this.player && this.player.buffered && this.player.duration ) {
-          return (this.player.buffered.end() / this.player.duration);
+          return (this.player.buffered.end(0) / this.player.duration);
         }
         else if( this.bytesTotal ) {
           return (this.bytesLoaded / this.bytesTotal);
