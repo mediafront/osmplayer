@@ -161,7 +161,7 @@
                 this.media.player.seekMedia( data.value );
                 break;
               case "volume":
-                this.media.player.setVolume( data.value );
+                this.media.setVolume( data.value );
                 break;
               case "mute":
                 this.media.mute( data.value );

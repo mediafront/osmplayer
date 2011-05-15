@@ -572,7 +572,7 @@
       this.settings = jQuery.media.utils.getSettings( options );
       this.display = mediaWrapper;
       var _this = this;
-      this.volume = 0;
+      this.volume = -1;
       this.player = null;
       this.preview = '';
       this.updateInterval = null;
@@ -771,7 +771,7 @@
         if( data.type=="playing" && !this.loaded ) {
           if( this.settings.autoLoad && !this.settings.autostart ) {
             setTimeout( function() {
-              _this.player.setVolume( (_this.settings.volume / 100) );
+              _this.setVolume();
               _this.player.pauseMedia();
               _this.settings.autostart = true;
               _this.loaded = true;
@@ -779,7 +779,7 @@
           }
           else {
             this.loaded = true;
-            this.player.setVolume( (this.settings.volume / 100) );
+            this.setVolume();
             this.display.trigger( "mediaupdate", data );
           }
         }
@@ -826,13 +826,7 @@
       };
          
       this.mute = function( on ) {
-        if( on ) {
-          this.volume = this.player.getVolume();
-          this.player.setVolume( 0 );
-        }
-        else {
-          this.player.setVolume( this.volume );
-        }
+        this.player.setVolume( on ? 0 : this.volume );
       };
       
       this.onResize = function() {
@@ -875,6 +869,20 @@
         else {
           return 0;
         }
+      };
+      
+      this.setVolume = function( vol ) {
+        this.volume = vol ? vol : ((this.volume == -1) ? (this.settings.volume / 100) : this.volume);
+        if( this.player ) {
+          this.player.setVolume(this.volume);
+        }
+      }
+      
+      this.getVolume = function() {
+        if( !this.volume ) {
+          this.volume = this.player.getVolume();
+        }
+        return this.volume;
       };
          
       this.getQuality = function() {
@@ -1587,7 +1595,7 @@
                 this.media.player.seekMedia( data.value );
                 break;
               case "volume":
-                this.media.player.setVolume( data.value );
+                this.media.setVolume( data.value );
                 break;
               case "mute":
                 this.media.mute( data.value );
