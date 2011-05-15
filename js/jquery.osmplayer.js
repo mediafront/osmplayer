@@ -725,10 +725,13 @@
         }
       };
          
-      this.loadMedia = function( file ) {
+      this.loadMedia = function( file, mediaplayer ) {
         if( file ) {
           // Get the media file object.
           file = new jQuery.media.file( this.getMediaFile( file ), this.settings );
+          
+          // Set the media player if they force it.
+          file.player = mediaplayer ? mediaplayer : file.player;
                
           // Stop the current player.
           this.stopMedia();
@@ -782,6 +785,16 @@
             clearInterval( this.progressInterval );
             clearInterval( this.updateInterval );
             break;
+          case "error":
+            if( data.code == 4 ) {
+              // It is saying not supported... Try and fall back to flash...
+              this.loadMedia(this.mediaFile, "flash");
+            }
+            else {
+              clearInterval( this.progressInterval );
+              clearInterval( this.updateInterval );
+            }
+            break;            
           case "paused":
             clearInterval( this.updateInterval );
             break;
@@ -1150,9 +1163,9 @@
       
     // Check for video types...
     var elem = document.createElement("video");
-    types.ogg  = jQuery.media.checkPlayType( elem, "video/ogg");
-    types.h264  = jQuery.media.checkPlayType( elem, "video/mp4");
-    types.webm = jQuery.media.checkPlayType( elem, "video/x-webm");
+    types.ogg  = jQuery.media.checkPlayType( elem, 'video/ogg; codecs="theora, vorbis"');
+    types.h264  = jQuery.media.checkPlayType( elem, 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"');
+    types.webm = jQuery.media.checkPlayType( elem, 'video/webm; codecs="vp8, vorbis"');
          
     // Now check for audio types...
     elem = document.createElement("audio");
@@ -1657,9 +1670,11 @@
               busy:"hide"
             });
           }, true);
-          this.player.addEventListener( "error", function() {
+          this.player.addEventListener( "error", function(e) {
+            _this.onError(e.target.error);
             onUpdate( {
-              type:"error"
+              type:"error",
+              code:e.target.error.code
             } );
           }, true);
           this.player.addEventListener( "waiting", function() {
@@ -1706,6 +1721,24 @@
           onUpdate({
             type:"playerready"
           });
+        }
+      };
+      
+      // A function to be called when an error occurs.
+      this.onError = function( error ) {
+        switch(error.code) {
+          case 1:
+            console.log("Error: MEDIA_ERR_ABORTED");
+            break;
+          case 2:
+            console.log("Error: MEDIA_ERR_DECODE");
+            break;
+          case 3:
+            console.log("Error: MEDIA_ERR_NETWORK");
+            break;
+          case 4:
+            console.log("Error: MEDIA_ERR_SRC_NOT_SUPPORTED");
+            break;
         }
       };
 

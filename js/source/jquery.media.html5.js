@@ -124,9 +124,11 @@
               busy:"hide"
             });
           }, true);
-          this.player.addEventListener( "error", function() {
+          this.player.addEventListener( "error", function(e) {
+            _this.onError(e.target.error);
             onUpdate( {
-              type:"error"
+              type:"error",
+              code:e.target.error.code
             } );
           }, true);
           this.player.addEventListener( "waiting", function() {
@@ -173,6 +175,24 @@
           onUpdate({
             type:"playerready"
           });
+        }
+      };
+      
+      // A function to be called when an error occurs.
+      this.onError = function( error ) {
+        switch(error.code) {
+          case 1:
+            console.log("Error: MEDIA_ERR_ABORTED");
+            break;
+          case 2:
+            console.log("Error: MEDIA_ERR_DECODE");
+            break;
+          case 3:
+            console.log("Error: MEDIA_ERR_NETWORK");
+            break;
+          case 4:
+            console.log("Error: MEDIA_ERR_SRC_NOT_SUPPORTED");
+            break;
         }
       };
 
