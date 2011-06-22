@@ -146,7 +146,7 @@ class OSMPlayer {
       'id' => 'player',
       'showPlaylist' => true,
       'file' => '',
-      'flashPlayer' => 'flash/mediafront.swf',
+      'flashPlayer' => 'minplayer/minplayer.swf',
       'image' => '',
       'volume' => 80,
       'autostart' => false,
