@@ -31,7 +31,7 @@ function initialize( _controlBar:* )
   controlBar = _controlBar;
 
   // Set the y position to the bottom of the player..
-  this.y = (controlBar.stage.stageHeight - this.height);
+  this.y = (controlBar.stage.stageHeight - this.height - 5);
 
   // Hide the volume bar for now...
   volumeBar.visible = false;
@@ -69,7 +69,7 @@ function initialize( _controlBar:* )
   menu.mouseChildren = false;
 
   // Add the callbacks to control the tile.
-  ExternalInterface.addCallback("setTile", setTitle);
+  ExternalInterface.addCallback("setTitle", setTitle);
 
   // Set the size.
   setSize( controlBar.stage.stageWidth );
@@ -177,6 +177,7 @@ function setSize( newWidth:Number )
   volumeBar.x = newWidth - (bgWidth - volumeBar.x);
   menu.x = newWidth - (bgWidth - menu.x);
   textBack.width = newWidth - (bgWidth - textBack.width);
+  title.width = newWidth - (bgWidth - title.width);
   seekBar.track.width = newWidth - (bgWidth - seekBar.track.width);
   seekBar.fullness.width = newWidth - (bgWidth - seekBar.fullness.width);
   seekBar.progress.width = newWidth - (bgWidth - seekBar.progress.width);
