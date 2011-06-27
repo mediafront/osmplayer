@@ -29,7 +29,7 @@
  */
 (function($) {
   jQuery.media = jQuery.media ? jQuery.media : {};
-  
+
   // Add the menu callback.
   window.onFlashPlayerMenu = function( id ) {
     var player = jQuery.media.players[id];
@@ -47,6 +47,7 @@
         this.player = null;
         this.logo = null;
         this.fullScreenButton = null;
+        this.nodeInfo = null;
 
         /**
          * Called just before the mediaplayer is ready to show this template to the user.
@@ -93,7 +94,7 @@
 
           // Show the volume bar when they hover over the mute button.
           mediaplayer.controller.mute.display.bind("mousemove", function() {
-            if( jQuery.media.hasMedia ) {
+            if( jQuery.media.hasMedia && !mediaplayer.node.player.usePlayerControls) {
               jQuery.media.utils.showThenHide( _this.volumeBar, "volumeBar", "fast", "fast" );
             }
           });
@@ -183,23 +184,37 @@
         };
 
         this.onNodeLoad = function( data ) {
+          this.nodeInfo = data;
           mediaplayer.node.player.play.show();
         };
 
 
         // See if we are using FireFox with an mp4 video.
         this.isFireFoxWithH264 = function() {
-          var ext = this.player.media.mediaFile.getFileExtension();
-          return jQuery.browser.mozilla && (ext == 'mp4' || ext == 'm4v');
+          if (this.player && this.player.media && this.player.media.mediaFile) {
+            var ext = this.player.media.mediaFile.getFileExtension();
+            return jQuery.browser.mozilla && (ext == 'mp4' || ext == 'm4v');
+          }
+          else {
+            return false;
+          }
         };
 
         this.onMediaUpdate = function( data ) {
-          if( mediaplayer.controller && mediaplayer.node ) {
-            if ((data.type == "playerready") && (this.isFireFoxWithH264())) {
+          if (data.type == "playerready") {
+            if (this.isFireFoxWithH264()) {
+              mediaplayer.node.player.media.player.player.setTitle(this.nodeInfo.title);
               mediaplayer.showNativeControls(true);
               this.fullScreenButton.hide();
             }
-            else if( data.type == "reset" ) {
+            else {
+              mediaplayer.showNativeControls(false);
+              this.fullScreenButton.show();
+            }
+          }
+
+          if( mediaplayer.controller && mediaplayer.node ) {
+            if( data.type == "reset" ) {
               jQuery.media.hasMedia = true;
               if (!mediaplayer.node.player.usePlayerControls) {
                 mediaplayer.controller.display.show();
