@@ -395,12 +395,21 @@
         return newPlaylist;
       };
 
+      // Search these elements for the id.
+      this.searchForElement = function(elementList) {
+        for(var id in elementList) {
+          if (settings.id.search(id) === 0) {
+            return elementList[id];
+          }
+        }
+      }
+
       // Add the default playlist.
       this.playlist = this.addPlaylist( this.dialog.find( settings.ids.playlist ).mediaplaylist( this.server, settings ) );
 
       // Now add any queued playlists...
-      if( jQuery.media.playlists[settings.id] ) {
-        var playlists = jQuery.media.playlists[settings.id];
+      var playlists = this.searchForElement(jQuery.media.playlists);
+      if (playlists) {
         i = playlists.length;
         while(i--) {
           this.addPlaylist( playlists[i] );
@@ -434,8 +443,8 @@
       }
 
       // Now add any queued controllers...
-      if( jQuery.media.controllers[settings.id] ) {
-        var controllers = jQuery.media.controllers[settings.id];
+      var controllers = this.searchForElement(jQuery.media.controllers);
+      if (controllers) {
         i = controllers.length;
         while(i--) {
           this.addController( controllers[i], true );
