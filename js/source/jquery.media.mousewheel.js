@@ -18,7 +18,8 @@
     setup: function() {
       if ( this.addEventListener ) {
         for ( var i=types.length; i; ) {
-          this.addEventListener( types[--i], handler, false );
+          i--;
+          this.addEventListener( types[i], handler, false );
         }
       } else {
         this.onmousewheel = handler;
@@ -28,7 +29,8 @@
     teardown: function() {
       if ( this.removeEventListener ) {
         for ( var i=types.length; i; ) {
-          this.removeEventListener( types[--i], handler, false );
+          i--;
+          this.removeEventListener( types[i], handler, false );
         }
       } else {
         this.onmousewheel = null;

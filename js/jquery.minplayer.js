@@ -889,7 +889,7 @@
         if( this.player ) {
           this.player.setVolume(this.volume);
         }
-      }
+      };
 
       this.getVolume = function() {
         if( !this.volume ) {
@@ -1181,7 +1181,8 @@
         if( typeof mediaFile === 'array' ) {
           html += '>';
           var i = mediaFile.length;
-          while( i-- ) {
+          while(i) {
+            i--;
             html += '<source src="' + mediaFile[i].path + '" type="' + mediaFile[i].mimetype + '">';
           }
         }
@@ -1196,7 +1197,7 @@
         this.onResize();
         
         // return the player object.
-        return this.playerElement.eq(0)[0];;
+        return this.playerElement.eq(0)[0];
       };
          
       // Create a new HTML5 player.
@@ -1329,6 +1330,8 @@
           case 4:
             console.log("Error: MEDIA_ERR_SRC_NOT_SUPPORTED");
             break;
+          default:
+            break;
         }
       };
 
@@ -1354,6 +1357,9 @@
                   
           case "oga": case "mp3":
             return "audio";
+            
+          default:
+            break;
         }
         return "video";
       };
@@ -1412,7 +1418,7 @@
         else {
           return 0;
         }
-      }
+      };
       
       // Called when the player resizes.
       this.onResize = function() {
@@ -1633,6 +1639,8 @@
               case "mute":
                 this.media.mute( data.value );
                 break;
+              default:
+                break;
             }
           }
           // If there are files in the queue but no current media file.
@@ -1713,7 +1721,7 @@
             this.media.player.playMedia();
           }
         }
-      }
+      };
 
       // Set the media player.
       this.media = this.display.find( settings.ids.media ).mediadisplay( settings );
@@ -1941,7 +1949,7 @@
   window.onVimeoProgress = function( time, playerId ) {
     playerId = playerId.replace("_media", "");
     jQuery.media.players[playerId].node.player.media.player.onProgress(time);
-  }
+  };
 
   // Tell the media player how to determine if a file path is a YouTube media type.
   jQuery.media.playerTypes = jQuery.extend( jQuery.media.playerTypes, {
@@ -1992,7 +2000,7 @@
 
       this.getId = function( path ) {
         var regex = /^http[s]?\:\/\/(www\.)?vimeo\.com\/(\?v\=)?([0-9]+)/i;
-        return (path.search(regex) == 0) ? path.replace(regex, "$3") : path;
+        return (path.search(regex) === 0) ? path.replace(regex, "$3") : path;
       };
 
       this.loadMedia = function( videoFile ) {
@@ -2200,7 +2208,7 @@
          
       this.getId = function( path ) {
         var regex = /^http[s]?\:\/\/(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9]+)/i;
-        return (path.search(regex) == 0) ? path.replace(regex, "$2") : path;
+        return (path.search(regex) === 0) ? path.replace(regex, "$2") : path;
       };
          
       this.loadMedia = function( videoFile ) {

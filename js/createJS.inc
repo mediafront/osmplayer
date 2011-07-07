@@ -8,23 +8,26 @@ function create_compressed_file( $output_dir, $original, $compressed ) {
       // Delete the previous compressed file.
       if( file_exists( $compressed ) ) {
          unlink( $compressed );
-      }     
-   
-      print "Creating " . basename($compressed) . "\n";
+      }
+
+      // Lint the file...
+      print "\n\nCreating " . basename($compressed) . "\n";
+      $command = 'jsl -process ' . $original;
+      print shell_exec($command);
       $command = 'java -jar ' . $output_dir . 'js/yuicompressor/build/yuicompressor.jar --preserve-semi -o ' . $compressed . ' ' . $original;
       shell_exec( $command );
-      addCopyRight( $output_dir, $compressed );   
+      addCopyRight( $output_dir, $compressed );
    }
 }
 
 function create_js_files( $output_dir, $files, $filter, $uncompressed, $compressed, $num_files, $source_dir = '' )
-{   
+{
    if( $num_files > 1 ) {
       if( file_exists( $uncompressed ) ) {
          unlink( $uncompressed );
       }
 
-      $handle = smart_fopen( $uncompressed, 'a+' ); 
+      $handle = smart_fopen( $uncompressed, 'a+' );
       if( $handle ) {
          $index = 0;
          foreach( $files as $file ) {
@@ -38,18 +41,18 @@ function create_js_files( $output_dir, $files, $filter, $uncompressed, $compress
                   $contents = str_replace('})(jQuery);', '', $contents);
                }
                fwrite( $handle, $contents );
-               
+
                if( $source_dir ) {
                   create_compressed_file( $output_dir, $file, $source_dir . '/' . basename($file) );
                }
             }
          }
-         fclose( $handle );       
+         fclose( $handle );
       }
    }
-   
+
    create_compressed_file( $output_dir, $uncompressed, $compressed );
-} 
+}
 
 function addCopyRight( $output_dir, $file ) {
    static $copyright;
@@ -58,7 +61,7 @@ function addCopyRight( $output_dir, $file ) {
    }
    $code = file_get_contents($file);
    unlink( $file );
-   $handle = fopen( $file, 'a+' ); 
+   $handle = fopen( $file, 'a+' );
    if( $handle ) {
       fwrite( $handle, $copyright );
       fwrite( $handle, "\n" );
@@ -67,9 +70,9 @@ function addCopyRight( $output_dir, $file ) {
    }
 }
 
-function create_javascript_release( $output_dir = '' ) { 
+function create_javascript_release( $output_dir = '' ) {
    define( "RELEASE_DIR", $output_dir . "js/source" );
-   
+
    // Bad things will happen if the release directory is the same as the output.
    if( $output_dir != RELEASE_DIR ) {
       define( "RELEASE_SOURCE_DIR", $output_dir . "js/compressed");
@@ -79,7 +82,7 @@ function create_javascript_release( $output_dir = '' ) {
       define( "MIN_RELEASE_FILE_COMPRESSED", $output_dir . "js/jquery.minplayer.compressed.js" );
       define( "TEMPLATE_FILE", $output_dir . "templates/default/jquery.media.template.default.js" );
       define( "TEMPLATE_RELEASE_FILE", $output_dir . "templates/default/jquery.media.template.default.compressed.js" );
-      
+
       $min_files = array(
          "jquery.media.minplayer.js",
          "jquery.media.control.js",
@@ -101,11 +104,11 @@ function create_javascript_release( $output_dir = '' ) {
       $num_files = count($files);
       if( $num_files > 0 ) {
          create_js_files( $output_dir, $files, array(), MAX_RELEASE_FILE, MAX_RELEASE_FILE_COMPRESSED, $num_files, RELEASE_SOURCE_DIR );
-         create_js_files( $output_dir, $files, $min_files, MIN_RELEASE_FILE, MIN_RELEASE_FILE_COMPRESSED, count($min_files) );   
+         create_js_files( $output_dir, $files, $min_files, MIN_RELEASE_FILE, MIN_RELEASE_FILE_COMPRESSED, count($min_files) );
       }
-      
+
       // Now create the template javascript file...
       create_compressed_file( $output_dir, TEMPLATE_FILE, TEMPLATE_RELEASE_FILE );
    }
-} 
+}
 ?>

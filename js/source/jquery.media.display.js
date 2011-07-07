@@ -364,7 +364,7 @@
         if( this.player ) {
           this.player.setVolume(this.volume);
         }
-      }
+      };
 
       this.getVolume = function() {
         if( !this.volume ) {

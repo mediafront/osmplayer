@@ -211,6 +211,8 @@
             case 'cck_text':
               this.setCCKTextField( fieldObj, _nodeInfo, fieldName );
               break;
+            default:
+              break;
           }
         }
       };

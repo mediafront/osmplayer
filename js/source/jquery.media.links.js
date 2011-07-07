@@ -64,7 +64,8 @@
           };
                
           var i = settings.links.length;
-          while(i--) {
+          while(i) {
+            i--;
             // Add this link to the scroll region.
             var link = this.scrollRegion.newItem().playlistlink( settings, settings.links[i] );
             link.unbind("linkclick").bind("linkclick", onLinkClick);

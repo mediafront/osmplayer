@@ -325,7 +325,8 @@
 
           // Loop through and add the new arguments.
           var i = _args.length;
-          while(i--) {
+          while(i) {
+            i--;
             var arg = _args[i];
             if( arg && (arg != settings.wildcard) ) {
               this.args[i] = arg;

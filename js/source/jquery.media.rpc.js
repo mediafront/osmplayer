@@ -88,7 +88,10 @@
                      
             case 'object':
               return this.parseObject( data );
+            default:
+              break;
           }
+          return '';
         };
             
         this.parseXMLValue = function( node ) {
@@ -125,8 +128,11 @@
                 return retObj;
               case "dateTime.iso8601":
                 return NULL;
+              default:
+                break;
             }
           }
+          return null;
         };
             
         this.parseXML = function( data ) {

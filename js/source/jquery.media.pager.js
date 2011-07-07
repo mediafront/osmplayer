@@ -156,6 +156,9 @@
           case "rand" :
             newIndex = Math.floor(Math.random() * this.numItems);
             break;
+            
+          default:
+            break;
         }
 
         this.loadState = "";
