@@ -113,7 +113,7 @@
       };
 
       this.loadMedia = function( mediaFile ) {
-        if( this.player ) {
+        if( this.player && this.ready ) {
           this.mediaFile = mediaFile;
 
           // Load the new media file into the Flash player.
@@ -147,43 +147,53 @@
       };
 
       this.playMedia = function() {
-        this.player.playMedia();
+        if( this.player && this.ready ) {
+          this.player.playMedia();
+        }
       };
 
       this.pauseMedia = function() {
-        this.player.pauseMedia();
+        if( this.player && this.ready ) {
+          this.player.pauseMedia();
+        }
       };
 
       this.stopMedia = function() {
-        this.player.stopMedia();
+        if( this.player && this.ready ) {
+          this.player.stopMedia();
+        }
       };
 
       this.seekMedia = function( pos ) {
-        this.player.seekMedia( pos );
+        if( this.player && this.ready ) {
+          this.player.seekMedia( pos );
+        }
       };
 
       this.setVolume = function( vol ) {
-        this.player.setVolume( vol );
+        if( this.player && this.ready ) {
+          this.player.setVolume( vol );
+        }
       };
 
       this.getVolume = function() {
-        return this.player.getVolume();
+        return (this.player && this.ready) ? this.player.getVolume() : 0;
       };
 
       this.getDuration = function() {
-        return this.player.getDuration();
+        return (this.player && this.ready) ? this.player.getDuration() : 0;
       };
 
       this.getCurrentTime = function() {
-        return this.player.getCurrentTime();
+        return (this.player && this.ready) ? this.player.getCurrentTime() : 0;
       };
 
       this.getBytesLoaded = function() {
-        return this.player.getMediaBytesLoaded();
+        return (this.player && this.ready) ? this.player.getMediaBytesLoaded() : 0;
       };
 
       this.getBytesTotal = function() {
-        return this.player.getMediaBytesTotal();
+        return (this.player && this.ready) ? this.player.getMediaBytesTotal() : 0;
       };
 
       this.hasControls = function() {
@@ -191,8 +201,10 @@
       };
 
       this.showControls = function(show) {
-        this.player.showPlugin("controlBar", show);
-        this.player.showPlugin("playLoader", show);
+        if( this.player && this.ready ) {
+          this.player.showPlugin("controlBar", show);
+          this.player.showPlugin("playLoader", show);
+        }
       };
 
       this.getEmbedCode = function() {

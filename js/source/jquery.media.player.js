@@ -417,16 +417,6 @@
       // Add the default playlist.
       this.playlist = this.addPlaylist( this.dialog.find( settings.ids.playlist ).mediaplaylist( this.server, settings ) );
 
-      // Now add any queued playlists...
-      var playlists = this.searchForElement(jQuery.media.playlists);
-      if (playlists) {
-        i = playlists.length;
-        while(i) {
-          i--;
-          this.addPlaylist( playlists[i] );
-        }
-      }
-
       // Allow mulitple controllers to control this media.
       this.addController = function( newController, active ) {
         if( newController ) {
@@ -451,16 +441,6 @@
       if( this.controller && this.node ) {
         // Add any voters to the node.
         this.node.addVoters( this.controller.display );
-      }
-
-      // Now add any queued controllers...
-      var controllers = this.searchForElement(jQuery.media.controllers);
-      if (controllers) {
-        i = controllers.length;
-        while(i) {
-          i--;
-          this.addController( controllers[i], true );
-        }
       }
 
       // Called when the player resizes.
@@ -510,6 +490,27 @@
 
       // Load the content into the player.
       this.loadContent = function() {
+        
+        // Now add any queued controllers...
+        var controllers = this.searchForElement(jQuery.media.controllers);
+        if (controllers) {
+          i = controllers.length;
+          while(i) {
+            i--;
+            this.addController( controllers[i], true );
+          }
+        }        
+        
+        // Now add any queued playlists...
+        var playlists = this.searchForElement(jQuery.media.playlists);
+        if (playlists) {
+          i = playlists.length;
+          while(i) {
+            i--;
+            this.addPlaylist( playlists[i] );
+          }
+        }         
+        
         var playlistLoaded = false;
 
         if( this.playlist ) {
@@ -524,7 +525,7 @@
           }
 
           this.node.loadNode();
-        }
+        }       
       };
 
       this.initializeTemplate = function() {
