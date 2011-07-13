@@ -1934,32 +1934,32 @@
   
 
   window.onVimeoReady = function( playerId ) {
-    playerId = playerId.replace("_media", "");
+    playerId = playerId.replace(/\_media$/, "");
     jQuery.media.players[playerId].node.player.media.player.onReady();
   };
 
   window.onVimeoFinish = function( playerId ) {
-    playerId = playerId.replace("_media", "");
+    playerId = playerId.replace(/\_media$/, "");
     jQuery.media.players[playerId].node.player.media.player.onFinished();
   };
 
   window.onVimeoLoading = function( data, playerId ) {
-    playerId = playerId.replace("_media", "");
+    playerId = playerId.replace(/\_media$/, "");
     jQuery.media.players[playerId].node.player.media.player.onLoading( data );
   };
 
   window.onVimeoPlay = function( playerId ) {
-    playerId = playerId.replace("_media", "");
+    playerId = playerId.replace(/\_media$/, "");
     jQuery.media.players[playerId].node.player.media.player.onPlaying();
   };
 
   window.onVimeoPause = function( playerId ) {
-    playerId = playerId.replace("_media", "");
+    playerId = playerId.replace(/\_media$/, "");
     jQuery.media.players[playerId].node.player.media.player.onPaused();
   };
 
   window.onVimeoProgress = function( time, playerId ) {
-    playerId = playerId.replace("_media", "");
+    playerId = playerId.replace(/\_media$/, "");
     jQuery.media.players[playerId].node.player.media.player.onProgress(time);
   };
 
@@ -2176,7 +2176,7 @@
 
   // Called when the YouTube player is ready.
   window.onYouTubePlayerReady = function( playerId ) {
-    playerId = playerId.replace("_media", "");
+    playerId = playerId.replace(/\_media$/, "");
     jQuery.media.players[playerId].node.player.media.player.onReady();
   };
 
