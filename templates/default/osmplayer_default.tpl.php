@@ -16,7 +16,7 @@
 ?>
 <?php if( !$params['playlistOnly'] && !$params['controllerOnly'] ) { ?>
 <div id="<?php print $params['prefix']; ?>mediaplayerloading" style="<?php print $width; ?><?php print $height; ?>">
-  <img src="<?php print $params['playerURL']; ?>/templates/default/images/busy.gif" />
+  <img src="<?php print $params['playerPath']; ?>templates/default/images/busy.gif" />
 </div>
 <?php } ?>
 <div id="<?php print $params['id']; ?>" class="<?php print $showCSS ?><?php print $params['prefix']; ?>mediaplayerdialog <?php print $params['prefix']; ?>ui-dialog <?php print $params['prefix']; ?>ui-widget <?php print $params['prefix']; ?>ui-widget-content <?php print $params['prefix']; ?>ui-corner-all" style="<?php print $width; ?><?php print $height; ?>">
