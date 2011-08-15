@@ -57,10 +57,15 @@ package com.mediafront.display.media {
       backgroundMC=_skin.backgroundMC;
       if (_skin.preview&&settings.image) {
         preview=_skin.preview;
+        preview.addEventListener(Event.ADDED, onPreviewLoaded);
         preview.loadImage( settings.image );
       }
 
       super.setSkin( _skin );
+    }
+
+    protected function onPreviewLoaded( event:Event ) {
+      preview.resize( backgroundMC.getRect(this) );
     }
 
     public override function onReady():void {
@@ -194,9 +199,9 @@ package com.mediafront.display.media {
 
     private function onMediaPlaying():Boolean {
       loadedFile.loaded=true;
-      if (settings&&! settings.autostart) {
+      if (settings && !settings.autostart) {
         settings.autostart=true;
-        if (preview&&mediaRegion) {
+        if (preview && mediaRegion) {
           mediaRegion.visible=false;
         }
         pauseMedia();
@@ -205,7 +210,10 @@ package com.mediafront.display.media {
         // Set the preview to be invisible for non-audio types.
         if (preview) {
           preview.visible = (loadedFile.mediaType == "audio");
-        } else if ( mediaRegion ) {
+        }
+
+        // Reshow the media region.
+        if (preview && mediaRegion) {
           mediaRegion.visible=true;
         }
       }

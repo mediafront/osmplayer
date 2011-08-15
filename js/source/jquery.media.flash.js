@@ -88,6 +88,7 @@
           config:settings.config,
           id:settings.id,
           file:mediaFile.path,
+          image:this.preview,
           skin:settings.skin,
           autostart:(settings.autostart || !settings.autoLoad)
         };

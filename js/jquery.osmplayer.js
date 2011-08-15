@@ -1415,6 +1415,7 @@
           config:settings.config,
           id:settings.id,
           file:mediaFile.path,
+          image:this.preview,
           skin:settings.skin,
           autostart:(settings.autostart || !settings.autoLoad)
         };
@@ -2828,6 +2829,7 @@
           // Hide the overlays for non-media types.
           this.showBusy(1, false);
           this.showPlay(false);
+          this.showPreview(true);
           this.timeoutId = setTimeout( function() {
             _this.media.display.trigger( "mediaupdate", {type:"complete"} );
           }, (settings.timeout * 1000) );
