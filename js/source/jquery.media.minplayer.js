@@ -299,6 +299,7 @@
       this.reset = function() {
         this.hasMedia = false;
         this.playing = false;
+        jQuery.media.players[settings.id].showNativeControls(false);
         this.showBusy(1, false);
         this.showPlay(true);
         this.showPreview(true);
