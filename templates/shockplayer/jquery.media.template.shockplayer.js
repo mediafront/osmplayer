@@ -29,23 +29,13 @@
  */
 (function($) {
   jQuery.media = jQuery.media ? jQuery.media : {};
-  
+
   // Add the menu callback.
   window.onFlashPlayerMenu = function( id ) {
     var player = jQuery.media.players[id];
     player.showMenu( !player.menuOn );
   };
 
-  // Add the callback for next buttons.
-  window.onFlashPlayerNext = function() {
-    console.log("Next Clip");
-  };
-  
-  // Add the callback for the previous clip.
-  window.onFlashPlayerPrev = function() {
-    console.log("Prev Clip");
-  };
-  
   jQuery.media.templates = jQuery.extend( {}, {
     "shockplayer" : function( mediaplayer, settings ) {
       return new (function( mediaplayer, settings ) {
