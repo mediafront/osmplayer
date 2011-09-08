@@ -118,7 +118,7 @@ class OSMTemplate
 
   /**
    * Return's this templates settings.  This function is used to tell the Open Standard Media Player class
-   * about your template.  
+   * about your template.
    */
   public function getSettings() {
     // We must have a template derive from this class... set all settings to null.
@@ -134,11 +134,14 @@ class OSMTemplate
       $theme_folder = 'jquery-ui/css/' . $this->playerSettings['theme'];
 
       // Now search this folder for the CSS file...
-      if($contents = opendir( dirname(__FILE__) . '/' . $theme_folder)) {
-        while(($node = readdir($contents)) !== false) {
-          if( preg_match('/\.css$/', $node) ) {
-            $theme_css = $node;
-            break;
+      $theme_path = dirname(__FILE__) . '/' . $theme_folder;
+      if (is_dir($theme_path)) {
+        if ($contents = opendir($theme_path)) {
+          while(($node = readdir($contents)) !== false) {
+            if( preg_match('/\.css$/', $node) ) {
+              $theme_css = $node;
+              break;
+            }
           }
         }
       }
@@ -373,7 +376,7 @@ class OSMTemplate
     else {
       $ids = $this->settings['ids'];
     }
-    
+
     // Return the id's with the prefix's in place.
     return $ids;
   }
@@ -388,7 +391,7 @@ class OSMTemplate
 
   /**
    * Theme function for the base template class.
-   * 
+   *
    * @param array $variables - The variables used within this particular theme.
    * @param string $subtemplate - The subtemplate to include.
    * @return string The HTML markup of this theme.
