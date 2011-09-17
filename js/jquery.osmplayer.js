@@ -311,7 +311,7 @@
 /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *  Developed by Travis Tidwell | travist at alethia-inc.com
  *
  *  License:  GPL version 3.
  *
@@ -321,7 +321,7 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in
  *  all copies or substantial portions of the Software.
 
@@ -358,7 +358,7 @@
       this.meta = false;
       this.loaded = false;
       this.ready = false;
-         
+
       this.createMedia = function( videoFile, preview ) {
         this.videoFile = videoFile;
         this.ready = false;
@@ -379,68 +379,68 @@
           }
           );
       };
-         
+
       this.loadMedia = function( videoFile ) {
         if( this.player ) {
           this.loaded = false;
           this.meta = false;
           this.videoFile = videoFile;
-               
+
           // Let them know the player is ready.
           onUpdate( {
             type:"playerready"
           } );
-               
+
           // Load our video.
           this.player.loadVideoById( this.videoFile.path, 0 );
         }
       };
-         
+
       // Called when the player has finished loading.
       this.onReady = function() {
         this.ready = true;
         this.loadPlayer();
       };
-         
+
       this.loadPlayer = function() {
         if( this.ready && this.player ) {
           // Create our callback functions.
           window[options.id + 'StateChange'] = function( newState ) {
             _this.onStateChange( newState );
           };
-   
+
           window[options.id + 'PlayerError'] = function( errorCode ) {
             _this.onError( errorCode );
           };
-               
+
           // Add our event listeners.
           this.player.addEventListener('onStateChange', options.id + 'StateChange');
           this.player.addEventListener('onError', options.id + 'PlayerError');
-               
+
           // Let them know the player is ready.
           onUpdate( {
             type:"playerready"
           } );
-               
+
           // Load our video.
           this.player.loadVideoById( this.videoFile.path, 0 );
         }
       };
-         
+
       // Called when the player state changes.
       this.onStateChange = function( newState ) {
         var playerState = this.getPlayerState( newState );
-            
+
         // Alright... Dailymotion's status updates are just crazy...
         // write some hacks to just make it work.
-            
+
         if( !(!this.meta && playerState.state =="stopped") ) {
           onUpdate( {
             type:playerState.state,
             busy:playerState.busy
           } );
         }
-            
+
         if( !this.loaded && playerState.state == "buffering" ) {
           this.loaded = true;
           onUpdate( {
@@ -451,18 +451,18 @@
             this.playMedia();
           }
         }
-            
+
         if( !this.meta && playerState.state == "playing" ) {
           // Set this player to meta.
           this.meta = true;
-               
+
           // Update our meta data.
           onUpdate( {
             type:"meta"
           } );
         }
       };
-         
+
       // Called when the player has an error.
       this.onError = function( errorCode ) {
         var errorText = "An unknown error has occured: " + errorCode;
@@ -478,7 +478,7 @@
           data:errorText
         } );
       };
-         
+
       // Translates the player state for the  API player.
       this.getPlayerState = function( playerState ) {
         switch (playerState) {
@@ -501,9 +501,9 @@
       };
 
       /*
-         this.setSize = function( newWidth, newHeight ) {             
+         this.setSize = function( newWidth, newHeight ) {
             this.player.setSize(newWidth, newHeight);
-         };           
+         };
          */
       this.playMedia = function() {
         onUpdate({
@@ -512,15 +512,21 @@
         });
         this.player.playVideo();
       };
-         
+
       this.pauseMedia = function() {
         this.player.pauseVideo();
       };
-         
+
       this.stopMedia = function() {
         this.player.stopVideo();
       };
-         
+
+      this.destroy = function() {
+        this.stopMedia();
+        jQuery.media.utils.removeFlash( this.display, (options.id + "_media") );
+        this.display.children().remove();
+      };
+
       this.seekMedia = function( pos ) {
         onUpdate({
           type:"buffering",
@@ -528,39 +534,39 @@
         });
         this.player.seekTo( pos, true );
       };
-         
+
       this.setVolume = function( vol ) {
         this.player.setVolume( vol * 100 );
       };
-         
+
       this.getVolume = function() {
         return (this.player.getVolume() / 100);
       };
-         
+
       this.getDuration = function() {
         return this.player.getDuration();
       };
-         
+
       this.getCurrentTime = function() {
         return this.player.getCurrentTime();
       };
-         
+
       this.getBytesLoaded = function() {
         return this.player.getVideoBytesLoaded();
       };
-         
+
       this.getBytesTotal = function() {
         return this.player.getVideoBytesTotal();
       };
-         
+
       this.getEmbedCode = function() {
         return this.player.getVideoEmbedCode();
       };
-         
+
       this.getMediaLink = function() {
         return this.player.getVideoUrl();
       };
-         
+
       this.hasControls = function() {
         return true;
       };
@@ -571,7 +577,7 @@
       };
     })( this, options, onUpdate );
   };
-  /**
+/**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
  *  Developed by Travis Tidwell | travist at alethia-inc.com
@@ -698,6 +704,12 @@
         }
         var hasMedia = (this.playQueue.length > 0);
         if( !hasMedia ) {
+          if (this.player) {
+            // Destroy the current player.
+            this.player.destroy();
+            this.player = null;
+          }
+
           this.display.trigger( "mediaupdate", {type:"nomedia"} );
         }
         return hasMedia;
@@ -1492,6 +1504,12 @@
         }
       };
 
+      this.destroy = function() {
+        this.stopMedia();
+        jQuery.media.utils.removeFlash( this.display, (options.id + "_media") );
+        this.display.children().remove();
+      };
+
       this.seekMedia = function( pos ) {
         if( this.player && this.ready ) {
           this.player.seekMedia( pos );
@@ -1569,7 +1587,7 @@
 /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *  Developed by Travis Tidwell | travist at alethia-inc.com
  *
  *  License:  GPL version 3.
  *
@@ -1579,7 +1597,7 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in
  *  all copies or substantial portions of the Software.
 
@@ -1603,13 +1621,13 @@
       this.loaded = false;
       this.mediaFile = null;
       this.playerElement = null;
-         
+
       this.getPlayer = function( mediaFile, preview ) {
         this.mediaFile = mediaFile;
         var playerId = options.id + '_' + this.mediaType;
         var html = '<' + this.mediaType + ' style="position:absolute" id="' + playerId + '"';
         html += preview ? ' poster="' + preview + '"' : '';
-            
+
         if( typeof mediaFile === 'array' ) {
           html += '>';
           var i = mediaFile.length;
@@ -1621,17 +1639,17 @@
         else {
           html += ' src="' + mediaFile.path + '">Unable to display media.';
         }
-            
+
         html += '</' + this.mediaType + '>';
         this.display.append( html );
-        this.bytesTotal = mediaFile.bytesTotal;        
+        this.bytesTotal = mediaFile.bytesTotal;
         this.playerElement = this.display.find('#' + playerId);
         this.onResize();
-        
+
         // return the player object.
         return this.playerElement.eq(0)[0];
       };
-         
+
       // Create a new HTML5 player.
       this.createMedia = function( mediaFile, preview ) {
         // Remove any previous Flash players.
@@ -1746,7 +1764,7 @@
           });
         }
       };
-      
+
       // A function to be called when an error occurs.
       this.onError = function( error ) {
         switch(error.code) {
@@ -1780,62 +1798,67 @@
         this.mediaFile = mediaFile;
         this.createMedia( mediaFile );
       };
-         
+
       this.getMediaType = function( mediaFile ) {
         var extension = (typeof mediaFile === 'array') ? mediaFile[0].extension : mediaFile.extension;
         switch( extension ) {
           case "ogg": case "ogv": case "mp4": case "m4v":
             return "video";
-                  
+
           case "oga": case "mp3":
             return "audio";
-            
+
           default:
             break;
         }
         return "video";
       };
-         
+
       this.playMedia = function() {
         if( this.player && this.player.play ) {
           this.player.play();
         }
       };
-         
+
       this.pauseMedia = function() {
         if( this.player && this.player.pause ) {
           this.player.pause();
         }
       };
-         
+
       this.stopMedia = function() {
         this.pauseMedia();
         if( this.player ) {
           this.player.src = "";
         }
       };
-         
+
+      this.destroy = function() {
+        this.stopMedia();
+        this.display.children().remove();
+      };
+
       this.seekMedia = function( pos ) {
         if( this.player ) {
           this.player.currentTime = pos;
         }
       };
-         
+
       this.setVolume = function( vol ) {
         if( this.player ) {
           this.player.volume = vol;
         }
       };
-         
+
       this.getVolume = function() {
         return this.player ? this.player.volume : 0;
       };
-         
+
       this.getDuration = function() {
         var dur = this.player ? this.player.duration : 0;
         return (dur === Infinity) ? 0 : dur;
       };
-         
+
       this.getCurrentTime = function() {
         return this.player ? this.player.currentTime : 0;
       };
@@ -1851,15 +1874,15 @@
           return 0;
         }
       };
-      
+
       // Called when the player resizes.
       this.onResize = function() {
         // If this is a video, set the width and height of the video element.
         if( this.mediaType == "video" ) {
           this.playerElement.css({width:this.display.width(), height:this.display.height()});
         }
-      };   
-         
+      };
+
       // Not implemented yet...
       this.setQuality = function( quality ) {};
       this.getQuality = function() {
@@ -1903,7 +1926,7 @@
       };
     })( this, options, onUpdate );
   };
-         /**
+/**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
  *  Developed by Travis Tidwell | travist at alethia-inc.com 
@@ -6178,7 +6201,7 @@
 /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *  Developed by Travis Tidwell | travist at alethia-inc.com
  *
  *  License:  GPL version 3.
  *
@@ -6188,7 +6211,7 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in
  *  all copies or substantial portions of the Software.
 
@@ -6250,7 +6273,7 @@
       this.bytesLoaded = 0;
       this.bytesTotal = 0;
       this.currentVolume = 1;
-         
+
       this.createMedia = function( videoFile, preview ) {
         this.videoFile = videoFile;
         this.ready = false;
@@ -6306,16 +6329,16 @@
           this.player.api_addEventListener('onLoading', 'onVimeoLoading');
           this.player.api_addEventListener('onPlay', 'onVimeoPlay');
           this.player.api_addEventListener('onPause', 'onVimeoPause');
-               
+
           // Let them know the player is ready.
           onUpdate({
             type:"playerready"
           });
-               
+
           this.playMedia();
         }
       };
-         
+
       this.onFinished = function() {
         onUpdate({
           type:"complete"
@@ -6326,7 +6349,7 @@
         this.bytesLoaded = data.bytesLoaded;
         this.bytesTotal = data.bytesTotal;
       };
-         
+
       this.onPlaying = function() {
         onUpdate({
           type:"playing",
@@ -6340,7 +6363,7 @@
           busy:"hide"
         });
       };
-         
+
       this.playMedia = function() {
         onUpdate({
           type:"playing",
@@ -6354,7 +6377,7 @@
           type:"progress"
         });
       };
-         
+
       this.pauseMedia = function() {
         onUpdate({
           type:"paused",
@@ -6362,30 +6385,36 @@
         });
         this.player.api_pause();
       };
-         
+
       this.stopMedia = function() {
         this.pauseMedia();
         this.player.api_unload();
       };
-         
+
+      this.destroy = function() {
+        this.stopMedia();
+        jQuery.media.utils.removeFlash( this.display, (options.id + "_media") );
+        this.display.children().remove();
+      };
+
       this.seekMedia = function( pos ) {
         this.player.api_seekTo( pos );
       };
-         
+
       this.setVolume = function( vol ) {
         this.currentVolume = vol;
         this.player.api_setVolume( (vol*100) );
       };
-         
+
       // For some crazy reason... Vimeo has not implemented this... so just cache the value.
       this.getVolume = function() {
         return this.currentVolume;
       };
-         
+
       this.getDuration = function() {
         return this.player.api_getDuration();
       };
-         
+
       this.getCurrentTime = function() {
         return this.player.api_getCurrentTime();
       };
@@ -6393,11 +6422,11 @@
       this.getBytesLoaded = function() {
         return this.bytesLoaded;
       };
-         
+
       this.getBytesTotal = function() {
         return this.bytesTotal;
       };
-         
+
       // Not implemented yet...
       this.setQuality = function( quality ) {};
       this.getQuality = function() {
@@ -6416,7 +6445,7 @@
       };
     })( this, options, onUpdate );
   };
-         /**
+/**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
  *  Developed by Travis Tidwell | travist at alethia-inc.com 
@@ -6550,7 +6579,7 @@
 /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *  Developed by Travis Tidwell | travist at alethia-inc.com
  *
  *  License:  GPL version 3.
  *
@@ -6560,7 +6589,7 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in
  *  all copies or substantial portions of the Software.
 
@@ -6618,33 +6647,33 @@
           }
           );
       };
-         
+
       this.getId = function( path ) {
         var regex = /^http[s]?\:\/\/(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9]+)/i;
         return (path.search(regex) === 0) ? path.replace(regex, "$2") : path;
       };
-         
+
       this.loadMedia = function( videoFile ) {
         if( this.player ) {
           this.loaded = false;
           this.videoFile = videoFile;
-               
+
           // Let them know the player is ready.
           onUpdate( {
             type:"playerready"
           } );
-               
+
           // Load our video.
           this.player.loadVideoById( this.getId( this.videoFile.path ), 0, options.quality );
         }
       };
-         
+
       // Called when the player has finished loading.
       this.onReady = function() {
         this.ready = true;
         this.loadPlayer();
       };
-         
+
       // Try to load the player.
       this.loadPlayer = function() {
         if( this.ready && this.player ) {
@@ -6652,15 +6681,15 @@
           window[options.id + 'StateChange'] = function( newState ) {
             _this.onStateChange( newState );
           };
-   
+
           window[options.id + 'PlayerError'] = function( errorCode ) {
             _this.onError( errorCode );
           };
-               
+
           window[options.id + 'QualityChange'] = function( newQuality ) {
             _this.quality = newQuality;
           };
-               
+
           // Add our event listeners.
           this.player.addEventListener('onStateChange', options.id + 'StateChange');
           this.player.addEventListener('onError', options.id + 'PlayerError');
@@ -6673,12 +6702,12 @@
           onUpdate( {
             type:"playerready"
           });
-               
+
           // Load our video.
           this.player.loadVideoById( this.getId( this.videoFile.path ), 0 );
         }
       };
-         
+
       // Called when the YouTube player state changes.
       this.onStateChange = function( newState ) {
         var playerState = this.getPlayerState( newState );
@@ -6686,18 +6715,18 @@
           type:playerState.state,
           busy:playerState.busy
         } );
-            
+
         if( !this.loaded && playerState == "playing" ) {
           // Set this player to loaded.
           this.loaded = true;
-               
+
           // Update our meta data.
           onUpdate( {
             type:"meta"
           } );
         }
       };
-         
+
       // Called when the YouTube player has an error.
       this.onError = function( errorCode ) {
         var errorText = "An unknown error has occured: " + errorCode;
@@ -6716,7 +6745,7 @@
           data:errorText
         } );
       };
-         
+
       // Translates the player state for the YouTube API player.
       this.getPlayerState = function( playerState ) {
         switch (playerState) {
@@ -6749,15 +6778,21 @@
         });
         this.player.playVideo();
       };
-         
+
       this.pauseMedia = function() {
         this.player.pauseVideo();
       };
-         
+
       this.stopMedia = function() {
         this.player.stopVideo();
       };
-         
+
+      this.destroy = function() {
+        this.stopMedia();
+        jQuery.media.utils.removeFlash( this.display, (options.id + "_media") );
+        this.display.children().remove();
+      };
+
       this.seekMedia = function( pos ) {
         onUpdate({
           type:"buffering",
@@ -6765,27 +6800,27 @@
         });
         this.player.seekTo( pos, true );
       };
-         
+
       this.setVolume = function( vol ) {
         this.player.setVolume( vol * 100 );
       };
-         
+
       this.setQuality = function( quality ) {
         this.player.setPlaybackQuality( quality );
       };
-         
+
       this.getVolume = function() {
         return (this.player.getVolume() / 100);
       };
-         
+
       this.getDuration = function() {
         return this.player.getDuration();
       };
-         
+
       this.getCurrentTime = function() {
         return this.player.getCurrentTime();
       };
-         
+
       this.getQuality = function() {
         return this.player.getPlaybackQuality();
       };
@@ -6793,7 +6828,7 @@
       this.getEmbedCode = function() {
         return this.player.getVideoEmbedCode();
       };
-         
+
       this.getMediaLink = function() {
         return this.player.getVideoUrl();
       };
@@ -6801,15 +6836,15 @@
       this.getBytesLoaded = function() {
         return this.player.getVideoBytesLoaded();
       };
-         
+
       this.getBytesTotal = function() {
         return this.player.getVideoBytesTotal();
       };
-         
+
       this.hasControls = function() {
         return false;
       };
       this.showControls = function(show) {};
     })( this, options, onUpdate );
   };
-})(jQuery);         
+})(jQuery);
