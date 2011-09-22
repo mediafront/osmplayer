@@ -136,6 +136,12 @@
         // Set the busy cursor visiblility.
         this.busyVisible = (this.busyFlags > 0);
         this.showElement( this.busy, this.busyVisible, tween );
+
+        // If the media has finished loading, then we don't need the
+        // loader for the image.
+        if (id==1 && !show) {
+          this.showBusy(3, false);
+        }
       };
 
       this.showPreview = function( show, tween ) {
@@ -335,8 +341,23 @@
       // Loads an image...
       this.loadImage = function( image ) {
         if( this.preview ) {
+          // Show a busy cursor for the image loading...
+          this.showBusy(3, true);
+
           // Load the image.
           this.preview.loadImage( image );
+
+          // Set and interval to check if the image is loaded.
+          var imageInterval = setInterval(function() {
+
+            // If the image is loaded, then clear the interval.
+            if (_this.preview.loaded()) {
+
+              // Clear the interval and stop the busy cursor.
+              clearInterval(imageInterval);
+              _this.showBusy(3, false);
+            }
+          }, 500);
 
           // Now set the preview image in the media player.
           if( this.media ) {

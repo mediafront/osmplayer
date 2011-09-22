@@ -122,7 +122,7 @@
 
       // Load the player.
       this.loadPlayer = function() {
-        if( this.ready && this.player ) {
+        if( this.ready && this.player && this.player.api_addEventListener ) {
           // Add our event listeners.
           this.player.api_addEventListener('onProgress', 'onVimeoProgress');
           this.player.api_addEventListener('onFinish', 'onVimeoFinish');
@@ -169,7 +169,9 @@
           type:"playing",
           busy:"hide"
         });
-        this.player.api_play();
+        if (this.player.api_play) {
+          this.player.api_play();
+        }
       };
 
       this.onProgress = function( time ) {
@@ -183,12 +185,16 @@
           type:"paused",
           busy:"hide"
         });
-        this.player.api_pause();
+        if (this.player.api_pause) {
+          this.player.api_pause();
+        }
       };
 
       this.stopMedia = function() {
         this.pauseMedia();
-        this.player.api_unload();
+        if (this.player.api_unload) {
+          this.player.api_unload();
+        }
       };
 
       this.destroy = function() {
@@ -198,12 +204,16 @@
       };
 
       this.seekMedia = function( pos ) {
-        this.player.api_seekTo( pos );
+        if (this.player.api_seekTo) {
+          this.player.api_seekTo( pos );
+        }
       };
 
       this.setVolume = function( vol ) {
         this.currentVolume = vol;
-        this.player.api_setVolume( (vol*100) );
+        if (this.player.api_setVolume) {
+          this.player.api_setVolume( (vol*100) );
+        }
       };
 
       // For some crazy reason... Vimeo has not implemented this... so just cache the value.
@@ -212,11 +222,11 @@
       };
 
       this.getDuration = function() {
-        return this.player.api_getDuration();
+        return this.player.api_getDuration ? this.player.api_getDuration() : 0;
       };
 
       this.getCurrentTime = function() {
-        return this.player.api_getCurrentTime();
+        return this.player.api_getCurrentTime ? this.player.api_getCurrentTime() : 0;
       };
 
       this.getBytesLoaded = function() {
