@@ -21,8 +21,7 @@
   </div>
   <div id="<?php print $params['prefix']; ?>mediainfo" class="<?php print $params['prefix']; ?>menucontent <?php print $params['prefix']; ?>ui-tabs-panel <?php print $params['prefix']; ?>ui-widget-content <?php print $params['prefix']; ?>ui-corner-bottom" id="<?php print $params['prefix']; ?>mediainfo">
     <p>
-      <a target="_blank" href="http://www.mediafront.org">Open Standard Media Player</a> version <?php print $params['version']; ?><br/><br/>
-      Built by <a target="_blank" href="http://www.alethia-inc.com">Alethia Inc.</a>
+      <a target="_blank" href="http://www.mediafront.org">Open Standard Media Player</a> version <?php print $params['version']; ?>
     </p>
   </div>
 </div>

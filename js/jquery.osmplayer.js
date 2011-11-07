@@ -4114,6 +4114,16 @@
         if( this.node && this.node.player ) {
           this.node.player.fullScreen( this.fullScreen );
           this.onResize();
+
+          // Check to see if this browser supports native fullscreen.
+          if (window.webkitSupportsFullscreen && window.webkitSupportsFullscreen()) {
+            if (full) {
+              window.webkitEnterFullscreen();
+            }
+            else {
+              window.webkitExitFullscreen();
+            }
+          }
         }
       };
 
@@ -4254,10 +4264,10 @@
 
       // Search these elements for the id.
       this.searchForElement = function(elementList) {
-        
+
         // Iterate through the elements.
         for(var id in elementList) {
-          
+
           // We need to tolerate instances.
           var reg = new RegExp( '^' + id + '(\\_[0-9]+)?$', 'i');
           if (settings.id.search(reg) === 0) {
@@ -4343,7 +4353,7 @@
 
       // Load the content into the player.
       this.loadContent = function() {
-        
+
         // Now add any queued controllers...
         var controllers = this.searchForElement(jQuery.media.controllers);
         if (controllers) {
@@ -4352,8 +4362,8 @@
             i--;
             this.addController( controllers[i], true );
           }
-        }        
-        
+        }
+
         // Now add any queued playlists...
         var playlists = this.searchForElement(jQuery.media.playlists);
         if (playlists) {
@@ -4362,8 +4372,8 @@
             i--;
             this.addPlaylist( playlists[i] );
           }
-        }         
-        
+        }
+
         var playlistLoaded = false;
 
         if( this.playlist ) {
@@ -4378,7 +4388,7 @@
           }
 
           this.node.loadNode();
-        }       
+        }
       };
 
       this.initializeTemplate = function() {
