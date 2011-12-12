@@ -1,8 +1,4 @@
 ﻿/**
- *  Copyright (c) 2010 Alethia Inc,
- *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com
- *
  *  License:  GPL version 3.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
