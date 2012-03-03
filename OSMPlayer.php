@@ -29,6 +29,12 @@
 define('OSMPLAYER_DEFAULT_WIDTH', 550);
 define('OSMPLAYER_DEFAULT_HEIGHT', 400);
 
+if (!function_exists('check_plain')) {
+  function check_plain($text) {
+    return (preg_match('/^./us', $text) == 1) ? htmlspecialchars($text, ENT_QUOTES, 'UTF-8') : '';
+  }
+}
+
 /**
  * PHP wrapper class for the Open Standard Media (OSM) player.
  *
@@ -101,8 +107,8 @@ class OSMPlayer {
     if( !$playerPath ) {
       // Set the base path and url of this class.
       $base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
-      $base_url = $base_root .= '://'. $_SERVER['HTTP_HOST'];
-      if ($dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/')) {
+      $base_url = $base_root .= '://'. check_plain($_SERVER['HTTP_HOST']);
+      if ($dir = trim(dirname(check_plain($_SERVER['SCRIPT_NAME'])), '\,/')) {
          $base_url .= "/$dir";
       }
 
