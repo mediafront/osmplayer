@@ -1,7 +1,7 @@
 /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *  Developed by Travis Tidwell | travist at alethia-inc.com
  *
  *  License:  GPL version 3.
  *
@@ -11,7 +11,7 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in
  *  all copies or substantial portions of the Software.
 
@@ -25,7 +25,7 @@
  */
 (function($) {
   jQuery.media = jQuery.media ? jQuery.media : {};
-   
+
   // Set up our defaults for this component.
   jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
     node:"",
@@ -38,20 +38,20 @@
     mediaRegion:"#mediaregion",
     field:".mediafield"
   });
-   
+
   jQuery.fn.medianode = function( server, settings ) {
     if( this.length === 0 ) {
       return null;
     }
     return new (function( server, node, settings ) {
       settings = jQuery.media.utils.getSettings(settings);
-         
+
       // Save the jQuery display.
       this.display = node;
       this.nodeInfo = {};
       this.incremented = false;
       var _this = this;
-         
+
       // Add the min player as the player for this node.
       this.player = this.display.find(settings.ids.mediaRegion).minplayer( settings );
       if( this.player && (settings.incrementTime !== 0)) {
@@ -59,7 +59,7 @@
           _this.onMediaUpdate( data );
         });
       }
-         
+
       // Store all loaded images.
       this.images = [];
 
@@ -82,7 +82,7 @@
 
       // Add the voters to this node.
       this.addVoters( this.display );
-         
+
       // Handle the media events.
       this.onMediaUpdate = function( data ) {
         if( !this.incremented ) {
@@ -106,7 +106,7 @@
           }
         }
       };
-         
+
       this.loadNode = function( _nodeInfo ) {
         return this.getNode( this.translateNode( _nodeInfo ) );
       };
@@ -162,7 +162,7 @@
           // Set the node information object.
           this.nodeInfo = _nodeInfo;
           this.incremented = false;
-   
+
           // Load the media...
           if( this.player && this.nodeInfo.mediafiles ) {
             // Load the preview image.
@@ -177,7 +177,7 @@
             // Load the media...
             this.player.loadFiles( this.nodeInfo.mediafiles.media );
           }
-               
+
           // Get the vote for these voters.
           if( this.voter ) {
             this.voter.getVote( _nodeInfo );
@@ -185,12 +185,12 @@
           if( this.uservoter ) {
             this.uservoter.getVote( _nodeInfo );
           }
-               
+
           // Load all of our fields.
           this.display.find(settings.ids.field).each( function() {
             _this.setField( this, _nodeInfo, $(this).attr("type"), $(this).attr("field") );
           });
-                  
+
           // Trigger our node loaded event.
           this.display.trigger( "nodeload", this.nodeInfo );
         }
@@ -203,7 +203,7 @@
             case "text":
               this.setTextField( fieldObj, _nodeInfo, fieldName );
               break;
-   
+
             case "image":
               this.setImageField( fieldObj, fieldName );
               break;
@@ -216,7 +216,7 @@
           }
         }
       };
-         
+
       this.setTextField = function( fieldObj, _nodeInfo, fieldName ) {
         var field = _nodeInfo[fieldName];
         if( field ) {
@@ -242,10 +242,10 @@
       };
 
       this.getImage = function( imageName ) {
-        var images = this.nodeInfo.mediafiles ? this.nodeInfo.mediafiles.images : null;
+        var images = this.nodeInfo.mediafiles ? this.nodeInfo.mediafiles.image : null;
         var image = null;
         if( images ) {
-               
+
           // Get the image.
           if( images[imageName] ) {
             image = images[imageName];
@@ -259,7 +259,7 @@
               }
             }
           }
-               
+
           // If they just provided a string, then still show the image.
           image = (typeof image === "string") ? {
             path:image
@@ -274,7 +274,7 @@
         }
         return image;
       };
-         
+
       this.setImageField = function( fieldObj, fieldName ) {
         var file = this.getImage( fieldName );
         if( file ) {
