@@ -2,55 +2,59 @@
 <playlist version="1" xmlns="http://xspf.org/ns/0/">
    <trackList>
       <track>
-         <location>http://upload.wikimedia.org/wikipedia/commons/6/69/RoboCupSoccer_Robot_Football_at_2009_German_Open.ogg</location>
-         <creator>Mike1024</creator>
-         <title>OGG Video: Robocup Soccer</title>
-         <annotation>A robotic soccer tournament.</annotation>
-         <image>http://upload.wikimedia.org/wikipedia/commons/thumb/6/69/RoboCupSoccer_Robot_Football_at_2009_German_Open.ogg/mid-RoboCupSoccer_Robot_Football_at_2009_German_Open.ogg.jpg</image>
-         <info>http://commons.wikimedia.org/wiki/File:RoboCupSoccer_Robot_Football_at_2009_German_Open.ogg</info>
+         <title>The Dark Knight Rises</title>
+         <location>http://progressive.totaleclips.com.edgesuite.net/105/e105947_257.mp4</location>
+         <image>http://ia.media-imdb.com/images/M/MV5BMTY0MTc2OTUwNV5BMl5BanBnXkFtZTcwNjk4NjQxNw@@._V1._SX640_SY947_.jpg</image>
       </track>
       <track>
-         <location>http://upload.wikimedia.org/wikipedia/commons/2/2f/Levitron-levitating-top-demonstrating-Roy-M-Harrigans-spin-stabilized-magnetic-levitation.ogg</location>
-         <creator>Scott Stevenson</creator>
-         <title>OGG Video: Levitron</title>
-         <annotation>Wikipedia demonstration video of the Levitron levitating top device which partially explains its reliance upon the principle of spin stabilized magnetic levitation. A phenomenon discovered through invention in the late 1970's by Roy M. Harrigan (for which he received a patent in 1983 #4,382,245).</annotation>
-         <image>http://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Levitron-levitating-top-demonstrating-Roy-M-Harrigans-spin-stabilized-magnetic-levitation.ogg/mid-Levitron-levitating-top-demonstrating-Roy-M-Harrigans-spin-stabilized-magnetic-levitation.ogg.jpg</image>
-         <info>http://commons.wikimedia.org/wiki/File:Levitron-levitating-top-demonstrating-Roy-M-Harrigans-spin-stabilized-magnetic-levitation.ogg</info>
+         <title>The Amazing Spiderman</title>
+         <location>http://progressive.totaleclips.com.edgesuite.net/108/e108011_257.mp4</location>
+         <image>http://ia.media-imdb.com/images/M/MV5BMTUwMzk3NTQ2Ml5BMl5BanBnXkFtZTcwMDYyMzUxNw@@._V1._SX640_SY948_.jpg</image>
       </track>
       <track>
-         <location>http://www.vimeo.com/5653474</location>
-         <creator>nesthor</creator>
-         <title>Vimeo Example: Kuroshio Sea</title>
-         <annotation>Vimeo Example.</annotation>
-         <image>http://ats.vimeo.com/192/971/19297174_100.jpg</image>
+         <title>Matagascar III</title>
+         <location>http://progressive.totaleclips.com.edgesuite.net/105/e105598_257.mp4</location>
+         <image>http://ia.media-imdb.com/images/M/MV5BMTM2MTIzNzk2MF5BMl5BanBnXkFtZTcwMDcwMzQxNw@@._V1._SX640_SY946_.jpg</image>
       </track>
       <track>
-         <location>http://www.youtube.com/watch?v=dTAAsCNK7RA</location>
-         <creator>Ok Go!</creator>
-         <title>YouTube Example: Ok Go!</title>
-         <annotation>YouTube Example.</annotation>
-         <image>http://i1.ytimg.com/vi/dTAAsCNK7RA/hqdefault.jpg</image>
-      </track> 
+         <title>Snow White and the Huntsman</title>
+         <location>http://progressive.totaleclips.com.edgesuite.net/103/e103981_257.mp4</location>
+         <image>http://ia.media-imdb.com/images/M/MV5BMTQ1NDA0MTk5OV5BMl5BanBnXkFtZTcwMTM4NDMwNw@@._V1._SX509_SY755_.jpg</image>
+      </track>
       <track>
-         <location>http://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_640x360.m4v</location>
-         <creator>www.bigbuckbunny.org</creator>
-         <title>M4V Example: Big Buck Bunny</title>
-         <annotation>M4V Example.</annotation>
-         <image>http://upload.wikimedia.org/wikipedia/commons/5/5f/BBB-Bunny.png</image>
-      </track> 
+         <title>Men in Black III</title>
+         <location>http://progressive.totaleclips.com.edgesuite.net/105/e105857_257.mp4</location>
+         <image>http://ia.media-imdb.com/images/M/MV5BMTA5MTMyNTQwMjVeQTJeQWpwZ15BbWU3MDExOTk2NDc@._V1._SX508_SY755_.jpg</image>
+      </track>
       <track>
-         <location>http://mirror.cs.umn.edu/blender.org/peach/trailer/trailer_480p.mov</location>
-         <creator>www.bigbuckbunny.org</creator>
-         <title>MOV (Flash) Example: Big Buck Bunny Trailer</title>
-         <annotation>MOV Example.</annotation>
-         <image>http://peach.blender.org/wp-content/uploads/watchtrailer.gif</image>
-      </track> 
+         <title>The Three Stooges</title>
+         <location>http://progressive.totaleclips.com.edgesuite.net/105/e105408_227.mp4</location>
+         <image>http://ia.media-imdb.com/images/M/MV5BMTQwMzYwNjQ3OF5BMl5BanBnXkFtZTcwNzczNDMxNw@@._V1._SX486_SY720_.jpg</image>
+      </track>
       <track>
-         <location>http://upload.wikimedia.org/wikipedia/commons/c/cf/Big_Buck_Bunny_8_seconds_bird_clip.ogv</location>
-         <creator>www.bigbuckbunny.org</creator>
-         <title>OGV Example: Bird in Tree</title>
-         <annotation>OGV Example.</annotation>
-         <image>http://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Big_Buck_Bunny_8_seconds_bird_clip.ogv/mid-Big_Buck_Bunny_8_seconds_bird_clip.ogv.jpg</image>
-      </track>      
+         <title>The Hunger Games</title>
+         <location>http://progressive.totaleclips.com.edgesuite.net/107/e107950_227.mp4</location>
+         <image>http://ia.media-imdb.com/images/M/MV5BMjA4NDg3NzYxMF5BMl5BanBnXkFtZTcwNTgyNzkyNw@@._V1._SX640_SY948_.jpg</image>
+      </track>
+      <track>
+         <title>Se7en</title>
+         <location>http://progressive.totaleclips.com.edgesuite.net/102/e10278_301.mp4</location>
+         <image>http://ia.media-imdb.com/images/M/MV5BMTQwNTU3MTE4NF5BMl5BanBnXkFtZTcwOTgxNDM2Mg@@._V1._SX326_SY500_.jpg</image>
+      </track>
+      <track>
+         <title>The Matrix</title>
+         <location>http://progressive.totaleclips.com.edgesuite.net/445/e44573_301.mp4</location>
+         <image>http://ia.media-imdb.com/images/M/MV5BMjEzNjg1NTg2NV5BMl5BanBnXkFtZTYwNjY3MzQ5._V1._SX338_SY475_.jpg</image>
+      </track>
+      <track>
+         <title>Amelie</title>
+         <location>http://progressive.totaleclips.com.edgesuite.net/203/e20379_301.mp4</location>
+         <image>http://ia.media-imdb.com/images/M/MV5BMTUwNzkwMTk5Nl5BMl5BanBnXkFtZTYwMDAzMDI5._V1._SX329_SY475_.jpg</image>
+      </track>
+      <track>
+         <title>The Prestige</title>
+         <location>http://progressive.totaleclips.com.edgesuite.net/308/e30871_257.mp4</location>
+         <image>http://ia.media-imdb.com/images/M/MV5BMjA4NDI0MTIxNF5BMl5BanBnXkFtZTYwNTM0MzY2._V1._SX450_SY667_.jpg</image>
+      </track>
    </trackList>
 </playlist>
