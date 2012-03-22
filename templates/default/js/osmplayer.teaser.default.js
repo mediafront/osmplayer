@@ -37,10 +37,10 @@ osmplayer.teaser['default'].prototype.construct = function() {
 /**
  * Return the display for this plugin.
  */
-osmplayer.teaser['default'].prototype.getDisplay = function(context, options) {
+osmplayer.teaser['default'].prototype.getDisplay = function() {
 
   // Append this to the list.
-  context.append('\
+  this.context.append('\
   <div class="osmplayer-teaser ui-widget-content">\
     <div class="osmplayer-teaser-image"></div>\
     <div class="osmplayer-teaser-info ui-state-default">\
@@ -48,7 +48,7 @@ osmplayer.teaser['default'].prototype.getDisplay = function(context, options) {
     </div>\
   </div>');
 
-  var teasers = jQuery('.osmplayer-teaser', context);
+  var teasers = jQuery('.osmplayer-teaser', this.context);
   return teasers.eq(teasers.length - 1);
 }
 

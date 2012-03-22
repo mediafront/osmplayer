@@ -18,12 +18,12 @@ osmplayer.pager['default'].prototype.constructor = osmplayer.pager['default'];
 /**
  * Return the display for this plugin.
  */
-osmplayer.pager['default'].prototype.getDisplay = function(context, options) {
+osmplayer.pager['default'].prototype.getDisplay = function() {
 
-  if (options.build) {
+  if (this.options.build) {
 
     // append the pager.
-    context.append('\
+    this.context.append('\
     <div class="osmplayer-playlist-pager ui-state-default">\
       <div class="osmplayer-playlist-pager-left">\
         <a href="#" class="osmplayer-playlist-pager-link osmplayer-playlist-pager-prevpage">&nbsp;</a>\
@@ -34,7 +34,7 @@ osmplayer.pager['default'].prototype.getDisplay = function(context, options) {
     </div>');
   }
 
-  return jQuery('.osmplayer-playlist-pager', context);
+  return jQuery('.osmplayer-playlist-pager', this.context);
 }
 
 // Return the elements

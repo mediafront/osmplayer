@@ -63,13 +63,13 @@ minplayer.controller["default"].prototype.onFullScreen = function(full) {
 /**
  * Return the display for this plugin.
  */
-minplayer.controller["default"].prototype.getDisplay = function(context, options) {
+minplayer.controller["default"].prototype.getDisplay = function() {
 
   // See if we need to build out the controller.
-  if (options.build) {
+  if (this.options.build) {
 
     // Prepend the control template.
-    context.prepend('\
+    this.context.prepend('\
     <div class="media-player-error"></div>\
     <div class="media-player-controls">\
       <div class="media-player-controls-left">\
@@ -94,7 +94,7 @@ minplayer.controller["default"].prototype.getDisplay = function(context, options
     </div>');
   }
 
-  return jQuery('.media-player-controls', context);
+  return jQuery('.media-player-controls', this.context);
 }
 
 // Return the elements
