@@ -791,22 +791,26 @@ osmplayer.playlist.prototype.load = function(page, loadIndex) {
     return;
   }
 
+  // Determine if we need to loop.
+  var maxPages = Math.floor(this.totalItems / this.options.pageLimit);
+  if (page > maxPages) {
+    if (this.options.loop) {
+      page = 0;
+      loadIndex = 0;
+    }
+    else {
+      return;
+    }
+  }
+
   // Say that we are busy.
   if (this.scroll.elements.playlist_busy) {
     this.scroll.elements.playlist_busy.show();
   }
 
-  // Determine if we need to loop.
-  var maxPages = Math.floor(this.totalItems / this.options.pageLimit);
-  if (this.options.loop && (page >= maxPages)) {
-    page = 0;
-    loadIndex = 0;
-  }
-
   // Normalize the page.
   page = page || 0;
   page = (page < 0) ? 0 : page;
-  page = (page >= maxPages) ? maxPages : page;
 
   // Set the queue.
   this.setQueue();
