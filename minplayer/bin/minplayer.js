@@ -806,9 +806,6 @@ minplayer = minplayer || {};
  */
 minplayer.display = function(name, context, options, queue) {
 
-  // See if we allow resize on this display.
-  this.allowResize = false;
-
   // Derive from plugin
   minplayer.plugin.call(this, name, context, options, queue);
 };
@@ -843,7 +840,7 @@ minplayer.display.prototype.construct = function() {
   this.elements = this.getElements();
 
   // Only do this if they allow resize for this display.
-  if (this.allowResize) {
+  if (this.onResize) {
 
     // Set the resize timeout and this pointer.
     var resizeTimeout = 0;
@@ -863,8 +860,7 @@ minplayer.display.prototype.construct = function() {
 /**
  * Called when the window resizes.
  */
-minplayer.display.prototype.onResize = function() {
-};
+minplayer.display.prototype.onResize = false;
 
 /**
  * Gets the full screen element.
@@ -1429,7 +1425,9 @@ minplayer.prototype.resize = function() {
 
   // Call onRezie for each plugin.
   this.get(function(plugin) {
-    plugin.onResize();
+    if (plugin.onResize) {
+      plugin.onResize();
+    }
   });
 };
 /** The minplayer namespace. */
@@ -1469,9 +1467,6 @@ minplayer.image.prototype.constructor = minplayer.image;
  * @see minplayer.plugin.construct
  */
 minplayer.image.prototype.construct = function() {
-
-  // Say we need to resize.
-  this.allowResize = true;
 
   // Call the media display constructor.
   minplayer.display.prototype.construct.call(this);

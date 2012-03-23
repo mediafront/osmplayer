@@ -61,6 +61,7 @@ var osmplayer = osmplayer || {};
  *    y = ratio * (w - (v + h))
  *    v = w - (h + (y / ratio))
  *
+ *
  * @param {object} context The jQuery context.
  * @param {object} options This components options.
  */
@@ -92,53 +93,78 @@ osmplayer.scroll.prototype.construct = function() {
   // Call the minplayer plugin constructor.
   minplayer.display.prototype.construct.call(this);
 
+  // Make this component orientation agnostic.
+  this.pos = this.options.vertical ? 'pageY' : 'pageX';
+  this.offset = this.options.vertical ? 'top' : 'left';
+  this.margin = this.options.vertical ? 'marginTop' : 'marginLeft';
+  this.size = this.options.vertical ? 'height' : 'width';
+  this.outer = this.options.vertical ? 'outerHeight' : 'outerWidth';
+
   this.getMousePos = function(event) {
-    return (event.pageY - this.display.offset().top);
+    return (event[this.pos] - this.display.offset()[this.offset]);
   };
   this.getPos = function(handlePos) {
-    return this.ratio * (this.scrollSize - (handlePos + this.handleSize));
+    if (this.options.vertical) {
+      return this.ratio * (this.scrollSize - (handlePos + this.handleSize));
+    }
+    else {
+      return this.ratio * handlePos;
+    }
   };
   this.getHandlePos = function(pos) {
-    return this.scrollSize - (this.handleSize + (pos / this.ratio));
+    if (this.options.vertical) {
+      return this.scrollSize - (this.handleSize + (pos / this.ratio));
+    }
+    else {
+      return (pos / this.ratio);
+    }
   };
 
   // If they have a scroll bar.
   if (this.elements.scroll) {
 
     // Get the values of our variables.
-    this.scrollSize = this.elements.scroll.height();
-    this.handleSize = 17;
-    this.scrollTop = (this.scrollSize - this.handleSize);
-    this.scrollMid = this.scrollSize / 2;
+    var scroll = this.elements.scroll;
+    this.handleSize = 0;
+    this.scrollTop = 0;
     this.mousePos = 0;
 
     // Refresh the scroll.
     this.refresh();
 
     // Create the scroll bar slider control.
-    this.scroll = this.elements.scroll.slider({
-      orientation: 'vertical',
+    this.scroll = scroll.slider({
+      orientation: this.options.vertical ? 'vertical' : 'horizontal',
       max: this.scrollSize,
-      value: this.scrollTop,
-      slide: (function(scroll) {
+      create: (function(scroll, vertical) {
         return function(event, ui) {
-
+          var handle = jQuery('.ui-slider-handle', event.target);
+          scroll.handleSize = handle[scroll.outer]();
+          scroll.scrollTop = (scroll.scrollSize - scroll.handleSize);
+          var initValue = vertical ? scroll.scrollTop : 0;
+          jQuery(this).slider('option', 'value', initValue);
+        };
+      })(this, this.options.vertical),
+      slide: (function(scroll, vertical) {
+        return function(event, ui) {
           // Get the new position.
           var pos = scroll.getPos(ui.value);
 
           // Ensure it doesn't go over the limits.
-          if (pos < 0) {
-            pos = 0;
+          if (vertical && (pos < 0)) {
             scroll.scroll.slider('option', 'value', scroll.scrollTop);
+            return false;
+          }
+          else if (!vertical && (ui.value > scroll.scrollTop)) {
+            scroll.scroll.slider('option', 'value', scroll.scrollTop);
+            return false;
           }
 
           // Set our list position.
-          scroll.elements.list.css('marginTop', -pos + 'px');
-
-          // Return false to stop the scrolling.
-          return (pos > 0);
+          scroll.elements.list.css(scroll.margin, -pos + 'px');
+          return true;
         };
-      })(this)
+      })(this, this.options.vertical)
     });
 
     // If they wish to have auto scroll mode.
@@ -150,7 +176,8 @@ osmplayer.scroll.prototype.construct = function() {
         // Return our event function.
         return function(event) {
           event.preventDefault();
-          scroll.mousePos = (event.pageY - scroll.display.offset().top);
+          scroll.mousePos = event[scroll.pos];
+          scroll.mousePos -= scroll.display.offset()[scroll.offset];
         };
 
       })(this)).bind('mouseenter', (function(scroll) {
@@ -175,7 +202,7 @@ osmplayer.scroll.prototype.construct = function() {
                 delta /= scroll.scrollMid;
 
                 // Get the scroll position.
-                var pos = scroll.elements.list.css('marginTop');
+                var pos = scroll.elements.list.css(scroll.margin);
                 pos = parseFloat(pos) - delta;
                 pos = (pos > 0) ? 0 : pos;
 
@@ -184,7 +211,7 @@ osmplayer.scroll.prototype.construct = function() {
                 pos = (pos < top) ? top : pos;
 
                 // Set the new scroll position.
-                scroll.elements.list.css('marginTop', pos + 'px');
+                scroll.elements.list.css(scroll.margin, pos + 'px');
 
                 // Set the scroll position.
                 pos = scroll.getHandlePos(-pos);
@@ -211,14 +238,46 @@ osmplayer.scroll.prototype.construct = function() {
 };
 
 /**
- * Refresh all the variables that may change.
+ * Refreshes the scroll list.
  */
 osmplayer.scroll.prototype.refresh = function() {
-  this.listSize = this.elements.list.height();
+
+  // The list size.
+  if (this.options.vertical) {
+    this.listSize = this.elements.list.height();
+  }
+  else {
+    this.listSize = 0;
+    jQuery.each(this.elements.list.children(), (function(scroll) {
+      return function() {
+        scroll.listSize += $(this)[scroll.outer]();
+      };
+    })(this));
+
+    // Set the list size.
+    this.elements.list[this.size](this.listSize);
+  }
+
+  // Refresh the list.
+  this.onResize();
+
+  // Set the scroll position.
+  if (this.scroll) {
+    this.elements.list.css(this.margin, '0px');
+    this.scroll.slider('option', 'value', this.getHandlePos(0));
+  }
+};
+
+/**
+ * Refresh all the variables that may change.
+ */
+osmplayer.scroll.prototype.onResize = function() {
+  this.scrollSize = this.elements.scroll[this.size]();
+  this.scrollMid = this.scrollSize / 2;
+  this.scrollTop = (this.scrollSize - this.handleSize);
   this.ratio = (this.listSize - this.scrollSize);
   this.ratio /= (this.scrollSize - this.handleSize);
   if (this.scroll) {
-    this.elements.list.css('marginTop', '0px');
-    this.scroll.slider('option', 'value', this.getHandlePos(0));
+    this.scroll.slider('option', 'max', this.scrollSize);
   }
 };
