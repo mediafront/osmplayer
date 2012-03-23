@@ -74,6 +74,7 @@ minplayer.image.prototype.load = function(src) {
     this.img = jQuery(document.createElement('img')).attr({src: ''}).hide();
     this.display.append(this.img);
     this.loader.src = src;
+    this.img.attr('src', src);
   });
 };
 

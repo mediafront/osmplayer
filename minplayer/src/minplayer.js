@@ -90,7 +90,9 @@ minplayer.prototype.construct = function() {
     files: [],
     file: '',
     preview: '',
-    attributes: {}
+    attributes: {},
+    logo: '',
+    link: ''
   }, this.options);
 
   // Call the minplayer display constructor.
@@ -101,6 +103,20 @@ minplayer.prototype.construct = function() {
 
   /** The play loader for this player. */
   this.playLoader = this.create('playLoader');
+
+  /** Add the logo for the player. */
+  if (this.options.logo && this.elements.logo) {
+
+    var code = '';
+    if (this.options.link) {
+      code += '<a target="_blank" href="' + this.options.link + '">';
+    }
+    code += '<img src="' + this.options.logo + '" >';
+    if (this.options.link) {
+      code += '</a>';
+    }
+    this.logo = this.elements.logo.append(code);
+  }
 
   /** Variable to store the current media player. */
   this.currentPlayer = 'html5';
@@ -264,7 +280,6 @@ minplayer.prototype.loadPlayer = function() {
 
   // Do nothing if there isn't a file.
   if (!this.options.file) {
-    this.error('No media found.');
     return;
   }
 

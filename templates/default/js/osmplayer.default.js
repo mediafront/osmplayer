@@ -34,6 +34,10 @@ osmplayer['default'].prototype.getDisplay = function() {
     .wrap(jQuery(document.createElement('div')).attr({
       'class': 'media-player'
     })).parent('.media-player')
+    .prepend('\
+      <div class="media-player-logo with-controller"></div>\
+      <div class="media-player-error"></div>'
+    )
     .wrap(jQuery(document.createElement('div')).attr({
       'id': this.options.id,
       'class': 'osmplayer'
@@ -57,6 +61,7 @@ osmplayer['default'].prototype.getElements = function() {
     display:jQuery(".media-player-display", this.display),
     media:jQuery("#" + this.options.id + "-player", this.display),
     error:jQuery('.media-player-error', this.display),
+    logo:jQuery('.media-player-logo', this.display),
     playlist:jQuery('.osmplayer-playlist', this.display)
   });
 };

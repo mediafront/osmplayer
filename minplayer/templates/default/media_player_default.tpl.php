@@ -1,4 +1,5 @@
 <div id="<?php print $settings['id']; ?>" class="media-player" style="width:<?php print $settings['width']; ?>; height:<?php print $settings['height']; ?>;">
+  <div class="media-player-logo"></div>
   <div class="media-player-error"></div>
   <div class="media-player-controls">
     <div class="media-player-controls-left">
