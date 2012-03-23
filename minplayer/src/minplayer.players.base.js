@@ -357,6 +357,12 @@ minplayer.players.base.prototype.onComplete = function() {
  * Should be called when the media is done loading.
  */
 minplayer.players.base.prototype.onLoaded = function() {
+
+  // If we should autoplay, then just play now.
+  if (this.options.autoplay) {
+    this.play();
+  }
+
   this.trigger('loadeddata');
 };
 

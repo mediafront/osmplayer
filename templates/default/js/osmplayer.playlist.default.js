@@ -19,6 +19,11 @@ osmplayer.playlist['default'].prototype.constructor = osmplayer.playlist['defaul
  * @see minplayer.plugin#construct
  */
 osmplayer.playlist['default'].prototype.construct = function() {
+
+  this.options = jQuery.extend({
+    showPlaylist: true
+  }, this.options);
+
   osmplayer.playlist.prototype.construct.call(this);
 
   // Show then hide the element.
@@ -32,34 +37,58 @@ osmplayer.playlist['default'].prototype.construct = function() {
     var position = this.options.vertical ? 'right' : 'bottom';
     var margin = this.options.vertical ? 'marginRight' : 'marginBottom';
 
+    // Hide and show the playlist.
+    this.hideShow = function(show, animate) {
+      var playerPos = {}, displayPos = {};
+      var displaySize = this.display[size]();
+      playerPos[position] = show ? displaySize : 0;
+      if (animate) {
+        player.elements.minplayer.animate(playerPos, 'fast');
+      }
+      else {
+        player.elements.minplayer.css(playerPos);
+      }
+      displayPos[margin] = show ? 0 : -displaySize;
+      if (animate) {
+        this.display.animate(displayPos, 'fast', function() {
+          player.resize();
+        });
+      }
+      else {
+        this.display.css(displayPos);
+      }
+    };
+
     // Perform the show hide functionality of the playlist.
-    this.elements.hideShow.bind('click', (function(playlist, displaySize) {
+    this.elements.hideShow.bind('click', (function(playlist) {
       return function(event) {
         event.preventDefault();
         var button = $('span', playlist.elements.hideShow);
         var e = playlist.options.vertical ? 'e' : 's';
         var w = playlist.options.vertical ? 'w' : 'n';
-        var visible = button.hasClass('ui-icon-triangle-1-' + e);
-        var from = visible ? 'ui-icon-triangle-1-' + e : 'ui-icon-triangle-1-' + w;
-        var to = visible ? 'ui-icon-triangle-1-' + w : 'ui-icon-triangle-1-' + e;
+        var show = button.hasClass('ui-icon-triangle-1-' + w);
+        var from = show ? 'ui-icon-triangle-1-' + w : 'ui-icon-triangle-1-' + e;
+        var to = show ? 'ui-icon-triangle-1-' + e : 'ui-icon-triangle-1-' + w;
         $('span', playlist.elements.hideShow).removeClass(from).addClass(to);
-
-        var playerPos = {}, displayPos = {};
-        playerPos[position] = visible ? 0 : displaySize;
-        player.elements.minplayer.animate(playerPos, 200);
-        displayPos[margin] = visible ? -displaySize : 0;
-        playlist.display.animate(displayPos, 200, function() {
-          player.resize();
-        });
+        playlist.hideShow(show, true);
       };
-    })(this, this.display[size]()));
+    })(this));
 
-    // Set the player to have the correct margin if the playlist is present.
-    if (this.options.vertical) {
-      player.elements.minplayer.css('right', this.display.width() + 'px');
+    // If they wish to show the playlist.
+    if (this.options.showPlaylist) {
+
+      // Set the player to have the correct margin if the playlist is present.
+      if (this.options.vertical) {
+        player.elements.minplayer.css('right', this.display.width() + 'px');
+      }
+      else {
+        player.elements.minplayer.css('bottom', this.display.height() + 'px');
+      }
     }
     else {
-      player.elements.minplayer.css('bottom', this.display.height() + 'px');
+
+      // Hide the playlist.
+      this.hideShow(false);
     }
   });
 };
@@ -70,7 +99,8 @@ osmplayer.playlist['default'].prototype.construct = function() {
 osmplayer.playlist['default'].prototype.getDisplay = function() {
   if (this.options.build) {
     var cName = this.options.vertical ? 'playlist-vertical' : 'playlist-horizontal';
-    var icon = this.options.vertical ? 'e' : 's';
+    var show = this.options.showPlaylist;
+    var icon = this.options.vertical ? (show ? 'e' : 'w') : (show ? 's' : 'n');
     var corner = this.options.vertical ? 'ui-corner-left' : 'ui-corner-top';
     this.context.append('\
       <div class="osmplayer-playlist ' + cName + '">\
