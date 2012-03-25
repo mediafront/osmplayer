@@ -41,14 +41,14 @@ osmplayer.teaser['default'].prototype.getDisplay = function() {
 
   // Append this to the list.
   this.context.append('\
-  <div class="osmplayer-teaser ui-widget-content">\
-    <div class="osmplayer-teaser-image"></div>\
-    <div class="osmplayer-teaser-info ui-state-default">\
-      <div class="osmplayer-teaser-title">Sample Title</div>\
+  <div class="osmplayer-default-teaser ui-widget-content">\
+    <div class="osmplayer-default-teaser-image"></div>\
+    <div class="osmplayer-default-teaser-info ui-state-default">\
+      <div class="osmplayer-default-teaser-title">Sample Title</div>\
     </div>\
   </div>');
 
-  var teasers = jQuery('.osmplayer-teaser', this.context);
+  var teasers = jQuery('.osmplayer-default-teaser', this.context);
   return teasers.eq(teasers.length - 1);
 }
 
@@ -69,8 +69,8 @@ osmplayer.teaser['default'].prototype.select = function(selected) {
 osmplayer.teaser['default'].prototype.getElements = function() {
   var elements = osmplayer.teaser.prototype.getElements.call(this);
   return jQuery.extend(elements, {
-    info: jQuery(".osmplayer-teaser-info", this.display),
-    title:jQuery(".osmplayer-teaser-title", this.display),
-    image:jQuery(".osmplayer-teaser-image", this.display)
+    info: jQuery(".osmplayer-default-teaser-info", this.display),
+    title:jQuery(".osmplayer-default-teaser-title", this.display),
+    image:jQuery(".osmplayer-default-teaser-image", this.display)
   });
 };

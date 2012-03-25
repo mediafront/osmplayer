@@ -98,25 +98,33 @@ osmplayer.playlist['default'].prototype.construct = function() {
  */
 osmplayer.playlist['default'].prototype.getDisplay = function() {
   if (this.options.build) {
-    var cName = this.options.vertical ? 'playlist-vertical' : 'playlist-horizontal';
-    var show = this.options.showPlaylist;
-    var icon = this.options.vertical ? (show ? 'e' : 'w') : (show ? 's' : 'n');
-    var corner = this.options.vertical ? 'ui-corner-left' : 'ui-corner-top';
     this.context.append('\
-      <div class="osmplayer-playlist ' + cName + '">\
-        <div class="osmplayer-hide-show-playlist ' + corner + '">\
-          <span class="ui-icon ui-icon ui-icon-triangle-1-' + icon + '"></span>\
+      <div class="osmplayer-default-playlist">\
+        <div class="osmplayer-default-hide-show-playlist">\
+          <span class="ui-icon"></span>\
         </div>\
       </div>\
     ');
   }
-  return jQuery('.osmplayer-playlist', this.context);
+  return jQuery('.osmplayer-default-playlist', this.context);
 };
 
 // Return the elements
 osmplayer.playlist['default'].prototype.getElements = function() {
   var elements = osmplayer.playlist.prototype.getElements.call(this);
+
+  // Setup the dynamic settings.
+  var cName = this.options.vertical ? 'playlist-vertical' : 'playlist-horizontal';
+  var show = this.options.showPlaylist;
+  var icon = this.options.vertical ? (show ? 'e' : 'w') : (show ? 's' : 'n');
+  var corner = this.options.vertical ? 'ui-corner-left' : 'ui-corner-top';
+
+  this.display.addClass(cName);
+  var hideShow = jQuery(".osmplayer-default-hide-show-playlist", this.display);
+  hideShow.addClass(corner);
+  jQuery('span', hideShow).addClass('ui-icon-triangle-1-' + icon);
+
   return jQuery.extend(elements, {
-    hideShow:jQuery(".osmplayer-hide-show-playlist", this.display)
+    hideShow:hideShow
   });
 };

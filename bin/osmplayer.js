@@ -77,7 +77,9 @@ osmplayer.prototype.construct = function() {
   // Make sure we provide default options...
   this.options = jQuery.extend({
     playlist: '',
-    swfplayer: 'minplayer/flash/minplayer.swf'
+    swfplayer: 'minplayer/flash/minplayer.swf',
+    logo: 'logo.png',
+    link: 'http://www.mediafront.org'
   }, this.options);
 
   // Call the minplayer display constructor.
@@ -132,7 +134,10 @@ osmplayer.prototype.loadNode = function(node) {
 
     // Load the preview image.
     this.options.preview = osmplayer.getImage(node.mediafiles.image, 'preview');
-    this.playLoader.loadPreview();
+
+    if (this.playLoader) {
+      this.playLoader.loadPreview();
+    }
 
     // Play the next media
     this.playNext();

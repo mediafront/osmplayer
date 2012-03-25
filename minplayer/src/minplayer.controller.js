@@ -78,6 +78,9 @@ minplayer.controller.prototype.construct = function() {
   // Keep track of if we are dragging...
   this.dragging = false;
 
+  // Keep track of the current volume.
+  this.vol = 0;
+
   // If they have a seek bar.
   if (this.elements.seek) {
 
@@ -236,6 +239,25 @@ minplayer.controller.prototype.construct = function() {
           };
         })(this)
       });
+    }
+
+    // Setup the mute button.
+    if (this.elements.mute) {
+      this.elements.mute.click((function(controller) {
+        return function(event) {
+          event.preventDefault();
+          var value = controller.volumeBar.slider('option', 'value');
+          if (value > 0) {
+            controller.vol = value;
+            controller.volumeBar.slider('option', 'value', 0);
+            media.setVolume(0);
+          }
+          else {
+            controller.volumeBar.slider('option', 'value', controller.vol);
+            media.setVolume(controller.vol / 100);
+          }
+        };
+      })(this));
     }
 
     // Setup the volume bar.

@@ -1,14 +1,5 @@
-
 /* base styles */
-.media-player {}
-.media-player-play, .media-player-volume-button {
-  cursor: pointer;
-}
-.media-player-timer {
-  cursor: default;
-}
-
-.media-player {
+.minplayer-default {
   position: relative;
   background:#000;
   border:1px solid #333;
@@ -17,7 +8,7 @@
   -webkit-box-shadow:0px 5px 10px #333;/*no-important chrome*/
 }
 
-.media-player .media-player-error {
+.minplayer-default-error {
   display:none;
   position: absolute;
   top: 80%;
@@ -41,29 +32,29 @@
   -moz-box-shadow: 2px 2px 4px #000;
 }
 
-.media-player .media-player-display {
+.minplayer-default-display {
   background-color:#000;
   width:100%;
   height:100%;
 }
 
-.media-player .media-player-display video {
+.minplayer-default-display video {
   width: 100%;
   height: 100%;
 }
 
-.media-player .media-player-preview {
+.minplayer-default-preview {
   width:100%;
   height:100%;
   position:absolute;
   z-index:1;
 }
 
-.media-player .media-player-preview.has-preview {
+.minplayer-default-preview.has-preview {
   background-color: rgb(0, 0, 0);
 }
 
-.media-player .media-player-play-loader {
+.minplayer-default-loader-wrapper {
   width:100%;
   height:100%;
   position:absolute;
@@ -74,7 +65,7 @@
   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#55000000, endColorstr=#55000000)";
 }
 
-.media-player .media-player-loader {
+.minplayer-default-loader {
   width:42px;
   height:10px;
   position: absolute;
@@ -88,7 +79,7 @@
 }
 
 /* Big play button */
-.media-player .media-player-play-loader .media-player-big-play {
+.minplayer-default-big-play {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -110,14 +101,14 @@
   -moz-box-shadow: 2px 2px 4px #000;
 }
 
-.media-player .media-player-play-loader .media-player-big-play span {
+.minplayer-default-big-play span {
   margin: 22px 0 0 48px;
   border-left: 36px solid white;
   border-top: 18px solid transparent;
   border-bottom: 18px solid transparent;
 }
 
-.media-player .media-player-play-loader .media-player-big-play span {
+.minplayer-default-big-play span {
   display: block;
   font-size: 0;
   line-height: 0;
@@ -129,7 +120,7 @@
   border-bottom: 20px solid transparent;
 }
 
-.media-player.fullscreen, .media-player.fullscreen .media-player-display, .media-player.fullscreen .media-player-play-loader {
+.minplayer-default.fullscreen, .minplayer-default.fullscreen .minplayer-default-display, .minplayer-default.fullscreen .minplayer-default-loader-wrapper {
   position: fixed;
   left: 0;
   top: 0;
@@ -141,11 +132,11 @@
   height: 100% !important;
 }
 
-.media-player.fullscreen .media-player-play-loader {
+.minplayer-default.fullscreen .minplayer-default-play-loader {
   z-index:1001;
 }
 
-.media-player .media-player-controls {
+.minplayer-default-controls {
   position: absolute;
   display: block;
   z-index:3;
@@ -156,7 +147,7 @@
   background-color:rgba(0,0,0,0.5);
 }
 
-.media-player-controls-left {
+.minplayer-default-controls-left {
   float:left;
   width:30px;
   height:26px;
@@ -164,38 +155,46 @@
   border-right:1px solid #eee;
 }
 
-.media-player.fullscreen .media-player-controls-left {
+.minplayer-default.fullscreen .minplayer-default-controls-left {
   width:40px;
   border:none;
 }
 
-.media-player-controls-right {
+.minplayer-default-controls-right {
   float:right;
   width:120px;
   height:30px;
 }
 
-.media-player.fullscreen .media-player-controls-right {
+.minplayer-default.fullscreen .minplayer-default-controls-right {
   width:110px;
 }
 
-.media-player-controls-mid {
+.minplayer-default-controls-mid {
   position:absolute;
-  left:40px;
+  left:45px;
   right:130px;
   height:30px;
 }
 
-.media-player.fullscreen .media-player-controls-mid {
+.minplayer-default.fullscreen .minplayer-default-controls-mid {
   left:50px;
 }
 
-.media-player .media-player-play, .media-player .media-player-volume, .media-player .media-player-timer {
+.minplayer-default-play, .minplayer-default-volume, .minplayer-default-timer {
   float: left;
 }
 
+.minplayer-default-play, .minplayer-default-volume-button, minplayer-default-fullscreen {
+  cursor: pointer;
+}
+
+.minplayer-default-timer {
+  cursor: default;
+}
+
 /* play, pause */
-.media-player .media-player-play, .media-player .media-player-pause {
+.minplayer-default-button {
   display: block;
   width: 22px;
   height: 22px;
@@ -207,21 +206,21 @@
   transition: all 0.2s ease-in-out;
 }
 
-.media-player .media-player-play:hover, .media-player .media-player-pause:hover {
+.minplayer-default-button:hover {
   opacity: 1;
 }
 
-.media-player .media-player-play {
+.minplayer-default-play {
   background: url(images/play-icon.png) no-repeat;
 }
 
-.media-player .media-player-pause {
+.minplayer-default-pause {
   background: url(images/pause-icon.png) no-repeat;
   display:none;
 }
 
 /* seek */
-.media-player .media-player-seek {
+.minplayer-default-seek {
   position:relative;
   height: 10px;
   margin-top:9px;
@@ -235,12 +234,12 @@
   box-shadow: inset 0 -3px 3px #333333;
 }
 
-.media-player .media-player-seek .ui-slider-handle {
-  width: 15px;
-  height: 15px;
+.minplayer-default-seek .ui-slider-handle {
+  position: absolute;
+  width: 16px;
+  height: 16px;
   border: 1px solid #333;
-  top: -4px;
-  z-index:20px;
+  z-index:20;
   -moz-border-radius:10px;
   -webkit-border-radius:10px;
   border-radius:10px;
@@ -250,11 +249,13 @@
   box-shadow: inset 0 -3px 3px #d5d5d5;
 }
 
-.media-player .media-player-seek .ui-slider-handle.ui-state-hover {
+.minplayer-default-seek .ui-slider-handle.ui-state-hover {
   background: #fff;
 }
 
-.media-player .media-player-seek .ui-slider-range {
+.minplayer-default-seek .ui-slider-range {
+  position: absolute;
+  height: 10px;
   -moz-border-radius:15px;
   -webkit-border-radius:15px;
   z-index:10px;
@@ -265,12 +266,13 @@
   box-shadow: inset 0 -3px 3px #39a2ce;
 }
 
-.media-player .media-player-progress {
+.minplayer-default-progress {
+  position: absolute;
+  width:0px;
+  height:10px;
   -moz-border-radius:15px;
   -webkit-border-radius:15px;
   z-index:8px;
-  width:0px;
-  height:10px;
   border-radius:15px;
   background: #266580;
   background-image: -moz-linear-gradient(top, #266580, #153A4A);
@@ -279,7 +281,7 @@
 }
 
 /* timer */
-.media-player .media-player-timer {
+.minplayer-default-timer {
   position:relative;
   height: 22px;
   float:left;
@@ -291,13 +293,13 @@
   border-right:1px solid #eee;
 }
 
-.media-player.fullscreen .media-player-timer {
+.minplayer-default.fullscreen .minplayer-default-timer {
   border:none;
   margin-top:4px;
 }
 
 /* volume */
-.media-player .media-player-volume {
+.minplayer-default-volume {
   position: absolute;
   right:33px;
   bottom:4px;
@@ -313,24 +315,24 @@
   transition: all 0.1s ease-in-out;
 }
 
-.media-player.fullscreen .media-player-volume {
+.minplayer-default.fullscreen .minplayer-default-volume {
   right:40px;
   bottom:13px;
 }
 
-.media-player .media-player-volume:hover {
+.minplayer-default-volume:hover {
   height: 135px;
   padding-top: 5px;
 }
 
 
-.media-player .media-player-volume:hover .media-player-volume-slider {
+.minplayer-default-volume:hover .minplayer-default-volume-slider {
   position: relative;
   visibility: visible;
   opacity: 1;
 }
 
-.media-player .media-player-volume-slider {
+.minplayer-default-volume-slider {
   position: relative;
   height: 100px;
   width: 7px;
@@ -351,7 +353,9 @@
   transition: all 0.1s ease-in-out;
 }
 
-.media-player .media-player-volume-slider .ui-slider-handle {
+.minplayer-default-volume-slider .ui-slider-handle {
+  position: absolute;
+  z-index: 20;
   width: 12px;
   height: 12px;
   left: -4px;
@@ -364,15 +368,19 @@
   background: #e6e6e6;
   background-image: -moz-linear-gradient(top, #e6e6e6, #d5d5d5);
   background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #e6e6e6),color-stop(1, #d5d5d5));
-
   box-shadow: inset 0 3px 3px #d5d5d5;
 }
 
-.media-player .media-player-volume-slider .ui-slider-handle.ui-state-hover {
+.minplayer-default-volume-slider .ui-slider-handle.ui-state-hover {
   background: #fff;
 }
 
-.media-player .media-player-volume-slider .ui-slider-range {
+.minplayer-default-volume-slider .ui-slider-range {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
   -moz-border-radius:15px;
   -webkit-border-radius:15px;
   border-radius:15px;
@@ -384,7 +392,7 @@
 
 /* volume button */
 
-.media-player .media-player-volume-button {
+.minplayer-default-volume-button {
   position: absolute;
   bottom: 0px;
   display: block;
@@ -395,16 +403,16 @@
   opacity: 0.8;
 }
 
-.media-player .media-player-volume-button:hover {
+.minplayer-default-volume-button:hover {
   opacity: 1;
 }
 
-.media-player .media-player-volume-mute {
+.minplayer-default-volume-mute {
   background: url(images/volume-mute-icon.png) no-repeat;
 }
 
 /* Fullscreen button */
-.media-player .media-player-fullscreen {
+.minplayer-default-fullscreen {
   position: absolute;
   right:6px;
   bottom:7px;
@@ -413,12 +421,12 @@
   border:1px solid #aaa;
 }
 
-.media-player.fullscreen .media-player-fullscreen {
+.minplayer-default.fullscreen .minplayer-default-fullscreen {
   right:14px;
   bottom:16px;
 }
 
-.media-player .media-player-fullscreen-inner, .media-player.fullscreen .media-player-fullscreen:hover .media-player-fullscreen-inner {
+.minplayer-default-fullscreen-inner, .minplayer-default.fullscreen .minplayer-default-fullscreen:hover .minplayer-default-fullscreen-inner {
   position:absolute;
   bottom:0;
   width:16px;
@@ -430,12 +438,12 @@
   transition: all 0.1s ease-in-out;
 }
 
-.media-player .media-player-fullscreen:hover .media-player-fullscreen-inner, .media-player.fullscreen .media-player-fullscreen-inner {
+.minplayer-default-fullscreen:hover .minplayer-default-fullscreen-inner, .minplayer-default.fullscreen .minplayer-default-fullscreen-inner {
   width:20px;
   height:12px;
 }
 
-.media-player.fullscreen .media-player-controls {
+.minplayer-default.fullscreen .minplayer-default-controls {
   position: absolute;
   z-index:1002;
   width:500px;
@@ -457,13 +465,15 @@
   transition: all 0.1s ease-in-out;
 }
 
-.media-player-logo {
+.minplayer-default-logo {
   z-index: 1000;
   position: absolute;
   bottom: 3px;
   left: 3px;
 }
 
-.media-player-logo.with-controller {
-  bottom: 32px;
+.with-controller .minplayer-default-logo {
+  bottom: 34px;
 }
+
+.ui-slider-horizontal .ui-slider-handle { top: -.3em; margin-left: -.6em; }
