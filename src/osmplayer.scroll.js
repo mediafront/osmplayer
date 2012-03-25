@@ -250,7 +250,7 @@ osmplayer.scroll.prototype.refresh = function() {
     this.listSize = 0;
     jQuery.each(this.elements.list.children(), (function(scroll) {
       return function() {
-        scroll.listSize += $(this)[scroll.outer]();
+        scroll.listSize += jQuery(this)[scroll.outer]();
       };
     })(this));
 

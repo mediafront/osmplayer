@@ -37,7 +37,7 @@ osmplayer.parser.asx = {
       nodes: []
     };
     jQuery('asx entry', data).each(function(index) {
-      osmplayer.parser.rss.addRSSItem(playlist, $(this));
+      osmplayer.parser.rss.addRSSItem(playlist, jQuery(this));
     });
     return playlist;
   }

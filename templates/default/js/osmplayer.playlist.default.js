@@ -63,13 +63,13 @@ osmplayer.playlist['default'].prototype.construct = function() {
     this.elements.hideShow.bind('click', (function(playlist) {
       return function(event) {
         event.preventDefault();
-        var button = $('span', playlist.elements.hideShow);
+        var button = jQuery('span', playlist.elements.hideShow);
         var e = playlist.options.vertical ? 'e' : 's';
         var w = playlist.options.vertical ? 'w' : 'n';
         var show = button.hasClass('ui-icon-triangle-1-' + w);
         var from = show ? 'ui-icon-triangle-1-' + w : 'ui-icon-triangle-1-' + e;
         var to = show ? 'ui-icon-triangle-1-' + e : 'ui-icon-triangle-1-' + w;
-        $('span', playlist.elements.hideShow).removeClass(from).addClass(to);
+        jQuery('span', playlist.elements.hideShow).removeClass(from).addClass(to);
         playlist.hideShow(show, true);
       };
     })(this));

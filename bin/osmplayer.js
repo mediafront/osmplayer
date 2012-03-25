@@ -12,7 +12,7 @@ if (!jQuery.fn.osmplayer) {
   jQuery.fn.osmplayer = function(options) {
     return jQuery(this).each(function() {
       options = options || {};
-      options.id = options.id || $(this).attr('id') || Math.random();
+      options.id = options.id || jQuery(this).attr('id') || Math.random();
       if (!minplayer.plugins[options.id]) {
         options.template = options.template || 'default';
         if (osmplayer[options.template]) {
@@ -391,7 +391,7 @@ osmplayer.parser.rss = {
       nodes: []
     };
     jQuery('rss channel', data).find('item').each(function(index) {
-      osmplayer.parser.rss.addRSSItem(playlist, $(this));
+      osmplayer.parser.rss.addRSSItem(playlist, jQuery(this));
     });
     return playlist;
   },
@@ -456,7 +456,7 @@ osmplayer.parser.asx = {
       nodes: []
     };
     jQuery('asx entry', data).each(function(index) {
-      osmplayer.parser.rss.addRSSItem(playlist, $(this));
+      osmplayer.parser.rss.addRSSItem(playlist, jQuery(this));
     });
     return playlist;
   }
@@ -500,7 +500,7 @@ osmplayer.parser.xsfp = {
       nodes: []
     };
     jQuery('playlist trackList track', data).each(function(index) {
-      osmplayer.parser.rss.addRSSItem(playlist, $(this));
+      osmplayer.parser.rss.addRSSItem(playlist, jQuery(this));
     });
     return playlist;
   }
@@ -1134,7 +1134,7 @@ osmplayer.scroll.prototype.refresh = function() {
     this.listSize = 0;
     jQuery.each(this.elements.list.children(), (function(scroll) {
       return function() {
-        scroll.listSize += $(this)[scroll.outer]();
+        scroll.listSize += jQuery(this)[scroll.outer]();
       };
     })(this));
 
