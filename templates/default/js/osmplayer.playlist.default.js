@@ -99,12 +99,11 @@ osmplayer.playlist['default'].prototype.construct = function() {
 osmplayer.playlist['default'].prototype.getDisplay = function() {
   if (this.options.build) {
     this.context.append('\
-      <div class="osmplayer-default-playlist">\
-        <div class="osmplayer-default-hide-show-playlist">\
-          <span class="ui-icon"></span>\
-        </div>\
+    <div class="osmplayer-default-playlist">\
+      <div class="osmplayer-default-hide-show-playlist ui-state-default">\
+        <span class="ui-icon"></span>\
       </div>\
-    ');
+    </div>');
   }
   return jQuery('.osmplayer-default-playlist', this.context);
 };

@@ -89,7 +89,7 @@ minplayer.controller["default"].prototype.getElements = function() {
     seek: jQuery(".minplayer-default-seek", this.display),
     progress: jQuery(".minplayer-default-progress", this.display),
     volume: jQuery(".minplayer-default-volume-slider", this.display),
-    mute: jQuery('.minplayer-default-volume-button', this.display),
+    mute: jQuery('.minplayer-default-volume-mute', this.display),
     timer:timer,
     duration:timer
   });
