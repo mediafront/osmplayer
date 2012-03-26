@@ -52,19 +52,11 @@
     <script type="text/javascript" src="templates/default/js/osmplayer.default.js"></script>
     <script type="text/javascript">
       $(function() {
-        $("#osmplayer").osmplayer({
-          debug: true,
-          vertical: true,
-          showPlaylist: false,
-          shuffle: false,
-          autoplay: false,
-          loop: false,
-          playlist: 'http://drupal7/mediafront_getplaylist/playlist'
-        });
+        $("#osmplayer").osmplayer();
       });
     </script>
   </head>
   <body>
-    <video id="osmplayer"></video>
+    <video id="osmplayer" playlist="http://gdata.youtube.com/feeds/api/videos"></video>
   </body>
 </html>
