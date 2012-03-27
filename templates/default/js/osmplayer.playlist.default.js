@@ -114,6 +114,7 @@ osmplayer.playlist['default'].prototype.getElements = function() {
 
   // Setup the dynamic settings.
   var cName = this.options.vertical ? 'playlist-vertical' : 'playlist-horizontal';
+  cName += this.options.playlistOnly ? ' playlist-only' : '';
   var show = this.options.showPlaylist;
   var icon = this.options.vertical ? (show ? 'e' : 'w') : (show ? 's' : 'n');
   var corner = this.options.vertical ? 'ui-corner-left' : 'ui-corner-top';
@@ -121,9 +122,13 @@ osmplayer.playlist['default'].prototype.getElements = function() {
   this.display.addClass(cName);
   var hideShow = jQuery(".osmplayer-default-hide-show-playlist", this.display);
   hideShow.addClass(corner);
+  if (this.options.playlistOnly) {
+    hideShow.hide();
+    hideShow = null;
+  }
   jQuery('span', hideShow).addClass('ui-icon-triangle-1-' + icon);
 
   return jQuery.extend(elements, {
-    hideShow:hideShow
+    hideShow: hideShow
   });
 };

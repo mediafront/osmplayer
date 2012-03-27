@@ -25,9 +25,14 @@
   right: 0px;
 }
 
+.osmplayer-default-playlist.playlist-only {
+  width: 100%;
+  height: 100%;
+}
+
 .playlist-horizontal {
   width: 100%;
-  height: 172px;
+  height: 180px;
   top: inherit;
   bottom: 0px;
   left: 0px;
@@ -50,7 +55,7 @@
 .playlist-horizontal .osmplayer-default-hide-show-playlist {
   top: inherit;
   left: 50%;
-  bottom: 202px; /* Playlist height + control bar. */
+  bottom: 211px; /* Playlist height + control bar. */
   width: 40px;
   height: 16px;
   margin: 0 0 0 -20px;
@@ -75,10 +80,11 @@
   top: 0px;
   right: 0px;
   left: 0px;
+  bottom: 32px;
 }
 
-.playlist-vertical .osmplayer-default-playlist-scroll {
-  bottom: 32px;
+.playlist-horizontal .osmplayer-default-playlist-scroll {
+  bottom: 30px;
 }
 
 .osmplayer-default-playlist-scrollbar {
@@ -138,8 +144,10 @@
 }
 
 .playlist-horizontal .osmplayer-default-playlist-list {
-  margin: 2px 2px 14px 2px;
-  height: 124px;
+  position: absolute;
+  margin: 1px 2px 14px 2px;
+  top: 0px;
+  bottom: 0px;
 }
 
 .osmplayer-default-teaser {
@@ -150,7 +158,7 @@
 
 .playlist-horizontal .osmplayer-default-teaser {
   width: 160px;
-  height: 124px;
+  height: 100%;
   float: left;
 }
 
@@ -165,10 +173,6 @@
   font-size: 12px;
   margin-top: 2px;
   padding: 4px;
-}
-
-.playlist-horizontal .osmplayer-default-teaser-info {
-  height: 30px;
 }
 
 .osmplayer-default-playlist-pager {
