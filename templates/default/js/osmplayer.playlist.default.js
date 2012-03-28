@@ -60,35 +60,39 @@ osmplayer.playlist['default'].prototype.construct = function() {
     };
 
     // Perform the show hide functionality of the playlist.
-    this.elements.hideShow.bind('click', (function(playlist) {
-      return function(event) {
-        event.preventDefault();
-        var button = jQuery('span', playlist.elements.hideShow);
-        var e = playlist.options.vertical ? 'e' : 's';
-        var w = playlist.options.vertical ? 'w' : 'n';
-        var show = button.hasClass('ui-icon-triangle-1-' + w);
-        var from = show ? 'ui-icon-triangle-1-' + w : 'ui-icon-triangle-1-' + e;
-        var to = show ? 'ui-icon-triangle-1-' + e : 'ui-icon-triangle-1-' + w;
-        jQuery('span', playlist.elements.hideShow).removeClass(from).addClass(to);
-        playlist.hideShow(show, true);
-      };
-    })(this));
+    if (this.elements.hideShow) {
+      this.elements.hideShow.bind('click', (function(playlist) {
+        return function(event) {
+          event.preventDefault();
+          var button = jQuery('span', playlist.elements.hideShow);
+          var e = playlist.options.vertical ? 'e' : 's';
+          var w = playlist.options.vertical ? 'w' : 'n';
+          var show = button.hasClass('ui-icon-triangle-1-' + w);
+          var from = show ? 'ui-icon-triangle-1-' + w : 'ui-icon-triangle-1-' + e;
+          var to = show ? 'ui-icon-triangle-1-' + e : 'ui-icon-triangle-1-' + w;
+          jQuery('span', playlist.elements.hideShow).removeClass(from).addClass(to);
+          playlist.hideShow(show, true);
+        };
+      })(this));
+    }
 
     // If they wish to show the playlist.
-    if (this.options.showPlaylist) {
+    if (player.elements.minplayer) {
+      if (this.options.showPlaylist) {
 
-      // Set the player to have the correct margin if the playlist is present.
-      if (this.options.vertical) {
-        player.elements.minplayer.css('right', this.display.width() + 'px');
+        // Set the player to have the correct margin if the playlist is present.
+        if (this.options.vertical) {
+          player.elements.minplayer.css('right', this.display.width() + 'px');
+        }
+        else {
+          player.elements.minplayer.css('bottom', this.display.height() + 'px');
+        }
       }
       else {
-        player.elements.minplayer.css('bottom', this.display.height() + 'px');
-      }
-    }
-    else {
 
-      // Hide the playlist.
-      this.hideShow(false);
+        // Hide the playlist.
+        this.hideShow(false);
+      }
     }
   });
 };
