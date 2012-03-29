@@ -17,7 +17,7 @@
   left: 0px;
 }
 
-.osmplayer-default-playlist {
+.player-ui .osmplayer-default-playlist {
   position: absolute;
   width: 160px;
   top: 0px;
@@ -25,12 +25,12 @@
   right: 0px;
 }
 
-.osmplayer-default-playlist.playlist-only {
+.player-ui .osmplayer-default-playlist.playlist-only {
   width: 100%;
   height: 100%;
 }
 
-.playlist-horizontal {
+.player-ui .playlist-horizontal {
   width: 100%;
   height: 180px;
   top: inherit;
@@ -39,7 +39,7 @@
   right: 0px;
 }
 
-.osmplayer-default-hide-show-playlist {
+.player-ui .osmplayer-default-hide-show-playlist {
   position: absolute;
   z-index: 3;
   top: 50%;
@@ -52,7 +52,7 @@
   opacity: 0.5;
 }
 
-.playlist-horizontal .osmplayer-default-hide-show-playlist {
+.player-ui .playlist-horizontal .osmplayer-default-hide-show-playlist {
   top: inherit;
   left: 50%;
   bottom: 211px; /* Playlist height + control bar. */
@@ -61,20 +61,20 @@
   margin: 0 0 0 -20px;
 }
 
-.osmplayer-default-hide-show-playlist span {
+.player-ui .osmplayer-default-hide-show-playlist span {
   position: absolute;
   top: 50%;
   margin-top: -8px;
 }
 
-.playlist-horizontal .osmplayer-default-hide-show-playlist span {
+.player-ui .playlist-horizontal .osmplayer-default-hide-show-playlist span {
   top: inherit;
   left: 50%;
   margin-top: 0px;
   margin-left: -8px;
 }
 
-.osmplayer-default-playlist-scroll {
+.player-ui .osmplayer-default-playlist-scroll {
   position: absolute;
   overflow: hidden;
   top: 0px;
@@ -83,11 +83,11 @@
   bottom: 32px;
 }
 
-.playlist-horizontal .osmplayer-default-playlist-scroll {
+.player-ui .playlist-horizontal .osmplayer-default-playlist-scroll {
   bottom: 30px;
 }
 
-.osmplayer-default-playlist-scrollbar {
+.player-ui .osmplayer-default-playlist-scrollbar {
   position: absolute;
   width: 10px;
   height: 100%;
@@ -99,17 +99,17 @@
   border-radius: 0px;
 }
 
-.playlist-vertical .osmplayer-default-playlist-scrollbar {
+.player-ui .playlist-vertical .osmplayer-default-playlist-scrollbar {
   top: 0px;
 }
 
-.playlist-horizontal .osmplayer-default-playlist-scrollbar {
+.player-ui .playlist-horizontal .osmplayer-default-playlist-scrollbar {
   width: 100%;
   height: 10px;
   bottom: 0px;
 }
 
-.osmplayer-default-playlist-scrollbar .ui-slider-handle {
+.player-ui .osmplayer-default-playlist-scrollbar .ui-slider-handle {
   width: 8px;
   height: 15px;
   border: 1px solid #333;
@@ -126,7 +126,7 @@
   box-shadow: inset 0 -3px 3px #d5d5d5;
 }
 
-.playlist-horizontal .osmplayer-default-playlist-scrollbar .ui-slider-handle {
+.player-ui .playlist-horizontal .osmplayer-default-playlist-scrollbar .ui-slider-handle {
   width: 15px;
   height: 8px;
   top: 0px;
@@ -135,47 +135,47 @@
   left: inherit;
 }
 
-.osmplayer-default-playlist-scrollbar .ui-slider-handle.ui-state-hover {
+.player-ui .osmplayer-default-playlist-scrollbar .ui-slider-handle.ui-state-hover {
   background: #fff;
 }
 
-.osmplayer-default-playlist-list {
+.player-ui .osmplayer-default-playlist-list {
   margin: 2px 13px 2px 2px;
 }
 
-.playlist-horizontal .osmplayer-default-playlist-list {
+.player-ui .playlist-horizontal .osmplayer-default-playlist-list {
   position: absolute;
   margin: 1px 2px 14px 2px;
   top: 0px;
   bottom: 0px;
 }
 
-.osmplayer-default-teaser {
+.player-ui .osmplayer-default-teaser {
   margin:1px 0 1px 0;
   cursor:pointer;
   padding: 0;
 }
 
-.playlist-horizontal .osmplayer-default-teaser {
+.player-ui .playlist-horizontal .osmplayer-default-teaser {
   width: 160px;
   height: 100%;
   float: left;
 }
 
-.osmplayer-default-teaser-image {
+.player-ui .osmplayer-default-teaser-image {
   width: 100%;
   height: 80px;
   margin: auto;
 }
 
-.osmplayer-default-teaser-info {
+.player-ui .osmplayer-default-teaser-info {
   z-index: 20;
   font-size: 12px;
   margin-top: 2px;
   padding: 4px;
 }
 
-.osmplayer-default-playlist-pager {
+.player-ui .osmplayer-default-playlist-pager {
   position: absolute;
   display: block;
   z-index:3;
@@ -185,16 +185,16 @@
   height:30px;
 }
 
-.osmplayer-default-playlist-pager-link {
+.player-ui .osmplayer-default-playlist-pager-link {
   float:left;
 }
 
-.osmplayer-default-playlist-pager-left {
+.player-ui .osmplayer-default-playlist-pager-left {
   float:left;
   margin: 3px;
 }
 
-.osmplayer-default-playlist-pager-right {
+.player-ui .osmplayer-default-playlist-pager-right {
   float:right;
   margin: 3px;
 }
