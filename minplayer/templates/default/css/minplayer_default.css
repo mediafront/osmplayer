@@ -418,6 +418,7 @@
 
 .player-ui .minplayer-default-logo {
   z-index: 1000;
+  line-height: 0px;
   position: absolute;
   bottom: 3px;
   left: 3px;
