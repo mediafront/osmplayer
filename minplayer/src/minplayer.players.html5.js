@@ -186,6 +186,10 @@ minplayer.players.html5.prototype.getPlayer = function() {
  */
 minplayer.players.html5.prototype.load = function(file) {
 
+  // Set the autoload.
+  var option = this.options.autoload ? 'auto' : 'metadata';
+  this.elements.media.attr('preload', option);
+
   if (file) {
 
     // Get the current source.

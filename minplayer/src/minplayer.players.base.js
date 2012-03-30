@@ -487,10 +487,10 @@ minplayer.players.base.prototype.seekRelative = function(pos) {
           // Get the position.
           var seekPos = 0;
           if ((pos > -1) && (pos < 1)) {
-            seekPos = (currentTime / duration) + parseFloat(pos);
+            seekPos = ((currentTime / duration) + parseFloat(pos)) * duration;
           }
           else {
-            seekPos = (currentTime + parseFloat(pos)) / duration;
+            seekPos = (currentTime + parseFloat(pos));
           }
 
           // Set the seek value.

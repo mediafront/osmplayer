@@ -82,6 +82,7 @@ minplayer.prototype.construct = function() {
     wmode: 'transparent',
     preload: true,
     autoplay: false,
+    autoload: true,
     loop: false,
     width: '100%',
     height: '350px',

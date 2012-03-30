@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - osmplayer.playlist</title>
+		<title>JsDoc Reference - minplayer.players.minplayer</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -240,7 +240,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Class osmplayer.playlist
+				Class minplayer.players.minplayer
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -250,16 +250,16 @@ ul.inheritsList
 					<a href="../symbols/minplayer.display.html">minplayer.display</a>.<br />
 				
 			
-				This class creates the playlist functionality for the minplayer.
+				The Flash media player class to control the flash fallback.
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/src_osmplayer.playlist.js.html">osmplayer.playlist.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/minplayer_src_minplayer.players.minplayer.js.html">minplayer.players.minplayer.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class osmplayer.playlist.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class minplayer.players.minplayer.">
 				<caption>Class Summary</caption>
 				<thead>
 					<tr>
@@ -272,7 +272,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/osmplayer.playlist.html#constructor">osmplayer.playlist</a></b>(context, options)
+								<b><a href="../symbols/minplayer.players.minplayer.html#constructor">minplayer.players.minplayer</a></b>(context, options, queue)
 							</div>
 							<div class="description"></div>
 						</td>
@@ -285,7 +285,7 @@ ul.inheritsList
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class osmplayer.playlist.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class minplayer.players.minplayer.">
 					<caption>Field Summary</caption>
 					<thead>
 						<tr>
@@ -299,19 +299,9 @@ ul.inheritsList
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont">
-								<b><a href="../symbols/osmplayer.playlist.html#constructor">constructor</a></b>
+								<b><a href="../symbols/minplayer.players.minplayer.html#constructor">constructor</a></b>
 								</div>
 								<div class="description">Reset the constructor.</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">
-								<b><a href="../symbols/osmplayer.playlist.html#nodes">nodes</a></b>
-								</div>
-								<div class="description">The nodes within this playlist.</div>
 							</td>
 						</tr>
 					
@@ -330,7 +320,7 @@ ul.inheritsList
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class osmplayer.playlist.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class minplayer.players.minplayer.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -341,9 +331,9 @@ ul.inheritsList
 					<tbody>
 					
 						<tr>
-							<td class="attributes">&nbsp;</td>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.playlist.html#construct">construct</a></b>()
+								<div class="fixedFont">minplayer.players.minplayer.<b><a href="../symbols/minplayer.players.minplayer.html#.canPlay">canPlay</a></b>(file)
 								</div>
 								<div class="description"></div>
 							</td>
@@ -352,72 +342,126 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.playlist.html#load">load</a></b>(page, loadIndex)
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.minplayer.html#create">create</a></b>()
 								</div>
-								<div class="description">Loads a playlist.</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.playlist.html#loadItem">loadItem</a></b>(index)
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.minplayer.html#getBytesLoaded">getBytesLoaded</a></b>(callback)
 								</div>
-								<div class="description">Loads a playlist node.</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.playlist.html#next">next</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.minplayer.html#getBytesTotal">getBytesTotal</a></b>(callback)
 								</div>
-								<div class="description">Loads the next item.</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.playlist.html#nextPage">nextPage</a></b>(loadIndex)
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.minplayer.html#getCurrentTime">getCurrentTime</a></b>(callback)
 								</div>
-								<div class="description">Loads the next page.</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.playlist.html#prev">prev</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.minplayer.html#getDuration">getDuration</a></b>(callback)
 								</div>
-								<div class="description">Loads the previous item.</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">minplayer.players.minplayer.<b><a href="../symbols/minplayer.players.minplayer.html#.getPriority">getPriority</a></b>()
+								</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.playlist.html#prevPage">prevPage</a></b>(loadIndex)
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.minplayer.html#getVolume">getVolume</a></b>(callback)
 								</div>
-								<div class="description">Loads the previous page.</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.playlist.html#set">set</a></b>(playlist, loadIndex)
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.minplayer.html#load">load</a></b>(file)
 								</div>
-								<div class="description">Sets the playlist.</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.playlist.html#setQueue">setQueue</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.minplayer.html#onMediaUpdate">onMediaUpdate</a></b>(eventType)
 								</div>
-								<div class="description">Stores the current playlist state in the queue.</div>
+								<div class="description">Called when the Flash player has an update.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.minplayer.html#pause">pause</a></b>()
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.minplayer.html#play">play</a></b>()
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.minplayer.html#seek">seek</a></b>(pos)
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.minplayer.html#setVolume">setVolume</a></b>(vol)
+								</div>
+								<div class="description"></div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.minplayer.html#stop">stop</a></b>()
+								</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
@@ -427,7 +471,7 @@ ul.inheritsList
 				
 				
 				<dl class="inheritsList">
-				<dt>Methods borrowed from class <a href="../symbols/minplayer.display.html">minplayer.display</a>: </dt><dd><a href="../symbols/minplayer.display.html#fullscreen">fullscreen</a>, <a href="../symbols/minplayer.display.html#fullScreenElement">fullScreenElement</a>, <a href="../symbols/minplayer.display.html#getDisplay">getDisplay</a>, <a href="../symbols/minplayer.display.html#getElements">getElements</a>, <a href="../symbols/minplayer.display.html#getScaledRect">getScaledRect</a>, <a href="../symbols/minplayer.display.html#isFullScreen">isFullScreen</a>, <a href="../symbols/minplayer.display.html#isValid">isValid</a>, <a href="../symbols/minplayer.display.html#toggleFullScreen">toggleFullScreen</a></dd><dt>Methods borrowed from class <a href="../symbols/minplayer.plugin.html">minplayer.plugin</a>: </dt><dd><a href="../symbols/minplayer.plugin.html#addPlugin">addPlugin</a>, <a href="../symbols/minplayer.plugin.html#bind">bind</a>, <a href="../symbols/minplayer.plugin.html#checkQueue">checkQueue</a>, <a href="../symbols/minplayer.plugin.html#create">create</a>, <a href="../symbols/minplayer.plugin.html#destroy">destroy</a>, <a href="../symbols/minplayer.plugin.html#get">get</a>, <a href="../symbols/minplayer.plugin.html#poll">poll</a>, <a href="../symbols/minplayer.plugin.html#ready">ready</a>, <a href="../symbols/minplayer.plugin.html#trigger">trigger</a>, <a href="../symbols/minplayer.plugin.html#unbind">unbind</a></dd>
+				<dt>Methods borrowed from class <a href="../symbols/minplayer.display.html">minplayer.display</a>: </dt><dd><a href="../symbols/minplayer.display.html#construct">construct</a>, <a href="../symbols/minplayer.display.html#fullscreen">fullscreen</a>, <a href="../symbols/minplayer.display.html#fullScreenElement">fullScreenElement</a>, <a href="../symbols/minplayer.display.html#getDisplay">getDisplay</a>, <a href="../symbols/minplayer.display.html#getElements">getElements</a>, <a href="../symbols/minplayer.display.html#getScaledRect">getScaledRect</a>, <a href="../symbols/minplayer.display.html#isFullScreen">isFullScreen</a>, <a href="../symbols/minplayer.display.html#isValid">isValid</a>, <a href="../symbols/minplayer.display.html#toggleFullScreen">toggleFullScreen</a></dd><dt>Methods borrowed from class <a href="../symbols/minplayer.plugin.html">minplayer.plugin</a>: </dt><dd><a href="../symbols/minplayer.plugin.html#addPlugin">addPlugin</a>, <a href="../symbols/minplayer.plugin.html#bind">bind</a>, <a href="../symbols/minplayer.plugin.html#checkQueue">checkQueue</a>, <a href="../symbols/minplayer.plugin.html#destroy">destroy</a>, <a href="../symbols/minplayer.plugin.html#get">get</a>, <a href="../symbols/minplayer.plugin.html#poll">poll</a>, <a href="../symbols/minplayer.plugin.html#ready">ready</a>, <a href="../symbols/minplayer.plugin.html#trigger">trigger</a>, <a href="../symbols/minplayer.plugin.html#unbind">unbind</a></dd>
 				</dl>
 				
 			
@@ -442,7 +486,7 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>osmplayer.playlist</b>(context, options)
+						<b>minplayer.players.minplayer</b>(context, options, queue)
 				</div>
 				
 				<div class="description">
@@ -468,6 +512,12 @@ ul.inheritsList
 								
 							</dt>
 								<dd>This components options.</dd>
+						
+							<dt>
+								<span class="light fixedFont">{object}</span>  <b>queue</b>
+								
+							</dt>
+								<dd>The event queue to pass events around.</dd>
 						
 						</dl>
 					
@@ -507,28 +557,6 @@ ul.inheritsList
 						
 						
 
-					<hr />
-				
-					<a name="nodes"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>nodes</b>
-					
-					</div>
-					<div class="description">
-						The nodes within this playlist.
-						
-						
-					</div>
-					
-					
-
-						
-						
-						
-						
-
 					
 				
 			
@@ -539,11 +567,433 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name="construct"> </a>
+					<a name=".canPlay"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{boolean}</span>
+					<span class="light">minplayer.players.minplayer.</span><b>canPlay</b>(file)
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>file</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{boolean}</span> If this player can play this media type.</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd>minplayer.players.base#canPlay</dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name="create"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{object}</span>
+					<b>create</b>()
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{object}</span> The media player entity.</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/minplayer.players.base.html#create">minplayer.players.base#create</a></dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name="getBytesLoaded"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>construct</b>()
+					<b>getBytesLoaded</b>(callback)
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>callback</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/minplayer.players.base.html#getBytesLoaded">minplayer.players.base#getBytesLoaded</a></dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name="getBytesTotal"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>getBytesTotal</b>(callback)
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>callback</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd>minplayer.players.base#getBytesTotal.</dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name="getCurrentTime"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>getCurrentTime</b>(callback)
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>callback</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/minplayer.players.base.html#getCurrentTime">minplayer.players.base#getCurrentTime</a></dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name="getDuration"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>getDuration</b>(callback)
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>callback</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd>minplayer.players.flash#getDuration</dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name=".getPriority"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{number}</span>
+					<span class="light">minplayer.players.minplayer.</span><b>getPriority</b>()
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{number}</span> The priority of this media player.</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd>minplayer.players.base#getPriority</dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name="getVolume"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>getVolume</b>(callback)
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>callback</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/minplayer.players.base.html#getVolume">minplayer.players.base#getVolume</a></dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name="load"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>load</b>(file)
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>file</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/minplayer.players.base.html#load">minplayer.players.base#load</a></dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name="onMediaUpdate"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>onMediaUpdate</b>(eventType)
+					
+					</div>
+					<div class="description">
+						Called when the Flash player has an update.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>eventType</b>
+									
+								</dt>
+								<dd>The event that was triggered in the player.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="pause"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>pause</b>()
 					
 					</div>
 					<div class="description">
@@ -564,22 +1014,54 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">See:</dt>
 							
-								<dd><a href="../symbols/minplayer.plugin.html#construct">minplayer.plugin#construct</a></dd>
+								<dd><a href="../symbols/minplayer.players.base.html#pause">minplayer.players.base#pause</a></dd>
 							
 							</dl>
 						
 
 					<hr />
 				
-					<a name="load"> </a>
+					<a name="play"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>load</b>(page, loadIndex)
+					<b>play</b>()
 					
 					</div>
 					<div class="description">
-						Loads a playlist.
+						
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/minplayer.players.base.html#play">minplayer.players.base#play</a></dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name="seek"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>seek</b>(pos)
+					
+					</div>
+					<div class="description">
+						
 						
 						
 					</div>
@@ -591,16 +1073,10 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{integer}</span> <b>page</b>
+									<b>pos</b>
 									
 								</dt>
-								<dd>The page to load.</dd>
-							
-								<dt>
-									<span class="light fixedFont">{integer}</span> <b>loadIndex</b>
-									
-								</dt>
-								<dd>The index of the item to load.</dd>
+								<dd></dd>
 							
 							</dl>
 						
@@ -610,18 +1086,25 @@ ul.inheritsList
 						
 						
 						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/minplayer.players.base.html#seek">minplayer.players.base#seek</a></dd>
+							
+							</dl>
+						
 
 					<hr />
 				
-					<a name="loadItem"> </a>
+					<a name="setVolume"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>loadItem</b>(index)
+					<b>setVolume</b>(vol)
 					
 					</div>
 					<div class="description">
-						Loads a playlist node.
+						
 						
 						
 					</div>
@@ -633,10 +1116,10 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{number}</span> <b>index</b>
+									<b>vol</b>
 									
 								</dt>
-								<dd>The index of the item you would like to load.</dd>
+								<dd></dd>
 							
 							</dl>
 						
@@ -645,80 +1128,26 @@ ul.inheritsList
 						
 						
 						
-						
-
-					<hr />
-				
-					<a name="next"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>next</b>()
-					
-					</div>
-					<div class="description">
-						Loads the next item.
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="nextPage"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>nextPage</b>(loadIndex)
-					
-					</div>
-					<div class="description">
-						Loads the next page.
-						
-						
-					</div>
-					
-					
-					
 						
 							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
+							<dt class="heading">See:</dt>
 							
-								<dt>
-									<span class="light fixedFont">{integer}</span> <b>loadIndex</b>
-									
-								</dt>
-								<dd>The index of the item to load.</dd>
+								<dd><a href="../symbols/minplayer.players.base.html#setVolume">minplayer.players.base#setVolume</a></dd>
 							
 							</dl>
 						
-						
-						
-						
-						
-						
-						
 
 					<hr />
 				
-					<a name="prev"> </a>
+					<a name="stop"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>prev</b>()
+					<b>stop</b>()
 					
 					</div>
 					<div class="description">
-						Loads the previous item.
+						
 						
 						
 					</div>
@@ -731,109 +1160,13 @@ ul.inheritsList
 						
 						
 						
-						
-
-					<hr />
-				
-					<a name="prevPage"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>prevPage</b>(loadIndex)
-					
-					</div>
-					<div class="description">
-						Loads the previous page.
-						
-						
-					</div>
-					
-					
-					
 						
 							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
+							<dt class="heading">See:</dt>
 							
-								<dt>
-									<span class="light fixedFont">{integer}</span> <b>loadIndex</b>
-									
-								</dt>
-								<dd>The index of the item to load.</dd>
+								<dd><a href="../symbols/minplayer.players.base.html#stop">minplayer.players.base#stop</a></dd>
 							
 							</dl>
-						
-						
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="set"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>set</b>(playlist, loadIndex)
-					
-					</div>
-					<div class="description">
-						Sets the playlist.
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{object}</span> <b>playlist</b>
-									
-								</dt>
-								<dd>The playlist object.</dd>
-							
-								<dt>
-									<span class="light fixedFont">{integer}</span> <b>loadIndex</b>
-									
-								</dt>
-								<dd>The index of the item to load.</dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="setQueue"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>setQueue</b>()
-					
-					</div>
-					<div class="description">
-						Stores the current playlist state in the queue.
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-						
 						
 
 					

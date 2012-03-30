@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - osmplayer.pager</title>
+		<title>JsDoc Reference - minplayer.compatibility</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -240,26 +240,54 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Class osmplayer.pager
+				Class minplayer.compatibility
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
 			<p class="description">
 				
-				<br />Extends
-					<a href="../symbols/minplayer.display.html">minplayer.display</a>.<br />
 				
 			
-				This class provides pager functionality.
+				This class is used to define the types of media that can be played
+within the browser.
+<p>
+<strong>Usage:</strong>
+<pre><code>
+  var playTypes = new minplayer.compatibility();
+
+  if (playTypes.videoOGG) {
+    console.log("This browser can play OGG video");
+  }
+
+  if (playTypes.videoH264) {
+    console.log("This browser can play H264 video");
+  }
+
+  if (playTypes.videoWEBM) {
+    console.log("This browser can play WebM video");
+  }
+
+  if (playTypes.audioOGG) {
+    console.log("This browser can play OGG audio");
+  }
+
+  if (playTypes.audioMP3) {
+    console.log("This browser can play MP3 audio");
+  }
+
+  if (playTypes.audioMP4) {
+    console.log("This browser can play MP4 audio");
+  }
+</code></pre>
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/src_osmplayer.pager.js.html">osmplayer.pager.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/minplayer_src_minplayer.compatibility.js.html">minplayer.compatibility.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class osmplayer.pager.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class minplayer.compatibility.">
 				<caption>Class Summary</caption>
 				<thead>
 					<tr>
@@ -272,7 +300,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/osmplayer.pager.html#constructor">osmplayer.pager</a></b>(context, options)
+								<b><a href="../symbols/minplayer.compatibility.html#constructor">minplayer.compatibility</a></b>()
 							</div>
 							<div class="description"></div>
 						</td>
@@ -285,7 +313,7 @@ ul.inheritsList
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class osmplayer.pager.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class minplayer.compatibility.">
 					<caption>Field Summary</caption>
 					<thead>
 						<tr>
@@ -299,43 +327,59 @@ ul.inheritsList
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont">
-								<b><a href="../symbols/osmplayer.pager.html#constructor">constructor</a></b>
+								<b><a href="../symbols/minplayer.compatibility.html#audioMP3">audioMP3</a></b>
 								</div>
-								<div class="description">Reset the constructor.</div>
+								<div class="description">Can play audio MP3</div>
 							</td>
 						</tr>
-					
-					</tbody>
-				</table>
-				
-				
-				
-				<dl class="inheritsList">
-				<dt>Fields borrowed from class <a href="../symbols/minplayer.display.html">minplayer.display</a>: </dt><dd><a href="../symbols/minplayer.display.html#onResize">onResize</a></dd><dt>Fields borrowed from class <a href="../symbols/minplayer.plugin.html">minplayer.plugin</a>: </dt><dd><a href="../symbols/minplayer.plugin.html#context">context</a>, <a href="../symbols/minplayer.plugin.html#lock">lock</a>, <a href="../symbols/minplayer.plugin.html#name">name</a>, <a href="../symbols/minplayer.plugin.html#options">options</a>, <a href="../symbols/minplayer.plugin.html#pluginReady">pluginReady</a>, <a href="../symbols/minplayer.plugin.html#queue">queue</a>, <a href="../symbols/minplayer.plugin.html#triggered">triggered</a></dd>
-				</dl>
-				
-			
-
-<!-- ============================== methods summary ======================== -->
-			
-				
-				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class osmplayer.pager.">
-					<caption>Method Summary</caption>
-					<thead>
-						<tr>
-							<th scope="col">Method Attributes</th>
-							<th scope="col">Method Name and Description</th>
-						</tr>
-					</thead>
-					<tbody>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.pager.html#construct">construct</a></b>()
+								<div class="fixedFont">
+								<b><a href="../symbols/minplayer.compatibility.html#audioMP4">audioMP4</a></b>
 								</div>
-								<div class="description"></div>
+								<div class="description">Can play audio MP4</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/minplayer.compatibility.html#audioOGG">audioOGG</a></b>
+								</div>
+								<div class="description">Can play audio OGG</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/minplayer.compatibility.html#videoH264">videoH264</a></b>
+								</div>
+								<div class="description">Can play H264 video</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/minplayer.compatibility.html#videoOGG">videoOGG</a></b>
+								</div>
+								<div class="description">Can play OGG video</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/minplayer.compatibility.html#videoWEBM">videoWEBM</a></b>
+								</div>
+								<div class="description">Can play WEBM video</div>
 							</td>
 						</tr>
 					
@@ -344,10 +388,9 @@ ul.inheritsList
 				
 				
 				
-				<dl class="inheritsList">
-				<dt>Methods borrowed from class <a href="../symbols/minplayer.display.html">minplayer.display</a>: </dt><dd><a href="../symbols/minplayer.display.html#fullscreen">fullscreen</a>, <a href="../symbols/minplayer.display.html#fullScreenElement">fullScreenElement</a>, <a href="../symbols/minplayer.display.html#getDisplay">getDisplay</a>, <a href="../symbols/minplayer.display.html#getElements">getElements</a>, <a href="../symbols/minplayer.display.html#getScaledRect">getScaledRect</a>, <a href="../symbols/minplayer.display.html#isFullScreen">isFullScreen</a>, <a href="../symbols/minplayer.display.html#isValid">isValid</a>, <a href="../symbols/minplayer.display.html#toggleFullScreen">toggleFullScreen</a></dd><dt>Methods borrowed from class <a href="../symbols/minplayer.plugin.html">minplayer.plugin</a>: </dt><dd><a href="../symbols/minplayer.plugin.html#addPlugin">addPlugin</a>, <a href="../symbols/minplayer.plugin.html#bind">bind</a>, <a href="../symbols/minplayer.plugin.html#checkQueue">checkQueue</a>, <a href="../symbols/minplayer.plugin.html#create">create</a>, <a href="../symbols/minplayer.plugin.html#destroy">destroy</a>, <a href="../symbols/minplayer.plugin.html#get">get</a>, <a href="../symbols/minplayer.plugin.html#poll">poll</a>, <a href="../symbols/minplayer.plugin.html#ready">ready</a>, <a href="../symbols/minplayer.plugin.html#trigger">trigger</a>, <a href="../symbols/minplayer.plugin.html#unbind">unbind</a></dd>
-				</dl>
-				
+			
+
+<!-- ============================== methods summary ======================== -->
 			
 <!-- ============================== events summary ======================== -->
 			
@@ -360,7 +403,7 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>osmplayer.pager</b>(context, options)
+						<b>minplayer.compatibility</b>()
 				</div>
 				
 				<div class="description">
@@ -371,23 +414,6 @@ ul.inheritsList
 				
 				
 				
-					
-						<dl class="detailList">
-						<dt class="heading">Parameters:</dt>
-						
-							<dt>
-								<span class="light fixedFont">{object}</span>  <b>context</b>
-								
-							</dt>
-								<dd>The jQuery context.</dd>
-						
-							<dt>
-								<span class="light fixedFont">{object}</span>  <b>options</b>
-								
-							</dt>
-								<dd>This components options.</dd>
-						
-						</dl>
 					
 					
 					
@@ -405,15 +431,125 @@ ul.inheritsList
 					Field Detail
 				</div>
 				
-					<a name="constructor"> </a>
+					<a name="audioMP3"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>constructor</b>
+					<b>audioMP3</b>
 					
 					</div>
 					<div class="description">
-						Reset the constructor.
+						Can play audio MP3
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="audioMP4"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>audioMP4</b>
+					
+					</div>
+					<div class="description">
+						Can play audio MP4
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="audioOGG"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>audioOGG</b>
+					
+					</div>
+					<div class="description">
+						Can play audio OGG
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="videoH264"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>videoH264</b>
+					
+					</div>
+					<div class="description">
+						Can play H264 video
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="videoOGG"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>videoOGG</b>
+					
+					</div>
+					<div class="description">
+						Can play OGG video
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="videoWEBM"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>videoWEBM</b>
+					
+					</div>
+					<div class="description">
+						Can play WEBM video
 						
 						
 					</div>
@@ -431,43 +567,6 @@ ul.inheritsList
 
 <!-- ============================== method details ========================= -->		
 			
-				<div class="sectionTitle">
-					Method Detail
-				</div>
-				
-					<a name="construct"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>construct</b>()
-					
-					</div>
-					<div class="description">
-						
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd><a href="../symbols/minplayer.plugin.html#construct">minplayer.plugin#construct</a></dd>
-							
-							</dl>
-						
-
-					
-				
-			
 			
 <!-- ============================== event details ========================= -->		
 			
@@ -479,7 +578,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Mar 29 2012 18:12:01 GMT-0700 (PDT)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Mar 29 2012 18:12:00 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>
