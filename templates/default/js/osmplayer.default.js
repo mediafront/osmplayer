@@ -19,9 +19,8 @@ osmplayer['default'].prototype.constructor = osmplayer['default'];
  */
 osmplayer['default'].prototype.getDisplay = function() {
 
-  // If the tag is video or audio, then build out the player.
-  var tag = this.context.get(0).tagName.toLowerCase();
-  if (tag == 'video' || tag == 'audio') {
+  // If this is the bottom element, then we need to build.
+  if (this.context.children().length == 0) {
 
     // Build out the player provided the base tag.
     this.context = this.context.attr({
