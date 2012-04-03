@@ -187,53 +187,68 @@ minplayer.players.vimeo.prototype.playerFound = function() {
 
 /**
  * @see minplayer.players.base#play
+ * @return {boolean} If this action was performed.
  */
 minplayer.players.vimeo.prototype.play = function() {
-  minplayer.players.base.prototype.play.call(this);
-  if (this.isReady()) {
+  if (minplayer.players.base.prototype.play.call(this)) {
     this.player.api('play');
+    return true;
   }
+
+  return false;
 };
 
 /**
  * @see minplayer.players.base#pause
+ * @return {boolean} If this action was performed.
  */
 minplayer.players.vimeo.prototype.pause = function() {
-  minplayer.players.base.prototype.pause.call(this);
-  if (this.isReady()) {
+  if (minplayer.players.base.prototype.pause.call(this)) {
     this.player.api('pause');
+    return true;
   }
+
+  return false;
 };
 
 /**
  * @see minplayer.players.base#stop
+ * @return {boolean} If this action was performed.
  */
 minplayer.players.vimeo.prototype.stop = function() {
-  minplayer.players.base.prototype.stop.call(this);
-  if (this.isReady()) {
+  if (minplayer.players.base.prototype.stop.call(this)) {
     this.player.api('unload');
+    return true;
   }
+
+  return false;
 };
 
 /**
  * @see minplayer.players.base#seek
+ * @return {boolean} If this action was performed.
  */
 minplayer.players.vimeo.prototype.seek = function(pos) {
-  minplayer.players.base.prototype.seek.call(this, pos);
-  if (this.isReady()) {
+  if (minplayer.players.base.prototype.seek.call(this, pos)) {
     this.player.api('seekTo', pos);
+    return true;
   }
+
+  return false;
 };
 
 /**
  * @see minplayer.players.base#setVolume
+ * @return {boolean} If this action was performed.
  */
 minplayer.players.vimeo.prototype.setVolume = function(vol) {
-  minplayer.players.base.prototype.setVolume.call(this, vol);
-  if (this.isReady()) {
+  if (minplayer.players.base.prototype.setVolume.call(this, vol)) {
     this.volume.set(vol);
     this.player.api('setVolume', vol);
+    return true;
   }
+
+  return false;
 };
 
 /**

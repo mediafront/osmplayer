@@ -75,23 +75,17 @@ minplayer.players.base.prototype.construct = function() {
   // Call the media display constructor.
   minplayer.display.prototype.construct.call(this);
 
-  // Clear the media player.
-  this.clear();
-
   /** The currently loaded media file. */
   this.mediaFile = this.options.file;
+
+  // Clear the media player.
+  this.clear();
 
   // Get the player display object.
   if (!this.playerFound()) {
 
-    // Remove the media element if found
-    if (this.elements.media) {
-      this.elements.media.remove();
-    }
-
-    // Create a new media player element.
-    this.elements.media = jQuery(this.create());
-    this.display.html(this.elements.media);
+    // Add the new player.
+    this.addPlayer();
   }
 
   // Get the player object...
@@ -142,6 +136,21 @@ minplayer.players.base.prototype.construct = function() {
       }
     };
   })(this));
+};
+
+/**
+ * Adds the media player.
+ */
+minplayer.players.base.prototype.addPlayer = function() {
+
+  // Remove the media element if found
+  if (this.elements.media) {
+    this.elements.media.remove();
+  }
+
+  // Create a new media player element.
+  this.elements.media = jQuery(this.create());
+  this.display.html(this.elements.media);
 };
 
 /**
@@ -434,37 +443,47 @@ minplayer.players.base.prototype.getPlayer = function() {
  * Loads a new media player.
  *
  * @param {object} file A {@link minplayer.file} object.
+ * @return {boolean} If this action was performed.
  */
 minplayer.players.base.prototype.load = function(file) {
 
   // Store the media file for future lookup.
   var isString = (typeof this.mediaFile == 'string');
   var path = isString ? this.mediaFile : this.mediaFile.path;
-  if (file && (file.path != path)) {
+  if (file && this.isReady() && (file.path != path)) {
     this.reset();
     this.mediaFile = file;
+    return true;
   }
+
+  return false;
 };
 
 /**
  * Play the loaded media file.
+ * @return {boolean} If this action was performed.
  */
 minplayer.players.base.prototype.play = function() {
+  return this.isReady();
 };
 
 /**
  * Pause the loaded media file.
+ * @return {boolean} If this action was performed.
  */
 minplayer.players.base.prototype.pause = function() {
+  return this.isReady();
 };
 
 /**
  * Stop the loaded media file.
+ * @return {boolean} If this action was performed.
  */
 minplayer.players.base.prototype.stop = function() {
   this.playing = false;
   this.loading = false;
   this.hasFocus = false;
+  return this.isReady();
 };
 
 /**
@@ -505,8 +524,10 @@ minplayer.players.base.prototype.seekRelative = function(pos) {
  * Seek the loaded media.
  *
  * @param {number} pos The position to seek the minplayer. 0 to 1.
+ * @return {boolean} If this action was performed.
  */
 minplayer.players.base.prototype.seek = function(pos) {
+  return this.isReady();
 };
 
 /**
@@ -546,9 +567,11 @@ minplayer.players.base.prototype.setVolumeRelative = function(vol) {
  * Set the volume of the loaded minplayer.
  *
  * @param {number} vol The volume to set the media. 0 to 1.
+ * @return {boolean} If this action was performed.
  */
 minplayer.players.base.prototype.setVolume = function(vol) {
   this.trigger('volumeupdate', vol);
+  return this.isReady();
 };
 
 /**

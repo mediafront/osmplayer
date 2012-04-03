@@ -69,9 +69,23 @@ minplayer.players.html5.prototype.construct = function() {
   // Call base constructor.
   minplayer.players.base.prototype.construct.call(this);
 
-  // For the HTML5 player, we will just pass events along...
+  // Add the player events.
+  this.addEvents();
+};
+
+/**
+ * Add events.
+ * @return {boolean} If this action was performed.
+ */
+minplayer.players.html5.prototype.addEvents = function() {
+
+  // Check if the player exists.
   if (this.player) {
 
+    // Unbind all current events on this player.
+    jQuery(this.player).unbind();
+
+    // Add the events to this player.
     this.player.addEventListener('abort', (function(player) {
       return function() {
         player.trigger('abort');
@@ -140,9 +154,10 @@ minplayer.players.html5.prototype.construct = function() {
       };
     })(this), false);
 
-    // Say we are ready.
-    this.onReady();
+    return true;
   }
+
+  return false;
 };
 
 /**
@@ -183,83 +198,99 @@ minplayer.players.html5.prototype.getPlayer = function() {
 
 /**
  * @see minplayer.players.base#load
+ * @return {boolean} If this action was performed.
  */
 minplayer.players.html5.prototype.load = function(file) {
 
-  // Set the autoload.
-  var option = this.options.autoload ? 'auto' : 'metadata';
-  this.elements.media.attr('preload', option);
+  // See if a load is even necessary.
+  if (minplayer.players.base.prototype.load.call(this, file)) {
 
-  if (file) {
+    // Add a new player.
+    this.addPlayer();
 
-    // Get the current source.
-    var src = this.elements.media.attr('src');
-    if (!src) {
-      src = jQuery('source', this.elements.media).eq(0).attr('src');
-    }
+    // Set the new player.
+    this.player = this.getPlayer();
 
-    // If the source is different.
-    if (src != file.path) {
+    // Add the events again.
+    this.addEvents();
 
-      // Change the source...
-      var code = '<source src="' + file.path + '">';
-      this.elements.media.removeAttr('src').empty().html(code);
-    }
+    // Set the autoload.
+    var option = this.options.autoload ? 'auto' : 'metadata';
+    this.elements.media.attr('preload', option);
+
+    // Change the source...
+    var code = '<source src="' + file.path + '">';
+    this.elements.media.removeAttr('src').empty().html(code);
+    return true;
   }
 
-  // Always call the base first on load...
-  minplayer.players.base.prototype.load.call(this, file);
+  return false;
 };
 
 /**
  * @see minplayer.players.base#play
+ * @return {boolean} If this action was performed.
  */
 minplayer.players.html5.prototype.play = function() {
-  minplayer.players.base.prototype.play.call(this);
-  if (this.isReady()) {
+  if (minplayer.players.base.prototype.play.call(this)) {
     this.player.play();
+    return true;
   }
+
+  return false;
 };
 
 /**
  * @see minplayer.players.base#pause
+ * @return {boolean} If this action was performed.
  */
 minplayer.players.html5.prototype.pause = function() {
-  minplayer.players.base.prototype.pause.call(this);
-  if (this.isReady()) {
+  if (minplayer.players.base.prototype.pause.call(this)) {
     this.player.pause();
+    return true;
   }
+
+  return false;
 };
 
 /**
  * @see minplayer.players.base#stop
+ * @return {boolean} If this action was performed.
  */
 minplayer.players.html5.prototype.stop = function() {
-  minplayer.players.base.prototype.stop.call(this);
-  if (this.isReady()) {
+  if (minplayer.players.base.prototype.stop.call(this)) {
     this.player.pause();
     this.player.src = '';
+    return true;
   }
+
+  return false;
 };
 
 /**
  * @see minplayer.players.base#seek
+ * @return {boolean} If this action was performed.
  */
 minplayer.players.html5.prototype.seek = function(pos) {
-  minplayer.players.base.prototype.seek.call(this, pos);
-  if (this.isReady()) {
+  if (minplayer.players.base.prototype.seek.call(this, pos)) {
     this.player.currentTime = pos;
+    return true;
   }
+
+  return false;
 };
 
 /**
  * @see minplayer.players.base#setVolume
+ * @return {boolean} If this action was performed.
  */
 minplayer.players.html5.prototype.setVolume = function(vol) {
-  minplayer.players.base.prototype.setVolume.call(this, vol);
-  if (this.isReady()) {
+  if (minplayer.players.base.prototype.setVolume.call(this, vol)) {
     this.player.volume = vol;
+    return true;
   }
+
+  return false;
 };
 
 /**

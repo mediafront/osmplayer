@@ -91,16 +91,16 @@ osmplayer.prototype.construct = function() {
   this.playIndex = 0;
 
   /** The playlist for this media player. */
-  this.playlist = this.create('playlist', 'osmplayer');
+  this.create('playlist', 'osmplayer');
 
-  // Bind when the playlists loads a node.
-  this.playlist.bind('nodeLoad', (function(player) {
-    return function(event, data) {
-
-      // Load this node.
-      player.loadNode(data);
-    };
-  })(this));
+  /** Get the playlist or any other playlist that connects. */
+  this.get('playlist', function(playlist) {
+    playlist.bind('nodeLoad', (function(player) {
+      return function(event, data) {
+        player.loadNode(data);
+      };
+    })(this));
+  });
 
   // Load the node if one is provided.
   if (this.options.node) {

@@ -51,11 +51,11 @@ osmplayer.playlist.prototype.construct = function() {
   // The current loaded item index.
   this.currentItem = -1;
 
-  // The play queue.
-  this.queue = [];
+  // The play playqueue.
+  this.playqueue = [];
 
-  // The queue position.
-  this.queuepos = 0;
+  // The playqueue position.
+  this.playqueuepos = 0;
 
   // The current playlist.
   this.playlist = this.options.playlist;
@@ -90,6 +90,9 @@ osmplayer.playlist.prototype.construct = function() {
 
   // Load the "next" item.
   this.next();
+
+  // Say that we are ready.
+  this.ready();
 };
 
 /**
@@ -167,18 +170,18 @@ osmplayer.playlist.prototype.set = function(playlist, loadIndex) {
 };
 
 /**
- * Stores the current playlist state in the queue.
+ * Stores the current playlist state in the playqueue.
  */
 osmplayer.playlist.prototype.setQueue = function() {
 
-  // Add this item to the queue.
-  this.queue.push({
+  // Add this item to the playqueue.
+  this.playqueue.push({
     page: this.page,
     item: this.currentItem
   });
 
-  // Store the current queue position.
-  this.queuepos = this.queue.length;
+  // Store the current playqueue position.
+  this.playqueuepos = this.playqueue.length;
 };
 
 /**
@@ -187,8 +190,8 @@ osmplayer.playlist.prototype.setQueue = function() {
 osmplayer.playlist.prototype.next = function() {
   var item = 0, page = this.page;
 
-  // See if we are at the front of the queue.
-  if (this.queuepos >= this.queue.length) {
+  // See if we are at the front of the playqueue.
+  if (this.playqueuepos >= this.playqueue.length) {
 
     // If this is shuffle, then load a random item.
     if (this.options.shuffle) {
@@ -211,9 +214,9 @@ osmplayer.playlist.prototype.next = function() {
   }
   else {
 
-    // Load the next item in the queue.
-    this.queuepos = this.queuepos + 1;
-    var currentQueue = this.queue[this.queuepos];
+    // Load the next item in the playqueue.
+    this.playqueuepos = this.playqueuepos + 1;
+    var currentQueue = this.playqueue[this.playqueuepos];
     this.load(currentQueue.page, currentQueue.item);
   }
 };
@@ -223,10 +226,10 @@ osmplayer.playlist.prototype.next = function() {
  */
 osmplayer.playlist.prototype.prev = function() {
 
-  // Move back into the queue.
-  this.queuepos = this.queuepos - 1;
-  this.queuepos = (this.queuepos < 0) ? 0 : this.queuepos;
-  var currentQueue = this.queue[this.queuepos];
+  // Move back into the playqueue.
+  this.playqueuepos = this.playqueuepos - 1;
+  this.playqueuepos = (this.playqueuepos < 0) ? 0 : this.playqueuepos;
+  var currentQueue = this.playqueue[this.playqueuepos];
   if (currentQueue) {
     this.load(currentQueue.page, currentQueue.item);
   }
