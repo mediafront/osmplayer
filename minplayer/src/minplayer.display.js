@@ -214,16 +214,6 @@ minplayer.display.prototype.getElements = function() {
 };
 
 /**
- * Returns if this component is valid and exists within the DOM.
- *
- * @return {boolean} TRUE if the plugin display is valid.
- */
-minplayer.display.prototype.isValid = function() {
-  var valid = minplayer.plugin.prototype.isValid.call(this);
-  return valid && (this.display.length > 0);
-};
-
-/**
  * From https://github.com/sindresorhus/screenfull.js
  */
 /*global Element:true*/
