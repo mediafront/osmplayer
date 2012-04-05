@@ -1,76 +1,80 @@
-/** The osmplayer namespace. */
-var osmplayer = osmplayer || {};
+(function(template, osmplayer) {
 
-// Define the teaser object.
-osmplayer.teaser = osmplayer.teaser || {};
+  /** The osmplayer namespace. */
+  var osmplayer = osmplayer || {};
 
-// constructor.
-osmplayer.teaser['default'] = function(context, options) {
+  // Define the teaser object.
+  osmplayer.teaser = osmplayer.teaser || {};
 
-  // Derive from teaser
-  osmplayer.teaser.call(this, context, options);
-};
+  // constructor.
+  osmplayer.teaser[template] = function(context, options) {
 
-// Define the prototype for all controllers.
-osmplayer.teaser['default'].prototype = new osmplayer.teaser();
-osmplayer.teaser['default'].prototype.constructor = osmplayer.teaser['default'];
+    // Derive from teaser
+    osmplayer.teaser.call(this, context, options);
+  };
 
-/**
- * @see minplayer.plugin#construct
- */
-osmplayer.teaser['default'].prototype.construct = function() {
+  // Define the prototype for all controllers.
+  osmplayer.teaser[template].prototype = new osmplayer.teaser();
+  osmplayer.teaser[template].prototype.constructor = osmplayer.teaser[template];
 
-  minplayer.display.prototype.construct.call(this);
+  /**
+   * @see minplayer.plugin#construct
+   */
+  osmplayer.teaser[template].prototype.construct = function() {
 
-  // Add some hover events.
-  this.display.bind('mouseenter', (function(info) {
-    return function() {
-      info.addClass('ui-state-hover');
-    };
-  })(this.elements.info)).bind('mouseleave', (function(info) {
-    return function() {
-      info.removeClass('ui-state-hover');
-    };
-  })(this.elements.info));
-};
+    minplayer.display.prototype.construct.call(this);
 
-/**
- * Return the display for this plugin.
- */
-osmplayer.teaser['default'].prototype.getDisplay = function() {
+    // Add some hover events.
+    this.display.bind('mouseenter', (function(info) {
+      return function() {
+        info.addClass('ui-state-hover');
+      };
+    })(this.elements.info)).bind('mouseleave', (function(info) {
+      return function() {
+        info.removeClass('ui-state-hover');
+      };
+    })(this.elements.info));
+  };
 
-  // Append this to the list.
-  this.context.append('\
-  <div class="osmplayer-default-teaser ui-widget-content">\
-    <div class="osmplayer-default-teaser-image"></div>\
-    <div class="osmplayer-default-teaser-info ui-state-default">\
-      <div class="osmplayer-default-teaser-title">Sample Title</div>\
-    </div>\
-  </div>');
+  /**
+   * Return the display for this plugin.
+   */
+  osmplayer.teaser[template].prototype.getDisplay = function() {
 
-  var teasers = jQuery('.osmplayer-default-teaser', this.context);
-  return teasers.eq(teasers.length - 1);
-}
+    // Append this to the list.
+    this.context.append('\
+    <div class="osmplayer-' + template + '-teaser ui-widget-content">\
+      <div class="osmplayer-' + template + '-teaser-image"></div>\
+      <div class="osmplayer-' + template + '-teaser-info ui-state-default">\
+        <div class="osmplayer-' + template + '-teaser-title">Sample Title</div>\
+      </div>\
+    </div>');
 
-/**
- * Selects the teaser.
- */
-osmplayer.teaser['default'].prototype.select = function(selected) {
-  if (selected) {
-    this.elements.info.addClass('ui-state-active');
+    var teasers = jQuery('.osmplayer-' + template + '-teaser', this.context);
+    return teasers.eq(teasers.length - 1);
   }
-  else {
-    this.elements.info.removeClass('ui-state-active');
+
+  /**
+   * Selects the teaser.
+   */
+  osmplayer.teaser[template].prototype.select = function(selected) {
+    if (selected) {
+      this.elements.info.addClass('ui-state-active');
+    }
+    else {
+      this.elements.info.removeClass('ui-state-active');
+    }
   }
-}
 
 
-// Return the elements
-osmplayer.teaser['default'].prototype.getElements = function() {
-  var elements = osmplayer.teaser.prototype.getElements.call(this);
-  return jQuery.extend(elements, {
-    info: jQuery(".osmplayer-default-teaser-info", this.display),
-    title:jQuery(".osmplayer-default-teaser-title", this.display),
-    image:jQuery(".osmplayer-default-teaser-image", this.display)
-  });
-};
+  // Return the elements
+  osmplayer.teaser[template].prototype.getElements = function() {
+    var elements = osmplayer.teaser.prototype.getElements.call(this);
+    return jQuery.extend(elements, {
+      info: jQuery('.osmplayer-' + template + '-teaser-info', this.display),
+      title:jQuery('.osmplayer-' + template + '-teaser-title', this.display),
+      image:jQuery('.osmplayer-' + template + '-teaser-image', this.display)
+    });
+  };
+})('default', osmplayer);
+

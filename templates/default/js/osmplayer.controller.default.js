@@ -1,96 +1,99 @@
-/** The osmplayer namespace. */
-var osmplayer = osmplayer || {};
+(function(template, osmplayer) {
 
-// Define the controller object.
-osmplayer.controller = osmplayer.controller || {};
+  /** The osmplayer namespace. */
+  var osmplayer = osmplayer || {};
 
-/**
- * Constructor for the minplayer.controller
- */
-osmplayer.controller['default'] = function(context, options) {
+  // Define the controller object.
+  osmplayer.controller = osmplayer.controller || {};
 
-  // Derive from default controller
-  minplayer.controller.call(this, context, options);
-};
+  /**
+   * Constructor for the minplayer.controller
+   */
+  osmplayer.controller[template] = function(context, options) {
 
-/** Derive from controller. */
-osmplayer.controller['default'].prototype = new minplayer.controller();
-osmplayer.controller['default'].prototype.constructor = osmplayer.controller['default'];
+    // Derive from default controller
+    minplayer.controller.call(this, context, options);
+  };
 
-/**
- * @see minplayer.plugin#construct
- */
-osmplayer.controller['default'].prototype.construct = function() {
-  minplayer.controller.prototype.construct.call(this);
-  this.get('player', function(player) {
-    minplayer.showThenHide(this.display, 5000, function(shown) {
-      var op = shown ? 'addClass' : 'removeClass';
-      player.display[op]('with-controller');
+  /** Derive from controller. */
+  osmplayer.controller[template].prototype = new minplayer.controller();
+  osmplayer.controller[template].prototype.constructor = osmplayer.controller[template];
+
+  /**
+   * @see minplayer.plugin#construct
+   */
+  osmplayer.controller[template].prototype.construct = function() {
+    minplayer.controller.prototype.construct.call(this);
+    this.get('player', function(player) {
+      minplayer.showThenHide(this.display, 5000, function(shown) {
+        var op = shown ? 'addClass' : 'removeClass';
+        player.display[op]('with-controller');
+      });
     });
-  });
-}
-
-/**
- * Return the display for this plugin.
- */
-osmplayer.controller['default'].prototype.getDisplay = function() {
-
-  // See if we need to build out the controller.
-  if (this.options.build) {
-
-    // Prepend the control template.
-    jQuery('.minplayer-default', this.context).prepend('\
-    <div class="minplayer-default-controls ui-widget-header">\
-      <div class="minplayer-default-controls-left">\
-        <a class="minplayer-default-play minplayer-default-button ui-state-default ui-corner-all" title="Play">\
-          <span class="ui-icon ui-icon-play"></span>\
-        </a>\
-        <a class="minplayer-default-pause minplayer-default-button ui-state-default ui-corner-all" title="Pause">\
-          <span class="ui-icon ui-icon-pause"></span>\
-        </a>\
-      </div>\
-      <div class="minplayer-default-controls-right">\
-        <div class="minplayer-default-timer">00:00</div>\
-        <div class="minplayer-default-fullscreen ui-widget-content">\
-          <div class="minplayer-default-fullscreen-inner ui-state-default"></div>\
-        </div>\
-        <div class="minplayer-default-volume">\
-          <div class="minplayer-default-volume-slider"></div>\
-          <a class="minplayer-default-volume-mute minplayer-default-button ui-state-default ui-corner-all" title="Mute">\
-            <span class="ui-icon ui-icon-volume-on"></span>\
-          </a>\
-          <a class="minplayer-default-volume-unmute minplayer-default-button ui-state-default ui-corner-all" title="Unmute">\
-            <span class="ui-icon ui-icon-volume-off"></span>\
-          </a>\
-        </div>\
-      </div>\
-      <div class="minplayer-default-controls-mid">\
-        <div class="minplayer-default-seek">\
-          <div class="minplayer-default-progress ui-state-default"></div>\
-        </div>\
-      </div>\
-    </div>');
   }
 
-  // Let our template know we have a controller.
-  this.context.addClass('with-controller');
+  /**
+   * Return the display for this plugin.
+   */
+  osmplayer.controller[template].prototype.getDisplay = function() {
 
-  return jQuery('.minplayer-default-controls', this.context);
-}
+    // See if we need to build out the controller.
+    if (this.options.build) {
 
-// Return the elements
-osmplayer.controller['default'].prototype.getElements = function() {
-  var elements = minplayer.controller.prototype.getElements.call(this);
-  var timer = jQuery(".minplayer-default-timer", this.display);
-  return jQuery.extend(elements, {
-    play: jQuery(".minplayer-default-play", this.display),
-    pause: jQuery(".minplayer-default-pause", this.display),
-    fullscreen: jQuery(".minplayer-default-fullscreen", this.display),
-    seek: jQuery(".minplayer-default-seek", this.display),
-    progress: jQuery(".minplayer-default-progress", this.display),
-    volume: jQuery(".minplayer-default-volume-slider", this.display),
-    mute: jQuery('.minplayer-default-volume-mute', this.display),
-    timer:timer,
-    duration:timer
-  });
-};
+      // Prepend the control template.
+      jQuery('.minplayer-' + template, this.context).prepend('\
+      <div class="minplayer-' + template + '-controls ui-widget-header">\
+        <div class="minplayer-' + template + '-controls-left">\
+          <a class="minplayer-' + template + '-play minplayer-' + template + '-button ui-state-default ui-corner-all" title="Play">\
+            <span class="ui-icon ui-icon-play"></span>\
+          </a>\
+          <a class="minplayer-' + template + '-pause minplayer-' + template + '-button ui-state-default ui-corner-all" title="Pause">\
+            <span class="ui-icon ui-icon-pause"></span>\
+          </a>\
+        </div>\
+        <div class="minplayer-' + template + '-controls-right">\
+          <div class="minplayer-' + template + '-timer">00:00</div>\
+          <div class="minplayer-' + template + '-fullscreen ui-widget-content">\
+            <div class="minplayer-' + template + '-fullscreen-inner ui-state-default"></div>\
+          </div>\
+          <div class="minplayer-' + template + '-volume">\
+            <div class="minplayer-' + template + '-volume-slider"></div>\
+            <a class="minplayer-' + template + '-volume-mute minplayer-' + template + '-button ui-state-default ui-corner-all" title="Mute">\
+              <span class="ui-icon ui-icon-volume-on"></span>\
+            </a>\
+            <a class="minplayer-' + template + '-volume-unmute minplayer-' + template + '-button ui-state-default ui-corner-all" title="Unmute">\
+              <span class="ui-icon ui-icon-volume-off"></span>\
+            </a>\
+          </div>\
+        </div>\
+        <div class="minplayer-' + template + '-controls-mid">\
+          <div class="minplayer-' + template + '-seek">\
+            <div class="minplayer-' + template + '-progress ui-state-default"></div>\
+          </div>\
+        </div>\
+      </div>');
+    }
+
+    // Let our template know we have a controller.
+    this.context.addClass('with-controller');
+
+    return jQuery('.minplayer-' + template + '-controls', this.context);
+  }
+
+  // Return the elements
+  osmplayer.controller[template].prototype.getElements = function() {
+    var elements = minplayer.controller.prototype.getElements.call(this);
+    var timer = jQuery('.minplayer-' + template + '-timer', this.display);
+    return jQuery.extend(elements, {
+      play: jQuery('.minplayer-' + template + '-play', this.display),
+      pause: jQuery('.minplayer-' + template + '-pause', this.display),
+      fullscreen: jQuery('.minplayer-' + template + '-fullscreen', this.display),
+      seek: jQuery('.minplayer-' + template + '-seek', this.display),
+      progress: jQuery('.minplayer-' + template + '-progress', this.display),
+      volume: jQuery('.minplayer-' + template + '-volume-slider', this.display),
+      mute: jQuery('.minplayer-' + template + '-volume-mute', this.display),
+      timer:timer,
+      duration:timer
+    });
+  };
+})('default', osmplayer);
