@@ -290,6 +290,11 @@ osmplayer.playlist.prototype.load = function(page, loadIndex) {
   // Set the new playlist.
   this.playlist = this.options.playlist;
 
+  // Return if there aren't any playlists to play.
+  if (!this.playlist) {
+    return;
+  }
+
   // Determine if we need to loop.
   var maxPages = Math.floor(this.totalItems / this.options.pageLimit);
   if (page > maxPages) {

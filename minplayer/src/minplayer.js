@@ -130,9 +130,6 @@ minplayer.prototype.construct = function() {
   // Now load these files.
   this.load(this.getFiles());
 
-  // Add the player events.
-  this.addEvents();
-
   // The player is ready.
   this.ready();
 };
@@ -366,6 +363,9 @@ minplayer.prototype.load = function(files) {
 
   // Now load the player.
   this.loadPlayer();
+
+  // Add the player events.
+  this.addEvents();
 };
 
 /**
