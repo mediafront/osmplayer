@@ -3907,6 +3907,7 @@ minplayer.players.vimeo.prototype.create = function() {
         player.player.addEvent('ready', function() {
           clearTimeout(playerTimeout);
           player.onReady();
+          player.onError('');
         });
         playerTimeout = setTimeout(function() {
           player.onReady();
