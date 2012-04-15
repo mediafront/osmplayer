@@ -4,13 +4,14 @@
     <title>Open Standard Media (OSM) Player: PHP Demo</title>
     <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"></script>
+    <script type="text/javascript" src="https://getfirebug.com/firebug-lite-debug.js#enableTrace"></script>
 
     <!-- Many more themes to chose from... go to http://jqueryui.com/themeroller! -->
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/dark-hive/jquery-ui.css">
 
     <!-- The compressed osmplayer script. -->
-    <script type="text/javascript" src="bin/osmplayer.compressed.js"></script>
-    <!-- <script type="text/javascript" src="minplayer/src/minplayer.compatibility.js"></script>
+    <!--<script type="text/javascript" src="bin/osmplayer.compressed.js"></script> -->
+    <script type="text/javascript" src="minplayer/src/minplayer.compatibility.js"></script>
     <script type="text/javascript" src="minplayer/src/minplayer.flags.js"></script>
     <script type="text/javascript" src="minplayer/src/minplayer.async.js"></script>
     <script type="text/javascript" src="minplayer/src/minplayer.plugin.js"></script>
@@ -33,19 +34,26 @@
     <script type="text/javascript" src="src/osmplayer.parser.asx.js"></script>
     <script type="text/javascript" src="src/osmplayer.parser.xspf.js"></script>
     <script type="text/javascript" src="src/osmplayer.playlist.js"></script>
-    <script type="text/javascript" src="src/osmplayer.scroll.js"></script>
+    <script type="text/javascript" src="src/iscroll/src/iscroll.js"></script>
     <script type="text/javascript" src="src/osmplayer.pager.js"></script>
-    <script type="text/javascript" src="src/osmplayer.teaser.js"></script>-->
+    <script type="text/javascript" src="src/osmplayer.teaser.js"></script>
 
     <!-- Include the OSM Player template files. -->
     <link rel="stylesheet" href="templates/default/css/osmplayer_default.css">
-    <script type="text/javascript" src="templates/default/osmplayer.default.js"></script>
+    <script type="text/javascript" src="templates/default/js/osmplayer.default.js"></script>
+    <script type="text/javascript" src="templates/default/js/osmplayer.controller.default.js"></script>
+    <script type="text/javascript" src="templates/default/js/osmplayer.pager.default.js"></script>
+    <script type="text/javascript" src="templates/default/js/osmplayer.playLoader.default.js"></script>
+    <script type="text/javascript" src="templates/default/js/osmplayer.playlist.default.js"></script>
+    <script type="text/javascript" src="templates/default/js/osmplayer.teaser.default.js"></script>
 
     <!-- Here is how you make it come alive... -->
     <script type="text/javascript">
       $(function() {
         $("#osmplayer").osmplayer({
-          playlist: 'playlist.xml'
+          width: '600px',
+          height: '400px',
+          playlist: 'http://gdata.youtube.com/feeds/api/videos'
         });
       });
     </script>

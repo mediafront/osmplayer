@@ -1,4 +1,4 @@
-<div id="<?php print $params['id']; ?>" style="<?php print $width; ?><?php print $height; ?>">
+<div id="<?php print $params['id']; ?>" class="osmplayer-<?php print $params['template']; ?> player-ui">
   <div id="mediaplayer" style="<?php print $height; ?>">
     <div id="mediaplayer_node">
       <div id="mediaplayer_menu">
@@ -21,10 +21,7 @@
           </div>
         </div>
         <div id="mediaplayer_info" class="mediaplayer_info">
-          <p>
-            <a target="_blank" href="http://www.mediafront.org">Open Standard Media Player</a> version <?php print $params['version']; ?><br/><br/>
-            Built by <a target="_blank" href="http://www.alethia-inc.com">Alethia Inc.</a>
-          </p>
+          <p><a target="_blank" href="http://www.mediafront.org">Open Standard Media Player</a> version <?php print $params['version']; ?></p>
         </div>
       </div>
       <div id="mediaplayer_minplayer">

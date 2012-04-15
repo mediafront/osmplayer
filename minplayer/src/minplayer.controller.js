@@ -110,9 +110,7 @@ minplayer.controller.prototype.construct = function() {
     if (this.elements.fullscreen) {
 
       // Bind to the click event.
-      this.elements.fullscreen.unbind().bind('click', function(e) {
-
-        // Toggle fullscreen mode.
+      minplayer.click(this.elements.fullscreen.unbind(), function() {
         player.toggleFullScreen();
       }).css({'pointer' : 'hand'});
     }
@@ -121,170 +119,179 @@ minplayer.controller.prototype.construct = function() {
   // Get the media plugin.
   this.get('media', function(media) {
 
-    // If they have a pause button
-    if (this.elements.pause) {
+    // Only bind if this player does not have its own play loader.
+    if (!media.hasController()) {
 
-      // Bind to the click on this button.
-      this.elements.pause.unbind().bind('click', (function(controller) {
-        return function(event) {
-          event.preventDefault();
-          controller.playPause(false, media);
-        };
-      })(this));
+      // If they have a pause button
+      if (this.elements.pause) {
 
-      // Bind to the pause event of the media.
-      media.bind('pause', (function(controller) {
-        return function(event) {
-          controller.setPlayPause(true);
-        };
-      })(this));
-    }
-
-    // If they have a play button
-    if (this.elements.play) {
-
-      // Bind to the click on this button.
-      this.elements.play.unbind().bind('click', (function(controller) {
-        return function(event) {
-          event.preventDefault();
-          controller.playPause(true, media);
-        };
-      })(this));
-
-      // Bind to the play event of the media.
-      media.bind('playing', (function(controller) {
-        return function(event) {
-          controller.setPlayPause(false);
-        };
-      })(this));
-    }
-
-    // If they have a duration, then trigger on duration change.
-    if (this.elements.duration) {
-
-      // Bind to the duration change event.
-      media.bind('durationchange', (function(controller) {
-        return function(event, data) {
-          controller.setTimeString('duration', data.duration);
-        };
-      })(this));
-
-      // Set the timestring to the duration.
-      media.getDuration((function(controller) {
-        return function(duration) {
-          controller.setTimeString('duration', duration);
-        };
-      })(this));
-    }
-
-    // If they have a progress element.
-    if (this.elements.progress) {
-
-      // Bind to the progress event.
-      media.bind('progress', (function(controller) {
-        return function(event, data) {
-          var percent = data.total ? (data.loaded / data.total) * 100 : 0;
-          controller.elements.progress.width(percent + '%');
-        };
-      })(this));
-    }
-
-    // If they have a seek bar or timer, bind to the timeupdate.
-    if (this.seekBar || this.elements.timer) {
-
-      // Bind to the time update event.
-      media.bind('timeupdate', (function(controller) {
-        return function(event, data) {
-          if (!controller.dragging) {
-            var value = 0;
-            if (data.duration) {
-              value = (data.currentTime / data.duration) * 100;
-            }
-
-            // Update the seek bar if it exists.
-            if (controller.seekBar) {
-              controller.seekBar.slider('option', 'value', value);
-            }
-
-            controller.setTimeString('timer', data.currentTime);
-          }
-        };
-      })(this));
-    }
-
-    // If they have a seekBar element.
-    if (this.seekBar) {
-
-      // Register the events for the control bar to control the media.
-      this.seekBar.slider({
-        start: (function(controller) {
-          return function(event, ui) {
-            controller.dragging = true;
+        // Bind to the click on this button.
+        minplayer.click(this.elements.pause.unbind(), (function(controller) {
+          return function(event) {
+            event.preventDefault();
+            controller.playPause(false, media);
           };
-        })(this),
-        stop: (function(controller) {
-          return function(event, ui) {
-            controller.dragging = false;
-            media.getDuration(function(duration) {
-              media.seek((ui.value / 100) * duration);
-            });
+        })(this));
+
+        // Bind to the pause event of the media.
+        media.bind('pause', (function(controller) {
+          return function(event) {
+            controller.setPlayPause(true);
           };
-        })(this),
-        slide: (function(controller) {
-          return function(event, ui) {
-            media.getDuration(function(duration) {
-              var time = (ui.value / 100) * duration;
-              if (!controller.dragging) {
-                media.seek(time);
+        })(this));
+      }
+
+      // If they have a play button
+      if (this.elements.play) {
+
+        // Bind to the click on this button.
+        minplayer.click(this.elements.play.unbind(), (function(controller) {
+          return function(event) {
+            event.preventDefault();
+            controller.playPause(true, media);
+          };
+        })(this));
+
+        // Bind to the play event of the media.
+        media.bind('playing', (function(controller) {
+          return function(event) {
+            controller.setPlayPause(false);
+          };
+        })(this));
+      }
+
+      // If they have a duration, then trigger on duration change.
+      if (this.elements.duration) {
+
+        // Bind to the duration change event.
+        media.bind('durationchange', (function(controller) {
+          return function(event, data) {
+            controller.setTimeString('duration', data.duration);
+          };
+        })(this));
+
+        // Set the timestring to the duration.
+        media.getDuration((function(controller) {
+          return function(duration) {
+            controller.setTimeString('duration', duration);
+          };
+        })(this));
+      }
+
+      // If they have a progress element.
+      if (this.elements.progress) {
+
+        // Bind to the progress event.
+        media.bind('progress', (function(controller) {
+          return function(event, data) {
+            var percent = data.total ? (data.loaded / data.total) * 100 : 0;
+            controller.elements.progress.width(percent + '%');
+          };
+        })(this));
+      }
+
+      // If they have a seek bar or timer, bind to the timeupdate.
+      if (this.seekBar || this.elements.timer) {
+
+        // Bind to the time update event.
+        media.bind('timeupdate', (function(controller) {
+          return function(event, data) {
+            if (!controller.dragging) {
+              var value = 0;
+              if (data.duration) {
+                value = (data.currentTime / data.duration) * 100;
               }
-              controller.setTimeString('timer', time);
-            });
+
+              // Update the seek bar if it exists.
+              if (controller.seekBar) {
+                controller.seekBar.slider('option', 'value', value);
+              }
+
+              controller.setTimeString('timer', data.currentTime);
+            }
           };
-        })(this)
-      });
-    }
+        })(this));
+      }
 
-    // Setup the mute button.
-    if (this.elements.mute) {
-      this.elements.mute.click((function(controller) {
-        return function(event) {
-          event.preventDefault();
-          var value = controller.volumeBar.slider('option', 'value');
-          if (value > 0) {
-            controller.vol = value;
-            controller.volumeBar.slider('option', 'value', 0);
-            media.setVolume(0);
+      // If they have a seekBar element.
+      if (this.seekBar) {
+
+        // Register the events for the control bar to control the media.
+        this.seekBar.slider({
+          start: (function(controller) {
+            return function(event, ui) {
+              controller.dragging = true;
+            };
+          })(this),
+          stop: (function(controller) {
+            return function(event, ui) {
+              controller.dragging = false;
+              media.getDuration(function(duration) {
+                media.seek((ui.value / 100) * duration);
+              });
+            };
+          })(this),
+          slide: (function(controller) {
+            return function(event, ui) {
+              media.getDuration(function(duration) {
+                var time = (ui.value / 100) * duration;
+                if (!controller.dragging) {
+                  media.seek(time);
+                }
+                controller.setTimeString('timer', time);
+              });
+            };
+          })(this)
+        });
+      }
+
+      // Setup the mute button.
+      if (this.elements.mute) {
+        minplayer.click(this.elements.mute, (function(controller) {
+          return function(event) {
+            event.preventDefault();
+            var value = controller.volumeBar.slider('option', 'value');
+            if (value > 0) {
+              controller.vol = value;
+              controller.volumeBar.slider('option', 'value', 0);
+              media.setVolume(0);
+            }
+            else {
+              controller.volumeBar.slider('option', 'value', controller.vol);
+              media.setVolume(controller.vol / 100);
+            }
+          };
+        })(this));
+      }
+
+      // Setup the volume bar.
+      if (this.volumeBar) {
+
+        // Create the slider.
+        this.volumeBar.slider({
+          slide: function(event, ui) {
+            media.setVolume(ui.value / 100);
           }
-          else {
-            controller.volumeBar.slider('option', 'value', controller.vol);
-            media.setVolume(controller.vol / 100);
-          }
-        };
-      })(this));
+        });
+
+        media.bind('volumeupdate', (function(controller) {
+          return function(event, vol) {
+            controller.volumeBar.slider('option', 'value', (vol * 100));
+          };
+        })(this));
+
+        // Set the volume to match that of the player.
+        media.getVolume((function(controller) {
+          return function(vol) {
+            controller.volumeBar.slider('option', 'value', (vol * 100));
+          };
+        })(this));
+      }
     }
+    else {
 
-    // Setup the volume bar.
-    if (this.volumeBar) {
-
-      // Create the slider.
-      this.volumeBar.slider({
-        slide: function(event, ui) {
-          media.setVolume(ui.value / 100);
-        }
-      });
-
-      media.bind('volumeupdate', (function(controller) {
-        return function(event, vol) {
-          controller.volumeBar.slider('option', 'value', (vol * 100));
-        };
-      })(this));
-
-      // Set the volume to match that of the player.
-      media.getVolume((function(controller) {
-        return function(vol) {
-          controller.volumeBar.slider('option', 'value', (vol * 100));
-        };
-      })(this));
+      // Hide this controller.
+      this.hide();
     }
   });
 

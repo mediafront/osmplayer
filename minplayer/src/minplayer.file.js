@@ -31,6 +31,9 @@ minplayer.file = function(file) {
   this.player = file.player || this.getBestPlayer();
   this.priority = file.priority || this.getPriority();
   this.id = file.id || this.getId();
+  if (!this.path) {
+    this.path = this.id;
+  }
 };
 
 /**

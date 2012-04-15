@@ -98,4 +98,19 @@ if (!minplayer.playTypes) {
 
   /** The compatible playtypes for this browser. */
   minplayer.playTypes = new minplayer.compatibility();
+
+  /** See if we are an android device. */
+  minplayer.isAndroid = (/android/gi).test(navigator.appVersion);
+
+  /** See if we are an iOS device. */
+  minplayer.isIDevice = (/iphone|ipad/gi).test(navigator.appVersion);
+
+  /** See if we are a playbook device. */
+  minplayer.isPlaybook = (/playbook/gi).test(navigator.appVersion);
+
+  /** See if we are a touchpad device. */
+  minplayer.isTouchPad = (/hp-tablet/gi).test(navigator.appVersion);
+
+  /** Determine if we have a touchscreen. */
+  minplayer.hasTouch = 'ontouchstart' in window && !minplayer.isTouchPad;
 }

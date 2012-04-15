@@ -34,7 +34,6 @@ files =   minplayer/src/minplayer.compatibility.js\
           src/osmplayer.parser.asx.js\
           src/osmplayer.parser.xspf.js\
           src/osmplayer.playlist.js\
-          src/osmplayer.scroll.js\
           src/osmplayer.pager.js\
           src/osmplayer.teaser.js
 
@@ -42,7 +41,6 @@ default_template =   templates/default/js/osmplayer.playLoader.default.js\
           templates/default/js/osmplayer.controller.default.js\
           templates/default/js/osmplayer.playlist.default.js\
           templates/default/js/osmplayer.teaser.default.js\
-          templates/default/js/osmplayer.scroll.default.js\
           templates/default/js/osmplayer.pager.default.js\
           templates/default/js/osmplayer.default.js
 
@@ -57,7 +55,7 @@ jslint: ${files}
 # Create an aggregated js file and a compressed js file.
 js: ${files}
 	@echo "Generating aggregated bin/osmplayer.js file"
-	@cat > bin/osmplayer.js $^
+	@cat > bin/osmplayer.js src/iscroll/src/iscroll.js $^
 	@echo "Generating compressed bin/osmplayer.compressed file"
 	@java -jar tools/compiler.jar --js bin/osmplayer.js --js_output_file bin/osmplayer.compressed.js
 	@cat > templates/default/osmplayer.default.tmp ${default_template}

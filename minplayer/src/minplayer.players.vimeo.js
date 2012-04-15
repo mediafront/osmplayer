@@ -49,6 +49,24 @@ minplayer.players.vimeo.canPlay = function(file) {
 };
 
 /**
+ * Determines if the player should show the playloader.
+ *
+ * @return {bool} If this player implements its own playLoader.
+ */
+minplayer.players.vimeo.prototype.hasPlayLoader = function() {
+  return minplayer.hasTouch;
+};
+
+/**
+ * Determines if the player should show the playloader.
+ *
+ * @return {bool} If this player implements its own playLoader.
+ */
+minplayer.players.vimeo.prototype.hasController = function() {
+  return minplayer.hasTouch;
+};
+
+/**
  * Return the ID for a provided media file.
  *
  * @param {object} file A {@link minplayer.file} object.

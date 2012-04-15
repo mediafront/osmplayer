@@ -43,11 +43,10 @@
     <div class="osmplayer-<?php print $params['template']; ?>-hide-show-playlist ui-state-default">
       <span class="ui-icon"></span>
     </div>
+    <div class="minplayer-<?php print $params['template']; ?>-loader-wrapper">
+      <div class="minplayer-<?php print $params['template']; ?>-loader"></div>
+    </div>
     <div class="osmplayer-<?php print $params['template']; ?>-playlist-scroll ui-widget-content">
-      <div class="osmplayer-<?php print $params['template']; ?>-playlist-scrollbar"></div>
-      <div class="minplayer-<?php print $params['template']; ?>-loader-wrapper">
-        <div class="minplayer-<?php print $params['template']; ?>-loader"></div>
-      </div>
       <div class="osmplayer-<?php print $params['template']; ?>-playlist-list"></div>
     </div>
     <div class="osmplayer-<?php print $params['template']; ?>-playlist-pager ui-widget-header">

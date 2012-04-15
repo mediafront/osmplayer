@@ -107,6 +107,17 @@ minplayer.prototype.construct = function() {
   /** The play loader for this player. */
   this.playLoader = this.create('playLoader');
 
+  // Set the focus of the element based on if they click in or outside of it.
+  minplayer.click(document, (function(player) {
+    return function(event) {
+      var target = jQuery(event.target);
+      var focus = !(target.closest('#' + player.options.id).length == 0);
+      minplayer.get.call(this, player.options.id, null, function(plugin) {
+        plugin.onFocus(focus);
+      });
+    };
+  })(this));
+
   /** Add the logo for the player. */
   if (this.options.logo && this.elements.logo) {
 

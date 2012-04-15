@@ -185,6 +185,15 @@ minplayer.players.youtube.prototype.hasPlayLoader = function() {
 };
 
 /**
+ * Determines if the player should show the playloader.
+ *
+ * @return {bool} If this player implements its own playLoader.
+ */
+minplayer.players.youtube.prototype.hasController = function() {
+  return minplayer.isIDevice;
+};
+
+/**
  * @see minplayer.players.base#create
  * @return {object} The media player entity.
  */
@@ -203,6 +212,7 @@ minplayer.players.youtube.prototype.create = function() {
   // Create the iframe for this player.
   var iframe = document.createElement('iframe');
   iframe.setAttribute('id', this.options.id + '-player');
+  iframe.setAttribute('class', 'youtube-player');
   iframe.setAttribute('type', 'text/html');
   iframe.setAttribute('width', '100%');
   iframe.setAttribute('height', '100%');
@@ -210,20 +220,27 @@ minplayer.players.youtube.prototype.create = function() {
 
   // Get the source.
   var src = 'http://www.youtube.com/embed/';
-  src += this.mediaFile.id + '?';
+  src += this.mediaFile.id;
 
   // Determine the origin of this script.
   var origin = location.protocol;
   origin += '//' + location.hostname;
   origin += (location.port && ':' + location.port);
 
-  // Add the parameters to the src.
-  src += jQuery.param({
-    'wmode': 'opaque',
-    'controls': 0,
-    'enablejsapi': 1,
-    'origin': origin
-  });
+  if (minplayer.isIDevice) {
+    src += '?' + jQuery.param({
+      'origin': origin
+    });
+  }
+  else {
+    // Add the parameters to the src.
+    src += '?' + jQuery.param({
+      'wmode': 'opaque',
+      'controls': 0,
+      'enablejsapi': minplayer.isIDevice ? 0 : 1,
+      'origin': origin
+    });
+  }
 
   // Set the source of the iframe.
   iframe.setAttribute('src', src);

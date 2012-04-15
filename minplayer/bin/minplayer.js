@@ -98,6 +98,21 @@ if (!minplayer.playTypes) {
 
   /** The compatible playtypes for this browser. */
   minplayer.playTypes = new minplayer.compatibility();
+
+  /** See if we are an android device. */
+  minplayer.isAndroid = (/android/gi).test(navigator.appVersion);
+
+  /** See if we are an iOS device. */
+  minplayer.isIDevice = (/iphone|ipad/gi).test(navigator.appVersion);
+
+  /** See if we are a playbook device. */
+  minplayer.isPlaybook = (/playbook/gi).test(navigator.appVersion);
+
+  /** See if we are a touchpad device. */
+  minplayer.isTouchPad = (/hp-tablet/gi).test(navigator.appVersion);
+
+  /** Determine if we have a touchscreen. */
+  minplayer.hasTouch = 'ontouchstart' in window && !minplayer.isTouchPad;
 }
 /** The minplayer namespace. */
 var minplayer = minplayer || {};
@@ -496,9 +511,6 @@ minplayer.plugin.prototype.checkQueue = function(plugin) {
  * @return {object} The plugin object.
  */
 minplayer.plugin.prototype.trigger = function(type, data) {
-  data = data || {};
-  data.plugin = this;
-
   // Add this to our triggered array.
   this.triggered[type] = data;
 
@@ -554,7 +566,7 @@ minplayer.plugin.prototype.bind = function(type, data, fn) {
   });
 
   // Now see if this event has already been triggered.
-  if (this.triggered[type]) {
+  if (this.triggered.hasOwnProperty(type)) {
 
     // Go ahead and trigger the event.
     fn({target: this, data: data}, this.triggered[type]);
@@ -697,8 +709,8 @@ minplayer.bind = function(event, id, plugin, callback) {
   var i = selected.length;
   while (i--) {
     selected[i].bind(event, (function(context, plugin) {
-      return function(event, data) {
-        callback.call(context, data.plugin);
+      return function(event) {
+        callback.call(context, event.target);
       };
     })(this, selected[i]));
   }
@@ -893,12 +905,56 @@ minplayer.display.prototype.construct = function() {
 minplayer.display.prototype.onResize = false;
 
 /**
+ * Wrapper around hide that will always not show.
+ *
+ * @param {object} element The element you wish to hide.
+ */
+minplayer.display.prototype.hide = function(element) {
+  element = element || this.display;
+  if (element) {
+    element.forceHide = true;
+    element.unbind().hide();
+  }
+};
+
+/**
  * Gets the full screen element.
  *
  * @return {object} The display to be used for full screen support.
  */
 minplayer.display.prototype.fullScreenElement = function() {
   return this.display;
+};
+
+/**
+ * Fix for the click function in jQuery to be cross platform.
+ *
+ * @param {object} element The element that will be clicked.
+ * @param {function} fn Called when the element is clicked.
+ * @return {object} The element that is to be clicked.
+ */
+minplayer.click = function(element, fn) {
+  var flag = false;
+  element = jQuery(element);
+  element.bind('touchstart click', function(event) {
+    if (!flag) {
+      flag = true;
+      setTimeout(function() {
+        flag = false;
+      }, 100);
+      fn.call(this, event);
+    }
+  });
+  return element;
+};
+
+/**
+ * Determines if the player is in focus or not.
+ *
+ * @param {boolean} focus If the player is in focus.
+ */
+minplayer.display.prototype.onFocus = function(focus) {
+  this.hasFocus = this.focus = focus;
 };
 
 /**
@@ -921,6 +977,9 @@ minplayer.showThenHide = function(element, timeout, callback) {
   // If this has not yet been configured.
   if (!element.showTimer) {
     element.shown = true;
+    minplayer.click(document, function() {
+      minplayer.showThenHide(element, timeout, callback);
+    });
     jQuery(document).bind('mousemove', function() {
       minplayer.showThenHide(element, timeout, callback);
     });
@@ -930,7 +989,7 @@ minplayer.showThenHide = function(element, timeout, callback) {
   clearTimeout(element.showTimer);
 
   // Show the display.
-  if (!element.shown) {
+  if (!element.shown && !element.forceHide) {
     element.shown = true;
     element.show();
     if (callback) {
@@ -1221,6 +1280,17 @@ minplayer.prototype.construct = function() {
 
   /** The play loader for this player. */
   this.playLoader = this.create('playLoader');
+
+  // Set the focus of the element based on if they click in or outside of it.
+  minplayer.click(document, (function(player) {
+    return function(event) {
+      var target = jQuery(event.target);
+      var focus = !(target.closest('#' + player.options.id).length == 0);
+      minplayer.get.call(this, player.options.id, null, function(plugin) {
+        plugin.onFocus(focus);
+      });
+    };
+  })(this));
 
   /** Add the logo for the player. */
   if (this.options.logo && this.elements.logo) {
@@ -1670,6 +1740,9 @@ minplayer.file = function(file) {
   this.player = file.player || this.getBestPlayer();
   this.priority = file.priority || this.getPriority();
   this.id = file.id || this.getId();
+  if (!this.path) {
+    this.path = this.id;
+  }
 };
 
 /**
@@ -1865,7 +1938,7 @@ minplayer.playLoader.prototype.construct = function() {
 
       // Trigger a play event when someone clicks on the controller.
       if (this.elements.bigPlay) {
-        this.elements.bigPlay.unbind().bind('click', function(event) {
+        minplayer.click(this.elements.bigPlay.unbind(), function(event) {
           event.preventDefault();
           jQuery(this).hide();
           media.play();
@@ -1914,18 +1987,10 @@ minplayer.playLoader.prototype.construct = function() {
     }
     else {
 
-      // Hide the busy cursor.
-      if (this.elements.busy) {
-        this.elements.busy.unbind().hide();
-      }
-
-      // Hide the big play button.
-      if (this.elements.bigPlay) {
-        this.elements.bigPlay.unbind().hide();
-      }
-
       // Hide the display.
-      this.display.unbind().hide();
+      this.hide(this.elements.busy);
+      this.hide(this.elements.bigPlay);
+      this.hide();
     }
   });
 
@@ -2085,18 +2150,6 @@ minplayer.players.base.prototype.construct = function() {
 
   // Get the player object...
   this.player = this.getPlayer();
-
-  // Set the focus of the element based on if they click in or outside of it.
-  jQuery(document).bind('click', (function(player) {
-    return function(event) {
-      if (jQuery(event.target).closest('#' + player.options.id).length == 0) {
-        player.hasFocus = false;
-      }
-      else {
-        player.hasFocus = true;
-      }
-    };
-  })(this));
 
   // Bind to key events...
   jQuery(document).bind('keydown', (function(player) {
@@ -2403,6 +2456,15 @@ minplayer.players.base.prototype.isReady = function() {
  * @return {bool} If this player implements its own playLoader.
  */
 minplayer.players.base.prototype.hasPlayLoader = function() {
+  return false;
+};
+
+/**
+ * Determines if the player should show the controller.
+ *
+ * @return {bool} If this player implements its own controller.
+ */
+minplayer.players.base.prototype.hasController = function() {
   return false;
 };
 
@@ -2791,6 +2853,24 @@ minplayer.players.html5.prototype.addEvents = function() {
 };
 
 /**
+ * @see minplayer.players.base#onReady
+ */
+minplayer.players.html5.prototype.onReady = function() {
+  minplayer.players.base.prototype.onReady.call(this);
+
+  // iOS devices are strange in that they don't autoload.
+  if (minplayer.isIDevice) {
+    this.play();
+    setTimeout((function(player) {
+      return function() {
+        player.pause();
+        player.onLoaded();
+      };
+    })(this), 1);
+  }
+};
+
+/**
  * @see minplayer.players.base#playerFound
  * @return {boolean} TRUE - if the player is in the DOM, FALSE otherwise.
  */
@@ -2841,6 +2921,8 @@ minplayer.players.html5.prototype.load = function(file) {
       src = jQuery('source', this.elements.media).eq(0).attr('src');
     }
 
+    console.log(file);
+
     // Only swap out if the new file is different from the source.
     if (src != file.path) {
 
@@ -2855,10 +2937,11 @@ minplayer.players.html5.prototype.load = function(file) {
 
       // Set the autoload.
       var option = this.options.autoload ? 'auto' : 'metadata';
+      option = minplayer.isIDevice ? 'metadata' : option;
       this.elements.media.attr('preload', option);
 
       // Change the source...
-      var code = '<source src="' + file.path + '">';
+      var code = '<source src="' + file.path + '"></source>';
       this.elements.media.removeAttr('src').empty().html(code);
       return true;
     }
@@ -3617,6 +3700,15 @@ minplayer.players.youtube.prototype.hasPlayLoader = function() {
 };
 
 /**
+ * Determines if the player should show the playloader.
+ *
+ * @return {bool} If this player implements its own playLoader.
+ */
+minplayer.players.youtube.prototype.hasController = function() {
+  return minplayer.isIDevice;
+};
+
+/**
  * @see minplayer.players.base#create
  * @return {object} The media player entity.
  */
@@ -3635,6 +3727,7 @@ minplayer.players.youtube.prototype.create = function() {
   // Create the iframe for this player.
   var iframe = document.createElement('iframe');
   iframe.setAttribute('id', this.options.id + '-player');
+  iframe.setAttribute('class', 'youtube-player');
   iframe.setAttribute('type', 'text/html');
   iframe.setAttribute('width', '100%');
   iframe.setAttribute('height', '100%');
@@ -3642,20 +3735,27 @@ minplayer.players.youtube.prototype.create = function() {
 
   // Get the source.
   var src = 'http://www.youtube.com/embed/';
-  src += this.mediaFile.id + '?';
+  src += this.mediaFile.id;
 
   // Determine the origin of this script.
   var origin = location.protocol;
   origin += '//' + location.hostname;
   origin += (location.port && ':' + location.port);
 
-  // Add the parameters to the src.
-  src += jQuery.param({
-    'wmode': 'opaque',
-    'controls': 0,
-    'enablejsapi': 1,
-    'origin': origin
-  });
+  if (minplayer.isIDevice) {
+    src += '?' + jQuery.param({
+      'origin': origin
+    });
+  }
+  else {
+    // Add the parameters to the src.
+    src += '?' + jQuery.param({
+      'wmode': 'opaque',
+      'controls': 0,
+      'enablejsapi': minplayer.isIDevice ? 0 : 1,
+      'origin': origin
+    });
+  }
 
   // Set the source of the iframe.
   iframe.setAttribute('src', src);
@@ -3831,6 +3931,24 @@ minplayer.players.vimeo.canPlay = function(file) {
 
   // If the path is a vimeo path, then return true.
   return (file.path.search(/^http(s)?\:\/\/(www\.)?vimeo\.com/i) === 0);
+};
+
+/**
+ * Determines if the player should show the playloader.
+ *
+ * @return {bool} If this player implements its own playLoader.
+ */
+minplayer.players.vimeo.prototype.hasPlayLoader = function() {
+  return minplayer.hasTouch;
+};
+
+/**
+ * Determines if the player should show the playloader.
+ *
+ * @return {bool} If this player implements its own playLoader.
+ */
+minplayer.players.vimeo.prototype.hasController = function() {
+  return minplayer.hasTouch;
 };
 
 /**
@@ -4179,9 +4297,7 @@ minplayer.controller.prototype.construct = function() {
     if (this.elements.fullscreen) {
 
       // Bind to the click event.
-      this.elements.fullscreen.unbind().bind('click', function(e) {
-
-        // Toggle fullscreen mode.
+      minplayer.click(this.elements.fullscreen.unbind(), function() {
         player.toggleFullScreen();
       }).css({'pointer' : 'hand'});
     }
@@ -4190,170 +4306,179 @@ minplayer.controller.prototype.construct = function() {
   // Get the media plugin.
   this.get('media', function(media) {
 
-    // If they have a pause button
-    if (this.elements.pause) {
+    // Only bind if this player does not have its own play loader.
+    if (!media.hasController()) {
 
-      // Bind to the click on this button.
-      this.elements.pause.unbind().bind('click', (function(controller) {
-        return function(event) {
-          event.preventDefault();
-          controller.playPause(false, media);
-        };
-      })(this));
+      // If they have a pause button
+      if (this.elements.pause) {
 
-      // Bind to the pause event of the media.
-      media.bind('pause', (function(controller) {
-        return function(event) {
-          controller.setPlayPause(true);
-        };
-      })(this));
-    }
-
-    // If they have a play button
-    if (this.elements.play) {
-
-      // Bind to the click on this button.
-      this.elements.play.unbind().bind('click', (function(controller) {
-        return function(event) {
-          event.preventDefault();
-          controller.playPause(true, media);
-        };
-      })(this));
-
-      // Bind to the play event of the media.
-      media.bind('playing', (function(controller) {
-        return function(event) {
-          controller.setPlayPause(false);
-        };
-      })(this));
-    }
-
-    // If they have a duration, then trigger on duration change.
-    if (this.elements.duration) {
-
-      // Bind to the duration change event.
-      media.bind('durationchange', (function(controller) {
-        return function(event, data) {
-          controller.setTimeString('duration', data.duration);
-        };
-      })(this));
-
-      // Set the timestring to the duration.
-      media.getDuration((function(controller) {
-        return function(duration) {
-          controller.setTimeString('duration', duration);
-        };
-      })(this));
-    }
-
-    // If they have a progress element.
-    if (this.elements.progress) {
-
-      // Bind to the progress event.
-      media.bind('progress', (function(controller) {
-        return function(event, data) {
-          var percent = data.total ? (data.loaded / data.total) * 100 : 0;
-          controller.elements.progress.width(percent + '%');
-        };
-      })(this));
-    }
-
-    // If they have a seek bar or timer, bind to the timeupdate.
-    if (this.seekBar || this.elements.timer) {
-
-      // Bind to the time update event.
-      media.bind('timeupdate', (function(controller) {
-        return function(event, data) {
-          if (!controller.dragging) {
-            var value = 0;
-            if (data.duration) {
-              value = (data.currentTime / data.duration) * 100;
-            }
-
-            // Update the seek bar if it exists.
-            if (controller.seekBar) {
-              controller.seekBar.slider('option', 'value', value);
-            }
-
-            controller.setTimeString('timer', data.currentTime);
-          }
-        };
-      })(this));
-    }
-
-    // If they have a seekBar element.
-    if (this.seekBar) {
-
-      // Register the events for the control bar to control the media.
-      this.seekBar.slider({
-        start: (function(controller) {
-          return function(event, ui) {
-            controller.dragging = true;
+        // Bind to the click on this button.
+        minplayer.click(this.elements.pause.unbind(), (function(controller) {
+          return function(event) {
+            event.preventDefault();
+            controller.playPause(false, media);
           };
-        })(this),
-        stop: (function(controller) {
-          return function(event, ui) {
-            controller.dragging = false;
-            media.getDuration(function(duration) {
-              media.seek((ui.value / 100) * duration);
-            });
+        })(this));
+
+        // Bind to the pause event of the media.
+        media.bind('pause', (function(controller) {
+          return function(event) {
+            controller.setPlayPause(true);
           };
-        })(this),
-        slide: (function(controller) {
-          return function(event, ui) {
-            media.getDuration(function(duration) {
-              var time = (ui.value / 100) * duration;
-              if (!controller.dragging) {
-                media.seek(time);
+        })(this));
+      }
+
+      // If they have a play button
+      if (this.elements.play) {
+
+        // Bind to the click on this button.
+        minplayer.click(this.elements.play.unbind(), (function(controller) {
+          return function(event) {
+            event.preventDefault();
+            controller.playPause(true, media);
+          };
+        })(this));
+
+        // Bind to the play event of the media.
+        media.bind('playing', (function(controller) {
+          return function(event) {
+            controller.setPlayPause(false);
+          };
+        })(this));
+      }
+
+      // If they have a duration, then trigger on duration change.
+      if (this.elements.duration) {
+
+        // Bind to the duration change event.
+        media.bind('durationchange', (function(controller) {
+          return function(event, data) {
+            controller.setTimeString('duration', data.duration);
+          };
+        })(this));
+
+        // Set the timestring to the duration.
+        media.getDuration((function(controller) {
+          return function(duration) {
+            controller.setTimeString('duration', duration);
+          };
+        })(this));
+      }
+
+      // If they have a progress element.
+      if (this.elements.progress) {
+
+        // Bind to the progress event.
+        media.bind('progress', (function(controller) {
+          return function(event, data) {
+            var percent = data.total ? (data.loaded / data.total) * 100 : 0;
+            controller.elements.progress.width(percent + '%');
+          };
+        })(this));
+      }
+
+      // If they have a seek bar or timer, bind to the timeupdate.
+      if (this.seekBar || this.elements.timer) {
+
+        // Bind to the time update event.
+        media.bind('timeupdate', (function(controller) {
+          return function(event, data) {
+            if (!controller.dragging) {
+              var value = 0;
+              if (data.duration) {
+                value = (data.currentTime / data.duration) * 100;
               }
-              controller.setTimeString('timer', time);
-            });
+
+              // Update the seek bar if it exists.
+              if (controller.seekBar) {
+                controller.seekBar.slider('option', 'value', value);
+              }
+
+              controller.setTimeString('timer', data.currentTime);
+            }
           };
-        })(this)
-      });
-    }
+        })(this));
+      }
 
-    // Setup the mute button.
-    if (this.elements.mute) {
-      this.elements.mute.click((function(controller) {
-        return function(event) {
-          event.preventDefault();
-          var value = controller.volumeBar.slider('option', 'value');
-          if (value > 0) {
-            controller.vol = value;
-            controller.volumeBar.slider('option', 'value', 0);
-            media.setVolume(0);
+      // If they have a seekBar element.
+      if (this.seekBar) {
+
+        // Register the events for the control bar to control the media.
+        this.seekBar.slider({
+          start: (function(controller) {
+            return function(event, ui) {
+              controller.dragging = true;
+            };
+          })(this),
+          stop: (function(controller) {
+            return function(event, ui) {
+              controller.dragging = false;
+              media.getDuration(function(duration) {
+                media.seek((ui.value / 100) * duration);
+              });
+            };
+          })(this),
+          slide: (function(controller) {
+            return function(event, ui) {
+              media.getDuration(function(duration) {
+                var time = (ui.value / 100) * duration;
+                if (!controller.dragging) {
+                  media.seek(time);
+                }
+                controller.setTimeString('timer', time);
+              });
+            };
+          })(this)
+        });
+      }
+
+      // Setup the mute button.
+      if (this.elements.mute) {
+        minplayer.click(this.elements.mute, (function(controller) {
+          return function(event) {
+            event.preventDefault();
+            var value = controller.volumeBar.slider('option', 'value');
+            if (value > 0) {
+              controller.vol = value;
+              controller.volumeBar.slider('option', 'value', 0);
+              media.setVolume(0);
+            }
+            else {
+              controller.volumeBar.slider('option', 'value', controller.vol);
+              media.setVolume(controller.vol / 100);
+            }
+          };
+        })(this));
+      }
+
+      // Setup the volume bar.
+      if (this.volumeBar) {
+
+        // Create the slider.
+        this.volumeBar.slider({
+          slide: function(event, ui) {
+            media.setVolume(ui.value / 100);
           }
-          else {
-            controller.volumeBar.slider('option', 'value', controller.vol);
-            media.setVolume(controller.vol / 100);
-          }
-        };
-      })(this));
+        });
+
+        media.bind('volumeupdate', (function(controller) {
+          return function(event, vol) {
+            controller.volumeBar.slider('option', 'value', (vol * 100));
+          };
+        })(this));
+
+        // Set the volume to match that of the player.
+        media.getVolume((function(controller) {
+          return function(vol) {
+            controller.volumeBar.slider('option', 'value', (vol * 100));
+          };
+        })(this));
+      }
     }
+    else {
 
-    // Setup the volume bar.
-    if (this.volumeBar) {
-
-      // Create the slider.
-      this.volumeBar.slider({
-        slide: function(event, ui) {
-          media.setVolume(ui.value / 100);
-        }
-      });
-
-      media.bind('volumeupdate', (function(controller) {
-        return function(event, vol) {
-          controller.volumeBar.slider('option', 'value', (vol * 100));
-        };
-      })(this));
-
-      // Set the volume to match that of the player.
-      media.getVolume((function(controller) {
-        return function(vol) {
-          controller.volumeBar.slider('option', 'value', (vol * 100));
-        };
-      })(this));
+      // Hide this controller.
+      this.hide();
     }
   });
 

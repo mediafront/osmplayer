@@ -263,9 +263,6 @@ minplayer.plugin.prototype.checkQueue = function(plugin) {
  * @return {object} The plugin object.
  */
 minplayer.plugin.prototype.trigger = function(type, data) {
-  data = data || {};
-  data.plugin = this;
-
   // Add this to our triggered array.
   this.triggered[type] = data;
 
@@ -321,7 +318,7 @@ minplayer.plugin.prototype.bind = function(type, data, fn) {
   });
 
   // Now see if this event has already been triggered.
-  if (this.triggered[type]) {
+  if (this.triggered.hasOwnProperty(type)) {
 
     // Go ahead and trigger the event.
     fn({target: this, data: data}, this.triggered[type]);
@@ -464,8 +461,8 @@ minplayer.bind = function(event, id, plugin, callback) {
   var i = selected.length;
   while (i--) {
     selected[i].bind(event, (function(context, plugin) {
-      return function(event, data) {
-        callback.call(context, data.plugin);
+      return function(event) {
+        callback.call(context, event.target);
       };
     })(this, selected[i]));
   }

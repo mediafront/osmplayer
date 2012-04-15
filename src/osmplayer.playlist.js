@@ -33,7 +33,10 @@ osmplayer.playlist.prototype.construct = function() {
     pageLimit: 10,
     autoNext: true,
     shuffle: false,
-    loop: false
+    loop: false,
+    hysteresis: 40,
+    scrollSpeed: 20,
+    scrollMode: 'auto'
   }, this.options);
 
   // Call the minplayer plugin constructor.
@@ -61,7 +64,79 @@ osmplayer.playlist.prototype.construct = function() {
   this.playlist = this.options.playlist;
 
   // Create the scroll bar.
-  this.scroll = this.create('scroll', 'osmplayer');
+  this.scroll = null;
+  if (this.elements.scroll.length > 0) {
+
+    // Make this component orientation agnostic.
+    var orient = {};
+    orient.pos = (this.options.vertical) ? 'y' : 'x';
+    orient.pagePos = (this.options.vertical ? 'pageY' : 'pageX');
+    orient.offset = (this.options.vertical ? 'top' : 'left');
+    orient.wrapperSize = (this.options.vertical ? 'wrapperH' : 'wrapperW');
+    orient.minScroll = (this.options.vertical ? 'minScrollY' : 'minScrollX');
+    orient.maxScroll = (this.options.vertical ? 'maxScrollY' : 'maxScrollX');
+
+    // Setup the iScroll component.
+    this.scroll = new iScroll(this.elements.scroll.eq(0)[0], {
+      hScroll: !this.options.vertical,
+      hScrollbar: !this.options.vertical,
+      vScroll: this.options.vertical,
+      vScrollbar: this.options.vertical,
+      hideScrollbar: true
+    });
+
+    // Use autoScroll for non-touch devices.
+    if ((this.options.scrollMode == 'auto') && !minplayer.hasTouch) {
+
+      // Bind to the mouse events for autoscrolling.
+      this.elements.list.bind('mousemove', (function(playlist) {
+        return function(event) {
+          event.preventDefault();
+          playlist.mousePos = event[orient.pagePos];
+          playlist.mousePos -= playlist.display.offset()[orient.offset];
+        };
+      })(this)).bind('mouseenter', (function(playlist) {
+        return function(event) {
+          event.preventDefault();
+          playlist.scrolling = true;
+          var setScroll = function() {
+            if (playlist.scrolling) {
+              var scrollSize = playlist.scroll[orient.wrapperSize];
+              var scrollMid = (scrollSize / 2);
+              var delta = playlist.mousePos - scrollMid;
+              if (Math.abs(delta) > playlist.options.hysteresis) {
+                var hyst = playlist.options.hysteresis;
+                hyst *= (delta > 0) ? -1 : 0;
+                delta = (playlist.options.scrollSpeed * (delta + hyst));
+                delta /= scrollMid;
+                var pos = playlist.scroll[orient.pos] - delta;
+                var min = playlist.scroll[orient.minScroll] || 0;
+                var max = playlist.scroll[orient.maxScroll];
+                if (pos >= min) {
+                  playlist.scrollTo(min);
+                }
+                else if (pos <= max) {
+                  playlist.scrollTo(max);
+                }
+                else {
+                  playlist.scrollTo(delta, true);
+                }
+              }
+
+              // Set timeout to try again.
+              setTimeout(setScroll, 30);
+            }
+          };
+          setScroll();
+        };
+      })(this)).bind('mouseleave', (function(playlist) {
+        return function(event) {
+          event.preventDefault();
+          playlist.scrolling = false;
+        };
+      })(this));
+    }
+  }
 
   // Create the pager.
   this.pager = this.create('pager', 'osmplayer');
@@ -93,6 +168,46 @@ osmplayer.playlist.prototype.construct = function() {
 
   // Say that we are ready.
   this.ready();
+};
+
+/**
+ * Wrapper around the scroll scrollTo method.
+ *
+ * @param {number} pos The position you would like to set the list.
+ * @param {boolean} relative If this is a relative position change.
+ */
+osmplayer.playlist.prototype.scrollTo = function(pos, relative) {
+  if (this.scroll) {
+    this.scroll.options.hideScrollbar = false;
+    if (this.options.vertical) {
+      this.scroll.scrollTo(0, pos, 0, relative);
+    }
+    else {
+      this.scroll.scrollTo(pos, 0, 0, relative);
+    }
+    this.scroll.options.hideScrollbar = true;
+  }
+};
+
+/**
+ * Refresh the scrollbar.
+ */
+osmplayer.playlist.prototype.refresh = function() {
+  // Refresh the sizes.
+  if (this.scroll) {
+
+    // Need to force the width of the list.
+    if (!this.options.vertical) {
+      var listSize = 0;
+      jQuery.each(this.elements.list.children(), function() {
+        listSize += jQuery(this).outerWidth();
+      });
+      this.elements.list.width(listSize);
+    }
+
+    this.scroll.refresh();
+    this.scroll.scrollTo(0, 0, 200);
+  }
 };
 
 /**
@@ -132,14 +247,14 @@ osmplayer.playlist.prototype.set = function(playlist, loadIndex) {
 
     var teaser = null;
     var numNodes = playlist.nodes.length;
-    this.scroll.elements.list.empty();
+    this.elements.list.empty();
     this.nodes = [];
 
     // Iterate through all the nodes.
     for (var index = 0; index < numNodes; index++) {
 
       // Create the teaser object.
-      teaser = this.create('teaser', 'osmplayer', this.scroll.elements.list);
+      teaser = this.create('teaser', 'osmplayer', this.elements.list);
       teaser.setNode(playlist.nodes[index]);
       teaser.bind('nodeLoad', (function(playlist, index) {
         return function(event, data) {
@@ -157,15 +272,15 @@ osmplayer.playlist.prototype.set = function(playlist, loadIndex) {
     }
 
     // Refresh the sizes.
-    this.scroll.refresh();
+    this.refresh();
 
     // Trigger that the playlist has loaded.
     this.trigger('playlistLoad', playlist);
   }
 
   // Show that we are no longer busy.
-  if (this.scroll.elements.playlist_busy) {
-    this.scroll.elements.playlist_busy.hide();
+  if (this.elements.playlist_busy) {
+    this.elements.playlist_busy.hide();
   }
 };
 
@@ -308,8 +423,8 @@ osmplayer.playlist.prototype.load = function(page, loadIndex) {
   }
 
   // Say that we are busy.
-  if (this.scroll.elements.playlist_busy) {
-    this.scroll.elements.playlist_busy.show();
+  if (this.elements.playlist_busy) {
+    this.elements.playlist_busy.show();
   }
 
   // Normalize the page.
@@ -370,8 +485,8 @@ osmplayer.playlist.prototype.load = function(page, loadIndex) {
     })(this),
     error: (function(playlist) {
       return function(XMLHttpRequest, textStatus, errorThrown) {
-        if (playlist.scroll.elements.playlist_busy) {
-          playlist.scroll.elements.playlist_busy.hide();
+        if (playlist.elements.playlist_busy) {
+          playlist.elements.playlist_busy.hide();
         }
         playlist.trigger('error', textStatus);
       }
