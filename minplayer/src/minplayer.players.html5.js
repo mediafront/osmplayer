@@ -166,6 +166,11 @@ minplayer.players.html5.prototype.addEvents = function() {
 minplayer.players.html5.prototype.onReady = function() {
   minplayer.players.base.prototype.onReady.call(this);
 
+  // Android just say we are loaded here.
+  if (minplayer.isAndroid) {
+    this.onLoaded();
+  }
+
   // iOS devices are strange in that they don't autoload.
   if (minplayer.isIDevice) {
     this.play();
@@ -203,6 +208,10 @@ minplayer.players.html5.prototype.create = function() {
   // Fix the fluid width and height.
   element.eq(0)[0].setAttribute('width', '100%');
   element.eq(0)[0].setAttribute('height', '100%');
+  element.eq(0)[0].setAttribute('autobuffer', true);
+  var option = this.options.autoload ? 'auto' : 'metadata';
+  option = minplayer.isIDevice ? 'metadata' : option;
+  element.eq(0)[0].setAttribute('preload', option);
   return element;
 };
 
@@ -229,8 +238,6 @@ minplayer.players.html5.prototype.load = function(file) {
       src = jQuery('source', this.elements.media).eq(0).attr('src');
     }
 
-    console.log(file);
-
     // Only swap out if the new file is different from the source.
     if (src != file.path) {
 
@@ -242,11 +249,6 @@ minplayer.players.html5.prototype.load = function(file) {
 
       // Add the events again.
       this.addEvents();
-
-      // Set the autoload.
-      var option = this.options.autoload ? 'auto' : 'metadata';
-      option = minplayer.isIDevice ? 'metadata' : option;
-      this.elements.media.attr('preload', option);
 
       // Change the source...
       var code = '<source src="' + file.path + '"></source>';
