@@ -3702,7 +3702,7 @@ minplayer.players.youtube.prototype.hasPlayLoader = function() {
 };
 
 /**
- * Determines if the player should show the playloader.
+ * Determines if the player should show the controller.
  *
  * @return {bool} If this player implements its own playLoader.
  */
@@ -3753,7 +3753,7 @@ minplayer.players.youtube.prototype.create = function() {
     // Add the parameters to the src.
     src += '?' + jQuery.param({
       'wmode': 'opaque',
-      'controls': 0,
+      'controls': minplayer.isAndroid ? 1 : 0,
       'enablejsapi': minplayer.isIDevice ? 0 : 1,
       'origin': origin
     });
