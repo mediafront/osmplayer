@@ -291,9 +291,11 @@ minplayer.display.prototype.getElements = function() {
       ]
     ];
     for (var i = 0, l = methodMap.length; i < l; i++) {
-      var val = methodMap[i];
-      if (val[1] in document) {
-        return val;
+      if (methodMap.hasOwnProperty(i)) {
+        var val = methodMap[i];
+        if (val[1] in document) {
+          return val;
+        }
       }
     }
   })();

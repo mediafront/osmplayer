@@ -221,30 +221,32 @@ minplayer.plugin.prototype.checkQueue = function(plugin) {
   // Iterate through all the queues.
   var length = minplayer.queue.length;
   for (i = 0; i < length; i++) {
+    if (minplayer.queue.hasOwnProperty(i)) {
+      // Get the queue.
+      q = minplayer.queue[i];
 
-    // Get the queue.
-    q = minplayer.queue[i];
+      // Now check to see if this queue is about us.
+      check = !q.id && !q.plugin;
+      check |= (q.plugin == plugin.name);
+      check &= (!q.id || (q.id == this.options.id));
 
-    // Now check to see if this queue is about us.
-    check = !q.id && !q.plugin;
-    check |= (q.plugin == plugin.name) && (!q.id || (q.id == this.options.id));
+      // If the check passes...
+      if (check) {
+        check = minplayer.bind.call(
+          q.context,
+          q.event,
+          this.options.id,
+          plugin.name,
+          q.callback
+        );
+      }
 
-    // If the check passes...
-    if (check) {
-      check = minplayer.bind.call(
-        q.context,
-        q.event,
-        this.options.id,
-        plugin.name,
-        q.callback
-      );
-    }
+      // Add the queue back if it doesn't check out.
+      if (!check) {
 
-    // Add the queue back if it doesn't check out.
-    if (!check) {
-
-      // Add this back to the queue.
-      newqueue.push(q);
+        // Add this back to the queue.
+        newqueue.push(q);
+      }
     }
   }
 
@@ -269,14 +271,18 @@ minplayer.plugin.prototype.trigger = function(type, data) {
   // Check to make sure the queue for this type exists.
   if (this.queue.hasOwnProperty(type)) {
 
-    var i = 0, queue = {};
+    var i = 0, queue = {}, queuetype = this.queue[type];
 
     // Iterate through all the callbacks in this queue.
-    for (i in this.queue[type]) {
+    for (i in queuetype) {
 
-      // Setup the event object, and call the callback.
-      queue = this.queue[type][i];
-      queue.callback({target: this, data: queue.data}, data);
+      // Check to make sure the queue index exists.
+      if (queuetype.hasOwnProperty(i)) {
+
+        // Setup the event object, and call the callback.
+        queue = queuetype[i];
+        queue.callback({target: this, data: queue.data}, data);
+      }
     }
   }
 
@@ -349,19 +355,24 @@ minplayer.plugin.prototype.unbind = function(type, fn) {
   // Set the lock.
   this.lock = true;
 
+  // Get the queue type.
+  var queuetype = this.queue.hasOwnProperty(type) ? this.queue[type] : null;
+
   if (!type) {
     this.queue = {};
   }
   else if (!fn) {
     this.queue[type] = [];
   }
-  else {
+  else if (queuetype) {
     // Iterate through all the callbacks and search for equal callbacks.
     var i = 0, queue = {};
-    for (i in this.queue[type]) {
-      if (this.queue[type][i].callback === fn) {
-        queue = this.queue[type].splice(1, 1);
-        delete queue;
+    for (i in queuetype) {
+      if (queuetype.hasOwnProperty(i)) {
+        if (queuetype[i].callback === fn) {
+          queue = this.queue[type].splice(1, 1);
+          delete queue;
+        }
       }
     }
   }

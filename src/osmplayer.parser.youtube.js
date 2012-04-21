@@ -43,27 +43,29 @@ osmplayer.parser.youtube = {
 
     // Iterate through the items and parse it.
     for (var index in data.items) {
-      var item = data.items[index];
-      playlist.nodes.push({
-        title: item.title,
-        description: item.description,
-        mediafiles: {
-          image: {
-            'thumbnail': {
-              path: item.thumbnail.sqDefault
+      if (data.items.hasOwnProperty(index)) {
+        var item = data.items[index];
+        playlist.nodes.push({
+          title: item.title,
+          description: item.description,
+          mediafiles: {
+            image: {
+              'thumbnail': {
+                path: item.thumbnail.sqDefault
+              },
+              'image': {
+                path: item.thumbnail.hqDefault
+              }
             },
-            'image': {
-              path: item.thumbnail.hqDefault
-            }
-          },
-          media: {
-            'media': {
-              player: 'youtube',
-              id: item.id
+            media: {
+              'media': {
+                player: 'youtube',
+                id: item.id
+              }
             }
           }
-        }
-      });
+        });
+      }
     }
 
     return playlist;
