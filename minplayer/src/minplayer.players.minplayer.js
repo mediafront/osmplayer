@@ -56,7 +56,9 @@ window.onFlashPlayerUpdate = function(id, eventType) {
  * @param {string} debug The debug string.
  */
 window.onFlashPlayerDebug = function(debug) {
-  minplayer.console.log(debug);
+  if (console && console.log) {
+    console.log(debug);
+  }
 };
 
 /**

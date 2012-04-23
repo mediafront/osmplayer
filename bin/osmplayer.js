@@ -2322,11 +2322,6 @@ minplayer.prototype = new minplayer.display();
 minplayer.prototype.constructor = minplayer;
 
 /**
- * Define a way to debug.
- */
-minplayer.console = console || {log: function(data) {}};
-
-/**
  * @see minplayer.plugin.construct
  */
 minplayer.prototype.construct = function() {
@@ -4356,7 +4351,9 @@ window.onFlashPlayerUpdate = function(id, eventType) {
  * @param {string} debug The debug string.
  */
 window.onFlashPlayerDebug = function(debug) {
-  minplayer.console.log(debug);
+  if (console && console.log) {
+    console.log(debug);
+  }
 };
 
 /**

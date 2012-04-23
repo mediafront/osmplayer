@@ -59,11 +59,6 @@ minplayer.prototype = new minplayer.display();
 minplayer.prototype.constructor = minplayer;
 
 /**
- * Define a way to debug.
- */
-minplayer.console = console || {log: function(data) {}};
-
-/**
  * @see minplayer.plugin.construct
  */
 minplayer.prototype.construct = function() {

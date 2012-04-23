@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>minPlayer</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="minPlayer : A minimalistic, plugin-based &quot;core&quot; media player for the web." />
 
     <!-- Include jQuery and jQuery UI -->
     <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.js"></script>
@@ -54,17 +55,168 @@
         });
       });
     </script>
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>minPlayer</title>
   </head>
+
   <body>
-    <h1>minPlayer</h1>
-    <p>Below are some examples of the minPlayer in action.  It is creating a common API to interact with all different types of players, including Vimeo and YouTube.</p>
-    <h2>h264 Example</h2>
-    <video id="h264" src="http://mediafront.org/sites/default/files/video/The_Living_Sky___Time-Lapse__HD.mp4"></video>
-    <h2>YouTube Example</h2>
-    <video id="youtube" src="http://www.youtube.com/watch?v=hLQl3WQQoQ0"></video>
-    <h2>Two YouTube Players on same page</h2>
-    <video id="youtube2" src="http://www.youtube.com/watch?v=dTAAsCNK7RA"></video>
-    <h2>Vimeo Example</h2>
-    <video id="vimeo" src="http://vimeo.com/5606758"></video>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/travist/minplayer">Fork Me on GitHub</a>
+
+          <h1 id="project_title">minPlayer</h1>
+          <h2 id="project_tagline">A minimalistic, plugin-based &quot;core&quot; media player for the web.</h2>
+
+          <section id="downloads">
+            <a class="zip_download_link" href="https://github.com/travist/minplayer/zipball/master">Download this project as a .zip file</a>
+            <a class="tar_download_link" href="https://github.com/travist/minplayer/tarball/master">Download this project as a tar.gz file</a>
+          </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>minPlayer - Because less IS more.</h1>
+
+<p>The goal of this project is to provide a slim, well documented, object oriented,
+plugin-based "core" media player in which other players and libraries can build
+on top of.  It is written using object oriented JavaScript and is continuously
+integrated using JSLint, JSDoc, and Google Closure.</p>
+
+<h2>h264 Example</h2>
+<video id="h264" src="http://mediafront.org/sites/default/files/video/The_Living_Sky___Time-Lapse__HD.mp4"></video>
+<h2>YouTube Example</h2>
+<video id="youtube" src="http://www.youtube.com/watch?v=hLQl3WQQoQ0"></video>
+<h2>Two YouTube Players on same page</h2>
+<video id="youtube2" src="http://www.youtube.com/watch?v=dTAAsCNK7RA"></video>
+<h2>Vimeo Example</h2>
+<video id="vimeo" src="http://vimeo.com/5606758"></video>
+
+<h2>Multiple players - One single API.</h2>
+
+<p>It also allows for hot-swappable 3rd party API players by providing a common
+API for all of these players so that they can be utilized in the same manner.
+This means that once you develop for the minPlayer, one can easily bring in a
+different player an your code will still function as it would for all the
+others.  Out of the box, this player provides a common API for YouTube, Vimeo,
+HTML5, and Flash with more on the way.</p>
+
+<h2>Everything is a plugin</h2>
+
+<p>Since this is a plugin-based media player, every displayable class must derive
+from the plugin class, thereby, making it a plugin.  This includes the media
+player itself.  This plugin system is highly flexible to be able to handle
+just about any type of plugin imaginable, and allows for every plugin to have
+direct dependeny-injected control over any other plugin within the media player.</p>
+
+<h2>Complete User Interface &amp; Business Logic separation</h2>
+
+<p>One common complaint for many media solutions out there is that they hijack the
+DOM and build out their own controls to provide consistency amongst different
+browsers.  They do this, however, within the core player which completely binds
+the user interface to the business logic of the media player.  The minPlayer
+takes a different approach by keeping ALL user interface functionality within
+the "templates" directory, where each template essentially derives from the base
+Business logic classes only to provide the user interface aspects of that control.
+This allows for easy templating of the media player besides just overriding the
+CSS like current media solutions do today.</p>
+
+<h2>No "Features"!</h2>
+
+<p>I am pleased to say that this media player does NOT have many features, and this
+is on purpose.  Since this is a "core" player, it does not have any features
+other than what is critical in presenting your media.  Any additional "bling"
+will be added to this player from different repositories and from different
+players that extend this "core" functionality.  This methodology will keep this
+"core" media solution lean &amp; highly functional.</p>
+
+<h2>API</h2>
+
+<p>The API for minPlayer is very simple.  It revolves around a single API that is
+able to retrieve any plugin even before that plugin is created.  By doing this,
+you can have complete control over any plugin within the minPlayer.  This API
+is simply called</p>
+
+<pre><code>minplayer.get();
+</code></pre>
+
+<p>This API can take up to three different argument with each argument providing
+different usage.  The code docs for this function are as follows...</p>
+
+<pre><code>/**
+ * The main API for minPlayer.
+ *
+ * Provided that this function takes three parameters, there are 8 different
+ * ways to use this api.
+ *
+ *   id (0x100) - You want a specific player.
+ *   plugin (0x010) - You want a specific plugin.
+ *   callback (0x001) - You only want it when it is ready.
+ *
+ *   000 - You want all plugins from all players, ready or not.
+ *
+ *          var instances = minplayer.get();
+ *
+ *   001 - You want all plugins from all players, but only when ready.
+ *
+ *          minplayer.get(function(plugin) {
+ *            // Code goes here.
+ *          });
+ *
+ *   010 - You want a specific plugin from all players, ready or not...
+ *
+ *          var medias = minplayer.get(null, 'media');
+ *
+ *   011 - You want a specific plugin from all players, but only when ready.
+ *
+ *          minplayer.get('player', function(player) {
+ *            // Code goes here.
+ *          });
+ *
+ *   100 - You want all plugins from a specific player, ready or not.
+ *
+ *          var plugins = minplayer.get('player_id');
+ *
+ *   101 - You want all plugins from a specific player, but only when ready.
+ *
+ *          minplayer.get('player_id', null, function(plugin) {
+ *            // Code goes here.
+ *          });
+ *
+ *   110 - You want a specific plugin from a specific player, ready or not.
+ *
+ *          var plugin = minplayer.get('player_id', 'media');
+ *
+ *   111 - You want a specific plugin from a specific player, only when ready.
+ *
+ *          minplayer.get('player_id', 'media', function(media) {
+ *            // Code goes here.
+ *          });
+ *
+ * @this The context in which this function was called.
+ * @param {string} id The ID of the widget to get the plugins from.
+ * @param {string} plugin The name of the plugin.
+ * @param {function} callback Called when the plugin is ready.
+ * @return {object} The plugin object if it is immediately available.
+ */
+minplayer.get = function(id, plugin, callback) {
+};
+</code></pre>
+
+<p>Thanks and enjoy minPlayer.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">minPlayer maintained by <a href="https://github.com/travist">travist</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
   </body>
 </html>
