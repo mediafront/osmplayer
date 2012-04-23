@@ -3370,8 +3370,8 @@ minplayer.players.minplayer.prototype.onMediaUpdate = function(eventType) {
 /**
  * Resets all variables.
  */
-minplayer.players.minplayer.prototype.reset = function() {
-  minplayer.players.flash.prototype.reset.call(this);
+minplayer.players.minplayer.prototype.clear = function() {
+  minplayer.players.flash.prototype.clear.call(this);
   this.minplayerloaded = this.options.autoplay;
 };
 
@@ -3381,7 +3381,6 @@ minplayer.players.minplayer.prototype.reset = function() {
  */
 minplayer.players.minplayer.prototype.load = function(file) {
   if (minplayer.players.flash.prototype.load.call(this, file)) {
-    this.minplayerloaded = this.options.autoplay;
     this.player.loadMedia(file.path, file.stream);
     return true;
   }
