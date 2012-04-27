@@ -3673,47 +3673,56 @@ minplayer.players.youtube.prototype.create = function() {
   this.playerId = this.options.id + '-player';
 
   // Poll until the YouTube API is ready.
-  this.poll((function(player) {
+  window.onYouTubePlayerAPIReady = (function(player) {
     return function() {
-      var element = jQuery('#' + player.playerId);
-      var ready = (window.YT && element.length > 0);
-      if (ready) {
-        // Determine the origin of this script.
-        var origin = location.protocol;
-        origin += '//' + location.hostname;
-        origin += (location.port && ':' + location.port);
+      player.poll(function() {
+        var ready = jQuery('#' + player.playerId).length > 0;
+        if (ready) {
+          // Determine the origin of this script.
+          var origin = location.protocol;
+          origin += '//' + location.hostname;
+          origin += (location.port && ':' + location.port);
 
-        // Create the player.
-        player.player = new window.YT.Player(player.playerId, {
-          height: '100%',
-          width: '100%',
-          frameborder: 0,
-          videoId: player.mediaFile.id,
-          playerVars: {
-            enablejsapi: minplayer.isIDevice ? 0 : 1,
-            origin: origin,
-            wmode: 'opaque',
-            controls: 0
-          },
-          events: {
-            'onReady': function(event) {
-              player.onReady(event);
-            },
-            'onStateChange': function(event) {
-              player.onPlayerStateChange(event);
-            },
-            'onPlaybackQualityChange': function(newQuality) {
-              player.onQualityChange(newQuality);
-            },
-            'onError': function(errorCode) {
-              player.onError(errorCode);
-            }
+          var playerVars = {};
+          if (minplayer.isIDevice) {
+            playerVars.origin = origin;
           }
-        });
-      }
-      return !ready;
+          else {
+            playerVars = {
+              enablejsapi: minplayer.isIDevice ? 0 : 1,
+              origin: origin,
+              wmode: 'opaque',
+              controls: minplayer.isAndroid ? 1 : 0
+            };
+          }
+
+          // Create the player.
+          player.player = new YT.Player(player.playerId, {
+            height: '100%',
+            width: '100%',
+            frameborder: 0,
+            videoId: player.mediaFile.id,
+            playerVars: playerVars,
+            events: {
+              'onReady': function(event) {
+                player.onReady(event);
+              },
+              'onStateChange': function(event) {
+                player.onPlayerStateChange(event);
+              },
+              'onPlaybackQualityChange': function(newQuality) {
+                player.onQualityChange(newQuality);
+              },
+              'onError': function(errorCode) {
+                player.onError(errorCode);
+              }
+            }
+          });
+        }
+        return !ready;
+      }, 200);
     };
-  })(this), 200);
+  })(this);
 
   // Return the player.
   return jQuery(document.createElement('div')).attr({
