@@ -3226,6 +3226,15 @@ minplayer.players.base.prototype.construct = function() {
   // Get the player object...
   this.player = this.getPlayer();
 
+  // Toggle playing if they click.
+  minplayer.click(this.display, (function(player) {
+    return function() {
+      if (player.playing) {
+        player.pause();
+      }
+    };
+  })(this));
+
   // Bind to key events...
   jQuery(document).bind('keydown', (function(player) {
     return function(event) {
@@ -4360,28 +4369,7 @@ minplayer.players.minplayer.getPriority = function() {
  * @return {boolean} If this player can play this media type.
  */
 minplayer.players.minplayer.canPlay = function(file) {
-  switch (file.mimetype) {
-    case 'video/mp4':
-    case 'video/x-mp4':
-    case 'video/m4v':
-    case 'video/x-m4v':
-    case 'video/x-webm':
-    case 'video/webm':
-    case 'application/octet-stream':
-    case 'video/quicktime':
-    case 'video/3gpp2':
-    case 'video/3gpp':
-    case 'application/x-shockwave-flash':
-    case 'audio/mpeg':
-    case 'audio/mp4':
-    case 'audio/aac':
-    case 'audio/vnd.wave':
-    case 'audio/x-ms-wma':
-      return true;
-
-    default:
-      return false;
-  }
+  return (file.type == 'video' || file.type == 'audio');
 };
 
 /**
@@ -4661,48 +4649,6 @@ minplayer.players.youtube.getMediaId = function(file) {
 };
 
 /**
- * Register this youtube player so that multiple players can be present
- * on the same page without event collision.
- */
-minplayer.players.youtube.prototype.register = function() {
-
-  /**
-   * Register the standard youtube api ready callback.
-   */
-  window.onYouTubePlayerAPIReady = function() {
-
-    // Iterate over each media player.
-    jQuery.each(minplayer.get(null, 'player'), function(id, player) {
-
-      // Make sure this is the youtube player.
-      if (player.currentPlayer == 'youtube') {
-
-        // Create a new youtube player object for this instance only.
-        var playerId = id + '-player';
-
-        // Set this players media.
-        player.media.player = new YT.Player(playerId, {
-          events: {
-            'onReady': function(event) {
-              player.media.onReady(event);
-            },
-            'onStateChange': function(event) {
-              player.media.onPlayerStateChange(event);
-            },
-            'onPlaybackQualityChange': function(newQuality) {
-              player.media.onQualityChange(newQuality);
-            },
-            'onError': function(errorCode) {
-              player.media.onError(errorCode);
-            }
-          }
-        });
-      }
-    });
-  }
-};
-
-/**
  * Translates the player state for the YouTube API player.
  *
  * @param {number} playerState The YouTube player state.
@@ -4795,51 +4741,60 @@ minplayer.players.youtube.prototype.create = function() {
 
   // Insert the YouTube iframe API player.
   var tag = document.createElement('script');
-  tag.src = 'http://www.youtube.com/player_api?enablejsapi=1';
+  tag.src = 'https://www.youtube.com/player_api';
   var firstScriptTag = document.getElementsByTagName('script')[0];
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-  // Now register this player.
-  this.register();
+  // Get the player ID.
+  this.playerId = this.options.id + '-player';
 
-  // Create the iframe for this player.
-  var iframe = document.createElement('iframe');
-  iframe.setAttribute('id', this.options.id + '-player');
-  iframe.setAttribute('class', 'youtube-player');
-  iframe.setAttribute('type', 'text/html');
-  iframe.setAttribute('width', '100%');
-  iframe.setAttribute('height', '100%');
-  iframe.setAttribute('frameborder', '0');
+  // Poll until the YouTube API is ready.
+  this.poll((function(player) {
+    return function() {
+      var element = jQuery('#' + player.playerId);
+      var ready = (window.YT && element.length > 0);
+      if (ready) {
+        // Determine the origin of this script.
+        var origin = location.protocol;
+        origin += '//' + location.hostname;
+        origin += (location.port && ':' + location.port);
 
-  // Get the source.
-  var src = 'http://www.youtube.com/embed/';
-  src += this.mediaFile.id;
-
-  // Determine the origin of this script.
-  var origin = location.protocol;
-  origin += '//' + location.hostname;
-  origin += (location.port && ':' + location.port);
-
-  if (minplayer.isIDevice) {
-    src += '?' + jQuery.param({
-      'origin': origin
-    });
-  }
-  else {
-    // Add the parameters to the src.
-    src += '?' + jQuery.param({
-      'wmode': 'opaque',
-      'controls': minplayer.isAndroid ? 1 : 0,
-      'enablejsapi': minplayer.isIDevice ? 0 : 1,
-      'origin': origin
-    });
-  }
-
-  // Set the source of the iframe.
-  iframe.setAttribute('src', src);
+        // Create the player.
+        player.player = new window.YT.Player(player.playerId, {
+          height: '100%',
+          width: '100%',
+          frameborder: 0,
+          videoId: player.mediaFile.id,
+          playerVars: {
+            enablejsapi: minplayer.isIDevice ? 0 : 1,
+            origin: origin,
+            wmode: 'opaque',
+            controls: 0
+          },
+          events: {
+            'onReady': function(event) {
+              player.onReady(event);
+            },
+            'onStateChange': function(event) {
+              player.onPlayerStateChange(event);
+            },
+            'onPlaybackQualityChange': function(newQuality) {
+              player.onQualityChange(newQuality);
+            },
+            'onError': function(errorCode) {
+              player.onError(errorCode);
+            }
+          }
+        });
+      }
+      return !ready;
+    };
+  })(this), 200);
 
   // Return the player.
-  return iframe;
+  return jQuery(document.createElement('div')).attr({
+    id: this.playerId
+  });
 };
 
 /**

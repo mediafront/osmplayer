@@ -74,28 +74,7 @@ minplayer.players.minplayer.getPriority = function() {
  * @return {boolean} If this player can play this media type.
  */
 minplayer.players.minplayer.canPlay = function(file) {
-  switch (file.mimetype) {
-    case 'video/mp4':
-    case 'video/x-mp4':
-    case 'video/m4v':
-    case 'video/x-m4v':
-    case 'video/x-webm':
-    case 'video/webm':
-    case 'application/octet-stream':
-    case 'video/quicktime':
-    case 'video/3gpp2':
-    case 'video/3gpp':
-    case 'application/x-shockwave-flash':
-    case 'audio/mpeg':
-    case 'audio/mp4':
-    case 'audio/aac':
-    case 'audio/vnd.wave':
-    case 'audio/x-ms-wma':
-      return true;
-
-    default:
-      return false;
-  }
+  return (file.type == 'video' || file.type == 'audio');
 };
 
 /**
