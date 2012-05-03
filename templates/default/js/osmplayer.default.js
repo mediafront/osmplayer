@@ -6,6 +6,11 @@
   // templated player.
   osmplayer[template] = function(context, options) {
 
+    // Make sure we provide default options...
+    this.options = jQuery.extend({
+      controllerOnly: false
+    }, this.options);
+
     // Derive from osmplayer.
     osmplayer.call(this, context, options);
   };
@@ -15,6 +20,16 @@
    */
   osmplayer[template].prototype = new osmplayer();
   osmplayer[template].prototype.constructor = osmplayer[template];
+
+  /**
+   * The player constructor.
+   */
+  osmplayer[template].prototype.construct = function() {
+    osmplayer.prototype.construct.call(this);
+    if (this.options.controllerOnly) {
+      this.display.addClass('controller-only');
+    }
+  };
 
   /**
    * Return the display for this plugin.

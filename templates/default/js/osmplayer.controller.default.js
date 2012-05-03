@@ -24,19 +24,21 @@
    */
   osmplayer.controller[template].prototype.construct = function() {
     minplayer.controller.prototype.construct.call(this);
-    this.get('player', function(player) {
-      this.get('media', function(media) {
-        if (!media.hasController()) {
-          minplayer.showThenHide(this.display, 5000, function(shown) {
-            var op = shown ? 'addClass' : 'removeClass';
-            player.display[op]('with-controller');
-          });
-        }
-        else {
-          player.display.addClass('with-controller');
-        }
+    if (!this.options.controllerOnly) {
+      this.get('player', function(player) {
+        this.get('media', function(media) {
+          if (!media.hasController()) {
+            minplayer.showThenHide(this.display, 5000, function(shown) {
+              var op = shown ? 'addClass' : 'removeClass';
+              player.display[op]('with-controller');
+            });
+          }
+          else {
+            player.display.addClass('with-controller');
+          }
+        });
       });
-    });
+    }
   }
 
   /**
