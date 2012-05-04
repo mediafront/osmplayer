@@ -39,10 +39,6 @@
   height:100%;
 }
 
-.player-ui.controller-only .minplayer-default-display {
-  display:none !important;
-}
-
 .player-ui .minplayer-default-display video {
   width: 100%;
   height: 100%;
