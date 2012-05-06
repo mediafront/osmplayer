@@ -4646,9 +4646,9 @@ minplayer.players.youtube.canPlay = function(file) {
  * @return {string} The ID for the provided media.
  */
 minplayer.players.youtube.getMediaId = function(file) {
-  var regex = /^http[s]?\:\/\/(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9\-]+)/i;
-  if (file.path.search(regex) === 0) {
-    return file.path.match(regex)[2];
+  var reg = /^http[s]?\:\/\/(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_\-]+)/i;
+  if (file.path.search(reg) === 0) {
+    return file.path.match(reg)[2];
   }
   else {
     return file.path;
