@@ -131,6 +131,11 @@
     var icon = this.options.vertical ? (show ? 'e' : 'w') : (show ? 's' : 'n');
     var corner = this.options.vertical ? 'ui-corner-left' : 'ui-corner-top';
 
+    // Remove the playlist if we need to.
+    if (this.options.disablePlaylist || !this.options.playlist) {
+      this.display.remove();
+    }
+
     this.display.addClass(cName);
     var hideShow = jQuery('.osmplayer-' + template + '-hide-show-playlist', this.display);
     hideShow.addClass(corner);

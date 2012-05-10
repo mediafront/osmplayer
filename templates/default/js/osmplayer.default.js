@@ -81,21 +81,13 @@
       minplayer = null;
     }
 
-    // Get the playlist component.
-    var playlist = jQuery('.osmplayer-' + template + '-playlist', this.display);
-    if (this.options.disablePlaylist) {
-      playlist.remove();
-      playlist = null;
-    }
-
     return jQuery.extend(elements, {
       player:this.display,
       minplayer: minplayer,
       display:jQuery('.minplayer-' + template + '-display', this.display),
       media:jQuery('.minplayer-' + template + '-media', this.display),
       error:jQuery('.minplayer-' + template + '-error', this.display),
-      logo:jQuery('.minplayer-' + template + '-logo', this.display),
-      playlist: playlist
+      logo:jQuery('.minplayer-' + template + '-logo', this.display)
     });
   };
 })('default', osmplayer);
