@@ -1490,8 +1490,14 @@ minplayer.plugin.prototype.addPlugin = function(name, plugin) {
       minplayer.plugins[this.options.id] = {};
     }
 
+    if (!minplayer.plugins[this.options.id][name]) {
+
+      // Add the plugins array.
+      minplayer.plugins[this.options.id][name] = [];
+    }
+
     // Add this plugin.
-    minplayer.plugins[this.options.id][name] = plugin;
+    minplayer.plugins[this.options.id][name].push(plugin);
 
     // Now check the queue for this plugin.
     this.checkQueue(plugin);
@@ -1769,24 +1775,32 @@ minplayer.bind = function(event, id, plugin, callback) {
   // Determine the selected plugins.
   var selected = [];
 
+  // Create a quick add.
+  var addSelected = function(id, plugin) {
+    if (plugins.hasOwnProperty(id) && plugins[id].hasOwnProperty(plugin)) {
+      var i = plugins[id][plugin].length;
+      while (i--) {
+        selected.push(plugins[id][plugin][i]);
+      }
+    }
+  };
+
   // If they provide id && plugin
-  if (id && plugin && plugins[id] && plugins[id][plugin]) {
-    selected.push(plugins[id][plugin]);
+  if (id && plugin) {
+    addSelected(id, plugin);
   }
 
   // If they provide no id but a plugin.
   else if (!id && plugin) {
     for (var id in plugins) {
-      if (plugins[id].hasOwnProperty(plugin)) {
-        selected.push(plugins[id][plugin]);
-      }
+      addSelected(id, plugin);
     }
   }
 
   // If they provide an id but no plugin.
   else if (id && !plugin && plugins[id]) {
     for (var plugin in plugins[id]) {
-      selected.push(plugins[id][plugin]);
+      addSelected(id, plugin);
     }
   }
 
@@ -1794,7 +1808,7 @@ minplayer.bind = function(event, id, plugin, callback) {
   else if (!id && !plugin) {
     for (var id in plugins) {
       for (var plugin in plugins[id]) {
-        selected.push(plugins[id][plugin]);
+        addSelected(id, plugin);
       }
     }
   }
@@ -1802,11 +1816,11 @@ minplayer.bind = function(event, id, plugin, callback) {
   // Iterate through the selected plugins and bind.
   var i = selected.length;
   while (i--) {
-    selected[i].bind(event, (function(context, plugin) {
+    selected[i].bind(event, (function(context) {
       return function(event) {
         callback.call(context, event.target);
       };
-    })(this, selected[i]));
+    })(this));
   }
 
   // See if there were any plugins selected.
@@ -1916,10 +1930,13 @@ minplayer.get = function(id, plugin, callback) {
   }
   // 0x010
   else if (!id && plugin && !callback) {
-    var plugin_types = {};
+    var plugin_types = [];
     for (var id in plugins) {
-      if (plugins[id].hasOwnProperty(plugin)) {
-        plugin_types[id] = plugins[id][plugin];
+      if (plugins.hasOwnProperty(id) && plugins[id].hasOwnProperty(plugin)) {
+        var i = plugins[id][plugin].length;
+        while (i--) {
+          plugin_types.push(plugins[id][plugin][i]);
+        }
       }
     }
     return plugin_types;
@@ -1959,15 +1976,6 @@ minplayer.display.prototype.constructor = minplayer.display;
  */
 minplayer.display.prototype.getDisplay = function() {
   return this.context;
-};
-
-/**
- * @see minplayer.plugin.isValid
- *
- * @return {boolean} TRUE if the plugin display is valid.
- */
-minplayer.display.prototype.isValid = function() {
-  return minplayer.plugin.prototype.isValid.call(this) && !!this.display.length;
 };
 
 /**
@@ -4343,8 +4351,9 @@ minplayer.players.minplayer.prototype.constructor = minplayer.players.minplayer;
  */
 window.onFlashPlayerReady = function(id) {
   var media = minplayer.get(id, 'media');
-  if (media) {
-    media.onReady();
+  var i = media.length;
+  while (i--) {
+    media[i].onReady();
   }
 };
 
@@ -4356,8 +4365,9 @@ window.onFlashPlayerReady = function(id) {
  */
 window.onFlashPlayerUpdate = function(id, eventType) {
   var media = minplayer.get(id, 'media');
-  if (media) {
-    media.onMediaUpdate(eventType);
+  var i = media.length;
+  while (i--) {
+    media[i].onMediaUpdate(eventType);
   }
 };
 
