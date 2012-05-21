@@ -32,8 +32,9 @@ minplayer.players.minplayer.prototype.constructor = minplayer.players.minplayer;
  */
 window.onFlashPlayerReady = function(id) {
   var media = minplayer.get(id, 'media');
-  if (media) {
-    media.onReady();
+  var i = media.length;
+  while (i--) {
+    media[i].onReady();
   }
 };
 
@@ -45,8 +46,9 @@ window.onFlashPlayerReady = function(id) {
  */
 window.onFlashPlayerUpdate = function(id, eventType) {
   var media = minplayer.get(id, 'media');
-  if (media) {
-    media.onMediaUpdate(eventType);
+  var i = media.length;
+  while (i--) {
+    media[i].onMediaUpdate(eventType);
   }
 };
 

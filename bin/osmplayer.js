@@ -1490,8 +1490,14 @@ minplayer.plugin.prototype.addPlugin = function(name, plugin) {
       minplayer.plugins[this.options.id] = {};
     }
 
+    if (!minplayer.plugins[this.options.id][name]) {
+
+      // Add the plugins array.
+      minplayer.plugins[this.options.id][name] = [];
+    }
+
     // Add this plugin.
-    minplayer.plugins[this.options.id][name] = plugin;
+    minplayer.plugins[this.options.id][name].push(plugin);
 
     // Now check the queue for this plugin.
     this.checkQueue(plugin);
@@ -1769,24 +1775,32 @@ minplayer.bind = function(event, id, plugin, callback) {
   // Determine the selected plugins.
   var selected = [];
 
+  // Create a quick add.
+  var addSelected = function(id, plugin) {
+    if (plugins.hasOwnProperty(id) && plugins[id].hasOwnProperty(plugin)) {
+      var i = plugins[id][plugin].length;
+      while (i--) {
+        selected.push(plugins[id][plugin][i]);
+      }
+    }
+  };
+
   // If they provide id && plugin
-  if (id && plugin && plugins[id] && plugins[id][plugin]) {
-    selected.push(plugins[id][plugin]);
+  if (id && plugin) {
+    addSelected(id, plugin);
   }
 
   // If they provide no id but a plugin.
   else if (!id && plugin) {
     for (var id in plugins) {
-      if (plugins[id].hasOwnProperty(plugin)) {
-        selected.push(plugins[id][plugin]);
-      }
+      addSelected(id, plugin);
     }
   }
 
   // If they provide an id but no plugin.
   else if (id && !plugin && plugins[id]) {
     for (var plugin in plugins[id]) {
-      selected.push(plugins[id][plugin]);
+      addSelected(id, plugin);
     }
   }
 
@@ -1794,7 +1808,7 @@ minplayer.bind = function(event, id, plugin, callback) {
   else if (!id && !plugin) {
     for (var id in plugins) {
       for (var plugin in plugins[id]) {
-        selected.push(plugins[id][plugin]);
+        addSelected(id, plugin);
       }
     }
   }
@@ -1802,11 +1816,11 @@ minplayer.bind = function(event, id, plugin, callback) {
   // Iterate through the selected plugins and bind.
   var i = selected.length;
   while (i--) {
-    selected[i].bind(event, (function(context, plugin) {
+    selected[i].bind(event, (function(context) {
       return function(event) {
         callback.call(context, event.target);
       };
-    })(this, selected[i]));
+    })(this));
   }
 
   // See if there were any plugins selected.
@@ -1916,10 +1930,13 @@ minplayer.get = function(id, plugin, callback) {
   }
   // 0x010
   else if (!id && plugin && !callback) {
-    var plugin_types = {};
+    var plugin_types = [];
     for (var id in plugins) {
-      if (plugins[id].hasOwnProperty(plugin)) {
-        plugin_types[id] = plugins[id][plugin];
+      if (plugins.hasOwnProperty(id) && plugins[id].hasOwnProperty(plugin)) {
+        var i = plugins[id][plugin].length;
+        while (i--) {
+          plugin_types.push(plugins[id][plugin][i]);
+        }
       }
     }
     return plugin_types;
@@ -2983,6 +3000,9 @@ minplayer.playLoader = function(context, options) {
   /** The preview image. */
   this.preview = null;
 
+  /** If the playLoader is enabled. */
+  this.enabled = true;
+
   // Derive from display
   minplayer.display.call(this, 'playLoader', context, options);
 };
@@ -3006,6 +3026,9 @@ minplayer.playLoader.prototype.construct = function() {
 
     // Only bind if this player does not have its own play loader.
     if (!media.hasPlayLoader()) {
+
+      // Enable the playLoader.
+      this.enabled = true;
 
       // Get the poster image.
       if (!this.options.preview) {
@@ -3070,6 +3093,7 @@ minplayer.playLoader.prototype.construct = function() {
     else {
 
       // Hide the display.
+      this.enabled = false;
       this.hide(this.elements.busy);
       this.hide(this.elements.bigPlay);
       this.hide();
@@ -3084,6 +3108,11 @@ minplayer.playLoader.prototype.construct = function() {
  * Loads the preview image.
  */
 minplayer.playLoader.prototype.loadPreview = function() {
+
+  // Ignore if disabled.
+  if (!this.enabled) {
+    return;
+  }
 
   // If the preview element exists.
   if (this.elements.preview) {
@@ -3113,6 +3142,11 @@ minplayer.playLoader.prototype.loadPreview = function() {
  * button.
  */
 minplayer.playLoader.prototype.checkVisibility = function() {
+
+  // Ignore if disabled.
+  if (!this.enabled) {
+    return;
+  }
 
   // Hide or show the busy cursor based on the flags.
   if (this.busy.flag) {
@@ -4334,8 +4368,9 @@ minplayer.players.minplayer.prototype.constructor = minplayer.players.minplayer;
  */
 window.onFlashPlayerReady = function(id) {
   var media = minplayer.get(id, 'media');
-  if (media) {
-    media.onReady();
+  var i = media.length;
+  while (i--) {
+    media[i].onReady();
   }
 };
 
@@ -4347,8 +4382,9 @@ window.onFlashPlayerReady = function(id) {
  */
 window.onFlashPlayerUpdate = function(id, eventType) {
   var media = minplayer.get(id, 'media');
-  if (media) {
-    media.onMediaUpdate(eventType);
+  var i = media.length;
+  while (i--) {
+    media[i].onMediaUpdate(eventType);
   }
 };
 
@@ -4756,56 +4792,56 @@ minplayer.players.youtube.prototype.create = function() {
   this.playerId = this.options.id + '-player';
 
   // Poll until the YouTube API is ready.
-  window.onYouTubePlayerAPIReady = (function(player) {
+  this.poll((function(player) {
     return function() {
-      player.poll(function() {
-        var ready = jQuery('#' + player.playerId).length > 0;
-        if (ready) {
-          // Determine the origin of this script.
-          var origin = location.protocol;
-          origin += '//' + location.hostname;
-          origin += (location.port && ':' + location.port);
+      var ready = jQuery('#' + player.playerId).length > 0;
+      ready = ready && window.hasOwnProperty('YT');
+      ready = ready && (typeof YT.Player == 'function');
+      if (ready) {
+        // Determine the origin of this script.
+        var origin = location.protocol;
+        origin += '//' + location.hostname;
+        origin += (location.port && ':' + location.port);
 
-          var playerVars = {};
-          if (minplayer.isIDevice) {
-            playerVars.origin = origin;
-          }
-          else {
-            playerVars = {
-              enablejsapi: minplayer.isIDevice ? 0 : 1,
-              origin: origin,
-              wmode: 'opaque',
-              controls: minplayer.isAndroid ? 1 : 0
-            };
-          }
-
-          // Create the player.
-          player.player = new YT.Player(player.playerId, {
-            height: '100%',
-            width: '100%',
-            frameborder: 0,
-            videoId: player.mediaFile.id,
-            playerVars: playerVars,
-            events: {
-              'onReady': function(event) {
-                player.onReady(event);
-              },
-              'onStateChange': function(event) {
-                player.onPlayerStateChange(event);
-              },
-              'onPlaybackQualityChange': function(newQuality) {
-                player.onQualityChange(newQuality);
-              },
-              'onError': function(errorCode) {
-                player.onError(errorCode);
-              }
-            }
-          });
+        var playerVars = {};
+        if (minplayer.isIDevice) {
+          playerVars.origin = origin;
         }
-        return !ready;
-      }, 200);
+        else {
+          playerVars = {
+            enablejsapi: minplayer.isIDevice ? 0 : 1,
+            origin: origin,
+            wmode: 'opaque',
+            controls: minplayer.isAndroid ? 1 : 0
+          };
+        }
+
+        // Create the player.
+        player.player = new YT.Player(player.playerId, {
+          height: '100%',
+          width: '100%',
+          frameborder: 0,
+          videoId: player.mediaFile.id,
+          playerVars: playerVars,
+          events: {
+            'onReady': function(event) {
+              player.onReady(event);
+            },
+            'onStateChange': function(event) {
+              player.onPlayerStateChange(event);
+            },
+            'onPlaybackQualityChange': function(newQuality) {
+              player.onQualityChange(newQuality);
+            },
+            'onError': function(errorCode) {
+              player.onError(errorCode);
+            }
+          }
+        });
+      }
+      return !ready;
     };
-  })(this);
+  })(this), 200);
 
   // Return the player.
   return jQuery(document.createElement('div')).attr({
