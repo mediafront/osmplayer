@@ -67,6 +67,7 @@ minplayer.playLoader.prototype.construct = function() {
       if (this.elements.bigPlay) {
         minplayer.click(this.elements.bigPlay.unbind(), function(event) {
           event.preventDefault();
+          minplayer.showAll();
           jQuery(this).hide();
           media.play();
         });
