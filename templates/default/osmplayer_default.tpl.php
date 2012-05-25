@@ -1,4 +1,4 @@
-<div id="<?php print $params['id']; ?>" class="osmplayer-<?php print $params['template']; ?> player-ui">
+<div id="<?php print $params['id']; ?>" class="osmplayer-<?php print $params['template']; ?> player-ui" style="width=<?php print $params['width']; ?>; height=<?php print $params['height']; ?>;">
   <div class="minplayer-<?php print $params['template']; ?> player-ui">
     <div class="minplayer-<?php print $params['template']; ?>-loader-wrapper">
       <div class="minplayer-<?php print $params['template']; ?>-big-play ui-state-default"><span></span></div>
