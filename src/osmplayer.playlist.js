@@ -65,78 +65,17 @@ osmplayer.playlist.prototype.construct = function() {
 
   // Create the scroll bar.
   this.scroll = null;
-  if (this.elements.scroll && (this.elements.scroll.length > 0)) {
 
-    // Make this component orientation agnostic.
-    var orient = {};
-    orient.pos = (this.options.vertical) ? 'y' : 'x';
-    orient.pagePos = (this.options.vertical ? 'pageY' : 'pageX');
-    orient.offset = (this.options.vertical ? 'top' : 'left');
-    orient.wrapperSize = (this.options.vertical ? 'wrapperH' : 'wrapperW');
-    orient.minScroll = (this.options.vertical ? 'minScrollY' : 'minScrollX');
-    orient.maxScroll = (this.options.vertical ? 'maxScrollY' : 'maxScrollX');
-
-    // Setup the iScroll component.
-    this.scroll = new iScroll(this.elements.scroll.eq(0)[0], {
-      hScroll: !this.options.vertical,
-      hScrollbar: !this.options.vertical,
-      vScroll: this.options.vertical,
-      vScrollbar: this.options.vertical,
-      hideScrollbar: true
-    });
-
-    // Use autoScroll for non-touch devices.
-    if ((this.options.scrollMode == 'auto') && !minplayer.hasTouch) {
-
-      // Bind to the mouse events for autoscrolling.
-      this.elements.list.bind('mousemove', (function(playlist) {
-        return function(event) {
-          event.preventDefault();
-          playlist.mousePos = event[orient.pagePos];
-          playlist.mousePos -= playlist.display.offset()[orient.offset];
-        };
-      })(this)).bind('mouseenter', (function(playlist) {
-        return function(event) {
-          event.preventDefault();
-          playlist.scrolling = true;
-          var setScroll = function() {
-            if (playlist.scrolling) {
-              var scrollSize = playlist.scroll[orient.wrapperSize];
-              var scrollMid = (scrollSize / 2);
-              var delta = playlist.mousePos - scrollMid;
-              if (Math.abs(delta) > playlist.options.hysteresis) {
-                var hyst = playlist.options.hysteresis;
-                hyst *= (delta > 0) ? -1 : 0;
-                delta = (playlist.options.scrollSpeed * (delta + hyst));
-                delta /= scrollMid;
-                var pos = playlist.scroll[orient.pos] - delta;
-                var min = playlist.scroll[orient.minScroll] || 0;
-                var max = playlist.scroll[orient.maxScroll];
-                if (pos >= min) {
-                  playlist.scrollTo(min);
-                }
-                else if (pos <= max) {
-                  playlist.scrollTo(max);
-                }
-                else {
-                  playlist.scrollTo(delta, true);
-                }
-              }
-
-              // Set timeout to try again.
-              setTimeout(setScroll, 30);
-            }
-          };
-          setScroll();
-        };
-      })(this)).bind('mouseleave', (function(playlist) {
-        return function(event) {
-          event.preventDefault();
-          playlist.scrolling = false;
-        };
-      })(this));
-    }
-  }
+  // Create our orientation variable.
+  this.orient = {
+    pos: this.options.vertical ? 'y' : 'x',
+    pagePos: this.options.vertical ? 'pageY' : 'pageX',
+    offset: this.options.vertical ? 'top' : 'left',
+    wrapperSize: this.options.vertical ? 'wrapperH' : 'wrapperW',
+    minScroll: this.options.vertical ? 'minScrollY' : 'minScrollX',
+    maxScroll: this.options.vertical ? 'maxScrollY' : 'maxScrollX',
+    size: this.options.vertical ? 'height' : 'width'
+  };
 
   // Create the pager.
   this.pager = this.create('pager', 'osmplayer');
@@ -194,8 +133,78 @@ osmplayer.playlist.prototype.scrollTo = function(pos, relative) {
  * Refresh the scrollbar.
  */
 osmplayer.playlist.prototype.refresh = function() {
-  // Refresh the sizes.
-  if (this.scroll) {
+
+  // Check the size of the playlist.
+  var list = this.elements.list;
+  var scroll = this.elements.scroll;
+
+  // Check to see if we should add a scroll bar functionality.
+  if ((!this.scroll) &&
+      (list.length > 0) &&
+      (scroll.length > 0) &&
+      (list[this.orient.size]() > scroll[this.orient.size]())) {
+
+    // Setup the iScroll component.
+    this.scroll = new iScroll(this.elements.scroll.eq(0)[0], {
+      hScroll: !this.options.vertical,
+      hScrollbar: !this.options.vertical,
+      vScroll: this.options.vertical,
+      vScrollbar: this.options.vertical,
+      hideScrollbar: true
+    });
+
+    // Use autoScroll for non-touch devices.
+    if ((this.options.scrollMode == 'auto') && !minplayer.hasTouch) {
+
+      // Bind to the mouse events for autoscrolling.
+      this.elements.list.bind('mousemove', (function(playlist) {
+        return function(event) {
+          event.preventDefault();
+          var offset = playlist.display.offset()[playlist.orient.offset];
+          playlist.mousePos = event[playlist.orient.pagePos];
+          playlist.mousePos -= offset;
+        };
+      })(this)).bind('mouseenter', (function(playlist) {
+        return function(event) {
+          event.preventDefault();
+          playlist.scrolling = true;
+          var setScroll = function() {
+            if (playlist.scrolling) {
+              var scrollSize = playlist.scroll[playlist.orient.wrapperSize];
+              var scrollMid = (scrollSize / 2);
+              var delta = playlist.mousePos - scrollMid;
+              if (Math.abs(delta) > playlist.options.hysteresis) {
+                var hyst = playlist.options.hysteresis;
+                hyst *= (delta > 0) ? -1 : 0;
+                delta = (playlist.options.scrollSpeed * (delta + hyst));
+                delta /= scrollMid;
+                var pos = playlist.scroll[playlist.orient.pos] - delta;
+                var min = playlist.scroll[playlist.orient.minScroll] || 0;
+                var max = playlist.scroll[playlist.orient.maxScroll];
+                if (pos >= min) {
+                  playlist.scrollTo(min);
+                }
+                else if (pos <= max) {
+                  playlist.scrollTo(max);
+                }
+                else {
+                  playlist.scrollTo(delta, true);
+                }
+              }
+
+              // Set timeout to try again.
+              setTimeout(setScroll, 30);
+            }
+          };
+          setScroll();
+        };
+      })(this)).bind('mouseleave', (function(playlist) {
+        return function(event) {
+          event.preventDefault();
+          playlist.scrolling = false;
+        };
+      })(this));
+    }
 
     // Need to force the width of the list.
     if (!this.options.vertical) {
@@ -208,6 +217,15 @@ osmplayer.playlist.prototype.refresh = function() {
 
     this.scroll.refresh();
     this.scroll.scrollTo(0, 0, 200);
+  }
+  else if (this.scroll) {
+
+    // Disable the scroll bar.
+    this.scroll.disable();
+    this.elements.list
+      .unbind('mousemove')
+      .unbind('mouseenter')
+      .unbind('mouseleave');
   }
 };
 
