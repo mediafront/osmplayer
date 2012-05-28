@@ -6338,20 +6338,21 @@ osmplayer.playlist.prototype.construct = function() {
     };
   })(this));
 
-  // Get the media.
-  if (this.options.autoNext) {
-    this.get('media', function(media) {
-      media.bind('ended', (function(playlist) {
-        return function(event) {
-          media.options.autoplay = true;
-          playlist.next();
-        };
-      })(this));
-    });
-  }
-
   // Load the "next" item.
-  this.next();
+  if (this.next()) {
+
+    // Get the media.
+    if (this.options.autoNext) {
+      this.get('media', function(media) {
+        media.bind('ended', (function(playlist) {
+          return function(event) {
+            media.options.autoplay = true;
+            playlist.next();
+          };
+        })(this));
+      });
+    }
+  }
 
   // Say that we are ready.
   this.ready();
@@ -6488,6 +6489,8 @@ osmplayer.playlist.prototype.setQueue = function() {
 
 /**
  * Loads the next item.
+ *
+ * @return {boolean} TRUE if loaded, FALSE if not.
  */
 osmplayer.playlist.prototype.next = function() {
   var item = 0, page = this.page;
@@ -6500,17 +6503,17 @@ osmplayer.playlist.prototype.next = function() {
       item = Math.floor(Math.random() * this.totalItems);
       page = Math.floor(item / this.options.pageLimit);
       item = item % this.options.pageLimit;
-      this.load(page, item);
+      return this.load(page, item);
     }
     else {
 
       // Otherwise, increment the current item by one.
       item = (this.currentItem + 1);
       if (item >= this.nodes.length) {
-        this.load(page + 1, 0);
+        return this.load(page + 1, 0);
       }
       else {
-        this.loadItem(item);
+        return this.loadItem(item);
       }
     }
   }
@@ -6519,12 +6522,14 @@ osmplayer.playlist.prototype.next = function() {
     // Load the next item in the playqueue.
     this.playqueuepos = this.playqueuepos + 1;
     var currentQueue = this.playqueue[this.playqueuepos];
-    this.load(currentQueue.page, currentQueue.item);
+    return this.load(currentQueue.page, currentQueue.item);
   }
 };
 
 /**
  * Loads the previous item.
+ *
+ * @return {boolean} TRUE if loaded, FALSE if not.
  */
 osmplayer.playlist.prototype.prev = function() {
 
@@ -6533,14 +6538,16 @@ osmplayer.playlist.prototype.prev = function() {
   this.playqueuepos = (this.playqueuepos < 0) ? 0 : this.playqueuepos;
   var currentQueue = this.playqueue[this.playqueuepos];
   if (currentQueue) {
-    this.load(currentQueue.page, currentQueue.item);
+    return this.load(currentQueue.page, currentQueue.item);
   }
+  return false;
 };
 
 /**
  * Loads a playlist node.
  *
  * @param {number} index The index of the item you would like to load.
+ * @return {boolean} TRUE if loaded, FALSE if not.
  */
 osmplayer.playlist.prototype.loadItem = function(index) {
   if (index < this.nodes.length) {
@@ -6555,25 +6562,30 @@ osmplayer.playlist.prototype.loadItem = function(index) {
     teaser = this.nodes[index];
     teaser.select(true);
     this.trigger('nodeLoad', teaser.node);
+    return true;
   }
+
+  return false;
 };
 
 /**
  * Loads the next page.
  *
  * @param {integer} loadIndex The index of the item to load.
+ * @return {boolean} TRUE if loaded, FALSE if not.
  */
 osmplayer.playlist.prototype.nextPage = function(loadIndex) {
-  this.load(this.page + 1, loadIndex);
+  return this.load(this.page + 1, loadIndex);
 };
 
 /**
  * Loads the previous page.
  *
  * @param {integer} loadIndex The index of the item to load.
+ * @return {boolean} TRUE if loaded, FALSE if not.
  */
 osmplayer.playlist.prototype.prevPage = function(loadIndex) {
-  this.load(this.page - 1, loadIndex);
+  return this.load(this.page - 1, loadIndex);
 };
 
 /**
@@ -6581,12 +6593,13 @@ osmplayer.playlist.prototype.prevPage = function(loadIndex) {
  *
  * @param {integer} page The page to load.
  * @param {integer} loadIndex The index of the item to load.
+ * @return {boolean} TRUE if loaded, FALSE if not.
  */
 osmplayer.playlist.prototype.load = function(page, loadIndex) {
 
   // If the playlist and pages are the same, then no need to load.
   if ((this.playlist == this.options.playlist) && (page == this.page)) {
-    this.loadItem(loadIndex);
+    return this.loadItem(loadIndex);
   }
 
   // Set the new playlist.
@@ -6594,7 +6607,7 @@ osmplayer.playlist.prototype.load = function(page, loadIndex) {
 
   // Return if there aren't any playlists to play.
   if (!this.playlist) {
-    return;
+    return false;
   }
 
   // Determine if we need to loop.
@@ -6605,7 +6618,7 @@ osmplayer.playlist.prototype.load = function(page, loadIndex) {
       loadIndex = 0;
     }
     else {
-      return;
+      return false;
     }
   }
 
@@ -6638,7 +6651,7 @@ osmplayer.playlist.prototype.load = function(page, loadIndex) {
     if (this.playlist.endpoint) {
       this.playlist = this.options.playlist = this.playlist.endpoint;
     }
-    return;
+    return true;
   }
 
   // Get the highest priority parser.
@@ -6690,6 +6703,9 @@ osmplayer.playlist.prototype.load = function(page, loadIndex) {
 
   // Perform an ajax callback.
   jQuery.ajax(request);
+
+  // Return that we did something.
+  return true;
 };
 /** The osmplayer namespace. */
 var osmplayer = osmplayer || {};
