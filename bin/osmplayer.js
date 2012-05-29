@@ -3395,9 +3395,6 @@ minplayer.players.base.prototype.addPlayer = function() {
 minplayer.players.base.prototype.destroy = function() {
   minplayer.plugin.prototype.destroy.call(this);
   this.clear();
-  if (this.player) {
-    jQuery(this.player).remove();
-  }
 };
 
 /**
@@ -4342,46 +4339,60 @@ minplayer.players.flash.canPlay = function(file) {
  * @param {object} params The params used to populate the Flash code.
  * @return {object} A Flash DOM element.
  */
-minplayer.players.flash.getFlash = function(params) {
+minplayer.players.flash.prototype.getFlash = function(params) {
   // Get the protocol.
   var protocol = window.location.protocol;
   if (protocol.charAt(protocol.length - 1) == ':') {
     protocol = protocol.substring(0, protocol.length - 1);
   }
 
-  // Convert the flashvars object to a string...
-  var flashVars = jQuery.param(params.flashvars);
+  // Insert the swfobject javascript.
+  var tag = document.createElement('script');
+  var src = protocol;
+  src += '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js';
+  tag.src = src;
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-  // Set the codebase.
-  var codebase = protocol + '://fpdownload.macromedia.com';
-  codebase += '/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0';
+  // Create the swfobject.
+  setTimeout((function(player) {
+    return function() {
+      if (swfobject) {
+        swfobject.embedSWF(
+          params.swf,
+          params.id,
+          params.width,
+          params.height,
+          '9.0.0',
+          false,
+          params.flashvars,
+          {
+            allowscriptaccess: 'always',
+            allowfullscreen: 'true',
+            wmode: params.wmode,
+            quality: 'high'
+          },
+          {
+            id: params.id,
+            name: params.id,
+            playerType: 'flash'
+          },
+          function(e) {
+            player.player = e.ref;
+          }
+        );
+      }
+      else {
+        player.getFlash(params);
+      }
+    };
+  })(this), 200);
 
-  // Get the HTML flash object string.
-  var flash = '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" ';
-  flash += 'codebase="' + codebase + '" ';
-  flash += 'playerType="flash" ';
-  flash += 'width="' + params.width + '" ';
-  flash += 'height="' + params.height + '" ';
-  flash += 'id="' + params.id + '" ';
-  flash += 'name="' + params.id + '"> ';
-  flash += '<param name="allowScriptAccess" value="always"></param>';
-  flash += '<param name="allowfullscreen" value="true" />';
-  flash += '<param name="movie" value="' + params.swf + '"></param>';
-  flash += '<param name="wmode" value="' + params.wmode + '"></param>';
-  flash += '<param name="quality" value="high"></param>';
-  flash += '<param name="FlashVars" value="' + flashVars + '"></param>';
-  flash += '<embed src="' + params.swf + '" ';
-  flash += 'quality="high" ';
-  flash += 'width="' + params.width + '" height="' + params.height + '" ';
-  flash += 'id="' + params.id + '" name="' + params.id + '" ';
-  flash += 'swLiveConnect="true" allowScriptAccess="always" ';
-  flash += 'wmode="' + params.wmode + '"';
-  flash += 'allowfullscreen="true" type="application/x-shockwave-flash" ';
-  flash += 'FlashVars="' + flashVars + '" ';
-  flash += 'pluginspage="' + protocol;
-  flash += '://www.macromedia.com/go/getflashplayer" />';
-  flash += '</object>';
-  return flash;
+  // Return the ultimate fallback...
+  var output = '<div id="' + params.id + '">';
+  output += 'You must download Flash to view this media';
+  output += '</div>';
+  return output;
 };
 
 /**
@@ -4390,16 +4401,6 @@ minplayer.players.flash.getFlash = function(params) {
  */
 minplayer.players.flash.prototype.playerFound = function() {
   return (this.display.find('object[playerType="flash"]').length > 0);
-};
-
-/**
- * @see minplayer.players.base#getPlayer
- * @return {object} The media player object.
- */
-minplayer.players.flash.prototype.getPlayer = function() {
-  // IE needs the object, everyone else just needs embed.
-  var object = jQuery.browser.msie ? 'object' : 'embed';
-  return jQuery(object, this.display).eq(0)[0];
 };
 /** The minplayer namespace. */
 var minplayer = minplayer || {};
@@ -4506,7 +4507,7 @@ minplayer.players.minplayer.prototype.create = function() {
   };
 
   // Return a flash media player object.
-  return minplayer.players.flash.getFlash({
+  return this.getFlash({
     swf: this.options.swfplayer,
     id: this.options.id + '_player',
     width: '100%',
