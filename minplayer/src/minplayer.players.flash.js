@@ -64,7 +64,7 @@ minplayer.players.flash.prototype.getFlash = function(params) {
 
   // Create the swfobject.
   setTimeout((function(player) {
-    return function() {
+    return function tryAgain() {
       if (swfobject) {
         swfobject.embedSWF(
           params.swf,
@@ -91,7 +91,9 @@ minplayer.players.flash.prototype.getFlash = function(params) {
         );
       }
       else {
-        player.getFlash(params);
+
+        // Try again after 200 ms.
+        setTimeout(tryAgain, 200);
       }
     };
   })(this), 200);
