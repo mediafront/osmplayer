@@ -68,6 +68,18 @@ minplayer.players.youtube.getMediaId = function(file) {
 };
 
 /**
+ * Returns a preview image for this media player.
+ *
+ * @param {object} file A {@link minplayer.file} object.
+ * @param {string} type The type of image.
+ * @return {string} The full path to the preview image.
+ */
+minplayer.players.youtube.getImage = function(file, type) {
+  type = (type == 'thumbnail') ? '1' : '0';
+  return 'http://img.youtube.com/vi/' + file.id + '/' + type + '.jpg';
+};
+
+/**
  * Translates the player state for the YouTube API player.
  *
  * @param {number} playerState The YouTube player state.
