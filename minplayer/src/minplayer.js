@@ -153,6 +153,7 @@ minplayer.prototype.addEvents = function() {
         // If an error occurs within the html5 media player, then try
         // to fall back to the flash player.
         if (player.currentPlayer == 'html5') {
+          minplayer.player = 'minplayer';
           player.options.file.player = 'minplayer';
           player.loadPlayer();
         }
@@ -181,7 +182,15 @@ minplayer.prototype.error = function(error) {
     // Set the error text.
     this.elements.error.text(error);
     if (error) {
+      // Show the error message.
       this.elements.error.show();
+
+      // Only show this error for a time interval.
+      setTimeout((function(player) {
+        return function() {
+          player.elements.error.hide('slow');
+        };
+      })(this), 5000);
     }
     else {
       this.elements.error.hide();

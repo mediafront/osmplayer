@@ -160,6 +160,9 @@ minplayer.players.base.prototype.addPlayer = function() {
 minplayer.players.base.prototype.destroy = function() {
   minplayer.plugin.prototype.destroy.call(this);
   this.clear();
+  if (this.player) {
+    jQuery(this.player).remove();
+  }
 };
 
 /**
