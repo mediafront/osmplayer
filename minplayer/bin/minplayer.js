@@ -1603,6 +1603,7 @@ minplayer.prototype.loadPlayer = function() {
   else if (this.media) {
 
     // Now load the different media file.
+    this.media.options = this.options;
     this.media.load(this.options.file);
   }
 };
