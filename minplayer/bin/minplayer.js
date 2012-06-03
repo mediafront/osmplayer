@@ -1794,7 +1794,15 @@ var minplayer = minplayer || {};
  * @param {object} file A media file object with minimal required information.
  */
 minplayer.file = function(file) {
+
   file = (typeof file === 'string') ? {path: file} : file;
+
+  // If we already are a minplayer file, then just return this file.
+  if (file.hasOwnProperty('isMinPlayerFile')) {
+    return file;
+  }
+
+  this.isMinPlayerFile = true;
   this.duration = file.duration || 0;
   this.bytesTotal = file.bytesTotal || 0;
   this.quality = file.quality || 0;
@@ -3271,7 +3279,7 @@ minplayer.players.flash.prototype.getFlash = function(params) {
   // Create the swfobject.
   setTimeout((function(player) {
     return function tryAgain() {
-      if (swfobject) {
+      if (typeof swfobject !== 'undefined') {
         swfobject.embedSWF(
           params.swf,
           params.id,
@@ -3304,11 +3312,8 @@ minplayer.players.flash.prototype.getFlash = function(params) {
     };
   })(this), 200);
 
-  // Return the ultimate fallback...
-  var output = '<div id="' + params.id + '">';
-  output += 'You must download Flash to view this media';
-  output += '</div>';
-  return output;
+  // Return the div tag...
+  return '<div id="' + params.id + '"></div>';
 };
 
 /**
