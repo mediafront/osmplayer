@@ -170,7 +170,6 @@
 .player-ui .minplayer-default-controls-right {
   float:right;
   width:120px;
-  height:30px;
   margin: 3px;
 }
 
@@ -220,6 +219,11 @@
 
 .player-ui .minplayer-default-button span {
   margin: 4px 0 0 4px;
+  margin-top: 3px\9;
+}
+
+.player-ui .minplayer-default-button span.ui-icon-pause {
+  margin-left: 3px;
 }
 
 .player-ui .minplayer-default-pause {
@@ -284,7 +288,6 @@
   position:relative;
   height: 22px;
   float:left;
-  padding-top:3px;
   padding-right:6px;
   font-size: 16px;
   font-weight: bold;
@@ -315,12 +318,14 @@
 }
 
 .player-ui .minplayer-default-volume:hover {
-  height: 135px;
+  height: 133px;
+  height: 130px\9;
 }
 
 
 .player-ui .minplayer-default-volume:hover .minplayer-default-volume-slider {
   position: relative;
+  display: block;
   visibility: visible;
   opacity: 1;
 }
@@ -331,6 +336,7 @@
   width: 7px;
   left: 8px;
   visiblity: hidden;
+  display: none;
   opacity: 0;
   border: 1px solid #444;
   -moz-border-radius:15px;
