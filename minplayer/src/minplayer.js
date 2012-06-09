@@ -158,7 +158,7 @@ minplayer.prototype.addEvents = function() {
           player.loadPlayer();
         }
         else {
-          player.error(data);
+          player.showError(data);
         }
       });
 
@@ -175,7 +175,7 @@ minplayer.prototype.addEvents = function() {
  *
  * @param {string} error The error to display on the player.
  */
-minplayer.prototype.error = function(error) {
+minplayer.prototype.showError = function(error) {
   error = error || '';
   if (this.elements.error) {
 
@@ -276,7 +276,7 @@ minplayer.getMediaFile = function(files) {
   for (var i in files) {
     if (files.hasOwnProperty(i)) {
       file = new minplayer.file(files[i]);
-      if (file.priority > bestPriority) {
+      if (file.player && (file.priority > bestPriority)) {
         mFile = file;
       }
     }
@@ -297,12 +297,12 @@ minplayer.prototype.loadPlayer = function() {
   }
 
   if (!this.options.file.player) {
-    this.error('Cannot play media: ' + this.options.file.mimetype);
+    this.showError('Cannot play media: ' + this.options.file.mimetype);
     return;
   }
 
   // Reset the error.
-  this.error();
+  this.showError();
 
   // Only destroy if the current player is different than the new player.
   var player = this.options.file.player.toString();
@@ -315,7 +315,7 @@ minplayer.prototype.loadPlayer = function() {
 
     // Do nothing if we don't have a display.
     if (!this.elements.display) {
-      this.error('No media display found.');
+      this.showError('No media display found.');
       return;
     }
 

@@ -2491,7 +2491,7 @@ minplayer.prototype.addEvents = function() {
           player.loadPlayer();
         }
         else {
-          player.error(data);
+          player.showError(data);
         }
       });
 
@@ -2508,7 +2508,7 @@ minplayer.prototype.addEvents = function() {
  *
  * @param {string} error The error to display on the player.
  */
-minplayer.prototype.error = function(error) {
+minplayer.prototype.showError = function(error) {
   error = error || '';
   if (this.elements.error) {
 
@@ -2609,7 +2609,7 @@ minplayer.getMediaFile = function(files) {
   for (var i in files) {
     if (files.hasOwnProperty(i)) {
       file = new minplayer.file(files[i]);
-      if (file.priority > bestPriority) {
+      if (file.player && (file.priority > bestPriority)) {
         mFile = file;
       }
     }
@@ -2630,12 +2630,12 @@ minplayer.prototype.loadPlayer = function() {
   }
 
   if (!this.options.file.player) {
-    this.error('Cannot play media: ' + this.options.file.mimetype);
+    this.showError('Cannot play media: ' + this.options.file.mimetype);
     return;
   }
 
   // Reset the error.
-  this.error();
+  this.showError();
 
   // Only destroy if the current player is different than the new player.
   var player = this.options.file.player.toString();
@@ -2648,7 +2648,7 @@ minplayer.prototype.loadPlayer = function() {
 
     // Do nothing if we don't have a display.
     if (!this.elements.display) {
-      this.error('No media display found.');
+      this.showError('No media display found.');
       return;
     }
 
@@ -2916,15 +2916,18 @@ minplayer.player = '';
  */
 minplayer.file.prototype.getBestPlayer = function() {
   var bestplayer = null, bestpriority = 0;
-  jQuery.each(minplayer.players, (function(file) {
-    return function(name, player) {
-      var priority = player.getPriority();
-      if (player.canPlay(file) && (priority > bestpriority)) {
-        bestplayer = name;
-        bestpriority = priority;
-      }
-    };
-  })(this));
+  // Only try for video files.
+  if (this.type == 'video') {
+    jQuery.each(minplayer.players, (function(file) {
+      return function(name, player) {
+        var priority = player.getPriority();
+        if (player.canPlay(file) && (priority > bestpriority)) {
+          bestplayer = name;
+          bestpriority = priority;
+        }
+      };
+    })(this));
+  }
   return bestplayer;
 };
 
@@ -4477,7 +4480,11 @@ minplayer.players.minplayer.getPriority = function() {
  * @return {boolean} If this player can play this media type.
  */
 minplayer.players.minplayer.canPlay = function(file) {
-  return (file.type == 'video' || file.type == 'audio');
+  var isWEBM = jQuery.inArray(file.mimetype, ['video/x-webm',
+    'video/webm',
+    'application/octet-stream'
+  ]) >= 0;
+  return !isWEBM && (file.type == 'video' || file.type == 'audio');
 };
 
 /**
@@ -5874,44 +5881,10 @@ osmplayer.prototype.loadNode = function(node) {
  * @return {object} The file that was added to the queue.
  */
 osmplayer.prototype.addToQueue = function(file) {
-  if (file) {
-    this.playQueue.push(this.getFile(file));
+  if (file = minplayer.getMediaFile(file)) {
+    this.playQueue.push(file);
   }
   return file;
-};
-
-/**
- * Returns a valid media file for this browser.
- *
- * @param {object} file The file object.
- * @return {object} The best media file.
- */
-osmplayer.prototype.getFile = function(file) {
-  if (file) {
-    var type = Object.prototype.toString.call(file);
-    file = (type === '[object Array]') ? file : [file];
-    file = this.getBestMedia(file);
-  }
-  return file;
-};
-
-/**
- * Returns the media file with the lowest weight value provided an array of
- * media files.
- *
- * @param {object} files The media files to play.
- * @return {object} The best media file.
- */
-osmplayer.prototype.getBestMedia = function(files) {
-  var mFile = null;
-  var i = files.length;
-  while (i--) {
-    var tempFile = new minplayer.file(files[i]);
-    if (!mFile || (tempFile.priority > mFile.priority)) {
-      mFile = tempFile;
-    }
-  }
-  return mFile;
 };
 
 /**
