@@ -2826,8 +2826,8 @@ minplayer.image.prototype.clear = function(callback) {
  * @param {integer} height (optional) The height of the container.
  */
 minplayer.image.prototype.resize = function(width, height) {
-  width = width || this.display.width();
-  height = height || this.display.height();
+  width = width || this.display.parent().width();
+  height = height || this.display.parent().height();
   if (width && height && this.loaded) {
 
     // Get the scaled rectangle.
@@ -5899,12 +5899,16 @@ osmplayer.prototype.playNext = function() {
     this.playIndex = 0;
     this.playNext();
   }
-  else {
+  else if (this.playQueue.length > 0) {
     // If there is no playlist, and no repeat, we will
     // just seek to the beginning and pause.
     this.options.autoplay = false;
     this.playIndex = 0;
     this.playNext();
+  }
+  else if (this.media) {
+    // Stop the player and unload.
+    this.media.stop();
   }
 };
 

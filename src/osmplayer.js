@@ -199,12 +199,16 @@ osmplayer.prototype.playNext = function() {
     this.playIndex = 0;
     this.playNext();
   }
-  else {
+  else if (this.playQueue.length > 0) {
     // If there is no playlist, and no repeat, we will
     // just seek to the beginning and pause.
     this.options.autoplay = false;
     this.playIndex = 0;
     this.playNext();
+  }
+  else if (this.media) {
+    // Stop the player and unload.
+    this.media.stop();
   }
 };
 
