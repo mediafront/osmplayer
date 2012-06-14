@@ -4879,7 +4879,7 @@ minplayer.players.youtube.prototype.create = function() {
   this.poll((function(player) {
     return function() {
       var ready = jQuery('#' + player.playerId).length > 0;
-      ready = ready && window.hasOwnProperty('YT');
+      ready = ready && ('YT' in window);
       ready = ready && (typeof YT.Player == 'function');
       if (ready) {
         // Determine the origin of this script.
