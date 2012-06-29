@@ -55,18 +55,15 @@ minplayer.player = '';
  */
 minplayer.file.prototype.getBestPlayer = function() {
   var bestplayer = null, bestpriority = 0;
-  // Only try for video and audio files.
-  if ((this.type == 'video') || (this.type == 'audio')) {
-    jQuery.each(minplayer.players, (function(file) {
-      return function(name, player) {
-        var priority = player.getPriority();
-        if (player.canPlay(file) && (priority > bestpriority)) {
-          bestplayer = name;
-          bestpriority = priority;
-        }
-      };
-    })(this));
-  }
+  jQuery.each(minplayer.players, (function(file) {
+    return function(name, player) {
+      var priority = player.getPriority();
+      if (player.canPlay(file) && (priority > bestpriority)) {
+        bestplayer = name;
+        bestpriority = priority;
+      }
+    };
+  })(this));
   return bestplayer;
 };
 
