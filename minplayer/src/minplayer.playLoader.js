@@ -46,6 +46,9 @@ minplayer.playLoader.prototype.construct = function() {
   // Call the media display constructor.
   minplayer.display.prototype.construct.call(this);
 
+  // Set the plugin name within the options.
+  this.options.pluginName = 'playLoader';
+
   // Get the media plugin.
   this.get('media', function(media) {
 

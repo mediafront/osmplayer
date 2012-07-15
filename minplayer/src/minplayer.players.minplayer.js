@@ -26,6 +26,19 @@ minplayer.players.minplayer.prototype = new minplayer.players.flash();
 minplayer.players.minplayer.prototype.constructor = minplayer.players.minplayer;
 
 /**
+ * @see minplayer.plugin.construct
+ * @this minplayer.players.minplayer
+ */
+minplayer.players.minplayer.prototype.construct = function() {
+
+  // Call the players.flash constructor.
+  minplayer.players.flash.prototype.construct.call(this);
+
+  // Set the plugin name within the options.
+  this.options.pluginName = 'minplayer';
+};
+
+/**
  * Called when the Flash player is ready.
  *
  * @param {string} id The media player ID.

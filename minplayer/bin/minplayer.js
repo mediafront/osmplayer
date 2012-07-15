@@ -290,6 +290,9 @@ minplayer.plugin = function(name, context, options, queue) {
   // Only call the constructor if we have a context.
   if (context) {
 
+    /** Say that we are active. */
+    this.active = true;
+
     /** Keep track of the context. */
     this.context = jQuery(context);
 
@@ -317,6 +320,7 @@ minplayer.plugin.prototype.construct = function() {
 minplayer.plugin.prototype.destroy = function() {
 
   // Unbind all events.
+  this.active = false;
   this.unbind();
 };
 
@@ -391,7 +395,7 @@ minplayer.plugin.prototype.ready = function() {
  * @return {boolean} TRUE if the plugin display is valid.
  */
 minplayer.plugin.prototype.isValid = function() {
-  return !!this.options.id;
+  return !!this.options.id && this.active;
 };
 
 /**
@@ -526,6 +530,12 @@ minplayer.plugin.prototype.checkQueue = function(plugin) {
  * @return {object} The plugin object.
  */
 minplayer.plugin.prototype.trigger = function(type, data) {
+
+  // Don't trigger if this plugin is inactive.
+  if (!this.active) {
+    return this;
+  }
+
   // Add this to our triggered array.
   this.triggered[type] = data;
 
@@ -560,6 +570,11 @@ minplayer.plugin.prototype.trigger = function(type, data) {
  * @return {object} The plugin object.
  **/
 minplayer.plugin.prototype.bind = function(type, data, fn) {
+
+  // Only bind if active.
+  if (!this.active) {
+    return this;
+  }
 
   // Allow the data to be the callback.
   if (typeof data === 'function') {
@@ -908,6 +923,9 @@ minplayer.display.prototype.construct = function() {
 
   // Call the plugin constructor.
   minplayer.plugin.prototype.construct.call(this);
+
+  // Set the plugin name within the options.
+  this.options.pluginName = 'display';
 
   // Get the display elements.
   this.elements = this.getElements();
@@ -1349,6 +1367,9 @@ minplayer.prototype.construct = function() {
   // Call the minplayer display constructor.
   minplayer.display.prototype.construct.call(this);
 
+  // Set the plugin name within the options.
+  this.options.pluginName = 'player';
+
   /** The controller for this player. */
   this.controller = this.create('controller');
 
@@ -1541,17 +1562,19 @@ minplayer.getMediaFile = function(files) {
 
 /**
  * Loads a media player based on the current file.
+ *
+ * @return {boolean} If a new player was loaded.
  */
 minplayer.prototype.loadPlayer = function() {
 
   // Do nothing if there isn't a file or anywhere to put it.
   if (!this.options.file || (this.elements.display.length == 0)) {
-    return;
+    return false;
   }
 
+  // If no player is set, then also return false.
   if (!this.options.file.player) {
-    this.showError('Cannot play media: ' + this.options.file.mimetype);
-    return;
+    return false;
   }
 
   // Reset the error.
@@ -1594,6 +1617,9 @@ minplayer.prototype.loadPlayer = function() {
         media.load(player.options.file);
       };
     })(this));
+
+    // Return that a new player is loaded.
+    return true;
   }
   // If the media object already exists...
   else if (this.media) {
@@ -1601,6 +1627,7 @@ minplayer.prototype.loadPlayer = function() {
     // Now load the different media file.
     this.media.options = this.options;
     this.media.load(this.options.file);
+    return false;
   }
 };
 
@@ -1619,10 +1646,16 @@ minplayer.prototype.load = function(files) {
   this.options.file = minplayer.getMediaFile(this.options.files);
 
   // Now load the player.
-  this.loadPlayer();
+  if (this.loadPlayer()) {
 
-  // Add the player events.
-  this.addEvents();
+    // Add the events since we now have a player.
+    this.addEvents();
+
+    // If the player isn't valid, then show an error.
+    if (this.options.file.mimetype && !this.options.file.player) {
+      this.showError('Cannot play media: ' + this.options.file.mimetype);
+    }
+  }
 };
 
 /**
@@ -1677,6 +1710,9 @@ minplayer.image.prototype.construct = function() {
 
   // Call the media display constructor.
   minplayer.display.prototype.construct.call(this);
+
+  // Set the plugin name within the options.
+  this.options.pluginName = 'image';
 
   // Set the container to not show any overflow...
   this.display.css('overflow', 'hidden');
@@ -2005,6 +2041,9 @@ minplayer.playLoader.prototype.construct = function() {
   // Call the media display constructor.
   minplayer.display.prototype.construct.call(this);
 
+  // Set the plugin name within the options.
+  this.options.pluginName = 'playLoader';
+
   // Get the media plugin.
   this.get('media', function(media) {
 
@@ -2241,6 +2280,9 @@ minplayer.players.base.prototype.construct = function() {
 
   // Call the media display constructor.
   minplayer.display.prototype.construct.call(this);
+
+  // Set the plugin name within the options.
+  this.options.pluginName = 'basePlayer';
 
   /** The currently loaded media file. */
   this.mediaFile = this.options.file;
@@ -2885,6 +2927,9 @@ minplayer.players.html5.prototype.construct = function() {
   // Call base constructor.
   minplayer.players.base.prototype.construct.call(this);
 
+  // Set the plugin name within the options.
+  this.options.pluginName = 'html5';
+
   // Add the player events.
   this.addPlayerEvents();
 };
@@ -3254,6 +3299,19 @@ minplayer.players.flash.prototype = new minplayer.players.base();
 minplayer.players.flash.prototype.constructor = minplayer.players.flash;
 
 /**
+ * @see minplayer.plugin.construct
+ * @this minplayer.players.flash
+ */
+minplayer.players.flash.prototype.construct = function() {
+
+  // Call the players.base constructor.
+  minplayer.players.base.prototype.construct.call(this);
+
+  // Set the plugin name within the options.
+  this.options.pluginName = 'flash';
+};
+
+/**
  * @see minplayer.players.base#getPriority
  * @return {number} The priority of this media player.
  */
@@ -3363,6 +3421,19 @@ minplayer.players.minplayer.prototype = new minplayer.players.flash();
 
 /** Reset the constructor. */
 minplayer.players.minplayer.prototype.constructor = minplayer.players.minplayer;
+
+/**
+ * @see minplayer.plugin.construct
+ * @this minplayer.players.minplayer
+ */
+minplayer.players.minplayer.prototype.construct = function() {
+
+  // Call the players.flash constructor.
+  minplayer.players.flash.prototype.construct.call(this);
+
+  // Set the plugin name within the options.
+  this.options.pluginName = 'minplayer';
+};
 
 /**
  * Called when the Flash player is ready.
@@ -3658,6 +3729,19 @@ minplayer.players.youtube.prototype = new minplayer.players.base();
 
 /** Reset the constructor. */
 minplayer.players.youtube.prototype.constructor = minplayer.players.youtube;
+
+/**
+ * @see minplayer.plugin.construct
+ * @this minplayer.players.youtube
+ */
+minplayer.players.youtube.prototype.construct = function() {
+
+  // Call the players.flash constructor.
+  minplayer.players.base.prototype.construct.call(this);
+
+  // Set the plugin name within the options.
+  this.options.pluginName = 'youtube';
+};
 
 /**
  * @see minplayer.players.base#getPriority
@@ -4015,6 +4099,19 @@ minplayer.players.vimeo.prototype = new minplayer.players.base();
 minplayer.players.vimeo.prototype.constructor = minplayer.players.vimeo;
 
 /**
+ * @see minplayer.plugin.construct
+ * @this minplayer.players.vimeo
+ */
+minplayer.players.vimeo.prototype.construct = function() {
+
+  // Call the players.flash constructor.
+  minplayer.players.base.prototype.construct.call(this);
+
+  // Set the plugin name within the options.
+  this.options.pluginName = 'vimeo';
+};
+
+/**
  * @see minplayer.players.base#getPriority
  * @return {number} The priority of this media player.
  */
@@ -4365,6 +4462,9 @@ minplayer.controller.prototype.construct = function() {
 
   // Call the minplayer plugin constructor.
   minplayer.display.prototype.construct.call(this);
+
+  // Set the plugin name within the options.
+  this.options.pluginName = 'controller';
 
   // Keep track of if we are dragging...
   this.dragging = false;

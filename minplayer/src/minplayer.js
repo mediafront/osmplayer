@@ -96,6 +96,9 @@ minplayer.prototype.construct = function() {
   // Call the minplayer display constructor.
   minplayer.display.prototype.construct.call(this);
 
+  // Set the plugin name within the options.
+  this.options.pluginName = 'player';
+
   /** The controller for this player. */
   this.controller = this.create('controller');
 
@@ -288,17 +291,19 @@ minplayer.getMediaFile = function(files) {
 
 /**
  * Loads a media player based on the current file.
+ *
+ * @return {boolean} If a new player was loaded.
  */
 minplayer.prototype.loadPlayer = function() {
 
   // Do nothing if there isn't a file or anywhere to put it.
   if (!this.options.file || (this.elements.display.length == 0)) {
-    return;
+    return false;
   }
 
+  // If no player is set, then also return false.
   if (!this.options.file.player) {
-    this.showError('Cannot play media: ' + this.options.file.mimetype);
-    return;
+    return false;
   }
 
   // Reset the error.
@@ -341,6 +346,9 @@ minplayer.prototype.loadPlayer = function() {
         media.load(player.options.file);
       };
     })(this));
+
+    // Return that a new player is loaded.
+    return true;
   }
   // If the media object already exists...
   else if (this.media) {
@@ -348,6 +356,7 @@ minplayer.prototype.loadPlayer = function() {
     // Now load the different media file.
     this.media.options = this.options;
     this.media.load(this.options.file);
+    return false;
   }
 };
 
@@ -366,10 +375,16 @@ minplayer.prototype.load = function(files) {
   this.options.file = minplayer.getMediaFile(this.options.files);
 
   // Now load the player.
-  this.loadPlayer();
+  if (this.loadPlayer()) {
 
-  // Add the player events.
-  this.addEvents();
+    // Add the events since we now have a player.
+    this.addEvents();
+
+    // If the player isn't valid, then show an error.
+    if (this.options.file.mimetype && !this.options.file.player) {
+      this.showError('Cannot play media: ' + this.options.file.mimetype);
+    }
+  }
 };
 
 /**

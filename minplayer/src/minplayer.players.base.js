@@ -75,6 +75,9 @@ minplayer.players.base.prototype.construct = function() {
   // Call the media display constructor.
   minplayer.display.prototype.construct.call(this);
 
+  // Set the plugin name within the options.
+  this.options.pluginName = 'basePlayer';
+
   /** The currently loaded media file. */
   this.mediaFile = this.options.file;
 

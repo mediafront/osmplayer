@@ -57,9 +57,21 @@ js: ${files}
 	@echo "Generating aggregated bin/osmplayer.js file"
 	@cat > bin/osmplayer.js src/iscroll/src/iscroll.js $^
 	@echo "Generating compressed bin/osmplayer.compressed file"
-	@java -jar tools/compiler.jar --js bin/osmplayer.js --js_output_file bin/osmplayer.compressed.js
+	curl -s \
+	  -d compilation_level=SIMPLE_OPTIMIZATIONS \
+	  -d output_format=text \
+	  -d output_info=compiled_code \
+	  --data-urlencode "js_code@bin/osmplayer.js" \
+	  http://closure-compiler.appspot.com/compile \
+	  > bin/osmplayer.compressed.js
 	@cat > templates/default/osmplayer.default.tmp ${default_template}
-	@java -jar tools/compiler.jar --js templates/default/osmplayer.default.tmp --js_output_file templates/default/osmplayer.default.js
+	curl -s \
+	  -d compilation_level=SIMPLE_OPTIMIZATIONS \
+	  -d output_format=text \
+	  -d output_info=compiled_code \
+	  --data-urlencode "js_code@templates/default/osmplayer.default.tmp" \
+	  http://closure-compiler.appspot.com/compile \
+	  > templates/default/osmplayer.default.js
 	@rm templates/default/osmplayer.default.tmp
 
 # Create the documentation from source code.
@@ -75,9 +87,6 @@ fixjsstyle: ${files}
 tools:
 	apt-get install python-setuptools
 	apt-get install unzip
-	wget http://closure-compiler.googlecode.com/files/compiler-latest.zip -P tools
-	unzip tools/compiler-latest.zip -d tools
-	rm tools/compiler-latest.zip tools/COPYING tools/README
 	easy_install http://closure-linter.googlecode.com/files/closure_linter-latest.tar.gz
 	wget http://jsdoc-toolkit.googlecode.com/files/jsdoc_toolkit-2.4.0.zip -P tools
 	unzip tools/jsdoc_toolkit-2.4.0.zip -d tools

@@ -41,7 +41,13 @@ js: ${files}
 	@echo "Generating aggregated bin/minplayer.js file"
 	@cat > bin/minplayer.js $^
 	@echo "Generating compressed bin/minplayer.compressed file"
-	@java -jar tools/compiler.jar --js bin/minplayer.js --js_output_file bin/minplayer.compressed.js
+	curl -s \
+	  -d compilation_level=SIMPLE_OPTIMIZATIONS \
+	  -d output_format=text \
+	  -d output_info=compiled_code \
+	  --data-urlencode "js_code@bin/minplayer.js" \
+	  http://closure-compiler.appspot.com/compile \
+	  > bin/minplayer.compressed.js
 
 # Create the documentation from source code.
 jsdoc: ${files}
@@ -56,9 +62,6 @@ fixjsstyle: ${files}
 tools:
 	apt-get install python-setuptools
 	apt-get install unzip
-	wget http://closure-compiler.googlecode.com/files/compiler-latest.zip -P tools
-	unzip tools/compiler-latest.zip -d tools
-	rm tools/compiler-latest.zip tools/COPYING tools/README
 	easy_install http://closure-linter.googlecode.com/files/closure_linter-latest.tar.gz
 	wget http://jsdoc-toolkit.googlecode.com/files/jsdoc_toolkit-2.4.0.zip -P tools
 	unzip tools/jsdoc_toolkit-2.4.0.zip -d tools

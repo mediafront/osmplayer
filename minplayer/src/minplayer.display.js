@@ -45,6 +45,9 @@ minplayer.display.prototype.construct = function() {
   // Call the plugin constructor.
   minplayer.plugin.prototype.construct.call(this);
 
+  // Set the plugin name within the options.
+  this.options.pluginName = 'display';
+
   // Get the display elements.
   this.elements = this.getElements();
 
