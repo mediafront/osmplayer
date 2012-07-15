@@ -136,6 +136,9 @@ minplayer.prototype.construct = function() {
   // Add key events to the window.
   this.addKeyEvents();
 
+  // Called to add events.
+  this.addEvents();
+
   // Now load these files.
   this.load(this.getFiles());
 
@@ -144,31 +147,39 @@ minplayer.prototype.construct = function() {
 };
 
 /**
+ * Called when an error occurs.
+ *
+ * @param {object} plugin The plugin you wish to bind to.
+ */
+minplayer.prototype.bindTo = function(plugin) {
+  plugin.bind('error', (function(player) {
+    return function(event, data) {
+      if (player.currentPlayer == 'html5') {
+        minplayer.player = 'minplayer';
+        player.options.file.player = 'minplayer';
+        player.loadPlayer();
+      }
+      else {
+        player.showError(data);
+      }
+    };
+  })(this));
+
+  // Bind to the fullscreen event.
+  plugin.bind('fullscreen', (function(player) {
+    return function(event, data) {
+      player.resize();
+    };
+  })(this));
+};
+
+/**
  * We need to bind to events we are interested in.
  */
 minplayer.prototype.addEvents = function() {
   minplayer.get.call(this, this.options.id, null, (function(player) {
     return function(plugin) {
-
-      // Bind to the error event.
-      plugin.bind('error', function(event, data) {
-
-        // If an error occurs within the html5 media player, then try
-        // to fall back to the flash player.
-        if (player.currentPlayer == 'html5') {
-          minplayer.player = 'minplayer';
-          player.options.file.player = 'minplayer';
-          player.loadPlayer();
-        }
-        else {
-          player.showError(data);
-        }
-      });
-
-      // Bind to the fullscreen event.
-      plugin.bind('fullscreen', function(event, data) {
-        player.resize();
-      });
+      player.bindTo(plugin);
     };
   })(this));
 };
@@ -378,7 +389,7 @@ minplayer.prototype.load = function(files) {
   if (this.loadPlayer()) {
 
     // Add the events since we now have a player.
-    this.addEvents();
+    this.bindTo(this.media);
 
     // If the player isn't valid, then show an error.
     if (this.options.file.mimetype && !this.options.file.player) {
