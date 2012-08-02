@@ -39,7 +39,7 @@
       this.display.removeClass('minplayer-controls-volume-horizontal');
     }
 
-    if (!this.options.controllerOnly)
+    if (!this.options.controllerOnly) {
       this.get('player', function(player) {
         this.get('media', function(media) {
           if (!media.hasController()) {
