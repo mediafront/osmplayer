@@ -82,6 +82,9 @@ minplayer.players.base.prototype.construct = function() {
   /** The currently loaded media file. */
   this.mediaFile = this.options.file;
 
+  // Make sure we always autoplay on streams.
+  this.options.autoplay = this.options.autoplay || this.mediaFile.stream;
+
   // Clear the media player.
   this.clear();
 
