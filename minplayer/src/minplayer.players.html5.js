@@ -27,9 +27,10 @@ minplayer.players.html5.prototype.constructor = minplayer.players.html5;
 
 /**
  * @see minplayer.players.base#getPriority
+ * @param {object} file A {@link minplayer.file} object.
  * @return {number} The priority of this media player.
  */
-minplayer.players.html5.getPriority = function() {
+minplayer.players.html5.getPriority = function(file) {
   return 10;
 };
 

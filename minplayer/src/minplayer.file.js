@@ -62,7 +62,7 @@ minplayer.file.prototype.getBestPlayer = function() {
   var bestplayer = null, bestpriority = 0;
   jQuery.each(minplayer.players, (function(file) {
     return function(name, player) {
-      var priority = player.getPriority();
+      var priority = player.getPriority(file);
       if (player.canPlay(file) && (priority > bestpriority)) {
         bestplayer = name;
         bestpriority = priority;
@@ -81,7 +81,7 @@ minplayer.file.prototype.getBestPlayer = function() {
 minplayer.file.prototype.getPriority = function() {
   var priority = 1;
   if (this.player) {
-    priority = minplayer.players[this.player].getPriority();
+    priority = minplayer.players[this.player].getPriority(this);
   }
   switch (this.mimetype) {
     case 'video/x-webm':

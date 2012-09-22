@@ -1895,7 +1895,7 @@ minplayer.file.prototype.getBestPlayer = function() {
   var bestplayer = null, bestpriority = 0;
   jQuery.each(minplayer.players, (function(file) {
     return function(name, player) {
-      var priority = player.getPriority();
+      var priority = player.getPriority(file);
       if (player.canPlay(file) && (priority > bestpriority)) {
         bestplayer = name;
         bestpriority = priority;
@@ -1914,7 +1914,7 @@ minplayer.file.prototype.getBestPlayer = function() {
 minplayer.file.prototype.getPriority = function() {
   var priority = 1;
   if (this.player) {
-    priority = minplayer.players[this.player].getPriority();
+    priority = minplayer.players[this.player].getPriority(this);
   }
   switch (this.mimetype) {
     case 'video/x-webm':
@@ -2271,9 +2271,10 @@ minplayer.players.base.prototype.getElements = function() {
 /**
  * Get the priority of this media player.
  *
+ * @param {object} file A {@link minplayer.file} object.
  * @return {number} The priority of this media player.
  */
-minplayer.players.base.getPriority = function() {
+minplayer.players.base.getPriority = function(file) {
   return 0;
 };
 
@@ -2911,9 +2912,10 @@ minplayer.players.html5.prototype.constructor = minplayer.players.html5;
 
 /**
  * @see minplayer.players.base#getPriority
+ * @param {object} file A {@link minplayer.file} object.
  * @return {number} The priority of this media player.
  */
-minplayer.players.html5.getPriority = function() {
+minplayer.players.html5.getPriority = function(file) {
   return 10;
 };
 
@@ -3345,9 +3347,10 @@ minplayer.players.flash.prototype.construct = function() {
 
 /**
  * @see minplayer.players.base#getPriority
+ * @param {object} file A {@link minplayer.file} object.
  * @return {number} The priority of this media player.
  */
-minplayer.players.flash.getPriority = function() {
+minplayer.players.flash.getPriority = function(file) {
   return 0;
 };
 
@@ -3507,10 +3510,12 @@ window.onFlashPlayerDebug = function(debug) {
 
 /**
  * @see minplayer.players.base#getPriority
+ * @param {object} file A {@link minplayer.file} object.
  * @return {number} The priority of this media player.
  */
-minplayer.players.minplayer.getPriority = function() {
-  return 1;
+minplayer.players.minplayer.getPriority = function(file) {
+  // Force this player if the stream is set.
+  return file.stream ? 100 : 1;
 };
 
 /**
@@ -3518,7 +3523,14 @@ minplayer.players.minplayer.getPriority = function() {
  * @return {boolean} If this player can play this media type.
  */
 minplayer.players.minplayer.canPlay = function(file) {
-  var isWEBM = jQuery.inArray(file.mimetype, ['video/x-webm',
+
+  // If this has a stream, then the minplayer must play it.
+  if (file.stream) {
+    return true;
+  }
+
+  var isWEBM = jQuery.inArray(file.mimetype, [
+    'video/x-webm',
     'video/webm',
     'application/octet-stream'
   ]) >= 0;
@@ -3544,6 +3556,7 @@ minplayer.players.minplayer.prototype.create = function() {
     'debug': this.options.debug,
     'config': 'nocontrols',
     'file': this.mediaFile.path,
+    'stream': this.mediaFile.stream,
     'autostart': this.options.autoplay,
     'autoload': this.options.autoload
   };
@@ -3777,9 +3790,10 @@ minplayer.players.youtube.prototype.construct = function() {
 
 /**
  * @see minplayer.players.base#getPriority
+ * @param {object} file A {@link minplayer.file} object.
  * @return {number} The priority of this media player.
  */
-minplayer.players.youtube.getPriority = function() {
+minplayer.players.youtube.getPriority = function(file) {
   return 10;
 };
 
@@ -4150,9 +4164,10 @@ minplayer.players.vimeo.prototype.construct = function() {
 
 /**
  * @see minplayer.players.base#getPriority
+ * @param {object} file A {@link minplayer.file} object.
  * @return {number} The priority of this media player.
  */
-minplayer.players.vimeo.getPriority = function() {
+minplayer.players.vimeo.getPriority = function(file) {
   return 10;
 };
 

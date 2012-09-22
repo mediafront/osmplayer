@@ -40,9 +40,10 @@ minplayer.players.flash.prototype.construct = function() {
 
 /**
  * @see minplayer.players.base#getPriority
+ * @param {object} file A {@link minplayer.file} object.
  * @return {number} The priority of this media player.
  */
-minplayer.players.flash.getPriority = function() {
+minplayer.players.flash.getPriority = function(file) {
   return 0;
 };
 
