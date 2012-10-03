@@ -49,13 +49,14 @@ osmplayer.teaser.prototype.setNode = function(node) {
 
   // Load the thumbnail image if it exists.
   if (node.mediafiles && node.mediafiles.image) {
-    var image = osmplayer.getImage(node.mediafiles, 'thumbnail');
-    if (image) {
-      if (this.elements.image) {
-        this.preview = new minplayer.image(this.elements.image);
-        this.preview.load(image);
-      }
-    }
+    osmplayer.getImage(node.mediafiles, 'thumbnail', (function(teaser) {
+      return function(image) {
+        if (image && teaser.elements.image) {
+          teaser.preview = new minplayer.image(teaser.elements.image);
+          teaser.preview.load(image.path);
+        }
+      };
+    })(this));
   }
 
   // Bind when they click on this teaser.
