@@ -51,6 +51,10 @@
   z-index:1;
 }
 
+.player-ui .minplayer-default-preview.no-image {
+  background: transparent;
+}
+
 .player-ui .minplayer-default-loader-wrapper {
   width:100%;
   height:100%;

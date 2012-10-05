@@ -37,6 +37,15 @@
     return jQuery('.minplayer-' + template + ' .minplayer-' + template + '-loader-wrapper', this.context);
   }
 
+  /**
+   * Loads the preview image.
+   */
+  osmplayer.playLoader[template].prototype.loadPreview = function() {
+    if (!minplayer.playLoader.prototype.loadPreview.call(this)) {
+      this.elements.preview.addClass('no-image');
+    }
+  };
+
   // Return the elements
   osmplayer.playLoader[template].prototype.getElements = function() {
     var elements = minplayer.playLoader.prototype.getElements.call(this);
