@@ -33,6 +33,7 @@
 .player-ui .minplayer-default-display {
   width:100%;
   height:100%;
+  background-color: #000;
 }
 
 .player-ui .minplayer-default-display video {
