@@ -254,7 +254,8 @@ minplayer.plugin.prototype.checkQueue = function(plugin) {
           q.event,
           this.options.id,
           plugin.name,
-          q.callback
+          q.callback,
+          true
         );
       }
 
@@ -450,10 +451,11 @@ minplayer.addQueue = function(context, event, id, plugin, callback) {
  * @param {string} id The player ID.
  * @param {string} plugin The name of the plugin.
  * @param {function} callback Called when the event occurs.
+ * @param {boolean} fromCheck If this is from a checkqueue.
  * @return {boolean} If the bind was successful.
  * @this The object in context who called this method.
  */
-minplayer.bind = function(event, id, plugin, callback) {
+minplayer.bind = function(event, id, plugin, callback, fromCheck) {
 
   // If no callback exists, then just return false.
   if (!callback) {
@@ -515,7 +517,9 @@ minplayer.bind = function(event, id, plugin, callback) {
   }
 
   // Add it to the queue for post bindings...
-  minplayer.addQueue(this, event, id, plugin, callback);
+  if ((selected.length == 0) && !fromCheck) {
+    minplayer.addQueue(this, event, id, plugin, callback);
+  }
 
   // Return that this wasn't handled.
   return (selected.length > 0);
