@@ -1,24 +1,14 @@
-
 /* base styles */
-.media-player {}
-.media-player-play, .media-player-volume-button {
-  cursor: pointer;
-}
-.media-player-timer {
-  cursor: default;
-}
-
-.media-player {
+.minplayer-jqueryui {
   position: relative;
-  background:#000;
-  border:1px solid #333;
   font-family:"Trebuchet MS", Helvetica, sans-serif;
   -moz-box-shadow:0px 5px 10px #333;/*no-important moz*/
   -webkit-box-shadow:0px 5px 10px #333;/*no-important chrome*/
 }
 
-.media-player .media-player-error {
+.player-ui .minplayer-jqueryui-error {
   display:none;
+  color: #eee;
   position: absolute;
   top: 80%;
   left: 50%;
@@ -30,7 +20,6 @@
   vertical-align: center;
   border: none;
   z-index:1000;
-  color: #fff;
   opacity: 0.9;
   border-radius: 10px;
   -webkit-border-radius: 10px;
@@ -41,29 +30,32 @@
   -moz-box-shadow: 2px 2px 4px #000;
 }
 
-.media-player .media-player-display {
-  background-color:#000;
+.player-ui .minplayer-jqueryui-display {
   width:100%;
   height:100%;
+  border: none;
+  background-color: #000;
 }
 
-.media-player .media-player-display video {
+.player-ui .minplayer-jqueryui-display video {
   width: 100%;
   height: 100%;
 }
 
-.media-player .media-player-preview {
+.player-ui .minplayer-jqueryui-preview {
   width:100%;
   height:100%;
   position:absolute;
+  background: #333;
+  border: none;
   z-index:1;
 }
 
-.media-player .media-player-preview.has-preview {
-  background-color: rgb(0, 0, 0);
+.player-ui .minplayer-jqueryui-preview.no-image {
+  background: transparent;
 }
 
-.media-player .media-player-play-loader {
+.player-ui .minplayer-jqueryui-loader-wrapper {
   width:100%;
   height:100%;
   position:absolute;
@@ -74,7 +66,7 @@
   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#55000000, endColorstr=#55000000)";
 }
 
-.media-player .media-player-loader {
+.player-ui .minplayer-jqueryui-loader {
   width:42px;
   height:10px;
   position: absolute;
@@ -88,7 +80,7 @@
 }
 
 /* Big play button */
-.media-player .media-player-play-loader .media-player-big-play {
+.player-ui .minplayer-jqueryui-big-play {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -110,14 +102,14 @@
   -moz-box-shadow: 2px 2px 4px #000;
 }
 
-.media-player .media-player-play-loader .media-player-big-play span {
+.player-ui .minplayer-jqueryui-big-play span {
   margin: 22px 0 0 48px;
   border-left: 36px solid white;
   border-top: 18px solid transparent;
   border-bottom: 18px solid transparent;
 }
 
-.media-player .media-player-play-loader .media-player-big-play span {
+.player-ui .minplayer-jqueryui-big-play span {
   display: block;
   font-size: 0;
   line-height: 0;
@@ -129,7 +121,7 @@
   border-bottom: 20px solid transparent;
 }
 
-.media-player.fullscreen, .media-player.fullscreen .media-player-display, .media-player.fullscreen .media-player-play-loader {
+.player-ui .minplayer-jqueryui.fullscreen, .player-ui .minplayer-jqueryui.fullscreen .minplayer-jqueryui-display, .player-ui .minplayer-jqueryui.fullscreen .minplayer-jqueryui-loader-wrapper {
   position: fixed;
   left: 0;
   top: 0;
@@ -141,11 +133,11 @@
   height: 100% !important;
 }
 
-.media-player.fullscreen .media-player-play-loader {
+.player-ui .minplayer-jqueryui.fullscreen .minplayer-jqueryui-play-loader {
   z-index:1001;
 }
 
-.media-player .media-player-controls {
+.player-ui .minplayer-jqueryui-controls {
   position: absolute;
   display: block;
   z-index:3;
@@ -153,53 +145,60 @@
   left:0px;
   right:0px;
   height:30px;
-  background-color:rgba(0,0,0,0.5);
 }
 
-.media-player-controls-left {
+.player-ui .minplayer-jqueryui-controls-left {
   float:left;
-  width:30px;
-  height:26px;
-  margin: 2px 0;
-  border-right:1px solid #eee;
+  width:29px;
+  margin: 3px;
+  border-right:1px solid #888;
 }
 
-.media-player.fullscreen .media-player-controls-left {
+.player-ui .minplayer-jqueryui.fullscreen .minplayer-jqueryui-controls-left {
   width:40px;
   border:none;
 }
 
-.media-player-controls-right {
+.player-ui .minplayer-jqueryui-controls-right {
   float:right;
   width:120px;
   height:30px;
+  margin: 3px;
 }
 
-.media-player.fullscreen .media-player-controls-right {
+.player-ui .minplayer-jqueryui.fullscreen .minplayer-jqueryui-controls-right {
   width:110px;
 }
 
-.media-player-controls-mid {
+.player-ui .minplayer-jqueryui-controls-mid {
   position:absolute;
   left:40px;
   right:130px;
   height:30px;
+  margin: 3px;
 }
 
-.media-player.fullscreen .media-player-controls-mid {
+.player-ui .minplayer-jqueryui.fullscreen .minplayer-jqueryui-controls-mid {
   left:50px;
 }
 
-.media-player .media-player-play, .media-player .media-player-volume, .media-player .media-player-timer {
+.player-ui .minplayer-jqueryui-play, .minplayer-jqueryui-volume, .player-ui .minplayer-jqueryui-timer, .player-ui .minplayer-jqueryui-mute, .player-ui .minplayer-jqueryui-unmute {
   float: left;
 }
 
+.player-ui .minplayer-jqueryui-play, .minplayer-jqueryui-fullscreen, .minplayer-jqueryui-mute, .minplayer-jqueryui-unmute {
+  cursor: pointer;
+}
+
+.player-ui .minplayer-jqueryui-timer {
+  cursor: default;
+}
+
 /* play, pause */
-.media-player .media-player-play, .media-player .media-player-pause {
+.player-ui .minplayer-jqueryui-button {
   display: block;
-  width: 22px;
-  height: 22px;
-  margin:2px 0 0 4px;
+  width: 24px;
+  height: 24px;
   opacity: 0.7;
   -moz-transition: all 0.2s ease-in-out; /* Firefox */
   -webkit-transition: all 0.2s ease-in-out; /* Safari and Chrome */
@@ -207,25 +206,23 @@
   transition: all 0.2s ease-in-out;
 }
 
-.media-player .media-player-play:hover, .media-player .media-player-pause:hover {
+.player-ui .minplayer-jqueryui-button:hover {
   opacity: 1;
 }
 
-.media-player .media-player-play {
-  background: url(images/play-icon.png) no-repeat;
+.player-ui .minplayer-jqueryui-button span {
+  margin: 4px 0 0 4px;
 }
 
-.media-player .media-player-pause {
-  background: url(images/pause-icon.png) no-repeat;
+.player-ui .minplayer-jqueryui-pause {
   display:none;
 }
 
 /* seek */
-.media-player .media-player-seek {
+.player-ui .minplayer-jqueryui-seek {
   position:relative;
   height: 10px;
-  margin-top:9px;
-  border: 1px solid #494949;
+  margin-top: 7px;
   -moz-border-radius:4px;
   -webkit-border-radius:4px;
   border-radius:4px;
@@ -235,12 +232,12 @@
   box-shadow: inset 0 -3px 3px #333333;
 }
 
-.media-player .media-player-seek .ui-slider-handle {
-  width: 15px;
-  height: 15px;
+.player-ui .minplayer-jqueryui-seek .ui-slider-handle {
+  position: absolute;
+  width: 16px;
+  height: 16px;
   border: 1px solid #333;
-  top: -4px;
-  z-index:20px;
+  z-index:20;
   -moz-border-radius:10px;
   -webkit-border-radius:10px;
   border-radius:10px;
@@ -250,108 +247,96 @@
   box-shadow: inset 0 -3px 3px #d5d5d5;
 }
 
-.media-player .media-player-seek .ui-slider-handle.ui-state-hover {
+.player-ui .minplayer-jqueryui-seek .ui-slider-handle.ui-state-hover {
   background: #fff;
 }
 
-.media-player .media-player-seek .ui-slider-range {
+.player-ui .minplayer-jqueryui-seek .ui-slider-range {
+  position: absolute;
+  height: 10px;
   -moz-border-radius:15px;
   -webkit-border-radius:15px;
   z-index:10px;
   border-radius:15px;
-  background: #4cbae8;
-  background-image: -moz-linear-gradient(top, #4cbae8, #39a2ce);
-  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #4cbae8),color-stop(1, #39a2ce));
-  box-shadow: inset 0 -3px 3px #39a2ce;
 }
 
-.media-player .media-player-progress {
+.player-ui .minplayer-jqueryui-progress {
+  position: absolute;
+  width:0px;
+  height:10px;
   -moz-border-radius:15px;
   -webkit-border-radius:15px;
   z-index:8px;
-  width:0px;
-  height:10px;
   border-radius:15px;
-  background: #266580;
-  background-image: -moz-linear-gradient(top, #266580, #153A4A);
-  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #266580),color-stop(1, #153A4A));
-  box-shadow: inset 0 -3px 3px #153A4A;
+  border: 0 !important;
 }
 
 /* timer */
-.media-player .media-player-timer {
+.player-ui .minplayer-jqueryui-timer {
   position:relative;
   height: 22px;
   float:left;
-  color: #999;
-  padding-top:6px;
+  padding-top:3px;
   padding-right:6px;
   font-size: 16px;
   font-weight: bold;
-  border-right:1px solid #eee;
+  border-right:1px solid #888;
 }
 
-.media-player.fullscreen .media-player-timer {
+.player-ui .minplayer-jqueryui.fullscreen .minplayer-jqueryui-timer {
   border:none;
-  margin-top:4px;
 }
 
 /* volume */
-.media-player .media-player-volume {
+.player-ui .minplayer-jqueryui-volume {
   position: absolute;
-  right:33px;
-  bottom:4px;
-  float:right;
+  right:38px;
+  bottom:1px;
   overflow: hidden;
-  width: 20px;
-  height: 30px;
-  color: #fff;
-  padding: 0px 10px;
+  width: 26px;
+  height: 26px;
   -moz-transition: all 0.1s ease-in-out; /* Firefox */
   -webkit-transition: all 0.1s ease-in-out; /* Safari and Chrome */
   -o-transition: all 0.2s ease-in-out;  /* Opera */
   transition: all 0.1s ease-in-out;
 }
 
-.media-player.fullscreen .media-player-volume {
-  right:40px;
-  bottom:13px;
+.player-ui .minplayer-jqueryui.fullscreen .minplayer-jqueryui-volume {
+  right:44px;
+  bottom:12px;
 }
 
-.media-player .media-player-volume:hover {
+.player-ui .minplayer-jqueryui-volume:hover {
   height: 135px;
-  padding-top: 5px;
 }
 
 
-.media-player .media-player-volume:hover .media-player-volume-slider {
+.player-ui .minplayer-jqueryui-volume:hover .minplayer-jqueryui-volume-slider {
   position: relative;
   visibility: visible;
   opacity: 1;
 }
 
-.media-player .media-player-volume-slider {
+.player-ui .minplayer-jqueryui-volume-slider {
   position: relative;
   height: 100px;
   width: 7px;
-  left: 4px;
+  left: 8px;
   visiblity: hidden;
   opacity: 0;
   border: 1px solid #444;
   -moz-border-radius:15px;
   -webkit-border-radius:15px;
   border-radius:15px;
-  background: #535353;
-  background-image: -moz-linear-gradient(top, #535353, #333333);
-  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #535353),color-stop(1, #333333));
-  box-shadow: inset 0 3px 3px #333333;
   -moz-transition: all 0.1s ease-in-out; /* Firefox */
   -webkit-transition: all 0.1s ease-in-out; /* Safari and Chrome */
   -o-transition: all 0.1s ease-in-out;  /* Opera */
   transition: all 0.1s ease-in-out;
 }
 
-.media-player .media-player-volume-slider .ui-slider-handle {
+.player-ui .minplayer-jqueryui-volume-slider .ui-slider-handle {
+  position: absolute;
+  z-index: 20;
   width: 12px;
   height: 12px;
   left: -4px;
@@ -364,78 +349,65 @@
   background: #e6e6e6;
   background-image: -moz-linear-gradient(top, #e6e6e6, #d5d5d5);
   background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #e6e6e6),color-stop(1, #d5d5d5));
-
   box-shadow: inset 0 3px 3px #d5d5d5;
 }
 
-.media-player .media-player-volume-slider .ui-slider-handle.ui-state-hover {
+.player-ui .minplayer-jqueryui-volume-slider .ui-slider-handle.ui-state-hover {
   background: #fff;
 }
 
-.media-player .media-player-volume-slider .ui-slider-range {
+.player-ui .minplayer-jqueryui-volume-slider .ui-slider-range {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
   -moz-border-radius:15px;
   -webkit-border-radius:15px;
   border-radius:15px;
-  background: #e6e6e6;
-  background-image: -moz-linear-gradient(top, #e6e6e6, #d5d5d5);
-  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #e6e6e6),color-stop(1, #d5d5d5));
-  box-shadow: inset 0 3px 3px #d5d5d5;
 }
 
 /* volume button */
-
-.media-player .media-player-volume-button {
+.player-ui .minplayer-jqueryui-volume-mute, .player-ui .minplayer-jqueryui-volume-unmute {
   position: absolute;
   bottom: 0px;
-  display: block;
-  width: 22px;
-  height: 22px;
-  background: url(images/volume-full-icon.png) no-repeat;
-  text-indent: -9999px;
-  opacity: 0.8;
 }
 
-.media-player .media-player-volume-button:hover {
-  opacity: 1;
-}
-
-.media-player .media-player-volume-mute {
-  background: url(images/volume-mute-icon.png) no-repeat;
+.player-ui .minplayer-jqueryui-volume-unmute {
+  display: none;
 }
 
 /* Fullscreen button */
-.media-player .media-player-fullscreen {
+.player-ui .minplayer-jqueryui-fullscreen {
   position: absolute;
   right:6px;
   bottom:7px;
   width: 22px;
   height: 14px;
-  border:1px solid #aaa;
 }
 
-.media-player.fullscreen .media-player-fullscreen {
+.player-ui .minplayer-jqueryui.fullscreen .minplayer-jqueryui-fullscreen {
   right:14px;
   bottom:16px;
 }
 
-.media-player .media-player-fullscreen-inner, .media-player.fullscreen .media-player-fullscreen:hover .media-player-fullscreen-inner {
+.player-ui .minplayer-jqueryui-fullscreen-inner, .player-ui .minplayer-jqueryui.fullscreen .minplayer-jqueryui-fullscreen:hover .minplayer-jqueryui-fullscreen-inner {
   position:absolute;
   bottom:0;
   width:16px;
   height:8px;
-  background-color:#aaa;
   -moz-transition: all 0.1s ease-in-out; /* Firefox */
   -webkit-transition: all 0.1s ease-in-out; /* Safari and Chrome */
   -o-transition: all 0.1s ease-in-out;  /* Opera */
   transition: all 0.1s ease-in-out;
 }
 
-.media-player .media-player-fullscreen:hover .media-player-fullscreen-inner, .media-player.fullscreen .media-player-fullscreen-inner {
+.player-ui .minplayer-jqueryui-fullscreen:hover .minplayer-jqueryui-fullscreen-inner, .player-ui .minplayer-jqueryui.fullscreen .minplayer-jqueryui-fullscreen-inner {
   width:20px;
   height:12px;
 }
 
-.media-player.fullscreen .media-player-controls {
+.player-ui .minplayer-jqueryui.fullscreen .minplayer-jqueryui-controls {
   position: absolute;
   z-index:1002;
   width:500px;
@@ -447,36 +419,26 @@
   -moz-border-radius: 5px; /* FF1+ */
   -webkit-border-radius: 5px; /* Saf3+, Chrome */
   border-radius: 5px; /* Opera 10.5, IE 9 */
-  background: #000000;
-  background-image: -moz-linear-gradient(top, #313131, #000000); /* FF3.6 */
-  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #313131),color-stop(1, #000000)); /* Saf4+, Chrome */
-  box-shadow: inset 0 15px 35px #535353;
   -moz-transition: all 0.1s ease-in-out; /* Firefox */
   -webkit-transition: all 0.1s ease-in-out; /* Safari and Chrome */
   -o-transition: all 0.1s ease-in-out;  /* Opera */
   transition: all 0.1s ease-in-out;
 }
 
-
-/* needed jquery ui styles
- * using these, we don't depend on jQuery UI's stylsheet
-*/
-.ui-slider-handle {
+.player-ui .minplayer-jqueryui-logo {
+  z-index: 200;
+  line-height: 0px;
   position: absolute;
-  z-index: 4;
-  display: block;
-  margin-left:-0.6em;
-  cursor: default;
-  outline: none;
+  bottom: 3px;
+  left: 3px;
 }
 
-.ui-slider-range {
-  display:block;
-  width:100%;
-  height:100%;
-  left:0;
-  bottom: 0;
-  border:0 none;
-  position:absolute;
-  z-index:3;
+.player-ui .minplayer-jqueryui.fullscreen .minplayer-jqueryui-logo {
+  z-index: 1002;
 }
+
+.with-controller .minplayer-jqueryui-logo {
+  bottom: 34px;
+}
+
+.player-ui .ui-slider-horizontal .ui-slider-handle { top: -.3em; margin-left: -.6em; }
