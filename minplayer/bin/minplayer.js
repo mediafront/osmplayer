@@ -114,6 +114,19 @@ if (!minplayer.playTypes) {
   /** Determine if we have a touchscreen. */
   minplayer.hasTouch = 'ontouchstart' in window && !minplayer.isTouchPad;
 }
+
+// Get the URL variables.
+if (!minplayer.urlVars) {
+
+  /** The URL variables for the minplayer. */
+  minplayer.urlVars = {};
+
+  // Get the URL variables.
+  var regEx = /[?&]+([^=&]+)=([^&]*)/gi;
+  window.location.href.replace(regEx, function(m, key, value) {
+    minplayer.urlVars[key] = value;
+  });
+}
 /** The minplayer namespace. */
 var minplayer = minplayer || {};
 
@@ -2535,6 +2548,44 @@ minplayer.players.base.prototype.onReady = function() {
 };
 
 /**
+ * Returns the amount of seconds you would like to seek.
+ *
+ * @return {number} The number of seconds we should seek.
+ */
+minplayer.players.base.prototype.getSeek = function() {
+  var seconds = 0, minutes = 0, hours = 0;
+
+  // See if they would like to seek.
+  if (minplayer.urlVars && minplayer.urlVars.seek) {
+
+    // Get the seconds.
+    seconds = minplayer.urlVars.seek.match(/([0-9])s/i);
+    if (seconds) {
+      seconds = parseInt(seconds[1], 10);
+    }
+
+    // Get the minutes.
+    minutes = minplayer.urlVars.seek.match(/([0-9])m/i);
+    if (minutes) {
+      seconds += (parseInt(minutes[1], 10) * 60);
+    }
+
+    // Get the hours.
+    hours = minplayer.urlVars.seek.match(/([0-9])h/i);
+    if (hours) {
+      seconds += (parseInt(hours[1], 10) * 3600);
+    }
+
+    // If no seconds were found, then just use the raw value.
+    if (!seconds) {
+      seconds = minplayer.urlVars.seek;
+    }
+  }
+
+  return seconds;
+};
+
+/**
  * Should be called when the media is playing.
  */
 minplayer.players.base.prototype.onPlaying = function() {
@@ -2625,6 +2676,18 @@ minplayer.players.base.prototype.onLoaded = function() {
   }
 
   this.trigger('loadeddata');
+
+  // See if they would like to seek.
+  var seek = this.getSeek();
+  if (seek) {
+    this.getDuration((function(player) {
+      return function(duration) {
+        if (seek < duration) {
+          player.seek(seek);
+        }
+      };
+    })(this));
+  }
 };
 
 /**
