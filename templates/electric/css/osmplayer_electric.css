@@ -240,7 +240,7 @@
   height: 15px;
   border: 1px solid #333;
   top: -4px;
-  z-index:20px;
+  z-index:20;
   -moz-border-radius:10px;
   -webkit-border-radius:10px;
   border-radius:10px;
@@ -257,7 +257,7 @@
 .media-player .media-player-seek .ui-slider-range {
   -moz-border-radius:15px;
   -webkit-border-radius:15px;
-  z-index:10px;
+  z-index:10;
   border-radius:15px;
   background: #4cbae8;
   background-image: -moz-linear-gradient(top, #4cbae8, #39a2ce);
@@ -268,7 +268,7 @@
 .media-player .media-player-progress {
   -moz-border-radius:15px;
   -webkit-border-radius:15px;
-  z-index:8px;
+  z-index:8;
   width:0px;
   height:10px;
   border-radius:15px;
