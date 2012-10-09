@@ -46,7 +46,7 @@
             minplayer.showThenHide(this.display, 5000, function(shown) {
               var op = shown ? 'addClass' : 'removeClass';
               player.display[op]('with-controller');
-            });
+            }, player.display);
           }
           else {
             player.display.addClass('with-controller');
