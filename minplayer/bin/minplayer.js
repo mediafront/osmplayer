@@ -1034,7 +1034,7 @@ minplayer.display.prototype.onFocus = function(focus) {
   this.hasFocus = this.focus = focus;
 
   // If they have autoHide enabled, then show then hide this element.
-  if (focus && this.autoHide) {
+  if (this.autoHide) {
     this.showThenHide(
       this.autoHide.element,
       this.autoHide.timeout,
