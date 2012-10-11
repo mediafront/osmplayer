@@ -1082,9 +1082,16 @@ minplayer.display.prototype.showThenHide = function(element, timeout, cb) {
 
   // Show the element.
   if (!element.forceHide) {
-    element.show();
-    if (cb) {
-      cb(true);
+    if (typeof element.showMe !== 'undefined') {
+      if (element.showMe) {
+        element.showMe(cb);
+      }
+    }
+    else {
+      element.show();
+      if (cb) {
+        cb(true);
+      }
     }
   }
 
@@ -1105,13 +1112,19 @@ minplayer.display.prototype.showThenHide = function(element, timeout, cb) {
 
       // Check the hover state.
       if (!element.hoverState) {
-
-        // Hide the element.
-        element.hide('slow', function() {
-          if (cb) {
-            cb(false);
+        if (typeof element.hideMe !== 'undefined') {
+          if (element.hideMe) {
+            element.hideMe(cb);
           }
-        });
+        }
+        else {
+          // Hide the element.
+          element.hide('slow', function() {
+            if (cb) {
+              cb(false);
+            }
+          });
+        }
       }
       else {
 
