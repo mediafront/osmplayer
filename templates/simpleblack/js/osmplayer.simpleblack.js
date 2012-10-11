@@ -7,9 +7,9 @@
   osmplayer[template] = function(context, options) {
 
     // Make sure we provide default options...
-    this.options = jQuery.extend({
+    options = jQuery.extend({
       controllerOnly: false
-    }, this.options);
+    }, options);
 
     // Derive from osmplayer.
     osmplayer.call(this, context, options);

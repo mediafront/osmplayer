@@ -9,6 +9,11 @@
   // constructor.
   osmplayer.playlist[template] = function(context, options) {
 
+    // Set some defaults.
+    options = jQuery.extend({
+      showPlaylist: true
+    }, options);
+
     // Derive from playlist
     osmplayer.playlist.call(this, context, options);
   };
@@ -21,10 +26,6 @@
    * @see minplayer.plugin#construct
    */
   osmplayer.playlist[template].prototype.construct = function() {
-
-    this.options = jQuery.extend({
-      showPlaylist: true
-    }, this.options);
 
     osmplayer.playlist.prototype.construct.call(this);
 

@@ -12,9 +12,9 @@
   osmplayer.controller[template] = function(context, options) {
 
     // Make sure we provide default options...
-    this.options = jQuery.extend({
+    options = jQuery.extend({
       volumeVertical: true
-    }, this.options);
+    }, options);
 
     // Derive from default controller
     minplayer.controller.call(this, context, options);
