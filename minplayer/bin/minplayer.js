@@ -844,16 +844,24 @@ minplayer.bind = function(event, id, plugin, callback, fromCheck) {
  */
 minplayer.get = function(id, plugin, callback) {
 
+  // Get the parameter types.
+  var idType = typeof id;
+  var pluginType = typeof plugin;
+  var callbackType = typeof callback;
+
   // Normalize the arguments for a better interface.
-  if (typeof id === 'function') {
+  if (idType === 'function') {
     callback = id;
     plugin = id = null;
   }
-
-  if (typeof plugin === 'function') {
+  else if (pluginType === 'function') {
     callback = plugin;
     plugin = id;
     id = null;
+  }
+  else if ((pluginType === 'undefined') && (callbackType === 'undefined')) {
+    plugin = id;
+    callback = id = null;
   }
 
   // Make sure the callback is a callback.
@@ -947,6 +955,9 @@ minplayer.display.prototype.construct = function() {
   // Get the display elements.
   this.elements = this.getElements();
 
+  // Set if this display is in autohide.
+  this.autoHide = false;
+
   // Only do this if they allow resize for this display.
   if (this.onResize) {
 
@@ -1021,107 +1032,94 @@ minplayer.click = function(element, fn) {
  */
 minplayer.display.prototype.onFocus = function(focus) {
   this.hasFocus = this.focus = focus;
-};
 
-/** Keep track of all the show hide elements. */
-minplayer.showHideElements = [];
-
-/**
- * Show all the show hide elements.
- */
-minplayer.showAll = function() {
-  var i = minplayer.showHideElements.length;
-  var obj = null;
-  while (i--) {
-    obj = minplayer.showHideElements[i];
-    minplayer.showThenHide(obj.element, obj.timeout, obj.callback);
+  // If they have autoHide enabled, then show then hide this element.
+  if (focus && this.autoHide) {
+    this.showThenHide(
+      this.autoHide.element,
+      this.autoHide.timeout,
+      this.autoHide.cb
+    );
   }
 };
 
 /**
- * Stops the whole show then hide from happening.
- *
- * @param {object} element The element you want the showThenHide to stop.
- */
-minplayer.stopShowThenHide = function(element) {
-  element = jQuery(element);
-  if (element.showTimer) {
-    clearTimeout(element.showTimer);
-  }
-  element.stopShowThenHide = true;
-  element.shown = true;
-  element.show();
-};
-
-/**
- * Called if you would like for your display item to show then hide.
+ * Called if you would like for your plugin to show then hide.
  *
  * @param {object} element The element you would like to hide or show.
  * @param {number} timeout The timeout to hide and show.
- * @param {function} callback Called when something happens.
- * @param {object} hoverElement The element you would like to trigger the show.
+ * @param {function} cb Called when something happens.
  */
-minplayer.showThenHide = function(element, timeout, callback, hoverElement) {
+minplayer.display.prototype.showThenHide = function(element, timeout, cb) {
 
-  // If no element exists, then just return.
-  if (!element) {
-    return;
+  // Get the element type.
+  var elementType = (typeof element);
+
+  // Set some interface defaults.
+  if (elementType === 'undefined') {
+    cb = null;
+    element = this.display;
+  }
+  else if (elementType === 'number') {
+    cb = timeout;
+    timeout = element;
+    element = this.display;
+  }
+  else if (elementType === 'function') {
+    cb = element;
+    element = this.display;
   }
 
-  // Allow them to provide a different element to show then hide from.
-  hoverElement = hoverElement ? hoverElement : document;
-
-  // Ensure we have a timeout.
+  // Make sure we have a timeout.
   timeout = timeout || 5000;
 
-  // If this has not yet been configured.
-  if (!element.showTimer) {
-    element.shown = true;
-    element.stopShowThenHide = false;
+  // Set the autohide variable.
+  this.autoHide = {
+    element: element,
+    timeout: timeout,
+    cb: cb
+  };
 
-    // Add this to our showHideElements.
-    minplayer.showHideElements.push({
-      element: element,
-      timeout: timeout,
-      callback: callback
-    });
-
-    // Bind to a click event.
-    minplayer.click(hoverElement, function() {
-      if (!element.stopShowThenHide) {
-        minplayer.showThenHide(element, timeout, callback);
-      }
-    });
-
-    // Bind to the mousemove event.
-    jQuery(hoverElement).bind('mousemove', function() {
-      if (!element.stopShowThenHide) {
-        minplayer.showThenHide(element, timeout, callback);
-      }
-    });
-  }
-
-  // Clear the timeout, and then setup the show then hide functionality.
-  clearTimeout(element.showTimer);
-
-  // Show the display.
-  if (!element.shown && !element.forceHide) {
-    element.shown = true;
+  // Show the element.
+  if (!element.forceHide) {
     element.show();
-    if (callback) {
-      callback(true);
+    if (cb) {
+      cb(true);
     }
   }
 
-  // Set a timer to hide it after the timeout.
-  element.showTimer = setTimeout(function() {
-    element.hide('slow', function() {
-      element.shown = false;
-      if (callback) {
-        callback(false);
-      }
+  // Define the hover state for this element.
+  if (!element.hoverState) {
+    jQuery(element).bind('mouseenter', function() {
+      element.hoverState = true;
     });
-  }, timeout);
+    jQuery(element).bind('mouseleave', function() {
+      element.hoverState = false;
+    });
+  }
+
+  // Clear the timeout and start it over again.
+  clearTimeout(this.showTimer);
+  this.showTimer = setTimeout((function(self) {
+    return function tryAgain() {
+
+      // Check the hover state.
+      if (!element.hoverState) {
+
+        // Hide the element.
+        element.hide('slow', function() {
+          if (cb) {
+            cb(false);
+          }
+        });
+      }
+      else {
+
+        // Try again in the timeout time.
+        self.showTimer = setTimeout(tryAgain, timeout);
+      }
+    };
+  })(this), timeout);
 };
 
 /**
@@ -1413,17 +1411,6 @@ minplayer.prototype.construct = function() {
   /** The play loader for this player. */
   this.playLoader = this.create('playLoader');
 
-  // Set the focus of the element based on if they click in or outside of it.
-  minplayer.click(document, (function(player) {
-    return function(event) {
-      var target = jQuery(event.target);
-      var focus = !(target.closest('#' + player.options.id).length == 0);
-      minplayer.get.call(this, player.options.id, null, function(plugin) {
-        plugin.onFocus(focus);
-      });
-    };
-  })(this));
-
   /** Add the logo for the player. */
   if (this.options.logo && this.elements.logo) {
 
@@ -1452,6 +1439,22 @@ minplayer.prototype.construct = function() {
 
   // The player is ready.
   this.ready();
+};
+
+/**
+ * Set the focus for this player.
+ *
+ * @param {boolean} focus If the player is in focus or not.
+ */
+minplayer.prototype.setFocus = function(focus) {
+
+  // Tell all plugins about this.
+  minplayer.get.call(this, this.options.id, null, function(plugin) {
+    plugin.onFocus(focus);
+  });
+
+  // Trigger an event that a focus event has occured.
+  this.trigger('playerFocus', focus);
 };
 
 /**
@@ -1485,6 +1488,32 @@ minplayer.prototype.bindTo = function(plugin) {
  * We need to bind to events we are interested in.
  */
 minplayer.prototype.addEvents = function() {
+
+  // Set the focus when they enter the player.
+  this.display.bind('mouseenter', (function(player) {
+    return function() {
+      player.setFocus(true);
+    };
+  })(this));
+
+  this.display.bind('mouseleave', (function(player) {
+    return function() {
+      player.setFocus(false);
+    };
+  })(this));
+
+  var moveThrottle = false;
+  this.display.bind('mousemove', (function(player) {
+    return function() {
+      if (!moveThrottle) {
+        moveThrottle = setTimeout(function() {
+          moveThrottle = false;
+          player.setFocus(true);
+        }, 300);
+      }
+    };
+  })(this));
+
   minplayer.get.call(this, this.options.id, null, (function(player) {
     return function(plugin) {
       player.bindTo(plugin);
@@ -2133,7 +2162,6 @@ minplayer.playLoader.prototype.initialize = function() {
       if (this.elements.bigPlay) {
         minplayer.click(this.elements.bigPlay.unbind(), function(event) {
           event.preventDefault();
-          minplayer.showAll();
           jQuery(this).hide();
           media.play();
         });
@@ -2374,7 +2402,6 @@ minplayer.players.base.prototype.construct = function() {
   // Toggle playing if they click.
   minplayer.click(this.display, (function(player) {
     return function() {
-      minplayer.showAll();
       if (player.playing) {
         player.pause();
       }

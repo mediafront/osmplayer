@@ -22,7 +22,7 @@ osmplayer.controller["electric"].prototype.constructor = osmplayer.controller["e
  */
 osmplayer.controller["electric"].prototype.construct = function() {
   minplayer.controller.prototype.construct.call(this);
-  minplayer.showThenHide(this.display);
+  this.showThenHide();
 }
 
 /**

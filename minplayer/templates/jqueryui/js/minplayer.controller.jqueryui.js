@@ -23,7 +23,7 @@ minplayer.controller["jqueryui"].prototype.constructor = minplayer.controller["j
 minplayer.controller["jqueryui"].prototype.construct = function() {
   minplayer.controller.prototype.construct.call(this);
   this.get('player', function(player) {
-    minplayer.showThenHide(this.display, 5000, function(shown) {
+    this.showThenHide(5000, function(shown) {
       var op = shown ? 'addClass' : 'removeClass';
       player.display[op]('with-controller');
     });

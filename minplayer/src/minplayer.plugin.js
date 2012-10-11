@@ -583,16 +583,24 @@ minplayer.bind = function(event, id, plugin, callback, fromCheck) {
  */
 minplayer.get = function(id, plugin, callback) {
 
+  // Get the parameter types.
+  var idType = typeof id;
+  var pluginType = typeof plugin;
+  var callbackType = typeof callback;
+
   // Normalize the arguments for a better interface.
-  if (typeof id === 'function') {
+  if (idType === 'function') {
     callback = id;
     plugin = id = null;
   }
-
-  if (typeof plugin === 'function') {
+  else if (pluginType === 'function') {
     callback = plugin;
     plugin = id;
     id = null;
+  }
+  else if ((pluginType === 'undefined') && (callbackType === 'undefined')) {
+    plugin = id;
+    callback = id = null;
   }
 
   // Make sure the callback is a callback.

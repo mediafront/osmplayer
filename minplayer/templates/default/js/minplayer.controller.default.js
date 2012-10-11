@@ -22,7 +22,7 @@ minplayer.controller["default"].prototype.constructor = minplayer.controller["de
  */
 minplayer.controller["default"].prototype.construct = function() {
   minplayer.controller.prototype.construct.call(this);
-  minplayer.showThenHide(this.display);
+  this.showThenHide();
 }
 
 /**

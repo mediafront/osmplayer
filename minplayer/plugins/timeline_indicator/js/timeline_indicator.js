@@ -124,6 +124,7 @@ minplayer.timeline_indicator.prototype.construct = function() {
         var time = minplayer.formatTime(seek);
         self.elements.timeline_indicator_text.text(time.time + time.units);
         self.display.css('margin-left', posX);
+        self.trigger('indicate', {time:seek});
       });
     });
 
