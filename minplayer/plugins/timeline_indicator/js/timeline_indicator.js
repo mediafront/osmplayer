@@ -71,10 +71,6 @@ minplayer.timeline_indicator.prototype.construct = function() {
 
   // Set the plugin name within the options.
   this.options.pluginName = 'timeline_indicator';
-
-  // Get the width and offset of the controller.
-  var offset = this.seek.offset().left;
-  var width = this.seek.width();
   var handleZIndex = jQuery('.ui-slider-handle', this.seek).css('zIndex');
   this.elements.timeline_indicator_line.css('zIndex', (handleZIndex - 1));
 
@@ -117,7 +113,8 @@ minplayer.timeline_indicator.prototype.construct = function() {
         if (!self.display.is(':visible')) {
           self.display.show();
         }
-        var posX = (event.pageX - offset);
+        var posX = (event.pageX - self.seek.offset().left);
+        var width = self.seek.width();
         posX = (posX < 0) ? 0 : posX;
         posX = (posX > width) ? width: posX;
         seek = (duration * (posX / width));
