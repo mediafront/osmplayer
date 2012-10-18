@@ -6757,9 +6757,19 @@ osmplayer.playlist.prototype.refreshScroll = function() {
   var list = this.elements.list;
   var scroll = this.elements.scroll;
 
+  // Destroy the scroll bar first.
+  if (this.scroll) {
+    this.scroll.scrollTo(0, 0);
+    this.scroll.destroy();
+    this.scroll = null;
+    this.elements.list
+        .unbind('mousemove')
+        .unbind('mouseenter')
+        .unbind('mouseleave');
+  }
+
   // Check to see if we should add a scroll bar functionality.
-  if ((!this.scroll) &&
-      (list.length > 0) &&
+  if ((list.length > 0) &&
       (scroll.length > 0) &&
       (list[this.orient.size]() > scroll[this.orient.size]())) {
 
@@ -6836,17 +6846,6 @@ osmplayer.playlist.prototype.refreshScroll = function() {
 
     this.scroll.refresh();
     this.scroll.scrollTo(0, 0, 200);
-  }
-  else if (this.scroll) {
-
-    // Disable the scroll bar.
-    this.scroll.scrollTo(0, 0);
-    this.scroll.destroy();
-    this.scroll = null;
-    this.elements.list
-        .unbind('mousemove')
-        .unbind('mouseenter')
-        .unbind('mouseleave');
   }
 };
 
