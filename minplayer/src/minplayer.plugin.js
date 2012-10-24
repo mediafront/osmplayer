@@ -39,6 +39,9 @@ minplayer.plugin = function(name, context, options, queue) {
   /** Create a queue lock. */
   this.lock = false;
 
+  /** The universally unique ID for this plugin. */
+  this.uuid = 0;
+
   // Only call the constructor if we have a context.
   if (context) {
 
@@ -177,7 +180,10 @@ minplayer.plugin.prototype.addPlugin = function(name, plugin) {
     }
 
     // Add this plugin.
-    minplayer.plugins[this.options.id][name].push(plugin);
+    var instance = minplayer.plugins[this.options.id][name].push(plugin);
+
+    // Set the uuid.
+    this.uuid = this.options.id + '__' + name + '__' + instance;
 
     // Now check the queue for this plugin.
     this.checkQueue(plugin);
@@ -276,6 +282,31 @@ minplayer.plugin.prototype.checkQueue = function(plugin) {
 };
 
 /**
+ * All minplayer event types.
+ */
+minplayer.eventTypes = {};
+
+/**
+ * Determine if an event is of a certain type.
+ *
+ * @param {string} name The full name of the event.
+ * @param {string} type The type of the event.
+ * @return {boolean} If this named event is of type.
+ */
+minplayer.plugin.prototype.isEvent = function(name, type) {
+  // Static cache for performance.
+  var cacheName = name + '__' + type;
+  if (typeof minplayer.eventTypes[cacheName] !== 'undefined') {
+    return minplayer.eventTypes[cacheName];
+  }
+  else {
+    var regex = new RegExp('^(.*\:)?' + type + '$', 'gi');
+    minplayer.eventTypes[cacheName] = (name.match(type) !== null);
+    return minplayer.eventTypes[cacheName];
+  }
+};
+
+/**
  * Trigger a media event.
  *
  * @param {string} type The event type.
@@ -292,26 +323,47 @@ minplayer.plugin.prototype.trigger = function(type, data) {
   // Add this to our triggered array.
   this.triggered[type] = data;
 
-  // Check to make sure the queue for this type exists.
-  if (this.queue.hasOwnProperty(type)) {
+  // Iterate through the queue.
+  var i = 0, queue = {}, queuetype = null;
 
-    var i = 0, queue = {}, queuetype = this.queue[type];
+  // Iterate through all the queue items.
+  for (var name in this.queue) {
 
-    // Iterate through all the callbacks in this queue.
-    for (i in queuetype) {
+    // See if this is an event we care about.
+    if (this.isEvent(name, type)) {
 
-      // Check to make sure the queue index exists.
-      if (queuetype.hasOwnProperty(i)) {
+      // Set the queuetype.
+      queuetype = this.queue[name];
 
-        // Setup the event object, and call the callback.
-        queue = queuetype[i];
-        queue.callback({target: this, data: queue.data}, data);
+      // Iterate through all the callbacks in this queue.
+      for (i in queuetype) {
+
+        // Check to make sure the queue index exists.
+        if (queuetype.hasOwnProperty(i)) {
+
+          // Setup the event object, and call the callback.
+          queue = queuetype[i];
+          queue.callback({target: this, data: queue.data}, data);
+        }
       }
     }
   }
 
   // Return the plugin object.
   return this;
+};
+
+/**
+ * Unbind then Bind
+ *
+ * @param {string} type The event type.
+ * @param {object} data The data to bind with the event.
+ * @param {function} fn The callback function.
+ * @return {object} The plugin object.
+ */
+minplayer.plugin.prototype.ubind = function(type, data, fn) {
+  this.unbind(type);
+  return this.bind(type, data, fn);
 };
 
 /**
@@ -343,9 +395,6 @@ minplayer.plugin.prototype.bind = function(type, data, fn) {
   // Initialize the queue for this type.
   this.queue[type] = this.queue[type] || [];
 
-  // Unbind any existing equivalent events.
-  this.unbind(type, fn);
-
   // Now add this event to the queue.
   this.queue[type].push({
     callback: fn,
@@ -353,10 +402,12 @@ minplayer.plugin.prototype.bind = function(type, data, fn) {
   });
 
   // Now see if this event has already been triggered.
-  if (this.triggered.hasOwnProperty(type)) {
-
-    // Go ahead and trigger the event.
-    fn({target: this, data: data}, this.triggered[type]);
+  for (var name in this.triggered) {
+    if (this.triggered.hasOwnProperty(name)) {
+      if (this.isEvent(type, name)) {
+        fn({target: this, data: data}, this.triggered[name]);
+      }
+    }
   }
 
   // Return the plugin.
@@ -391,7 +442,9 @@ minplayer.plugin.prototype.unbind = function(type, fn) {
     this.queue = {};
   }
   else if (!fn) {
-    this.queue[type] = [];
+    if (this.queue[type] && (this.queue[type].length > 0)) {
+      this.queue[type].length = 0;
+    }
   }
   else if (queuetype) {
     // Iterate through all the callbacks and search for equal callbacks.

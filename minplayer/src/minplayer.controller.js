@@ -137,7 +137,7 @@ minplayer.controller.prototype.construct = function() {
         })(this));
 
         // Bind to the pause event of the media.
-        media.bind('pause', (function(controller) {
+        media.ubind(this.uuid + ':pause', (function(controller) {
           return function(event) {
             controller.setPlayPause(true);
           };
@@ -156,7 +156,7 @@ minplayer.controller.prototype.construct = function() {
         })(this));
 
         // Bind to the play event of the media.
-        media.bind('playing', (function(controller) {
+        media.ubind(this.uuid + ':playing', (function(controller) {
           return function(event) {
             controller.setPlayPause(false);
           };
@@ -167,7 +167,7 @@ minplayer.controller.prototype.construct = function() {
       if (this.elements.duration) {
 
         // Bind to the duration change event.
-        media.bind('durationchange', (function(controller) {
+        media.ubind(this.uuid + ':durationchange', (function(controller) {
           return function(event, data) {
             controller.setTimeString('duration', data.duration);
           };
@@ -185,7 +185,7 @@ minplayer.controller.prototype.construct = function() {
       if (this.elements.progress) {
 
         // Bind to the progress event.
-        media.bind('progress', (function(controller) {
+        media.ubind(this.uuid + ':progress', (function(controller) {
           return function(event, data) {
             var percent = data.total ? (data.loaded / data.total) * 100 : 0;
             controller.elements.progress.width(percent + '%');
@@ -197,7 +197,7 @@ minplayer.controller.prototype.construct = function() {
       if (this.seekBar || this.elements.timer) {
 
         // Bind to the time update event.
-        media.bind('timeupdate', (function(controller) {
+        media.ubind(this.uuid + ':timeupdate', (function(controller) {
           return function(event, data) {
             if (!controller.dragging) {
               var value = 0;
@@ -277,7 +277,7 @@ minplayer.controller.prototype.construct = function() {
           }
         });
 
-        media.bind('volumeupdate', (function(controller) {
+        media.ubind(this.uuid + ':volumeupdate', (function(controller) {
           return function(event, vol) {
             controller.volumeBar.slider('option', 'value', (vol * 100));
           };

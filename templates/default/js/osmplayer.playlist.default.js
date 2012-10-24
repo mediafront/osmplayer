@@ -70,7 +70,7 @@
       };
 
       // Bind when the playlist loads.
-      this.bind('playlistLoad', (function(playlist) {
+      this.ubind(this.uuid + ':playlistLoad', (function(playlist) {
         return function(event, data) {
           if (data.nodes.length === 1) {
             playlist.hideShow(false, true);
