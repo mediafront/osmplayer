@@ -159,6 +159,15 @@ osmplayer.playlist.prototype.refreshScroll = function() {
         .unbind('mouseleave');
   }
 
+  // Need to force the width of the list.
+  if (!this.options.vertical) {
+    var listSize = 0;
+    jQuery.each(this.elements.list.children(), function() {
+      listSize += jQuery(this).outerWidth();
+    });
+    this.elements.list.width(listSize);
+  }
+
   // Check to see if we should add a scroll bar functionality.
   if ((list.length > 0) &&
       (scroll.length > 0) &&
@@ -224,15 +233,6 @@ osmplayer.playlist.prototype.refreshScroll = function() {
           playlist.scrolling = false;
         };
       })(this));
-    }
-
-    // Need to force the width of the list.
-    if (!this.options.vertical) {
-      var listSize = 0;
-      jQuery.each(this.elements.list.children(), function() {
-        listSize += jQuery(this).outerWidth();
-      });
-      this.elements.list.width(listSize);
     }
 
     this.scroll.refresh();

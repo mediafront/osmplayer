@@ -165,7 +165,7 @@ minplayer.players.vimeo.prototype.create = function() {
   iframe.setAttribute('src', src);
 
   // Now register this player when the froogaloop code is loaded.
-  this.poll((function(player) {
+  this.poll('vimeo', (function(player) {
     return function() {
       if (window.Froogaloop) {
         player.player = window.Froogaloop(iframe);
