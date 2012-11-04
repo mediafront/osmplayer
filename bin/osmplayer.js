@@ -4369,7 +4369,6 @@ minplayer.players.html5.prototype.onReady = function() {
 
   // iOS devices are strange in that they don't autoload.
   if (minplayer.isIDevice) {
-    this.play();
     setTimeout((function(player) {
       return function() {
         player.pause();
