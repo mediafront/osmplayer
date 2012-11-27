@@ -358,9 +358,14 @@ minplayer.players.html5.prototype.getVolume = function(callback) {
  */
 minplayer.players.html5.prototype.getDuration = function(callback) {
   if (this.isReady()) {
-    this.duration.get(callback);
-    if (this.player.duration) {
-      this.duration.set(this.player.duration);
+    if (this.options.duration) {
+      callback(this.options.duration);
+    }
+    else {
+      this.duration.get(callback);
+      if (this.player.duration) {
+        this.duration.set(this.player.duration);
+      }
     }
   }
 };

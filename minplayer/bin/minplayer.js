@@ -1436,7 +1436,8 @@ minplayer.prototype.construct = function() {
     attributes: {},
     plugins: {},
     logo: '',
-    link: ''
+    link: '',
+    duration: 0
   }, this.options);
 
   // Call the minplayer display constructor.
@@ -3044,7 +3045,12 @@ minplayer.players.base.prototype.getCurrentTime = function(callback) {
  * @return {number} The duration of the loaded media.
  */
 minplayer.players.base.prototype.getDuration = function(callback) {
-  return this.duration.get(callback);
+  if (this.options.duration) {
+    callback(this.options.duration);
+  }
+  else {
+    return this.duration.get(callback);
+  }
 };
 
 /**
@@ -3436,9 +3442,14 @@ minplayer.players.html5.prototype.getVolume = function(callback) {
  */
 minplayer.players.html5.prototype.getDuration = function(callback) {
   if (this.isReady()) {
-    this.duration.get(callback);
-    if (this.player.duration) {
-      this.duration.set(this.player.duration);
+    if (this.options.duration) {
+      callback(this.options.duration);
+    }
+    else {
+      this.duration.get(callback);
+      if (this.player.duration) {
+        this.duration.set(this.player.duration);
+      }
     }
   }
 };
@@ -3907,24 +3918,28 @@ minplayer.players.minplayer.prototype.getVolume = function(callback) {
  */
 minplayer.players.minplayer.prototype.getDuration = function(callback) {
   if (this.isReady()) {
-
-    // Check to see if it is immediately available.
-    var duration = this.player.getDuration();
-    if (duration) {
-      callback(duration);
+    if (this.options.duration) {
+      callback(this.options.duration);
     }
     else {
+      // Check to see if it is immediately available.
+      var duration = this.player.getDuration();
+      if (duration) {
+        callback(duration);
+      }
+      else {
 
-      // If not, then poll every second for the duration.
-      this.poll('duration', (function(player) {
-        return function() {
-          duration = player.player.getDuration();
-          if (duration) {
-            callback(duration);
-          }
-          return !duration;
-        };
-      })(this), 1000);
+        // If not, then poll every second for the duration.
+        this.poll('duration', (function(player) {
+          return function() {
+            duration = player.player.getDuration();
+            if (duration) {
+              callback(duration);
+            }
+            return !duration;
+          };
+        })(this), 1000);
+      }
     }
   }
 };
@@ -4302,7 +4317,12 @@ minplayer.players.youtube.prototype.getVolume = function(callback) {
  * @see minplayer.players.base#getDuration.
  */
 minplayer.players.youtube.prototype.getDuration = function(callback) {
-  this.getValue('getDuration', callback);
+  if (this.options.duration) {
+    callback(this.options.duration);
+  }
+  else {
+    this.getValue('getDuration', callback);
+  }
 };
 
 /**
@@ -4670,7 +4690,10 @@ minplayer.players.vimeo.prototype.getVolume = function(callback) {
  */
 minplayer.players.vimeo.prototype.getDuration = function(callback) {
   if (this.isReady()) {
-    if (this.duration.value) {
+    if (this.options.duration) {
+      callback(this.options.duration);
+    }
+    else if (this.duration.value) {
       callback(this.duration.value);
     }
     else {

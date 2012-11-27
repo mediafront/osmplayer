@@ -272,24 +272,28 @@ minplayer.players.minplayer.prototype.getVolume = function(callback) {
  */
 minplayer.players.minplayer.prototype.getDuration = function(callback) {
   if (this.isReady()) {
-
-    // Check to see if it is immediately available.
-    var duration = this.player.getDuration();
-    if (duration) {
-      callback(duration);
+    if (this.options.duration) {
+      callback(this.options.duration);
     }
     else {
+      // Check to see if it is immediately available.
+      var duration = this.player.getDuration();
+      if (duration) {
+        callback(duration);
+      }
+      else {
 
-      // If not, then poll every second for the duration.
-      this.poll('duration', (function(player) {
-        return function() {
-          duration = player.player.getDuration();
-          if (duration) {
-            callback(duration);
-          }
-          return !duration;
-        };
-      })(this), 1000);
+        // If not, then poll every second for the duration.
+        this.poll('duration', (function(player) {
+          return function() {
+            duration = player.player.getDuration();
+            if (duration) {
+              callback(duration);
+            }
+            return !duration;
+          };
+        })(this), 1000);
+      }
     }
   }
 };

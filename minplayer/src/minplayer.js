@@ -89,7 +89,8 @@ minplayer.prototype.construct = function() {
     attributes: {},
     plugins: {},
     logo: '',
-    link: ''
+    link: '',
+    duration: 0
   }, this.options);
 
   // Call the minplayer display constructor.

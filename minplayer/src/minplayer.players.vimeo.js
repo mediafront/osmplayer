@@ -336,7 +336,10 @@ minplayer.players.vimeo.prototype.getVolume = function(callback) {
  */
 minplayer.players.vimeo.prototype.getDuration = function(callback) {
   if (this.isReady()) {
-    if (this.duration.value) {
+    if (this.options.duration) {
+      callback(this.options.duration);
+    }
+    else if (this.duration.value) {
       callback(this.duration.value);
     }
     else {
