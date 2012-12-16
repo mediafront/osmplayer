@@ -2803,6 +2803,7 @@ minplayer.getMediaFile = function(files) {
     if (files.hasOwnProperty(i)) {
       file = new minplayer.file(files[i]);
       if (file.player && (file.priority > bestPriority)) {
+        bestPriority = file.priority;
         mFile = file;
       }
     }
