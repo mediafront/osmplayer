@@ -566,7 +566,7 @@ minplayer.bind = function(event, id, plugin, callback, fromCheck) {
   }
 
   // Add it to the queue for post bindings...
-  if ((selected.length == 0) && !fromCheck) {
+  if (!fromCheck) {
     minplayer.addQueue(this, event, id, plugin, callback);
   }
 
