@@ -111,9 +111,12 @@ minplayer.players.minplayer.canPlay = function(file) {
  */
 minplayer.players.minplayer.prototype.create = function() {
 
+  var swfplayer = 'http://www.mediafront.org/assets/osmplayer/minplayer/';
+  swfplayer += 'flash/minplayer.swf';
+
   // Make sure we provide default options...
   this.options = jQuery.extend({
-    swfplayer: 'flash/minplayer.swf'
+    swfplayer: swfplayer
   }, this.options);
 
   minplayer.players.flash.prototype.create.call(this);
