@@ -26,6 +26,7 @@ files =   minplayer/src/minplayer.compatibility.js\
           minplayer/src/minplayer.players.minplayer.js\
           minplayer/src/minplayer.players.youtube.js\
           minplayer/src/minplayer.players.vimeo.js\
+          minplayer/src/minplayer.players.limelight.js\
           minplayer/src/minplayer.controller.js\
           src/osmplayer.js\
           src/osmplayer.parser.default.js\

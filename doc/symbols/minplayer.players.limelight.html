@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - minplayer.players.html5</title>
+		<title>JsDoc Reference - minplayer.players.limelight</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -193,6 +193,8 @@ ul.inheritsList
 	
 	<li><a href="../symbols/jQuery.fn.minplayer.html">jQuery.fn.minplayer</a></li>
 	
+	<li><a href="../symbols/jQuery.fn.osmplayer.html">jQuery.fn.osmplayer</a></li>
+	
 	<li><a href="../symbols/minplayer.async.html">minplayer.async</a></li>
 	
 	<li><a href="../symbols/minplayer.compatibility.html">minplayer.compatibility</a></li>
@@ -221,6 +223,14 @@ ul.inheritsList
 	
 	<li><a href="../symbols/minplayer.plugin.html">minplayer.plugin</a></li>
 	
+	<li><a href="../symbols/osmplayer.html">osmplayer</a></li>
+	
+	<li><a href="../symbols/osmplayer.pager.html">osmplayer.pager</a></li>
+	
+	<li><a href="../symbols/osmplayer.playlist.html">osmplayer.playlist</a></li>
+	
+	<li><a href="../symbols/osmplayer.teaser.html">osmplayer.teaser</a></li>
+	
 </ul>
 <hr />
 			<!-- end publish.classesIndex -->
@@ -230,26 +240,26 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Class minplayer.players.html5
+				Class minplayer.players.limelight
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
 			<p class="description">
 				
 				<br />Extends
-					<a href="../symbols/minplayer.display.html">minplayer.display</a>.<br />
+					<a href="../symbols/minplayer.players.base.html">minplayer.players.base</a>.<br />
 				
 			
-				The HTML5 media player implementation.
+				The Limelight media player.
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/src_minplayer.players.html5.js.html">minplayer.players.html5.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/minplayer_src_minplayer.players.limelight.js.html">minplayer.players.limelight.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class minplayer.players.html5.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class minplayer.players.limelight.">
 				<caption>Class Summary</caption>
 				<thead>
 					<tr>
@@ -262,7 +272,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/minplayer.players.html5.html#constructor">minplayer.players.html5</a></b>(context, options, queue)
+								<b><a href="../symbols/minplayer.players.limelight.html#constructor">minplayer.players.limelight</a></b>(context, options)
 							</div>
 							<div class="description"></div>
 						</td>
@@ -275,7 +285,7 @@ ul.inheritsList
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class minplayer.players.html5.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class minplayer.players.limelight.">
 					<caption>Field Summary</caption>
 					<thead>
 						<tr>
@@ -289,7 +299,7 @@ ul.inheritsList
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont">
-								<b><a href="../symbols/minplayer.players.html5.html#constructor">constructor</a></b>
+								<b><a href="../symbols/minplayer.players.limelight.html#constructor">constructor</a></b>
 								</div>
 								<div class="description">Reset the constructor.</div>
 							</td>
@@ -301,7 +311,7 @@ ul.inheritsList
 				
 				
 				<dl class="inheritsList">
-				<dt>Fields borrowed from class <a href="../symbols/minplayer.display.html">minplayer.display</a>: </dt><dd><a href="../symbols/minplayer.display.html#onResize">onResize</a></dd><dt>Fields borrowed from class <a href="../symbols/minplayer.plugin.html">minplayer.plugin</a>: </dt><dd><a href="../symbols/minplayer.plugin.html#active">active</a>, <a href="../symbols/minplayer.plugin.html#context">context</a>, <a href="../symbols/minplayer.plugin.html#lock">lock</a>, <a href="../symbols/minplayer.plugin.html#name">name</a>, <a href="../symbols/minplayer.plugin.html#options">options</a>, <a href="../symbols/minplayer.plugin.html#pluginReady">pluginReady</a>, <a href="../symbols/minplayer.plugin.html#queue">queue</a>, <a href="../symbols/minplayer.plugin.html#triggered">triggered</a>, <a href="../symbols/minplayer.plugin.html#uuid">uuid</a></dd>
+				<dt>Fields borrowed from class <a href="../symbols/minplayer.players.base.html">minplayer.players.base</a>: </dt><dd><a href="../symbols/minplayer.players.base.html#mediaFile">mediaFile</a>, <a href="../symbols/minplayer.players.base.html#readyQueue">readyQueue</a></dd><dt>Fields borrowed from class <a href="../symbols/minplayer.display.html">minplayer.display</a>: </dt><dd><a href="../symbols/minplayer.display.html#onResize">onResize</a></dd><dt>Fields borrowed from class <a href="../symbols/minplayer.plugin.html">minplayer.plugin</a>: </dt><dd><a href="../symbols/minplayer.plugin.html#active">active</a>, <a href="../symbols/minplayer.plugin.html#context">context</a>, <a href="../symbols/minplayer.plugin.html#lock">lock</a>, <a href="../symbols/minplayer.plugin.html#name">name</a>, <a href="../symbols/minplayer.plugin.html#options">options</a>, <a href="../symbols/minplayer.plugin.html#pluginReady">pluginReady</a>, <a href="../symbols/minplayer.plugin.html#queue">queue</a>, <a href="../symbols/minplayer.plugin.html#triggered">triggered</a>, <a href="../symbols/minplayer.plugin.html#uuid">uuid</a></dd>
 				</dl>
 				
 			
@@ -310,7 +320,7 @@ ul.inheritsList
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class minplayer.players.html5.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class minplayer.players.limelight.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -321,27 +331,9 @@ ul.inheritsList
 					<tbody>
 					
 						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.html5.html#addPlayerEvent">addPlayerEvent</a></b>(type, callback)
-								</div>
-								<div class="description">Adds a new player event.</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.html5.html#addPlayerEvents">addPlayerEvents</a></b>()
-								</div>
-								<div class="description">Add events.</div>
-							</td>
-						</tr>
-					
-						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">minplayer.players.html5.<b><a href="../symbols/minplayer.players.html5.html#.canPlay">canPlay</a></b>(file)
+								<div class="fixedFont">minplayer.players.limelight.<b><a href="../symbols/minplayer.players.limelight.html#.canPlay">canPlay</a></b>(file)
 								</div>
 								<div class="description"></div>
 							</td>
@@ -350,61 +342,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.html5.html#construct">construct</a></b>()
-								</div>
-								<div class="description"></div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.html5.html#create">create</a></b>()
-								</div>
-								<div class="description"></div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.html5.html#getBytesLoaded">getBytesLoaded</a></b>(callback)
-								</div>
-								<div class="description"></div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.html5.html#getBytesTotal">getBytesTotal</a></b>(callback)
-								</div>
-								<div class="description"></div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.html5.html#getCurrentTime">getCurrentTime</a></b>(callback)
-								</div>
-								<div class="description"></div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.html5.html#getDuration">getDuration</a></b>(callback)
-								</div>
-								<div class="description"></div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.html5.html#getPlayer">getPlayer</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.limelight.html#create">create</a></b>()
 								</div>
 								<div class="description"></div>
 							</td>
@@ -413,7 +351,16 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">minplayer.players.html5.<b><a href="../symbols/minplayer.players.html5.html#.getPriority">getPriority</a></b>(file)
+								<div class="fixedFont">minplayer.players.limelight.<b><a href="../symbols/minplayer.players.limelight.html#.getMediaId">getMediaId</a></b>(file)
+								</div>
+								<div class="description">Return the ID for a provided media file.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">minplayer.players.limelight.<b><a href="../symbols/minplayer.players.limelight.html#.getPriority">getPriority</a></b>()
 								</div>
 								<div class="description"></div>
 							</td>
@@ -422,7 +369,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.html5.html#getVolume">getVolume</a></b>(callback)
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.limelight.html#getVolume">getVolume</a></b>(callback)
 								</div>
 								<div class="description"></div>
 							</td>
@@ -431,7 +378,16 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.html5.html#load">load</a></b>(file, callback)
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.limelight.html#onMediaUpdate">onMediaUpdate</a></b>(event, data)
+								</div>
+								<div class="description">The media update method.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.limelight.html#pause">pause</a></b>(callback)
 								</div>
 								<div class="description"></div>
 							</td>
@@ -440,7 +396,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.html5.html#onReady">onReady</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.limelight.html#play">play</a></b>(callback)
 								</div>
 								<div class="description"></div>
 							</td>
@@ -449,7 +405,26 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.html5.html#pause">pause</a></b>(callback)
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.limelight.html#register">register</a></b>()
+								</div>
+								<div class="description">Register this limelight player so that multiple players can be present
+on the same page without event collision.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.limelight.html#search">search</a></b>(query)
+								</div>
+								<div class="description">Perform the Limelight Search Inside.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.limelight.html#seek">seek</a></b>(pos, callback)
 								</div>
 								<div class="description"></div>
 							</td>
@@ -458,7 +433,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.html5.html#play">play</a></b>(callback)
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.limelight.html#setVolume">setVolume</a></b>(vol, callback)
 								</div>
 								<div class="description"></div>
 							</td>
@@ -467,34 +442,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.html5.html#playerFound">playerFound</a></b>()
-								</div>
-								<div class="description"></div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.html5.html#seek">seek</a></b>(pos, callback)
-								</div>
-								<div class="description"></div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.html5.html#setVolume">setVolume</a></b>(vol, callback)
-								</div>
-								<div class="description"></div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.html5.html#stop">stop</a></b>(callback)
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.limelight.html#stop">stop</a></b>(callback)
 								</div>
 								<div class="description"></div>
 							</td>
@@ -506,7 +454,7 @@ ul.inheritsList
 				
 				
 				<dl class="inheritsList">
-				<dt>Methods borrowed from class <a href="../symbols/minplayer.display.html">minplayer.display</a>: </dt><dd><a href="../symbols/minplayer.display.html#fullscreen">fullscreen</a>, <a href="../symbols/minplayer.display.html#fullScreenElement">fullScreenElement</a>, <a href="../symbols/minplayer.display.html#getDisplay">getDisplay</a>, <a href="../symbols/minplayer.display.html#getElements">getElements</a>, <a href="../symbols/minplayer.display.html#getScaledRect">getScaledRect</a>, <a href="../symbols/minplayer.display.html#hide">hide</a>, <a href="../symbols/minplayer.display.html#isFullScreen">isFullScreen</a>, <a href="../symbols/minplayer.display.html#onFocus">onFocus</a>, <a href="../symbols/minplayer.display.html#showThenHide">showThenHide</a>, <a href="../symbols/minplayer.display.html#toggleFullScreen">toggleFullScreen</a></dd><dt>Methods borrowed from class <a href="../symbols/minplayer.plugin.html">minplayer.plugin</a>: </dt><dd><a href="../symbols/minplayer.plugin.html#addPlugin">addPlugin</a>, <a href="../symbols/minplayer.plugin.html#bind">bind</a>, <a href="../symbols/minplayer.plugin.html#checkQueue">checkQueue</a>, <a href="../symbols/minplayer.plugin.html#destroy">destroy</a>, <a href="../symbols/minplayer.plugin.html#get">get</a>, <a href="../symbols/minplayer.plugin.html#isEvent">isEvent</a>, <a href="../symbols/minplayer.plugin.html#isValid">isValid</a>, <a href="../symbols/minplayer.plugin.html#poll">poll</a>, <a href="../symbols/minplayer.plugin.html#ready">ready</a>, <a href="../symbols/minplayer.plugin.html#trigger">trigger</a>, <a href="../symbols/minplayer.plugin.html#ubind">ubind</a>, <a href="../symbols/minplayer.plugin.html#unbind">unbind</a></dd>
+				<dt>Methods borrowed from class <a href="../symbols/minplayer.players.base.html">minplayer.players.base</a>: </dt><dd><a href="../symbols/minplayer.players.base.html#addPlayer">addPlayer</a>, <a href="../symbols/minplayer.players.base.html#clear">clear</a>, <a href="../symbols/minplayer.players.base.html#construct">construct</a>, <a href="../symbols/minplayer.players.base.html#destroy">destroy</a>, <a href="../symbols/minplayer.players.base.html#getBytesLoaded">getBytesLoaded</a>, <a href="../symbols/minplayer.players.base.html#getBytesStart">getBytesStart</a>, <a href="../symbols/minplayer.players.base.html#getBytesTotal">getBytesTotal</a>, <a href="../symbols/minplayer.players.base.html#getCurrentTime">getCurrentTime</a>, <a href="../symbols/minplayer.players.base.html#getDuration">getDuration</a>, <a href="../symbols/minplayer.players.base.html#getElements">getElements</a>, <a href="../symbols/minplayer.players.base.html#getPlayer">getPlayer</a>, <a href="../symbols/minplayer.players.base.html#getSeek">getSeek</a>, <a href="../symbols/minplayer.players.base.html#getValue">getValue</a>, <a href="../symbols/minplayer.players.base.html#hasController">hasController</a>, <a href="../symbols/minplayer.players.base.html#hasPlayLoader">hasPlayLoader</a>, <a href="../symbols/minplayer.players.base.html#isReady">isReady</a>, <a href="../symbols/minplayer.players.base.html#load">load</a>, <a href="../symbols/minplayer.players.base.html#onComplete">onComplete</a>, <a href="../symbols/minplayer.players.base.html#onError">onError</a>, <a href="../symbols/minplayer.players.base.html#onLoaded">onLoaded</a>, <a href="../symbols/minplayer.players.base.html#onPaused">onPaused</a>, <a href="../symbols/minplayer.players.base.html#onPlaying">onPlaying</a>, <a href="../symbols/minplayer.players.base.html#onReady">onReady</a>, <a href="../symbols/minplayer.players.base.html#onWaiting">onWaiting</a>, <a href="../symbols/minplayer.players.base.html#playerFound">playerFound</a>, <a href="../symbols/minplayer.players.base.html#reset">reset</a>, <a href="../symbols/minplayer.players.base.html#seekRelative">seekRelative</a>, <a href="../symbols/minplayer.players.base.html#setVolumeRelative">setVolumeRelative</a>, <a href="../symbols/minplayer.players.base.html#whenReady">whenReady</a></dd><dt>Methods borrowed from class <a href="../symbols/minplayer.display.html">minplayer.display</a>: </dt><dd><a href="../symbols/minplayer.display.html#fullscreen">fullscreen</a>, <a href="../symbols/minplayer.display.html#fullScreenElement">fullScreenElement</a>, <a href="../symbols/minplayer.display.html#getDisplay">getDisplay</a>, <a href="../symbols/minplayer.display.html#getScaledRect">getScaledRect</a>, <a href="../symbols/minplayer.display.html#hide">hide</a>, <a href="../symbols/minplayer.display.html#isFullScreen">isFullScreen</a>, <a href="../symbols/minplayer.display.html#onFocus">onFocus</a>, <a href="../symbols/minplayer.display.html#showThenHide">showThenHide</a>, <a href="../symbols/minplayer.display.html#toggleFullScreen">toggleFullScreen</a></dd><dt>Methods borrowed from class <a href="../symbols/minplayer.plugin.html">minplayer.plugin</a>: </dt><dd><a href="../symbols/minplayer.plugin.html#addPlugin">addPlugin</a>, <a href="../symbols/minplayer.plugin.html#bind">bind</a>, <a href="../symbols/minplayer.plugin.html#checkQueue">checkQueue</a>, <a href="../symbols/minplayer.plugin.html#get">get</a>, <a href="../symbols/minplayer.plugin.html#isEvent">isEvent</a>, <a href="../symbols/minplayer.plugin.html#isValid">isValid</a>, <a href="../symbols/minplayer.plugin.html#poll">poll</a>, <a href="../symbols/minplayer.plugin.html#ready">ready</a>, <a href="../symbols/minplayer.plugin.html#trigger">trigger</a>, <a href="../symbols/minplayer.plugin.html#ubind">ubind</a>, <a href="../symbols/minplayer.plugin.html#unbind">unbind</a></dd>
 				</dl>
 				
 			
@@ -521,7 +469,7 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>minplayer.players.html5</b>(context, options, queue)
+						<b>minplayer.players.limelight</b>(context, options)
 				</div>
 				
 				<div class="description">
@@ -547,12 +495,6 @@ ul.inheritsList
 								
 							</dt>
 								<dd>This components options.</dd>
-						
-							<dt>
-								<span class="light fixedFont">{object}</span>  <b>queue</b>
-								
-							</dt>
-								<dd>The event queue to pass events around.</dd>
 						
 						</dl>
 					
@@ -602,85 +544,11 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name="addPlayerEvent"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>addPlayerEvent</b>(type, callback)
-					
-					</div>
-					<div class="description">
-						Adds a new player event.
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{string}</span> <b>type</b>
-									
-								</dt>
-								<dd>The type of event being fired.</dd>
-							
-								<dt>
-									<span class="light fixedFont">{function}</span> <b>callback</b>
-									
-								</dt>
-								<dd>Called when the event is fired.</dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="addPlayerEvents"> </a>
-					<div class="fixedFont">
-					
-					<span class="light">{boolean}</span>
-					<b>addPlayerEvents</b>()
-					
-					</div>
-					<div class="description">
-						Add events.
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{boolean}</span> If this action was performed.</dd>
-							
-							</dl>
-						
-						
-						
-
-					<hr />
-				
 					<a name=".canPlay"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
 					<span class="light">{boolean}</span>
-					<span class="light">minplayer.players.html5.</span><b>canPlay</b>(file)
+					<span class="light">minplayer.players.limelight.</span><b>canPlay</b>(file)
 					
 					</div>
 					<div class="description">
@@ -726,38 +594,6 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="construct"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>construct</b>()
-					
-					</div>
-					<div class="description">
-						
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd>minplayer.plugin.construct</dd>
-							
-							</dl>
-						
-
-					<hr />
-				
 					<a name="create"> </a>
 					<div class="fixedFont">
 					
@@ -797,226 +633,15 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="getBytesLoaded"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>getBytesLoaded</b>(callback)
-					
-					</div>
-					<div class="description">
-						
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<b>callback</b>
-									
-								</dt>
-								<dd></dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd><a href="../symbols/minplayer.players.base.html#getBytesLoaded">minplayer.players.base#getBytesLoaded</a></dd>
-							
-							</dl>
-						
-
-					<hr />
-				
-					<a name="getBytesTotal"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>getBytesTotal</b>(callback)
-					
-					</div>
-					<div class="description">
-						
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<b>callback</b>
-									
-								</dt>
-								<dd></dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd><a href="../symbols/minplayer.players.base.html#getBytesTotal">minplayer.players.base#getBytesTotal</a></dd>
-							
-							</dl>
-						
-
-					<hr />
-				
-					<a name="getCurrentTime"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>getCurrentTime</b>(callback)
-					
-					</div>
-					<div class="description">
-						
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<b>callback</b>
-									
-								</dt>
-								<dd></dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd><a href="../symbols/minplayer.players.base.html#getCurrentTime">minplayer.players.base#getCurrentTime</a></dd>
-							
-							</dl>
-						
-
-					<hr />
-				
-					<a name="getDuration"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>getDuration</b>(callback)
-					
-					</div>
-					<div class="description">
-						
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<b>callback</b>
-									
-								</dt>
-								<dd></dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd><a href="../symbols/minplayer.players.base.html#getDuration">minplayer.players.base#getDuration</a></dd>
-							
-							</dl>
-						
-
-					<hr />
-				
-					<a name="getPlayer"> </a>
-					<div class="fixedFont">
-					
-					<span class="light">{object}</span>
-					<b>getPlayer</b>()
-					
-					</div>
-					<div class="description">
-						
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{object}</span> The media player object.</dd>
-							
-							</dl>
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd><a href="../symbols/minplayer.players.base.html#getPlayer">minplayer.players.base#getPlayer</a></dd>
-							
-							</dl>
-						
-
-					<hr />
-				
-					<a name=".getPriority"> </a>
+					<a name=".getMediaId"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{number}</span>
-					<span class="light">minplayer.players.html5.</span><b>getPriority</b>(file)
+					<span class="light">{string}</span>
+					<span class="light">minplayer.players.limelight.</span><b>getMediaId</b>(file)
 					
 					</div>
 					<div class="description">
-						
+						Return the ID for a provided media file.
 						
 						
 					</div>
@@ -1034,6 +659,38 @@ ul.inheritsList
 								<dd>A <a href="../symbols/minplayer.file.html">minplayer.file</a> object.</dd>
 							
 							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{string}</span> The ID for the provided media.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".getPriority"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{number}</span>
+					<span class="light">minplayer.players.limelight.</span><b>getPriority</b>()
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
 						
 						
 						
@@ -1101,15 +758,15 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="load"> </a>
+					<a name="onMediaUpdate"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>load</b>(file, callback)
+					<b>onMediaUpdate</b>(event, data)
 					
 					</div>
 					<div class="description">
-						
+						The media update method.
 						
 						
 					</div>
@@ -1121,16 +778,16 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>file</b>
+									<span class="light fixedFont">{string}</span> <b>event</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The event that was triggered.</dd>
 							
 								<dt>
-									<b>callback</b>
+									<span class="light fixedFont">{object}</span> <b>data</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>The event object.</dd>
 							
 							</dl>
 						
@@ -1139,45 +796,6 @@ ul.inheritsList
 						
 						
 						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd><a href="../symbols/minplayer.players.base.html#load">minplayer.players.base#load</a></dd>
-							
-							</dl>
-						
-
-					<hr />
-				
-					<a name="onReady"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>onReady</b>()
-					
-					</div>
-					<div class="description">
-						
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd><a href="../symbols/minplayer.players.base.html#onReady">minplayer.players.base#onReady</a></dd>
-							
-							</dl>
 						
 
 					<hr />
@@ -1268,15 +886,16 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="playerFound"> </a>
+					<a name="register"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{boolean}</span>
-					<b>playerFound</b>()
+					
+					<b>register</b>()
 					
 					</div>
 					<div class="description">
-						
+						Register this limelight player so that multiple players can be present
+on the same page without event collision.
 						
 						
 					</div>
@@ -1288,21 +907,43 @@ ul.inheritsList
 						
 						
 						
+						
+						
+
+					<hr />
+				
+					<a name="search"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>search</b>(query)
+					
+					</div>
+					<div class="description">
+						Perform the Limelight Search Inside.
+						
+						
+					</div>
+					
+					
+					
+						
 							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
+							<dt class="heading">Parameters:</dt>
 							
-								<dd><span class="light fixedFont">{boolean}</span> TRUE - if the player is in the DOM, FALSE otherwise.</dd>
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>query</b>
+									
+								</dt>
+								<dd>The query to search for.</dd>
 							
 							</dl>
 						
 						
 						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd><a href="../symbols/minplayer.players.base.html#playerFound">minplayer.players.base#playerFound</a></dd>
-							
-							</dl>
+						
+						
+						
 						
 
 					<hr />
@@ -1460,7 +1101,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Feb 07 2013 22:24:31 GMT-0600 (CST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Feb 07 2013 22:28:16 GMT-0600 (CST)
 		</div>
 	</body>
 </html>

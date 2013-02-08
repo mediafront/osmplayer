@@ -213,6 +213,8 @@ ul.inheritsList
 	
 	<li><a href="../symbols/minplayer.players.html5.html">minplayer.players.html5</a></li>
 	
+	<li><a href="../symbols/minplayer.players.limelight.html">minplayer.players.limelight</a></li>
+	
 	<li><a href="../symbols/minplayer.players.minplayer.html">minplayer.players.minplayer</a></li>
 	
 	<li><a href="../symbols/minplayer.players.vimeo.html">minplayer.players.vimeo</a></li>
@@ -310,6 +312,16 @@ ul.inheritsList
 								<b><a href="../symbols/minplayer.players.base.html#mediaFile">mediaFile</a></b>
 								</div>
 								<div class="description">The currently loaded media file.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/minplayer.players.base.html#readyQueue">readyQueue</a></b>
+								</div>
+								<div class="description">The ready queue for this player.</div>
 							</td>
 						</tr>
 					
@@ -530,7 +542,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.base.html#load">load</a></b>(file)
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.base.html#load">load</a></b>(file, callback)
 								</div>
 								<div class="description">Loads a new media player.</div>
 							</td>
@@ -602,7 +614,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.base.html#pause">pause</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.base.html#pause">pause</a></b>(callback)
 								</div>
 								<div class="description">Pause the loaded media file.</div>
 							</td>
@@ -611,7 +623,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.base.html#play">play</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.base.html#play">play</a></b>(callback)
 								</div>
 								<div class="description">Play the loaded media file.</div>
 							</td>
@@ -638,7 +650,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.base.html#seek">seek</a></b>(pos)
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.base.html#seek">seek</a></b>(pos, callback)
 								</div>
 								<div class="description">Seek the loaded media.</div>
 							</td>
@@ -656,7 +668,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.base.html#setVolume">setVolume</a></b>(vol)
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.base.html#setVolume">setVolume</a></b>(vol, callback)
 								</div>
 								<div class="description">Set the volume of the loaded minplayer.</div>
 							</td>
@@ -674,9 +686,18 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/minplayer.players.base.html#stop">stop</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.base.html#stop">stop</a></b>(callback)
 								</div>
 								<div class="description">Stop the loaded media file.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/minplayer.players.base.html#whenReady">whenReady</a></b>(callback)
+								</div>
+								<div class="description">Calls the callback when this player is ready.</div>
 							</td>
 						</tr>
 					
@@ -783,6 +804,28 @@ ul.inheritsList
 					</div>
 					<div class="description">
 						The currently loaded media file.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="readyQueue"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>readyQueue</b>
+					
+					</div>
+					<div class="description">
+						The ready queue for this player.
 						
 						
 					</div>
@@ -1599,8 +1642,8 @@ ul.inheritsList
 					<a name="load"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{boolean}</span>
-					<b>load</b>(file)
+					
+					<b>load</b>(file, callback)
 					
 					</div>
 					<div class="description">
@@ -1621,18 +1664,17 @@ ul.inheritsList
 								</dt>
 								<dd>A <a href="../symbols/minplayer.file.html">minplayer.file</a> object.</dd>
 							
-							</dl>
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{boolean}</span> If this action was performed.</dd>
+								<dt>
+									<span class="light fixedFont">{function}</span> <b>callback</b>
+									
+								</dt>
+								<dd>Called when it is done performing this operation.</dd>
 							
 							</dl>
+						
+						
+						
+						
 						
 						
 						
@@ -1828,8 +1870,8 @@ ul.inheritsList
 					<a name="pause"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{boolean}</span>
-					<b>pause</b>()
+					
+					<b>pause</b>(callback)
 					
 					</div>
 					<div class="description">
@@ -1841,16 +1883,20 @@ ul.inheritsList
 					
 					
 						
-						
-						
-						
-						
 							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
+							<dt class="heading">Parameters:</dt>
 							
-								<dd><span class="light fixedFont">{boolean}</span> If this action was performed.</dd>
+								<dt>
+									<span class="light fixedFont">{function}</span> <b>callback</b>
+									
+								</dt>
+								<dd>Called when it is done performing this operation.</dd>
 							
 							</dl>
+						
+						
+						
+						
 						
 						
 						
@@ -1860,8 +1906,8 @@ ul.inheritsList
 					<a name="play"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{boolean}</span>
-					<b>play</b>()
+					
+					<b>play</b>(callback)
 					
 					</div>
 					<div class="description">
@@ -1873,16 +1919,20 @@ ul.inheritsList
 					
 					
 						
-						
-						
-						
-						
 							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
+							<dt class="heading">Parameters:</dt>
 							
-								<dd><span class="light fixedFont">{boolean}</span> If this action was performed.</dd>
+								<dt>
+									<span class="light fixedFont">{function}</span> <b>callback</b>
+									
+								</dt>
+								<dd>Called when it is done performing this operation.</dd>
 							
 							</dl>
+						
+						
+						
+						
 						
 						
 						
@@ -1949,8 +1999,8 @@ ul.inheritsList
 					<a name="seek"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{boolean}</span>
-					<b>seek</b>(pos)
+					
+					<b>seek</b>(pos, callback)
 					
 					</div>
 					<div class="description">
@@ -1971,18 +2021,17 @@ ul.inheritsList
 								</dt>
 								<dd>The position to seek the minplayer. 0 to 1.</dd>
 							
-							</dl>
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{boolean}</span> If this action was performed.</dd>
+								<dt>
+									<span class="light fixedFont">{function}</span> <b>callback</b>
+									
+								</dt>
+								<dd>Called when it is done performing this operation.</dd>
 							
 							</dl>
+						
+						
+						
+						
 						
 						
 						
@@ -2028,8 +2077,8 @@ ul.inheritsList
 					<a name="setVolume"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{boolean}</span>
-					<b>setVolume</b>(vol)
+					
+					<b>setVolume</b>(vol, callback)
 					
 					</div>
 					<div class="description">
@@ -2050,18 +2099,17 @@ ul.inheritsList
 								</dt>
 								<dd>The volume to set the media. 0 to 1.</dd>
 							
-							</dl>
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{boolean}</span> If this action was performed.</dd>
+								<dt>
+									<span class="light fixedFont">{function}</span> <b>callback</b>
+									
+								</dt>
+								<dd>Called when it is done performing this operation.</dd>
 							
 							</dl>
+						
+						
+						
+						
 						
 						
 						
@@ -2107,8 +2155,8 @@ ul.inheritsList
 					<a name="stop"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{boolean}</span>
-					<b>stop</b>()
+					
+					<b>stop</b>(callback)
 					
 					</div>
 					<div class="description">
@@ -2120,16 +2168,56 @@ ul.inheritsList
 					
 					
 						
-						
-						
-						
-						
 							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
+							<dt class="heading">Parameters:</dt>
 							
-								<dd><span class="light fixedFont">{boolean}</span> If this action was performed.</dd>
+								<dt>
+									<span class="light fixedFont">{function}</span> <b>callback</b>
+									
+								</dt>
+								<dd>Called when it is done performing this operation.</dd>
 							
 							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="whenReady"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>whenReady</b>(callback)
+					
+					</div>
+					<div class="description">
+						Calls the callback when this player is ready.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{function}</span> <b>callback</b>
+									
+								</dt>
+								<dd>Called when it is done performing this operation.</dd>
+							
+							</dl>
+						
+						
+						
+						
 						
 						
 						
@@ -2148,7 +2236,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Feb 05 2013 21:10:10 GMT-0600 (CST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Feb 07 2013 22:28:16 GMT-0600 (CST)
 		</div>
 	</body>
 </html>
