@@ -7285,11 +7285,11 @@ osmplayer.playlist.prototype.construct = function() {
     };
   })(this));
 
-  // Load the "next" item.
-  this.hasNext = this.next();
-
   // Call the minplayer plugin constructor.
   minplayer.display.prototype.construct.call(this);
+
+  // Load the "next" item.
+  this.hasPlaylist = this.next();
 
   // Say that we are ready.
   this.ready();
@@ -7300,22 +7300,20 @@ osmplayer.playlist.prototype.construct = function() {
  */
 osmplayer.playlist.prototype.onAdded = function(plugin) {
 
-  // Load the "next" item.
-  if (this.hasNext) {
+  // Get the media.
+  if (this.options.autoNext) {
 
-    // Get the media.
-    if (this.options.autoNext) {
-
-      // Get the player from this plugin.
-      plugin.get('player', (function(playlist) {
-        return function(player) {
-          player.ubind(playlist.uuid + ':player_ended', function(event) {
+    // Get the player from this plugin.
+    plugin.get('player', (function(playlist) {
+      return function(player) {
+        player.ubind(playlist.uuid + ':player_ended', function(event) {
+          if (playlist.hasPlaylist) {
             player.options.autoplay = true;
             playlist.next();
-          });
-        };
-      })(this));
-    }
+          }
+        });
+      };
+    })(this));
   }
 };
 
