@@ -4219,7 +4219,8 @@ minplayer.players.youtube.prototype.create = function() {
             enablejsapi: minplayer.isIDevice ? 0 : 1,
             origin: origin,
             wmode: 'opaque',
-            controls: minplayer.isAndroid ? 1 : 0
+            controls: minplayer.isAndroid ? 1 : 0,
+            rel: 0
           };
         }
 
