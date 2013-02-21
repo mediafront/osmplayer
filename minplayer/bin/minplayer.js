@@ -1793,18 +1793,8 @@ minplayer.prototype.loadPlayer = function() {
     // Create the new media player.
     this.options.mediaelement = this.elements.media;
     this.media = new pClass(this.elements.display, this.options, queue);
-
-    // Now get the media when it is ready.
-    this.get('media', (function(player) {
-      return function(media) {
-
-        // Load the media.
-        media.load(player.options.file);
-        player.display.addClass('minplayer-player-' + media.mediaFile.player);
-      };
-    })(this));
-
-    // Return that a new player is loaded.
+    this.media.load(this.options.file);
+    this.display.addClass('minplayer-player-' + this.media.mediaFile.player);
     return true;
   }
   // If the media object already exists...
@@ -1957,11 +1947,13 @@ minplayer.image.prototype.clear = function(callback) {
         image.img.attr('src', '');
         image.loader.src = '';
         jQuery(this).remove();
-        callback.call(image);
+        if (callback) {
+          callback.call(image);
+        }
       };
     })(this));
   }
-  else {
+  else if (callback) {
     callback.call(this);
   }
 };
@@ -2199,20 +2191,8 @@ var minplayer = minplayer || {};
  */
 minplayer.playLoader = function(context, options) {
 
-  // Define the flags that control the busy cursor.
-  this.busy = new minplayer.flags();
-
-  // Define the flags that control the big play button.
-  this.bigPlay = new minplayer.flags();
-
-  // Define the flags the control the preview.
-  this.previewFlag = new minplayer.flags();
-
-  /** The preview image. */
-  this.preview = null;
-
-  /** If the playLoader is enabled. */
-  this.enabled = true;
+  // Clear the variables.
+  this.clear();
 
   // Derive from display
   minplayer.display.call(this, 'playLoader', context, options);
@@ -2333,6 +2313,32 @@ minplayer.playLoader.prototype.initializePlayLoader = function() {
       this.hide();
     }
   });
+};
+
+/**
+ * Clears the playloader.
+ */
+minplayer.playLoader.prototype.clear = function() {
+
+  // Define the flags that control the busy cursor.
+  this.busy = new minplayer.flags();
+
+  // Define the flags that control the big play button.
+  this.bigPlay = new minplayer.flags();
+
+  // Define the flags the control the preview.
+  this.previewFlag = new minplayer.flags();
+
+  // If the preview is defined, then clear the image.
+  if (this.preview) {
+    this.preview.clear();
+  }
+
+  /** The preview image. */
+  this.preview = null;
+
+  /** If the playLoader is enabled. */
+  this.enabled = true;
 };
 
 /**

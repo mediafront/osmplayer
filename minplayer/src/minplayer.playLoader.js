@@ -13,20 +13,8 @@ var minplayer = minplayer || {};
  */
 minplayer.playLoader = function(context, options) {
 
-  // Define the flags that control the busy cursor.
-  this.busy = new minplayer.flags();
-
-  // Define the flags that control the big play button.
-  this.bigPlay = new minplayer.flags();
-
-  // Define the flags the control the preview.
-  this.previewFlag = new minplayer.flags();
-
-  /** The preview image. */
-  this.preview = null;
-
-  /** If the playLoader is enabled. */
-  this.enabled = true;
+  // Clear the variables.
+  this.clear();
 
   // Derive from display
   minplayer.display.call(this, 'playLoader', context, options);
@@ -147,6 +135,32 @@ minplayer.playLoader.prototype.initializePlayLoader = function() {
       this.hide();
     }
   });
+};
+
+/**
+ * Clears the playloader.
+ */
+minplayer.playLoader.prototype.clear = function() {
+
+  // Define the flags that control the busy cursor.
+  this.busy = new minplayer.flags();
+
+  // Define the flags that control the big play button.
+  this.bigPlay = new minplayer.flags();
+
+  // Define the flags the control the preview.
+  this.previewFlag = new minplayer.flags();
+
+  // If the preview is defined, then clear the image.
+  if (this.preview) {
+    this.preview.clear();
+  }
+
+  /** The preview image. */
+  this.preview = null;
+
+  /** If the playLoader is enabled. */
+  this.enabled = true;
 };
 
 /**

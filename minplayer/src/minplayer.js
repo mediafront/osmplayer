@@ -405,18 +405,8 @@ minplayer.prototype.loadPlayer = function() {
     // Create the new media player.
     this.options.mediaelement = this.elements.media;
     this.media = new pClass(this.elements.display, this.options, queue);
-
-    // Now get the media when it is ready.
-    this.get('media', (function(player) {
-      return function(media) {
-
-        // Load the media.
-        media.load(player.options.file);
-        player.display.addClass('minplayer-player-' + media.mediaFile.player);
-      };
-    })(this));
-
-    // Return that a new player is loaded.
+    this.media.load(this.options.file);
+    this.display.addClass('minplayer-player-' + this.media.mediaFile.player);
     return true;
   }
   // If the media object already exists...
