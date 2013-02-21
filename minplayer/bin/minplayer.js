@@ -523,7 +523,7 @@ minplayer.plugin.prototype.get = function(plugin, callback) {
 minplayer.plugin.prototype.checkQueue = function(plugin) {
 
   // Initialize our variables.
-  var q = null, i = 0, check = false, newqueue = [];
+  var q = null, i = 0, check = false;
 
   // Normalize the plugin variable.
   plugin = plugin || this;
@@ -535,6 +535,7 @@ minplayer.plugin.prototype.checkQueue = function(plugin) {
   var length = minplayer.queue.length;
   for (i = 0; i < length; i++) {
     if (minplayer.queue.hasOwnProperty(i)) {
+
       // Get the queue.
       q = minplayer.queue[i];
 
@@ -543,8 +544,9 @@ minplayer.plugin.prototype.checkQueue = function(plugin) {
       check |= (q.plugin == plugin.name);
       check &= (!q.id || (q.id == this.options.id));
 
-      // If the check passes...
-      if (check) {
+      // If the check passes, and hasn't already been added...
+      if (check && !q.addedto.hasOwnProperty(plugin.options.id)) {
+        q.addedto[plugin.options.id] = true;
         check = minplayer.bind.call(
           q.context,
           q.event,
@@ -554,18 +556,8 @@ minplayer.plugin.prototype.checkQueue = function(plugin) {
           true
         );
       }
-
-      // Add the queue back if it doesn't check out.
-      if (!check) {
-
-        // Add this back to the queue.
-        newqueue.push(q);
-      }
     }
   }
-
-  // Set the old queue to the new queue.
-  minplayer.queue = newqueue;
 
   // Release the lock.
   minplayer.lock = false;
@@ -761,7 +753,8 @@ minplayer.addQueue = function(context, event, id, plugin, callback) {
       id: id,
       event: event,
       plugin: plugin,
-      callback: callback
+      callback: callback,
+      addedto: {}
     });
   }
   else {
