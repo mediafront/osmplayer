@@ -21,6 +21,9 @@ minplayer.image = function(context, options) {
   // The image element.
   this.img = null;
 
+  // Force the display to the context.
+  this.display = context;
+
   // Derive from display
   minplayer.display.call(this, 'image', context, options);
 };

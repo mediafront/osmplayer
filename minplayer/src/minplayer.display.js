@@ -45,8 +45,12 @@ minplayer.display.prototype.getDisplay = function(context, options) {
  */
 minplayer.display.prototype.initialize = function() {
 
-  // Set the display.
-  this.display = this.getDisplay(this.context, this.options);
+  // Only set the display if it hasn't already been set.
+  if (!this.display) {
+
+    // Set the display.
+    this.display = this.getDisplay(this.context, this.options);
+  }
 
   // Only continue loading this plugin if there is a display.
   if (this.display) {
