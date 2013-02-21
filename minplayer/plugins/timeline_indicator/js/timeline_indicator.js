@@ -106,8 +106,16 @@ minplayer.timeline_indicator.prototype.construct = function() {
       }
     });
 
+    var mediaDuration = 0;
+
+    // Bind to the duration change event.
+    media.ubind('durationchange', function(event, data) {
+      mediaDuration = data.duration;
+    });
+
     // Get the media duration.
     media.getDuration(function(duration) {
+      mediaDuration = duration;
       self.seek.unbind('mousemove').bind('mousemove', function(event) {
         clearTimeout(showTimer);
         if (!self.display.is(':visible')) {
@@ -117,7 +125,7 @@ minplayer.timeline_indicator.prototype.construct = function() {
         var width = self.seek.width();
         posX = (posX < 0) ? 0 : posX;
         posX = (posX > width) ? width: posX;
-        seek = (duration * (posX / width));
+        seek = (mediaDuration * (posX / width));
         var time = minplayer.formatTime(seek);
         self.elements.timeline_indicator_text.text(time.time + time.units);
         self.display.css('margin-left', posX);
