@@ -174,6 +174,7 @@ osmplayer.prototype.reset = function() {
 
   // Clear the playloader.
   if (this.playLoader) {
+    this.options.preview = '';
     this.playLoader.clear();
   }
 };
