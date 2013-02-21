@@ -183,8 +183,8 @@ minplayer.players.youtube.prototype.hasController = function() {
  * @see minplayer.players.base#create
  * @return {object} The media player entity.
  */
-minplayer.players.youtube.prototype.create = function() {
-  minplayer.players.base.prototype.create.call(this);
+minplayer.players.youtube.prototype.createPlayer = function() {
+  minplayer.players.base.prototype.createPlayer.call(this);
 
   // Insert the YouTube iframe API player.
   var tag = document.createElement('script');

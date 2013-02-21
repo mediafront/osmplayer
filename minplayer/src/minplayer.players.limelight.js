@@ -157,8 +157,8 @@ minplayer.players.limelight.prototype.onMediaUpdate = function(event, data) {
  * @see minplayer.players.base#create
  * @return {object} The media player entity.
  */
-minplayer.players.limelight.prototype.create = function() {
-  minplayer.players.flash.prototype.create.call(this);
+minplayer.players.limelight.prototype.createPlayer = function() {
+  minplayer.players.flash.prototype.createPlayer.call(this);
 
   // Insert the embed.js.
   var tag = document.createElement('script');

@@ -50,7 +50,7 @@ minplayer.playLoader.prototype.construct = function() {
   this.options.pluginName = 'playLoader';
 
   // Get the media plugin.
-  this.initialize();
+  this.initializePlayLoader();
 
   // We are now ready.
   this.ready();
@@ -59,7 +59,7 @@ minplayer.playLoader.prototype.construct = function() {
 /**
  * Initialize the playLoader.
  */
-minplayer.playLoader.prototype.initialize = function() {
+minplayer.playLoader.prototype.initializePlayLoader = function() {
 
   // Get the media plugin.
   this.get('media', function(media) {

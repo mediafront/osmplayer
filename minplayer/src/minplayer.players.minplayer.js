@@ -109,7 +109,7 @@ minplayer.players.minplayer.canPlay = function(file) {
  * @see minplayer.players.base#create
  * @return {object} The media player entity.
  */
-minplayer.players.minplayer.prototype.create = function() {
+minplayer.players.minplayer.prototype.createPlayer = function() {
 
   // Make sure we provide default swfplayer...
   if (!this.options.swfplayer) {
@@ -117,7 +117,7 @@ minplayer.players.minplayer.prototype.create = function() {
     this.options.swfplayer += '/flash/minplayer.swf';
   }
 
-  minplayer.players.flash.prototype.create.call(this);
+  minplayer.players.flash.prototype.createPlayer.call(this);
 
   // The flash variables for this flash player.
   var flashVars = {

@@ -1410,15 +1410,21 @@ minplayer.plugin = function(name, context, options, queue) {
   // Only call the constructor if we have a context.
   if (context) {
 
-    /** Say that we are active. */
-    this.active = true;
-
     /** Keep track of the context. */
     this.context = jQuery(context);
 
-    // Construct this plugin.
-    this.construct();
+    // Initialize this plugin.
+    this.initialize();
   }
+};
+
+/**
+ * Initialize function for the plugin.
+ */
+minplayer.plugin.prototype.initialize = function() {
+
+  // Construct this plugin.
+  this.construct();
 };
 
 /**
@@ -1429,6 +1435,9 @@ minplayer.plugin = function(name, context, options, queue) {
  * as object creation.
  */
 minplayer.plugin.prototype.construct = function() {
+
+  /** Say that we are active. */
+  this.active = true;
 
   // Adds this as a plugin.
   this.addPlugin();
@@ -2085,19 +2094,38 @@ minplayer.display.prototype.constructor = minplayer.display;
 /**
  * Returns the display for this component.
  *
+ * @param {object} context The context which this display is within.
+ * @param {object} options The options to get the display.
+ *
  * @return {object} The jQuery context for this display.
  */
-minplayer.display.prototype.getDisplay = function() {
-  return this.context;
+minplayer.display.prototype.getDisplay = function(context, options) {
+
+  // Return null by default so that display plugins without an element do not
+  // get initialized.
+  return null;
+};
+
+/**
+ * @see minplayer.plugin.initialize
+ */
+minplayer.display.prototype.initialize = function() {
+
+  // Set the display.
+  this.display = this.getDisplay(this.context, this.options);
+
+  // Only continue loading this plugin if there is a display.
+  if (this.display) {
+
+    // Call the plugin initialize method.
+    minplayer.plugin.prototype.initialize.call(this);
+  }
 };
 
 /**
  * @see minplayer.plugin.construct
  */
 minplayer.display.prototype.construct = function() {
-
-  // Set the display.
-  this.display = this.getDisplay(this.context, this.options);
 
   // Call the plugin constructor.
   minplayer.plugin.prototype.construct.call(this);
@@ -3305,7 +3333,7 @@ minplayer.playLoader.prototype.construct = function() {
   this.options.pluginName = 'playLoader';
 
   // Get the media plugin.
-  this.initialize();
+  this.initializePlayLoader();
 
   // We are now ready.
   this.ready();
@@ -3314,7 +3342,7 @@ minplayer.playLoader.prototype.construct = function() {
 /**
  * Initialize the playLoader.
  */
-minplayer.playLoader.prototype.initialize = function() {
+minplayer.playLoader.prototype.initializePlayLoader = function() {
 
   // Get the media plugin.
   this.get('media', function(media) {
@@ -3514,6 +3542,14 @@ minplayer.players.base.prototype = new minplayer.display();
 minplayer.players.base.prototype.constructor = minplayer.players.base;
 
 /**
+ * @see minplayer.display.getDisplay
+ * @return {object} The media container for which this media will reside.
+ */
+minplayer.players.base.prototype.getDisplay = function(context, options) {
+  return context;
+};
+
+/**
  * @see minplayer.display.getElements
  * @this minplayer.players.base
  * @return {object} The elements for this display.
@@ -3647,7 +3683,7 @@ minplayer.players.base.prototype.addPlayer = function() {
   }
 
   // Create a new media player element.
-  this.elements.media = jQuery(this.create());
+  this.elements.media = jQuery(this.createPlayer());
   this.display.html(this.elements.media);
 };
 
@@ -4026,7 +4062,7 @@ minplayer.players.base.prototype.playerFound = function() {
  *
  * @return {object} The media player entity.
  */
-minplayer.players.base.prototype.create = function() {
+minplayer.players.base.prototype.createPlayer = function() {
   this.reset();
   return null;
 };
@@ -4456,8 +4492,8 @@ minplayer.players.html5.prototype.playerFound = function() {
  * @see minplayer.players.base#create
  * @return {object} The media player entity.
  */
-minplayer.players.html5.prototype.create = function() {
-  minplayer.players.base.prototype.create.call(this);
+minplayer.players.html5.prototype.createPlayer = function() {
+  minplayer.players.base.prototype.createPlayer.call(this);
   var element = jQuery(document.createElement(this.mediaFile.type))
   .attr(this.options.attributes)
   .append(
@@ -4904,7 +4940,7 @@ minplayer.players.minplayer.canPlay = function(file) {
  * @see minplayer.players.base#create
  * @return {object} The media player entity.
  */
-minplayer.players.minplayer.prototype.create = function() {
+minplayer.players.minplayer.prototype.createPlayer = function() {
 
   // Make sure we provide default swfplayer...
   if (!this.options.swfplayer) {
@@ -4912,7 +4948,7 @@ minplayer.players.minplayer.prototype.create = function() {
     this.options.swfplayer += '/flash/minplayer.swf';
   }
 
-  minplayer.players.flash.prototype.create.call(this);
+  minplayer.players.flash.prototype.createPlayer.call(this);
 
   // The flash variables for this flash player.
   var flashVars = {
@@ -5289,8 +5325,8 @@ minplayer.players.youtube.prototype.hasController = function() {
  * @see minplayer.players.base#create
  * @return {object} The media player entity.
  */
-minplayer.players.youtube.prototype.create = function() {
-  minplayer.players.base.prototype.create.call(this);
+minplayer.players.youtube.prototype.createPlayer = function() {
+  minplayer.players.base.prototype.createPlayer.call(this);
 
   // Insert the YouTube iframe API player.
   var tag = document.createElement('script');
@@ -5610,8 +5646,8 @@ minplayer.players.vimeo.prototype.reset = function() {
  * @see minplayer.players.base#create
  * @return {object} The media player entity.
  */
-minplayer.players.vimeo.prototype.create = function() {
-  minplayer.players.base.prototype.create.call(this);
+minplayer.players.vimeo.prototype.createPlayer = function() {
+  minplayer.players.base.prototype.createPlayer.call(this);
 
   // Insert the Vimeo Froogaloop player.
   var tag = document.createElement('script');
@@ -5992,8 +6028,8 @@ minplayer.players.limelight.prototype.onMediaUpdate = function(event, data) {
  * @see minplayer.players.base#create
  * @return {object} The media player entity.
  */
-minplayer.players.limelight.prototype.create = function() {
-  minplayer.players.flash.prototype.create.call(this);
+minplayer.players.limelight.prototype.createPlayer = function() {
+  minplayer.players.flash.prototype.createPlayer.call(this);
 
   // Insert the embed.js.
   var tag = document.createElement('script');
