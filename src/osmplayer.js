@@ -167,11 +167,6 @@ osmplayer.prototype.fullScreenElement = function() {
  */
 osmplayer.prototype.reset = function() {
 
-  // Stop the media.
-  if (this.media) {
-    this.media.stop();
-  }
-
   // Empty the playqueue.
   this.playQueue.length = 0;
   this.playQueue = [];
@@ -192,6 +187,9 @@ osmplayer.prototype.loadNode = function(node) {
 
   // Reset the player.
   this.reset();
+
+  // Set the hasMedia flag.
+  this.hasMedia = node && node.mediafiles && node.mediafiles.media;
 
   // If this node is set and has files.
   if (node && node.mediafiles) {
@@ -225,19 +223,25 @@ osmplayer.prototype.loadNode = function(node) {
       this.display.addClass('nomedia');
     }
 
+    // Play the next media
+    this.playNext();
+
     // Load the preview image.
     osmplayer.getImage(node.mediafiles, 'preview', (function(player) {
       return function(image) {
         player.options.preview = image.path;
-        if (player.playLoader) {
+        if (player.playLoader && (player.playLoader.display.length > 0)) {
           player.playLoader.enabled = true;
           player.playLoader.loadPreview();
+          player.playLoader.previewFlag.setFlag('media', true);
+          if (!player.hasMedia) {
+            player.playLoader.busy.setFlag('media', false);
+            player.playLoader.bigPlay.setFlag('media', false);
+          }
+          player.playLoader.checkVisibility();
         }
       };
     })(this));
-
-    // Play the next media
-    this.playNext();
   }
 };
 
@@ -282,6 +286,11 @@ osmplayer.prototype.playNext = function() {
   }
   else if (this.media) {
     this.media.stop();
+
+    // If there is no media found, then clear the player.
+    if (!this.hasMedia) {
+      this.media.clear();
+    }
   }
 };
 

@@ -163,6 +163,14 @@ minplayer.plugin.prototype.isValid = function() {
 };
 
 /**
+ * Allows a plugin to do something when it is added to another plugin.
+ *
+ * @param {object} plugin The plugin that this plugin was added to.
+ */
+minplayer.plugin.prototype.onAdded = function(plugin) {
+};
+
+/**
  * Adds a new plugin to this player.
  *
  * @param {string} name The name of this plugin.
@@ -196,6 +204,9 @@ minplayer.plugin.prototype.addPlugin = function(name, plugin) {
 
     // Now check the queue for this plugin.
     this.checkQueue(plugin);
+
+    // Now let the plugin do something with this plugin.
+    plugin.onAdded(this);
   }
 };
 

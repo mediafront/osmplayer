@@ -89,7 +89,7 @@ minplayer.playLoader.prototype.initializePlayLoader = function() {
 
       // Bind to the player events to control the play loader.
       media.ubind(this.uuid + ':loadstart', (function(playLoader) {
-        return function(event) {
+        return function(event, data, reset) {
           playLoader.busy.setFlag('media', true);
           playLoader.bigPlay.setFlag('media', true);
           playLoader.previewFlag.setFlag('media', true);
@@ -97,31 +97,39 @@ minplayer.playLoader.prototype.initializePlayLoader = function() {
         };
       })(this));
       media.ubind(this.uuid + ':waiting', (function(playLoader) {
-        return function(event) {
-          playLoader.busy.setFlag('media', true);
-          playLoader.checkVisibility();
+        return function(event, data, reset) {
+          if (!reset) {
+            playLoader.busy.setFlag('media', true);
+            playLoader.checkVisibility();
+          }
         };
       })(this));
       media.ubind(this.uuid + ':loadeddata', (function(playLoader) {
-        return function(event) {
-          playLoader.busy.setFlag('media', false);
-          playLoader.checkVisibility();
+        return function(event, data, reset) {
+          if (!reset) {
+            playLoader.busy.setFlag('media', false);
+            playLoader.checkVisibility();
+          }
         };
       })(this));
       media.ubind(this.uuid + ':playing', (function(playLoader) {
-        return function(event) {
-          playLoader.busy.setFlag('media', false);
-          playLoader.bigPlay.setFlag('media', false);
-          if (media.mediaFile.type !== 'audio') {
-            playLoader.previewFlag.setFlag('media', false);
+        return function(event, data, reset) {
+          if (!reset) {
+            playLoader.busy.setFlag('media', false);
+            playLoader.bigPlay.setFlag('media', false);
+            if (media.mediaFile.type !== 'audio') {
+              playLoader.previewFlag.setFlag('media', false);
+            }
+            playLoader.checkVisibility();
           }
-          playLoader.checkVisibility();
         };
       })(this));
       media.ubind(this.uuid + ':pause', (function(playLoader) {
-        return function(event) {
-          playLoader.bigPlay.setFlag('media', true);
-          playLoader.checkVisibility();
+        return function(event, data, reset) {
+          if (!reset) {
+            playLoader.bigPlay.setFlag('media', true);
+            playLoader.checkVisibility();
+          }
         };
       })(this));
     }
@@ -171,7 +179,7 @@ minplayer.playLoader.prototype.clear = function() {
 minplayer.playLoader.prototype.loadPreview = function() {
 
   // Ignore if disabled.
-  if (!this.enabled) {
+  if (!this.enabled || (this.display.length == 0)) {
     return;
   }
 

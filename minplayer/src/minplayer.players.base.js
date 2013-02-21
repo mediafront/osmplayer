@@ -15,9 +15,6 @@ minplayer.players = minplayer.players || {};
  */
 minplayer.players.base = function(context, options, queue) {
 
-  // Force the display to the context.
-  this.display = context;
-
   // Derive from display
   minplayer.display.call(this, 'media', context, options, queue);
 };
@@ -93,6 +90,15 @@ minplayer.players.base.prototype.construct = function() {
 
   // Clear the media player.
   this.clear();
+
+  // Now setup the media player.
+  this.setupPlayer();
+};
+
+/**
+ * Sets up a new media player.
+ */
+minplayer.players.base.prototype.setupPlayer = function() {
 
   // Get the player display object.
   if (!this.playerFound()) {
@@ -187,7 +193,7 @@ minplayer.players.base.prototype.clear = function() {
 
   // If the player exists, then unbind all events.
   if (this.player) {
-    jQuery(this.player).unbind();
+    jQuery(this.player).remove();
     this.player = null;
   }
 };
@@ -299,19 +305,29 @@ minplayer.players.base.prototype.onReady = function() {
   // We are now ready.
   this.ready();
 
-  // Iterate through our ready queue.
-  for (var i in this.readyQueue) {
-    this.readyQueue[i].call(this);
+  // Make sure the player is ready or errors will occur.
+  if (this.isReady()) {
+
+    // Iterate through our ready queue.
+    for (var i in this.readyQueue) {
+      this.readyQueue[i].call(this);
+    }
+
+    // Empty the ready queue.
+    this.readyQueue.length = 0;
+    this.readyQueue = [];
+
+    if (!this.loaded) {
+
+      // If we are still loading, then trigger that the load has started.
+      this.trigger('loadstart');
+    }
   }
+  else {
 
-  // Empty the ready queue.
-  this.readyQueue.length = 0;
-  this.readyQueue = [];
-
-  if (!this.loaded) {
-
-    // If we are still loading, then trigger that the load has started.
-    this.trigger('loadstart');
+    // Empty the ready queue.
+    this.readyQueue.length = 0;
+    this.readyQueue = [];
   }
 };
 
@@ -567,13 +583,18 @@ minplayer.players.base.prototype.load = function(file, callback) {
   var isString = (typeof this.mediaFile == 'string');
   var path = isString ? this.mediaFile : this.mediaFile.path;
   if (file && (file.path != path)) {
-    this.whenReady(function() {
-      this.reset();
-      this.mediaFile = file;
-      if (callback) {
-        callback.call(this);
-      }
-    });
+
+    // If the player is not ready, then setup.
+    if (!this.isReady()) {
+      this.setupPlayer();
+    }
+
+    // Reset the media and set the media file.
+    this.reset();
+    this.mediaFile = file;
+    if (callback) {
+      callback.call(this);
+    }
   }
 };
 

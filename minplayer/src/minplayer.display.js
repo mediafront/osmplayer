@@ -35,9 +35,8 @@ minplayer.display.prototype.constructor = minplayer.display;
  */
 minplayer.display.prototype.getDisplay = function(context, options) {
 
-  // Return null by default so that display plugins without an element do not
-  // get initialized.
-  return null;
+  // Return the context.
+  return context;
 };
 
 /**
@@ -55,6 +54,12 @@ minplayer.display.prototype.initialize = function() {
   // Only continue loading this plugin if there is a display.
   if (this.display) {
 
+    // Set the plugin name within the options.
+    this.options.pluginName = 'display';
+
+    // Get the display elements.
+    this.elements = this.getElements();
+
     // Call the plugin initialize method.
     minplayer.plugin.prototype.initialize.call(this);
   }
@@ -67,12 +72,6 @@ minplayer.display.prototype.construct = function() {
 
   // Call the plugin constructor.
   minplayer.plugin.prototype.construct.call(this);
-
-  // Set the plugin name within the options.
-  this.options.pluginName = 'display';
-
-  // Get the display elements.
-  this.elements = this.getElements();
 
   // Set if this display is in autohide.
   this.autoHide = false;
