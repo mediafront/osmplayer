@@ -48,11 +48,14 @@ minplayer.plugin = function(name, context, options, queue) {
     /** Keep track of the context. */
     this.context = jQuery(context);
 
-    // Get the options.
-    var defaults = this.defaultOptions();
+    // Initialize the default options.
+    var defaults = {};
+
+    // Get the default options.
+    this.defaultOptions(defaults);
 
     /** The options for this plugin. */
-    this.options = defaults ? jQuery.extend(defaults, options) : options;
+    this.options = jQuery.extend(defaults, options);
 
     // Initialize this plugin.
     this.initialize();
@@ -71,10 +74,9 @@ minplayer.plugin.prototype.initialize = function() {
 /**
  * Get the default options for this plugin.
  *
- * @return {object} The default options for this plugin.
+ * @param {object} options The default options for this plugin.
  */
-minplayer.plugin.prototype.defaultOptions = function() {
-  return null;
+minplayer.plugin.prototype.defaultOptions = function(options) {
 };
 
 /**

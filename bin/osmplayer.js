@@ -1413,11 +1413,14 @@ minplayer.plugin = function(name, context, options, queue) {
     /** Keep track of the context. */
     this.context = jQuery(context);
 
-    // Get the options.
-    var defaults = this.defaultOptions();
+    // Initialize the default options.
+    var defaults = {};
+
+    // Get the default options.
+    this.defaultOptions(defaults);
 
     /** The options for this plugin. */
-    this.options = defaults ? jQuery.extend(defaults, options) : options;
+    this.options = jQuery.extend(defaults, options);
 
     // Initialize this plugin.
     this.initialize();
@@ -1436,10 +1439,9 @@ minplayer.plugin.prototype.initialize = function() {
 /**
  * Get the default options for this plugin.
  *
- * @return {object} The default options for this plugin.
+ * @param {object} options The default options for this plugin.
  */
-minplayer.plugin.prototype.defaultOptions = function() {
-  return null;
+minplayer.plugin.prototype.defaultOptions = function(options) {
 };
 
 /**
@@ -2571,40 +2573,38 @@ minplayer.prototype.constructor = minplayer;
 /**
  * Get the default options for this plugin.
  *
- * @return {object} The default options for this plugin.
+ * @param {object} options The default options for this plugin.
  */
-minplayer.prototype.defaultOptions = function() {
+minplayer.prototype.defaultOptions = function(options) {
 
-  // Make sure we provide default options...
-  var options = {
-    id: 'player',
-    build: false,
-    wmode: 'transparent',
-    preload: true,
-    autoplay: false,
-    autoload: true,
-    loop: false,
-    width: '100%',
-    height: '350px',
-    debug: false,
-    volume: 80,
-    files: null,
-    file: '',
-    preview: '',
-    attributes: {},
-    plugins: {},
-    logo: '',
-    link: '',
-    duration: 0
-  };
+  // Assign the default options.
+  options.id = 'player';
+  options.build = false;
+  options.wmode = 'transparent';
+  options.preload = true;
+  options.autoplay = false;
+  options.autoload = true;
+  options.loop = false;
+  options.width = '100%';
+  options.height = '350px';
+  options.debug = false;
+  options.volume = 80;
+  options.files = null;
+  options.file = '';
+  options.preview = '';
+  options.attributes = {};
+  options.plugins = {};
+  options.logo = '';
+  options.link = '';
+  options.duration = 0;
 
   // Allow them to provide arguments based off of the DOM attributes.
   jQuery.each(this.context[0].attributes, function(index, attr) {
     options[attr.name] = attr.value;
   });
 
-  // Return the options.
-  return options;
+  // Set the parent options.
+  minplayer.display.prototype.call.defaultOptions(this, options);
 };
 
 /**
@@ -6336,12 +6336,11 @@ minplayer.controller.prototype.getElements = function() {
 /**
  * Get the default options for this plugin.
  *
- * @return {object} The default options for this plugin.
+ * @param {object} options The default options for this plugin.
  */
-minplayer.controller.prototype.defaultOptions = function() {
-  return {
-    disptime: 0
-  };
+minplayer.controller.prototype.defaultOptions = function(options) {
+  options.disptime = 0;
+  minplayer.display.prototype.defaultOptions.call(this, options);
 };
 
 /**
@@ -6712,15 +6711,14 @@ osmplayer.prototype.create = function(name, base, context) {
 /**
  * Get the default options for this plugin.
  *
- * @return {object} The default options for this plugin.
+ * @param {object} options The default options for this plugin.
  */
-osmplayer.prototype.defaultOptions = function() {
-  return {
-    playlist: '',
-    node: {},
-    link: 'http://www.mediafront.org',
-    logo: 'http://mediafront.org/assets/osmplayer/logo.png'
-  };
+osmplayer.prototype.defaultOptions = function(options) {
+  options.playlist = '';
+  options.node = {};
+  options.link = 'http://www.mediafront.org';
+  options.logo = 'http://mediafront.org/assets/osmplayer/logo.png';
+  minplayer.prototype.defaultOptions.call(this, options);
 };
 
 /**
@@ -7284,20 +7282,19 @@ osmplayer.playlist.prototype.constructor = osmplayer.playlist;
 /**
  * Returns the default options for this plugin.
  *
- * @return {object} The default options for this plugin.
+ * @param {object} options The default options for this plugin.
  */
-osmplayer.playlist.prototype.defaultOptions = function() {
-  return {
-    vertical: true,
-    playlist: '',
-    pageLimit: 10,
-    autoNext: true,
-    shuffle: false,
-    loop: false,
-    hysteresis: 40,
-    scrollSpeed: 20,
-    scrollMode: 'auto'
-  };
+osmplayer.playlist.prototype.defaultOptions = function(options) {
+  options.vertical = true;
+  options.playlist = '';
+  options.pageLimit = 10;
+  options.autoNext = true;
+  options.shuffle = false;
+  options.loop = false;
+  options.hysteresis = 40;
+  options.scrollSpeed = 20;
+  options.scrollMode = 'auto';
+  minplayer.display.prototype.defaultOptions.call(this, options);
 };
 
 /**
