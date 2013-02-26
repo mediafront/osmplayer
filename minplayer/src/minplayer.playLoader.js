@@ -195,9 +195,14 @@ minplayer.playLoader.prototype.clear = function(callback) {
 /**
  * Loads the preview image.
  *
+ * @param {string} image The image you would like to load.
  * @return {boolean} Returns true if an image was loaded, false otherwise.
  */
-minplayer.playLoader.prototype.loadPreview = function() {
+minplayer.playLoader.prototype.loadPreview = function(image) {
+
+  // Get the image to load.
+  image = image || this.options.preview;
+  this.options.preview = image;
 
   // Ignore if disabled.
   if (!this.enabled || (this.display.length == 0)) {

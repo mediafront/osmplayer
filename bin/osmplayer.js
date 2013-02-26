@@ -1387,7 +1387,7 @@ minplayer.lock = false;
 minplayer.plugin = function(name, context, options, queue) {
 
   // Make sure we have some options.
-  options = options || {};
+  this.options = options || {};
 
   /** The name of this plugin. */
   this.name = name;
@@ -1420,7 +1420,11 @@ minplayer.plugin = function(name, context, options, queue) {
     this.defaultOptions(defaults);
 
     /** The options for this plugin. */
-    this.options = jQuery.extend(defaults, options);
+    for (var param in defaults) {
+      if (!this.options.hasOwnProperty(param)) {
+        this.options[param] = defaults[param];
+      }
+    }
 
     // Initialize this plugin.
     this.initialize();
@@ -3501,9 +3505,14 @@ minplayer.playLoader.prototype.clear = function(callback) {
 /**
  * Loads the preview image.
  *
+ * @param {string} image The image you would like to load.
  * @return {boolean} Returns true if an image was loaded, false otherwise.
  */
-minplayer.playLoader.prototype.loadPreview = function() {
+minplayer.playLoader.prototype.loadPreview = function(image) {
+
+  // Get the image to load.
+  image = image || this.options.preview;
+  this.options.preview = image;
 
   // Ignore if disabled.
   if (!this.enabled || (this.display.length == 0)) {
@@ -6878,10 +6887,9 @@ osmplayer.prototype.loadNode = function(node) {
       // Load the preview image.
       osmplayer.getImage(node.mediafiles, 'preview', (function(player) {
         return function(image) {
-          player.options.preview = image.path;
           if (player.playLoader && (player.playLoader.display.length > 0)) {
             player.playLoader.enabled = true;
-            player.playLoader.loadPreview();
+            player.playLoader.loadPreview(image.path);
             player.playLoader.previewFlag.setFlag('media', true);
             if (!player.hasMedia) {
               player.playLoader.busy.setFlag('media', false);

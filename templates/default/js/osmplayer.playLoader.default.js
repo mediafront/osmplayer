@@ -40,8 +40,8 @@
   /**
    * Loads the preview image.
    */
-  osmplayer.playLoader[template].prototype.loadPreview = function() {
-    if (!minplayer.playLoader.prototype.loadPreview.call(this)) {
+  osmplayer.playLoader[template].prototype.loadPreview = function(image) {
+    if (!minplayer.playLoader.prototype.loadPreview.call(this, image)) {
       this.elements.preview.addClass('no-image');
     }
   };

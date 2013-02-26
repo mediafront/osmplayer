@@ -22,7 +22,7 @@ minplayer.lock = false;
 minplayer.plugin = function(name, context, options, queue) {
 
   // Make sure we have some options.
-  options = options || {};
+  this.options = options || {};
 
   /** The name of this plugin. */
   this.name = name;
@@ -55,7 +55,11 @@ minplayer.plugin = function(name, context, options, queue) {
     this.defaultOptions(defaults);
 
     /** The options for this plugin. */
-    this.options = jQuery.extend(defaults, options);
+    for (var param in defaults) {
+      if (!this.options.hasOwnProperty(param)) {
+        this.options[param] = defaults[param];
+      }
+    }
 
     // Initialize this plugin.
     this.initialize();

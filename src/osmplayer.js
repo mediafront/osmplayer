@@ -246,10 +246,9 @@ osmplayer.prototype.loadNode = function(node) {
       // Load the preview image.
       osmplayer.getImage(node.mediafiles, 'preview', (function(player) {
         return function(image) {
-          player.options.preview = image.path;
           if (player.playLoader && (player.playLoader.display.length > 0)) {
             player.playLoader.enabled = true;
-            player.playLoader.loadPreview();
+            player.playLoader.loadPreview(image.path);
             player.playLoader.previewFlag.setFlag('media', true);
             if (!player.hasMedia) {
               player.playLoader.busy.setFlag('media', false);
