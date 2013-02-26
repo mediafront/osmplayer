@@ -1500,7 +1500,7 @@ minplayer.prototype.defaultOptions = function(options) {
   });
 
   // Set the parent options.
-  minplayer.display.prototype.call.defaultOptions(this, options);
+  minplayer.display.prototype.defaultOptions.call(this, options);
 };
 
 /**
