@@ -5286,7 +5286,8 @@ minplayer.players.youtube.canPlay = function(file) {
   }
 
   // If the path is a YouTube path, then return true.
-  return (file.path.search(/^http(s)?\:\/\/(www\.)?youtube\.com/i) === 0);
+  var regex = /^http(s)?\:\/\/(www\.)?(youtube\.com|youtu\.be)/i;
+  return (file.path.search(regex) === 0);
 };
 
 /**
@@ -5296,9 +5297,14 @@ minplayer.players.youtube.canPlay = function(file) {
  * @return {string} The ID for the provided media.
  */
 minplayer.players.youtube.getMediaId = function(file) {
-  var reg = /^http[s]?\:\/\/(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_\-]+)/i;
+  var regex = '^http[s]?\\:\\/\\/(www\\.)?';
+  regex += '(youtube\\.com\\/watch\\?v=|youtu\\.be\\/)';
+  regex += '([a-zA-Z0-9_\\-]+)';
+  var reg = RegExp(regex, 'i');
+
+  // Locate the media id.
   if (file.path.search(reg) === 0) {
-    return file.path.match(reg)[2];
+    return file.path.match(reg)[3];
   }
   else {
     return file.path;
