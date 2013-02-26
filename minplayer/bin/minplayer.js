@@ -282,14 +282,14 @@ minplayer.lock = false;
  */
 minplayer.plugin = function(name, context, options, queue) {
 
+  // Make sure we have some options.
+  options = options || {};
+
   /** The name of this plugin. */
   this.name = name;
 
   /** The ready flag. */
   this.pluginReady = false;
-
-  /** The options for this plugin. */
-  this.options = options || {};
 
   /** The event queue. */
   this.queue = queue || {};
@@ -309,6 +309,12 @@ minplayer.plugin = function(name, context, options, queue) {
     /** Keep track of the context. */
     this.context = jQuery(context);
 
+    // Get the options.
+    var defaults = this.defaultOptions();
+
+    /** The options for this plugin. */
+    this.options = defaults ? jQuery.extend(defaults, options) : options;
+
     // Initialize this plugin.
     this.initialize();
   }
@@ -321,6 +327,15 @@ minplayer.plugin.prototype.initialize = function() {
 
   // Construct this plugin.
   this.construct();
+};
+
+/**
+ * Get the default options for this plugin.
+ *
+ * @return {object} The default options for this plugin.
+ */
+minplayer.plugin.prototype.defaultOptions = function() {
+  return null;
 };
 
 /**
@@ -1450,19 +1465,14 @@ minplayer.prototype = new minplayer.display();
 minplayer.prototype.constructor = minplayer;
 
 /**
- * @see minplayer.plugin.construct
+ * Get the default options for this plugin.
+ *
+ * @return {object} The default options for this plugin.
  */
-minplayer.prototype.construct = function() {
-
-  // Allow them to provide arguments based off of the DOM attributes.
-  jQuery.each(this.context[0].attributes, (function(player) {
-    return function(index, attr) {
-      player.options[attr.name] = player.options[attr.name] || attr.value;
-    };
-  })(this));
+minplayer.prototype.defaultOptions = function() {
 
   // Make sure we provide default options...
-  this.options = jQuery.extend({
+  var options = {
     id: 'player',
     build: false,
     wmode: 'transparent',
@@ -1482,7 +1492,21 @@ minplayer.prototype.construct = function() {
     logo: '',
     link: '',
     duration: 0
-  }, this.options);
+  };
+
+  // Allow them to provide arguments based off of the DOM attributes.
+  jQuery.each(this.context[0].attributes, function(index, attr) {
+    options[attr.name] = attr.value;
+  });
+
+  // Return the options.
+  return options;
+};
+
+/**
+ * @see minplayer.plugin.construct
+ */
+minplayer.prototype.construct = function() {
 
   // Call the minplayer display constructor.
   minplayer.display.prototype.construct.call(this);
@@ -5206,14 +5230,20 @@ minplayer.controller.prototype.getElements = function() {
 };
 
 /**
+ * Get the default options for this plugin.
+ *
+ * @return {object} The default options for this plugin.
+ */
+minplayer.controller.prototype.defaultOptions = function() {
+  return {
+    disptime: 0
+  };
+};
+
+/**
  * @see minplayer.plugin#construct
  */
 minplayer.controller.prototype.construct = function() {
-
-  // Make sure we provide default options...
-  this.options = jQuery.extend({
-    disptime: 0
-  }, this.options);
 
   // Call the minplayer plugin constructor.
   minplayer.display.prototype.construct.call(this);

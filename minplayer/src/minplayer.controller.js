@@ -68,14 +68,20 @@ minplayer.controller.prototype.getElements = function() {
 };
 
 /**
+ * Get the default options for this plugin.
+ *
+ * @return {object} The default options for this plugin.
+ */
+minplayer.controller.prototype.defaultOptions = function() {
+  return {
+    disptime: 0
+  };
+};
+
+/**
  * @see minplayer.plugin#construct
  */
 minplayer.controller.prototype.construct = function() {
-
-  // Make sure we provide default options...
-  this.options = jQuery.extend({
-    disptime: 0
-  }, this.options);
 
   // Call the minplayer plugin constructor.
   minplayer.display.prototype.construct.call(this);

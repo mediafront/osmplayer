@@ -59,19 +59,14 @@ minplayer.prototype = new minplayer.display();
 minplayer.prototype.constructor = minplayer;
 
 /**
- * @see minplayer.plugin.construct
+ * Get the default options for this plugin.
+ *
+ * @return {object} The default options for this plugin.
  */
-minplayer.prototype.construct = function() {
-
-  // Allow them to provide arguments based off of the DOM attributes.
-  jQuery.each(this.context[0].attributes, (function(player) {
-    return function(index, attr) {
-      player.options[attr.name] = player.options[attr.name] || attr.value;
-    };
-  })(this));
+minplayer.prototype.defaultOptions = function() {
 
   // Make sure we provide default options...
-  this.options = jQuery.extend({
+  var options = {
     id: 'player',
     build: false,
     wmode: 'transparent',
@@ -91,7 +86,21 @@ minplayer.prototype.construct = function() {
     logo: '',
     link: '',
     duration: 0
-  }, this.options);
+  };
+
+  // Allow them to provide arguments based off of the DOM attributes.
+  jQuery.each(this.context[0].attributes, function(index, attr) {
+    options[attr.name] = attr.value;
+  });
+
+  // Return the options.
+  return options;
+};
+
+/**
+ * @see minplayer.plugin.construct
+ */
+minplayer.prototype.construct = function() {
 
   // Call the minplayer display constructor.
   minplayer.display.prototype.construct.call(this);
