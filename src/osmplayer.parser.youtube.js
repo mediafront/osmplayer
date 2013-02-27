@@ -42,31 +42,11 @@ osmplayer.parser.youtube = {
     };
 
     // Iterate through the items and parse it.
-    var item = null, node = null;
+    var node = null;
     for (var index in data.items) {
       if (data.items.hasOwnProperty(index)) {
-        item = data.items[index];
-        node = (typeof item.video !== 'undefined') ? item.video : item;
-        playlist.nodes.push({
-          title: node.title,
-          description: node.description,
-          mediafiles: {
-            image: {
-              'thumbnail': {
-                path: node.thumbnail.sqDefault
-              },
-              'image': {
-                path: node.thumbnail.hqDefault
-              }
-            },
-            media: {
-              'media': {
-                player: 'youtube',
-                id: node.id
-              }
-            }
-          }
-        });
+        node = minplayer.players.youtube.parseNode(data.items[index]);
+        playlist.nodes.push(node);
       }
     }
 
