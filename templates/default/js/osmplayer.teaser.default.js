@@ -46,7 +46,7 @@
     <div class="osmplayer-' + template + '-teaser ui-widget-content">\
       <div class="osmplayer-' + template + '-teaser-image"></div>\
       <div class="osmplayer-' + template + '-teaser-info ui-state-default">\
-        <div class="osmplayer-' + template + '-teaser-title">Sample Title</div>\
+        <div class="osmplayer-' + template + '-teaser-title"></div>\
       </div>\
     </div>');
 
