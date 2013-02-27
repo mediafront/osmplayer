@@ -4700,8 +4700,9 @@ minplayer.players.vimeo.getNode = function(file, callback) {
       url: 'http://vimeo.com/api/v2/video/' + file.id + '.json',
       dataType: 'jsonp',
       success: function(data) {
-        minplayer.players.vimeo.nodes[file.id] = data[0];
-        callback(minplayer.players.vimeo.parseNode(data[0]));
+        var node = minplayer.players.vimeo.parseNode(data[0]);
+        minplayer.players.vimeo.nodes[file.id] = node;
+        callback(node);
       }
     });
   }
