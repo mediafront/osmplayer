@@ -5329,7 +5329,7 @@ minplayer.players.youtube.getMediaId = function(file) {
  */
 minplayer.players.youtube.getImage = function(file, type, callback) {
   type = (type == 'thumbnail') ? '1' : '0';
-  callback('http://img.youtube.com/vi/' + file.id + '/' + type + '.jpg');
+  callback('https://img.youtube.com/vi/' + file.id + '/' + type + '.jpg');
 };
 
 /**
@@ -5801,7 +5801,7 @@ minplayer.players.vimeo.getNode = function(file, callback) {
   }
   else {
     jQuery.ajax({
-      url: 'http://vimeo.com/api/v2/video/' + file.id + '.json',
+      url: 'https://vimeo.com/api/v2/video/' + file.id + '.json',
       dataType: 'jsonp',
       success: function(data) {
         var node = minplayer.players.vimeo.parseNode(data[0]);
@@ -5857,7 +5857,7 @@ minplayer.players.vimeo.prototype.createPlayer = function() {
   jQuery(iframe).addClass('vimeo-player');
 
   // Get the source.
-  var src = 'http://player.vimeo.com/video/';
+  var src = 'https://player.vimeo.com/video/';
   src += this.mediaFile.id + '?';
 
   // Add the parameters to the src.
@@ -6225,7 +6225,7 @@ minplayer.players.limelight.prototype.createPlayer = function() {
 
   // Insert the embed.js.
   var tag = document.createElement('script');
-  tag.src = 'http://assets.delvenetworks.com/player/embed.js';
+  tag.src = 'https://assets.delvenetworks.com/player/embed.js';
   var firstScriptTag = document.getElementsByTagName('script')[0];
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
@@ -6285,7 +6285,7 @@ minplayer.players.limelight.prototype.createPlayer = function() {
 
   // Return a flash media player object.
   return this.getFlash({
-    swf: 'http://assets.delvenetworks.com/player/loader.swf',
+    swf: 'https://assets.delvenetworks.com/player/loader.swf',
     id: playerId,
     width: this.options.width,
     height: '100%',
