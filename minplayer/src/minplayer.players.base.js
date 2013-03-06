@@ -76,6 +76,11 @@ minplayer.players.base.prototype.construct = function() {
   // Call the media display constructor.
   minplayer.display.prototype.construct.call(this);
 
+  // Set the poster if it exists.
+  if (this.elements.media) {
+    this.poster = this.elements.media.attr('poster');
+  }
+
   // Set the plugin name within the options.
   this.options.pluginName = 'basePlayer';
 
@@ -84,9 +89,6 @@ minplayer.players.base.prototype.construct = function() {
 
   /** The currently loaded media file. */
   this.mediaFile = this.options.file;
-
-  // Make sure we always autoplay on streams.
-  this.options.autoplay = this.options.autoplay || !!this.mediaFile.stream;
 
   // Clear the media player.
   this.clear();

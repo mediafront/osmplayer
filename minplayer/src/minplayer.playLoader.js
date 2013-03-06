@@ -60,7 +60,7 @@ minplayer.playLoader.prototype.initializePlayLoader = function() {
 
       // Get the poster image.
       if (!this.options.preview) {
-        this.options.preview = media.elements.media.attr('poster');
+        this.options.preview = media.poster;
       }
 
       // Determine if we should load the image.
