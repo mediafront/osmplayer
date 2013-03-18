@@ -182,10 +182,13 @@ minplayer.players.vimeo.prototype.createPlayer = function() {
   minplayer.players.base.prototype.createPlayer.call(this);
 
   // Insert the Vimeo Froogaloop player.
-  var tag = document.createElement('script');
-  tag.src = 'http://a.vimeocdn.com/js/froogaloop2.min.js';
-  var firstScriptTag = document.getElementsByTagName('script')[0];
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  var vimeo_script = 'http://a.vimeocdn.com/js/froogaloop2.min.js';
+  if (jQuery('script[src="' + vimeo_script + '"]').length == 0) {
+    var tag = document.createElement('script');
+    tag.src = vimeo_script;
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  }
 
   // Create the iframe for this player.
   var iframe = document.createElement('iframe');
@@ -215,7 +218,7 @@ minplayer.players.vimeo.prototype.createPlayer = function() {
   iframe.setAttribute('src', src);
 
   // Now register this player when the froogaloop code is loaded.
-  this.poll('vimeo', (function(player) {
+  this.poll(this.options.id + '_vimeo', (function(player) {
     return function() {
       if (window.Froogaloop) {
         player.player = window.Froogaloop(iframe);

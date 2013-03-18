@@ -5495,16 +5495,19 @@ minplayer.players.youtube.prototype.createPlayer = function() {
   minplayer.players.base.prototype.createPlayer.call(this);
 
   // Insert the YouTube iframe API player.
-  var tag = document.createElement('script');
-  tag.src = 'https://www.youtube.com/player_api';
-  var firstScriptTag = document.getElementsByTagName('script')[0];
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  var youtube_script = 'https://www.youtube.com/player_api';
+  if (jQuery('script[src="' + youtube_script + '"]').length == 0) {
+    var tag = document.createElement('script');
+    tag.src = youtube_script;
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  }
 
   // Get the player ID.
   this.playerId = this.options.id + '-player';
 
   // Poll until the YouTube API is ready.
-  this.poll('youtube', (function(player) {
+  this.poll(this.options.id + '_youtube', (function(player) {
     return function() {
       var ready = jQuery('#' + player.playerId).length > 0;
       ready = ready && ('YT' in window);
@@ -5868,10 +5871,13 @@ minplayer.players.vimeo.prototype.createPlayer = function() {
   minplayer.players.base.prototype.createPlayer.call(this);
 
   // Insert the Vimeo Froogaloop player.
-  var tag = document.createElement('script');
-  tag.src = 'http://a.vimeocdn.com/js/froogaloop2.min.js';
-  var firstScriptTag = document.getElementsByTagName('script')[0];
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  var vimeo_script = 'http://a.vimeocdn.com/js/froogaloop2.min.js';
+  if (jQuery('script[src="' + vimeo_script + '"]').length == 0) {
+    var tag = document.createElement('script');
+    tag.src = vimeo_script;
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  }
 
   // Create the iframe for this player.
   var iframe = document.createElement('iframe');
@@ -5901,7 +5907,7 @@ minplayer.players.vimeo.prototype.createPlayer = function() {
   iframe.setAttribute('src', src);
 
   // Now register this player when the froogaloop code is loaded.
-  this.poll('vimeo', (function(player) {
+  this.poll(this.options.id + '_vimeo', (function(player) {
     return function() {
       if (window.Froogaloop) {
         player.player = window.Froogaloop(iframe);
