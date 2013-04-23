@@ -587,9 +587,9 @@ minplayer.players.base.prototype.getPlayer = function() {
 minplayer.players.base.prototype.load = function(file, callback) {
 
   // Store the media file for future lookup.
-  var isString = (typeof this.mediaFile == 'string');
+  var isString = (typeof this.mediaFile === 'string');
   var path = isString ? this.mediaFile : this.mediaFile.path;
-  if (file && (file.path != path)) {
+  if (file && (file.path !== path)) {
 
     // If the player is not ready, then setup.
     if (!this.isReady()) {

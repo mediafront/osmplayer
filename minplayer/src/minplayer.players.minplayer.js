@@ -88,6 +88,8 @@ minplayer.players.minplayer.getPriority = function(file) {
 
 /**
  * @see minplayer.players.base#canPlay
+ *
+ * @param {object} file A {@link minplayer.file} object.
  * @return {boolean} If this player can play this media type.
  */
 minplayer.players.minplayer.canPlay = function(file) {
@@ -102,7 +104,7 @@ minplayer.players.minplayer.canPlay = function(file) {
     'video/webm',
     'application/octet-stream'
   ]) >= 0;
-  return !isWEBM && (file.type == 'video' || file.type == 'audio');
+  return !isWEBM && (file.type === 'video' || file.type === 'audio');
 };
 
 /**

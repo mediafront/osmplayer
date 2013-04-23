@@ -43,6 +43,7 @@ minplayer.players.youtube.prototype.construct = function() {
 
 /**
  * @see minplayer.players.base#getPriority
+ *
  * @param {object} file A {@link minplayer.file} object.
  * @return {number} The priority of this media player.
  */
@@ -52,6 +53,8 @@ minplayer.players.youtube.getPriority = function(file) {
 
 /**
  * @see minplayer.players.base#canPlay
+ *
+ * @param {object} file A {@link minplayer.file} object.
  * @return {boolean} If this player can play this media type.
  */
 minplayer.players.youtube.canPlay = function(file) {
@@ -95,7 +98,7 @@ minplayer.players.youtube.getMediaId = function(file) {
  * @param {function} callback Called when the image is retrieved.
  */
 minplayer.players.youtube.getImage = function(file, type, callback) {
-  type = (type == 'thumbnail') ? '1' : '0';
+  type = (type === 'thumbnail') ? '1' : '0';
   callback('https://img.youtube.com/vi/' + file.id + '/' + type + '.jpg');
 };
 
@@ -238,7 +241,7 @@ minplayer.players.youtube.prototype.createPlayer = function() {
 
   // Insert the YouTube iframe API player.
   var youtube_script = 'https://www.youtube.com/player_api';
-  if (jQuery('script[src="' + youtube_script + '"]').length == 0) {
+  if (jQuery('script[src="' + youtube_script + '"]').length === 0) {
     var tag = document.createElement('script');
     tag.src = youtube_script;
     var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -253,7 +256,7 @@ minplayer.players.youtube.prototype.createPlayer = function() {
     return function() {
       var ready = jQuery('#' + player.playerId).length > 0;
       ready = ready && ('YT' in window);
-      ready = ready && (typeof YT.Player == 'function');
+      ready = ready && (typeof YT.Player === 'function');
       if (ready) {
         // Determine the origin of this script.
         jQuery('#' + player.playerId).addClass('youtube-player');

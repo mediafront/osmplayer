@@ -51,7 +51,7 @@ all: jslint js jsdoc
 
 # Perform a jsLint on all the files.
 jslint: ${files}
-	gjslint $^
+	jshint $^
 
 # Create an aggregated js file and a compressed js file.
 js: ${files}
@@ -91,3 +91,4 @@ tools:
 	mv tools/jsdoc_toolkit-2.4.0/jsdoc-toolkit tools/jsdoc-toolkit
 	rm -rd tools/jsdoc_toolkit-2.4.0
 	rm tools/jsdoc_toolkit-2.4.0.zip
+	npm install jshint

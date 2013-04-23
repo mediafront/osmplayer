@@ -198,7 +198,7 @@ osmplayer.prototype.reset = function(callback) {
 osmplayer.prototype.loadNode = function(node) {
 
   // Make sure this is a valid node.
-  if (!node || (node.hasOwnProperty('length') && (node.length == 0))) {
+  if (!node || (node.hasOwnProperty('length') && (node.length === 0))) {
     return false;
   }
 
@@ -228,7 +228,8 @@ osmplayer.prototype.loadNode = function(node) {
         // Iterate through the types.
         jQuery.each(types, (function(player) {
           return function(key, type) {
-            if (file = player.addToQueue(media[type])) {
+            file = player.addToQueue(media[type]);
+            if (file) {
               file.queueType = type;
             }
           };
@@ -269,7 +270,8 @@ osmplayer.prototype.loadNode = function(node) {
  * @return {object} The file that was added to the queue.
  */
 osmplayer.prototype.addToQueue = function(file) {
-  if (file = minplayer.getMediaFile(file)) {
+  file = minplayer.getMediaFile(file);
+  if (file) {
     this.playQueue.push(file);
   }
   return file;
@@ -349,8 +351,8 @@ osmplayer.getImage = function(mediafiles, type, callback) {
       image = images[type];
     }
     // Or try the original image...
-    else if (images['image']) {
-      image = images['image'];
+    else if (images.image) {
+      image = images.image;
     }
     // Otherwise, just try ANY image...
     else {
