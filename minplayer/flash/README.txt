@@ -1,6 +1,6 @@
-The minplayer is a GPLv3, minimalistic, skinable, plugin based Flash media player.
+The minplayer is a MIT, minimalistic, skinable, plugin based Flash media player.
 
-In addition to being a minimal Flash player, it was built with a solid API so that any 
+In addition to being a minimal Flash player, it was built with a solid API so that any
 JavaScript widget can communicate to this player easily and effectively controlling it
 from outside sources.
 
