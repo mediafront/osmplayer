@@ -24,11 +24,13 @@
     <script type="text/javascript" src="src/minplayer.playLoader.js"></script>
     <script type="text/javascript" src="src/minplayer.players.base.js"></script>
     <script type="text/javascript" src="src/minplayer.players.dailymotion.js"></script>
+    <script type="text/javascript" src="src/minplayer.players.kaltura.js"></script>
     <script type="text/javascript" src="src/minplayer.players.html5.js"></script>
     <script type="text/javascript" src="src/minplayer.players.flash.js"></script>
     <script type="text/javascript" src="src/minplayer.players.minplayer.js"></script>
     <script type="text/javascript" src="src/minplayer.players.youtube.js"></script>
     <script type="text/javascript" src="src/minplayer.players.vimeo.js"></script>
+    <script type="text/javascript" src="src/minplayer.players.limelight.js"></script>
     <script type="text/javascript" src="src/minplayer.controller.js"></script>
 
     <!-- Include the template CSS and JS files. -->
@@ -55,6 +57,14 @@
           height: '300px'
         });
         $("#dailymotion").minplayer({
+          width: '500px',
+          height: '300px'
+        });
+        $("#limelight").minplayer({
+          width: '500px',
+          height: '300px'
+        });
+        $("#kaltura").minplayer({
           width: '500px',
           height: '300px'
         });
@@ -102,6 +112,10 @@ integrated using JSLint, JSDoc, and Google Closure.</p>
 <video id="vimeo" src="http://vimeo.com/5606758"></video>
 <h2>Dailymotion Example</h2>
 <video id="dailymotion" src="http://www.dailymotion.com/video/xbhcig_i-m-yours-au-ukulele_music"></video>
+<h2>Limelight CDN Example</h2>
+<video id="limelight" src="http://link.videoplatform.limelight.com/media/?mediaId=75fa35c9ab634e55bf5f377fb0d5c67a&width=480&height=270&playerForm=b75b8d0290574a609d3af729b49d9e15"></video>
+<h2>Kaltura CDN Example</h2>
+<video id="kaltura" src="http://www.kaltura.com/kwidget/wid/_1446611/entry_id/0_yy36lues/uiconf_id/14224411"></video>
 
 <h2>Multiple players - One single API.</h2>
 
