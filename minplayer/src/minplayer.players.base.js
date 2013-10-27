@@ -385,7 +385,7 @@ minplayer.players.base.prototype.parseTime = function(time) {
 
   // If no seconds were found, then just use the raw value.
   if (!seconds) {
-    seconds = time.seek;
+    seconds = time;
   }
 
   // Return the seconds from the time.
