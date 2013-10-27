@@ -2863,6 +2863,11 @@ minplayer.players.base.prototype.parseTime = function(time) {
     return 0;
   }
 
+  // Convert to string if we need to.
+  if (typeof time != 'string') {
+    time = String(time);
+  }
+
   // Get the seconds.
   seconds = time.match(/([0-9]+)s/i);
   if (seconds) {
