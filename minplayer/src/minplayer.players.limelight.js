@@ -310,10 +310,8 @@ minplayer.players.limelight.prototype.setVolume = function(vol, callback) {
 /**
  * @see minplayer.players.base#getVolume
  */
-minplayer.players.limelight.prototype.getVolume = function(callback) {
-  this.whenReady(function() {
-    callback(this.player.doGetVolume());
-  });
+minplayer.players.limelight.prototype._getVolume = function(callback) {
+  callback(this.player.doGetVolume());
 };
 
 /**

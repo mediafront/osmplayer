@@ -248,50 +248,39 @@ minplayer.players.minplayer.prototype.setVolume = function(vol, callback) {
 /**
  * @see minplayer.players.base#getVolume
  */
-minplayer.players.minplayer.prototype.getVolume = function(callback) {
-  this.whenReady(function() {
-    callback(this.player.getVolume());
-  });
+minplayer.players.minplayer.prototype._getVolume = function(callback) {
+  callback(this.player.getVolume());
 };
 
 /**
  * @see minplayer.players.flash#getDuration
  */
-minplayer.players.minplayer.prototype.getDuration = function(callback) {
-  this.whenReady(function() {
-    if (this.options.duration) {
-      callback(this.options.duration);
-    }
-    else {
-      // Check to see if it is immediately available.
-      var duration = this.player.getDuration();
-      if (duration) {
-        callback(duration);
-      }
-      else {
+minplayer.players.minplayer.prototype._getDuration = function(callback) {
+  // Check to see if it is immediately available.
+  var duration = this.player.getDuration();
+  if (duration) {
+    callback(duration);
+  }
+  else {
 
-        // If not, then poll every second for the duration.
-        this.poll('duration', (function(player) {
-          return function() {
-            duration = player.player.getDuration();
-            if (duration) {
-              callback(duration);
-            }
-            return !duration;
-          };
-        })(this), 1000);
-      }
-    }
-  });
+    // If not, then poll every second for the duration.
+    this.poll('duration', (function(player) {
+      return function() {
+        duration = player.player.getDuration();
+        if (duration) {
+          callback(duration);
+        }
+        return !duration;
+      };
+    })(this), 1000);
+  }
 };
 
 /**
  * @see minplayer.players.base#getCurrentTime
  */
-minplayer.players.minplayer.prototype.getCurrentTime = function(callback) {
-  this.whenReady(function() {
-    callback(this.player.getCurrentTime());
-  });
+minplayer.players.minplayer.prototype._getCurrentTime = function(callback) {
+  callback(this.player.getCurrentTime());
 };
 
 /**

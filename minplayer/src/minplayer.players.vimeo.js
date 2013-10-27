@@ -380,29 +380,17 @@ minplayer.players.vimeo.prototype.setVolume = function(vol, callback) {
 /**
  * @see minplayer.players.base#getVolume
  */
-minplayer.players.vimeo.prototype.getVolume = function(callback) {
-  this.whenReady(function() {
-    this.player.api('getVolume', function(vol) {
-      callback(vol);
-    });
+minplayer.players.vimeo.prototype._getVolume = function(callback) {
+  this.player.api('getVolume', function(vol) {
+    callback(vol);
   });
 };
 
 /**
  * @see minplayer.players.base#getDuration.
  */
-minplayer.players.vimeo.prototype.getDuration = function(callback) {
-  this.whenReady(function() {
-    if (this.options.duration) {
-      callback(this.options.duration);
-    }
-    else if (this.duration.value) {
-      callback(this.duration.value);
-    }
-    else {
-      this.player.api('getDuration', function(duration) {
-        callback(duration);
-      });
-    }
+minplayer.players.vimeo.prototype._getDuration = function(callback) {
+  this.player.api('getDuration', function(duration) {
+    callback(duration);
   });
 };

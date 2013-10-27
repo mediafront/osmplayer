@@ -3644,6 +3644,17 @@ minplayer.players.base.prototype.getElements = function() {
   });
 };
 
+
+/**
+ * Get the default options for this plugin.
+ *
+ * @param {object} options The default options for this plugin.
+ */
+minplayer.players.base.prototype.defaultOptions = function(options) {
+  options.range = {min: 0, max: 0};
+  minplayer.display.prototype.defaultOptions.call(this, options);
+};
+
 /**
  * Get the priority of this media player.
  *
@@ -3941,41 +3952,81 @@ minplayer.players.base.prototype.onReady = function() {
 };
 
 /**
- * Returns the amount of seconds you would like to seek.
+ * Parses a time value into seconds.
+ *
+ * @param string time
+ *   The time to parse to seconds.
+ *
+ * @returns {number}
+ *   The number of seconds this time represents.
+ */
+minplayer.players.base.prototype.parseTime = function(time) {
+  var seconds = 0, minutes = 0, hours = 0;
+
+  if (!time) {
+    return 0;
+  }
+
+  // Get the seconds.
+  seconds = time.match(/([0-9]+)s/i);
+  if (seconds) {
+    seconds = parseInt(seconds[1], 10);
+  }
+
+  // Get the minutes.
+  minutes = time.match(/([0-9]+)m/i);
+  if (minutes) {
+    seconds += (parseInt(minutes[1], 10) * 60);
+  }
+
+  // Get the hours.
+  hours = time.match(/([0-9]+)h/i);
+  if (hours) {
+    seconds += (parseInt(hours[1], 10) * 3600);
+  }
+
+  // If no seconds were found, then just use the raw value.
+  if (!seconds) {
+    seconds = time.seek;
+  }
+
+  // Return the seconds from the time.
+  return seconds;
+};
+
+/**
+ * Sets the start and stop points for the media.
  *
  * @return {number} The number of seconds we should seek.
  */
-minplayer.players.base.prototype.getSeek = function() {
-  var seconds = 0, minutes = 0, hours = 0;
-
-  // See if they would like to seek.
-  if (minplayer.urlVars && minplayer.urlVars.seek) {
-
-    // Get the seconds.
-    seconds = minplayer.urlVars.seek.match(/([0-9])s/i);
-    if (seconds) {
-      seconds = parseInt(seconds[1], 10);
-    }
-
-    // Get the minutes.
-    minutes = minplayer.urlVars.seek.match(/([0-9])m/i);
-    if (minutes) {
-      seconds += (parseInt(minutes[1], 10) * 60);
-    }
-
-    // Get the hours.
-    hours = minplayer.urlVars.seek.match(/([0-9])h/i);
-    if (hours) {
-      seconds += (parseInt(hours[1], 10) * 3600);
-    }
-
-    // If no seconds were found, then just use the raw value.
-    if (!seconds) {
-      seconds = minplayer.urlVars.seek;
-    }
+minplayer.players.base.prototype.setStartStop = function() {
+  if (this.startTime) {
+    return this.startTime;
   }
 
-  return seconds;
+  this.startTime = 0;
+
+  // First check the url for the seek time.
+  if (minplayer.urlVars) {
+    this.startTime = this.parseTime(minplayer.urlVars.seek);
+  }
+
+  // Then check the options range parameter.
+  if (!this.startTime) {
+    this.startTime = this.parseTime(this.options.range.min);
+  }
+
+  // Get the stop time.
+  this.stopTime = this.options.range.max ? this.parseTime(this.options.range.max) : 0;
+
+  // Calculate the range.
+  this.mediaRange = this.stopTime - this.startTime;
+  if (this.mediaRange < 0) {
+    this.mediaRange = 0;
+  }
+
+  // Return the start time.
+  return this.startTime;
 };
 
 /**
@@ -4079,17 +4130,16 @@ minplayer.players.base.prototype.onLoaded = function() {
 
   // See if they would like to seek.
   if (!isLoaded) {
-    var seek = this.getSeek();
-    if (seek) {
-      this.getDuration((function(player) {
-        return function(duration) {
-          if (seek < duration) {
-            player.seek(seek);
+    this.getDuration((function(player) {
+      return function(duration) {
+        if (player.startTime && (player.startTime < duration)) {
+          player.seek(player.startTime);
+          if (player.options.autoplay) {
             player.play();
           }
-        };
-      })(this));
-    }
+        }
+      };
+    })(this));
   }
 };
 
@@ -4339,7 +4389,27 @@ minplayer.players.base.prototype.setVolume = function(vol, callback) {
  * @return {number} The volume of the media; 0 to 1.
  */
 minplayer.players.base.prototype.getVolume = function(callback) {
-  return this.volume.get(callback);
+  this.whenReady(function() {
+    var self = this;
+    this._getVolume(function(volume) {
+      if (volume !== null) {
+        callback(volume);
+      }
+      else {
+        self.volume.get(callback);
+      }
+    });
+  });
+};
+
+/**
+ * Implemented by the players to get the current time.
+ *
+ * @param callback
+ * @private
+ */
+minplayer.players.base.prototype._getVolume = function(callback) {
+  callback(null);
 };
 
 /**
@@ -4349,7 +4419,38 @@ minplayer.players.base.prototype.getVolume = function(callback) {
  * @return {number} The volume of the media; 0 to 1.
  */
 minplayer.players.base.prototype.getCurrentTime = function(callback) {
-  return this.currentTime.get(callback);
+  var self = this;
+  var onCurrentTime = function(currentTime) {
+    self.setStartStop();
+    if (self.stopTime && (currentTime > self.stopTime)) {
+      self.stop(function() {
+        self.onComplete();
+      });
+    }
+    currentTime -= self.startTime;
+    callback(currentTime);
+  };
+
+  this.whenReady(function() {
+    this._getCurrentTime(function(currentTime) {
+      if (currentTime !== null) {
+        onCurrentTime(currentTime);
+      }
+      else {
+        self.currentTime.get(onCurrentTime);
+      }
+    });
+  });
+};
+
+/**
+ * Implemented by the players to get the current time.
+ *
+ * @param callback
+ * @private
+ */
+minplayer.players.base.prototype._getCurrentTime = function(callback) {
+  callback(null);
 };
 
 /**
@@ -4359,12 +4460,42 @@ minplayer.players.base.prototype.getCurrentTime = function(callback) {
  * @return {number} The duration of the loaded media.
  */
 minplayer.players.base.prototype.getDuration = function(callback) {
-  if (this.options.duration) {
-    callback(this.options.duration);
-  }
-  else {
-    return this.duration.get(callback);
-  }
+  var self = this;
+  var onDuration = function(duration) {
+    self.setStartStop();
+    callback(self.mediaRange ? self.mediaRange : duration);
+  };
+
+  this.whenReady(function() {
+    if (this.options.duration) {
+      onDuration(this.options.duration);
+    }
+    else if (this.duration.value) {
+      onDuration(this.duration.value);
+    }
+    else {
+
+      // Try the derived player.
+      this._getDuration(function(duration) {
+        if (duration !== null) {
+          onDuration(duration);
+        }
+        else {
+          self.duration.get(onDuration);
+        }
+      });
+    }
+  });
+};
+
+/**
+ * Implemented by the players to get the duration.
+ *
+ * @param callback
+ * @private
+ */
+minplayer.players.base.prototype._getDuration = function(callback) {
+  callback(null);
 };
 
 /**
@@ -4565,7 +4696,10 @@ minplayer.players.html5.prototype.addPlayerEvents = function() {
     this.addPlayerEvent('durationchange', function() {
       if (this.player) {
         this.duration.set(this.player.duration);
-        this.trigger('durationchange', {duration: this.player.duration});
+        var self = this;
+        this.getDuration(function(duration) {
+          self.trigger('durationchange', {duration: duration});
+        });
       }
     });
     this.addPlayerEvent('progress', function(event) {
@@ -4747,36 +4881,22 @@ minplayer.players.html5.prototype.setVolume = function(vol, callback) {
 /**
  * @see minplayer.players.base#getVolume
  */
-minplayer.players.html5.prototype.getVolume = function(callback) {
-  this.whenReady(function() {
-    callback(this.player.volume);
-  });
+minplayer.players.html5.prototype._getVolume = function(callback) {
+  callback(this.player.volume);
 };
 
 /**
- * @see minplayer.players.base#getDuration
+ * @see minplayer.players.base#_getDuration
  */
-minplayer.players.html5.prototype.getDuration = function(callback) {
-  this.whenReady(function() {
-    if (this.options.duration) {
-      callback(this.options.duration);
-    }
-    else {
-      this.duration.get(callback);
-      if (this.player.duration) {
-        this.duration.set(this.player.duration);
-      }
-    }
-  });
+minplayer.players.html5.prototype._getDuration = function(callback) {
+  callback(this.player.duration);
 };
 
 /**
  * @see minplayer.players.base#getCurrentTime
  */
-minplayer.players.html5.prototype.getCurrentTime = function(callback) {
-  this.whenReady(function() {
-    callback(this.player.currentTime);
-  });
+minplayer.players.html5.prototype._getCurrentTime = function(callback) {
+  callback(this.player.currentTime);
 };
 
 /**
@@ -5204,50 +5324,39 @@ minplayer.players.minplayer.prototype.setVolume = function(vol, callback) {
 /**
  * @see minplayer.players.base#getVolume
  */
-minplayer.players.minplayer.prototype.getVolume = function(callback) {
-  this.whenReady(function() {
-    callback(this.player.getVolume());
-  });
+minplayer.players.minplayer.prototype._getVolume = function(callback) {
+  callback(this.player.getVolume());
 };
 
 /**
  * @see minplayer.players.flash#getDuration
  */
-minplayer.players.minplayer.prototype.getDuration = function(callback) {
-  this.whenReady(function() {
-    if (this.options.duration) {
-      callback(this.options.duration);
-    }
-    else {
-      // Check to see if it is immediately available.
-      var duration = this.player.getDuration();
-      if (duration) {
-        callback(duration);
-      }
-      else {
+minplayer.players.minplayer.prototype._getDuration = function(callback) {
+  // Check to see if it is immediately available.
+  var duration = this.player.getDuration();
+  if (duration) {
+    callback(duration);
+  }
+  else {
 
-        // If not, then poll every second for the duration.
-        this.poll('duration', (function(player) {
-          return function() {
-            duration = player.player.getDuration();
-            if (duration) {
-              callback(duration);
-            }
-            return !duration;
-          };
-        })(this), 1000);
-      }
-    }
-  });
+    // If not, then poll every second for the duration.
+    this.poll('duration', (function(player) {
+      return function() {
+        duration = player.player.getDuration();
+        if (duration) {
+          callback(duration);
+        }
+        return !duration;
+      };
+    })(this), 1000);
+  }
 };
 
 /**
  * @see minplayer.players.base#getCurrentTime
  */
-minplayer.players.minplayer.prototype.getCurrentTime = function(callback) {
-  this.whenReady(function() {
-    callback(this.player.getCurrentTime());
-  });
+minplayer.players.minplayer.prototype._getCurrentTime = function(callback) {
+  callback(this.player.getCurrentTime());
 };
 
 /**
@@ -5658,27 +5767,22 @@ minplayer.players.youtube.prototype.setVolume = function(vol, callback) {
 /**
  * @see minplayer.players.base#getVolume
  */
-minplayer.players.youtube.prototype.getVolume = function(callback) {
-  this.getValue('getVolume', callback);
+minplayer.players.youtube.prototype._getVolume = function(callback) {
+  callback(this.player.getVolume());
 };
 
 /**
  * @see minplayer.players.base#getDuration.
  */
-minplayer.players.youtube.prototype.getDuration = function(callback) {
-  if (this.options.duration) {
-    callback(this.options.duration);
-  }
-  else {
-    this.getValue('getDuration', callback);
-  }
+minplayer.players.youtube.prototype._getDuration = function(callback) {
+  callback(this.player.getDuration());
 };
 
 /**
  * @see minplayer.players.base#getCurrentTime
  */
-minplayer.players.youtube.prototype.getCurrentTime = function(callback) {
-  this.getValue('getCurrentTime', callback);
+minplayer.players.youtube.prototype._getCurrentTime = function(callback) {
+  callback(this.player.getCurrentTime());
 };
 
 /**
@@ -6083,30 +6187,18 @@ minplayer.players.vimeo.prototype.setVolume = function(vol, callback) {
 /**
  * @see minplayer.players.base#getVolume
  */
-minplayer.players.vimeo.prototype.getVolume = function(callback) {
-  this.whenReady(function() {
-    this.player.api('getVolume', function(vol) {
-      callback(vol);
-    });
+minplayer.players.vimeo.prototype._getVolume = function(callback) {
+  this.player.api('getVolume', function(vol) {
+    callback(vol);
   });
 };
 
 /**
  * @see minplayer.players.base#getDuration.
  */
-minplayer.players.vimeo.prototype.getDuration = function(callback) {
-  this.whenReady(function() {
-    if (this.options.duration) {
-      callback(this.options.duration);
-    }
-    else if (this.duration.value) {
-      callback(this.duration.value);
-    }
-    else {
-      this.player.api('getDuration', function(duration) {
-        callback(duration);
-      });
-    }
+minplayer.players.vimeo.prototype._getDuration = function(callback) {
+  this.player.api('getDuration', function(duration) {
+    callback(duration);
   });
 };
 /** The minplayer namespace. */
@@ -6421,10 +6513,8 @@ minplayer.players.limelight.prototype.setVolume = function(vol, callback) {
 /**
  * @see minplayer.players.base#getVolume
  */
-minplayer.players.limelight.prototype.getVolume = function(callback) {
-  this.whenReady(function() {
-    callback(this.player.doGetVolume());
-  });
+minplayer.players.limelight.prototype._getVolume = function(callback) {
+  callback(this.player.doGetVolume());
 };
 
 /**
