@@ -284,19 +284,15 @@ minplayer.players.minplayer.prototype._getCurrentTime = function(callback) {
 };
 
 /**
- * @see minplayer.players.base#getBytesLoaded
+ * @see minplayer.players.base#_getBytesLoaded
  */
-minplayer.players.minplayer.prototype.getBytesLoaded = function(callback) {
-  this.whenReady(function() {
-    callback(this.player.getMediaBytesLoaded());
-  });
+minplayer.players.minplayer.prototype._getBytesLoaded = function(callback) {
+  callback(this.player.getMediaBytesLoaded());
 };
 
 /**
- * @see minplayer.players.base#getBytesTotal.
+ * @see minplayer.players.base#_getBytesTotal.
  */
-minplayer.players.minplayer.prototype.getBytesTotal = function(callback) {
-  this.whenReady(function() {
-    callback(this.player.getMediaBytesTotal());
-  });
+minplayer.players.minplayer.prototype._getBytesTotal = function(callback) {
+  callback(this.player.getMediaBytesTotal());
 };

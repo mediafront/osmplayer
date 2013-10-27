@@ -417,21 +417,21 @@
 <span class='line'>410</span> </span><span class="COMM">/**
 <span class='line'>411</span>  * @see minplayer.players.base#getBytesStart.
 <span class='line'>412</span>  */</span><span class="WHIT">
-<span class='line'>413</span> </span><span class="NAME">minplayer.players.youtube.prototype.getBytesStart</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>414</span> </span><span class="WHIT">  </span><span class="NAME">this.getValue</span><span class="PUNC">(</span><span class="STRN">'getVideoStartBytes'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>413</span> </span><span class="NAME">minplayer.players.youtube.prototype._getBytesStart</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>414</span> </span><span class="WHIT">  </span><span class="NAME">callback</span><span class="PUNC">(</span><span class="NAME">this.player.getVideoStartBytes</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>415</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>416</span> 
 <span class='line'>417</span> </span><span class="COMM">/**
 <span class='line'>418</span>  * @see minplayer.players.base#getBytesLoaded.
 <span class='line'>419</span>  */</span><span class="WHIT">
-<span class='line'>420</span> </span><span class="NAME">minplayer.players.youtube.prototype.getBytesLoaded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>421</span> </span><span class="WHIT">  </span><span class="NAME">this.getValue</span><span class="PUNC">(</span><span class="STRN">'getVideoBytesLoaded'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>420</span> </span><span class="NAME">minplayer.players.youtube.prototype._getBytesLoaded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>421</span> </span><span class="WHIT">  </span><span class="NAME">callback</span><span class="PUNC">(</span><span class="NAME">this.player.getVideoBytesLoaded</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>422</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>423</span> 
 <span class='line'>424</span> </span><span class="COMM">/**
 <span class='line'>425</span>  * @see minplayer.players.base#getBytesTotal.
 <span class='line'>426</span>  */</span><span class="WHIT">
-<span class='line'>427</span> </span><span class="NAME">minplayer.players.youtube.prototype.getBytesTotal</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>428</span> </span><span class="WHIT">  </span><span class="NAME">this.getValue</span><span class="PUNC">(</span><span class="STRN">'getVideoBytesTotal'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>427</span> </span><span class="NAME">minplayer.players.youtube.prototype._getBytesTotal</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>428</span> </span><span class="WHIT">  </span><span class="NAME">callback</span><span class="PUNC">(</span><span class="NAME">this.player.getVideoBytesTotal</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>429</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>430</span> </span></pre></body></html>
