@@ -390,7 +390,7 @@ minplayer.players.base.prototype.parseTime = function(time) {
   }
 
   // Return the seconds from the time.
-  return seconds;
+  return Number(seconds);
 };
 
 /**
@@ -404,6 +404,7 @@ minplayer.players.base.prototype.setStartStop = function() {
   }
 
   this.startTime = 0;
+  this.offsetTime = this.parseTime(this.options.range.min);
 
   // First check the url for the seek time.
   if (minplayer.urlVars) {
@@ -412,14 +413,14 @@ minplayer.players.base.prototype.setStartStop = function() {
 
   // Then check the options range parameter.
   if (!this.startTime) {
-    this.startTime = this.parseTime(this.options.range.min);
+    this.startTime = this.offsetTime;
   }
 
   // Get the stop time.
   this.stopTime = this.options.range.max ? this.parseTime(this.options.range.max) : 0;
 
   // Calculate the range.
-  this.mediaRange = this.stopTime - this.startTime;
+  this.mediaRange = this.stopTime - this.offsetTime;
   if (this.mediaRange < 0) {
     this.mediaRange = 0;
   }
@@ -532,7 +533,7 @@ minplayer.players.base.prototype.onLoaded = function() {
     this.getDuration((function(player) {
       return function(duration) {
         if (player.startTime && (player.startTime < duration)) {
-          player.seek(player.startTime);
+          player.seek(player.startTime, null, true);
           if (player.options.autoplay) {
             player.play();
           }
@@ -733,9 +734,20 @@ minplayer.players.base.prototype.seekRelative = function(pos) {
  * @param {number} pos The position to seek the minplayer. 0 to 1.
  * @param {function} callback Called when it is done performing this operation.
  */
-minplayer.players.base.prototype.seek = function(pos, callback) {
-  this.whenReady(callback);
+minplayer.players.base.prototype.seek = function(pos, callback, noOffset) {
+  this.whenReady(function() {
+    pos = Number(pos);
+    if (!noOffset) {
+      pos += this.offsetTime;
+    }
+    this._seek(pos);
+    if (callback) {
+      callback.call(this);
+    }
+  });
 };
+
+minplayer.players.base.prototype._seek = function(pos) {};
 
 /**
  * Set the volume of the loaded minplayer.

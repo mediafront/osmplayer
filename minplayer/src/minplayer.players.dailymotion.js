@@ -328,16 +328,11 @@ minplayer.players.dailymotion.prototype.stop = function(callback) {
 };
 
 /**
- * @see minplayer.players.base#seek
+ * @see minplayer.players.base#_seek
  */
-minplayer.players.dailymotion.prototype.seek = function(pos, callback) {
-  minplayer.players.base.prototype.seek.call(this, pos, function() {
-    this.onWaiting();
-    this.player.seek(pos);
-    if (callback) {
-      callback.call(this);
-    }
-  });
+minplayer.players.dailymotion.prototype._seek = function(pos) {
+  this.onWaiting();
+  this.player.seek(pos);
 };
 
 /**

@@ -326,15 +326,10 @@ minplayer.players.html5.prototype.stop = function(callback) {
 };
 
 /**
- * @see minplayer.players.base#seek
+ * @see minplayer.players.base#_seek
  */
-minplayer.players.html5.prototype.seek = function(pos, callback) {
-  minplayer.players.base.prototype.seek.call(this, pos, function() {
-    this.player.currentTime = pos;
-    if (callback) {
-      callback.call(this);
-    }
-  });
+minplayer.players.html5.prototype._seek = function(pos) {
+  this.player.currentTime = pos;
 };
 
 /**
