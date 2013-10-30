@@ -442,6 +442,7 @@ minplayer.players.base.prototype.onPlaying = function() {
 
   // Set the playInterval to true.
   this.playing = true;
+  this.loaded = true;
 
   // Create a poll to get the timeupate.
   this.poll('timeupdate', (function(player) {
