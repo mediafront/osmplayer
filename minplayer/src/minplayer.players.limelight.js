@@ -120,7 +120,7 @@ minplayer.players.limelight.prototype.onMediaUpdate = function(event, data) {
         return;
       }
 
-      this.shouldSeek = (this.getSeek() > 0);
+      this.shouldSeek = (this.startTime > 0);
       this.onLoaded();
       break;
 
