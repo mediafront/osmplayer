@@ -237,7 +237,7 @@ minplayer.players.limelight.prototype.createPlayer = function() {
 
   // Return a flash media player object.
   return this.getFlash({
-    swf: 'https://assets.delvenetworks.com/player/loader.swf',
+    swf: document.location.protocol + '//assets.delvenetworks.com/player/loader.swf',
     id: playerId,
     width: this.options.width,
     height: '100%',
