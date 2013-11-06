@@ -17,7 +17,7 @@
   line-height: 40px;
   margin: -20px 0 0 -160px;
   text-align: center;
-  vertical-align: center;
+  vertical-align: middle;
   border: none;
   z-index: 200;
   opacity: 0.9;
@@ -85,7 +85,7 @@
   left: 50%;
   margin: -5px 0 0 -21px;
   text-align:center;
-  vertical-align:center;
+  vertical-align:middle;
   background: url(images/loader.gif) no-repeat;
 }
 
@@ -98,7 +98,7 @@
   height: 80px;
   margin: -40px 0 0 -40px;
   text-align: center;
-  vertical-align: center;
+  vertical-align: middle;
   cursor: pointer !important;
   border: none;
   opacity: 0.9;
@@ -231,7 +231,7 @@
 
 .player-ui .minplayer-default-button span {
   margin: 4px 0 0 4px;
-  margin-top: 3px\9;
+  margin-top: 3px;
 }
 
 .player-ui .minplayer-default-button span.ui-icon-pause {
@@ -281,7 +281,7 @@
   top: -1px;
   -moz-border-radius:15px;
   -webkit-border-radius:15px;
-  z-index:10px;
+  z-index:10;
   border-radius:15px;
 }
 
@@ -291,7 +291,7 @@
   height:10px;
   -moz-border-radius:15px;
   -webkit-border-radius:15px;
-  z-index:8px;
+  z-index:8;
   border-radius:15px;
   border: 0 !important;
 }
@@ -342,7 +342,7 @@
 
 .player-ui .minplayer-controls-volume-vertical .minplayer-default-volume:hover {
   height: 133px;
-  height: 130px\9;
+  height: 130px;
 }
 
 
@@ -566,7 +566,7 @@
   height: 40px;
   margin: -20px 0 0 0;
   text-align: center;
-  vertical-align: center;
+  vertical-align: middle;
   opacity: 0.5;
 }
 
@@ -634,7 +634,7 @@
   right: 0;
   left: 0;
   margin: 0;
-  z-index:20px;
+  z-index:20;
   -moz-border-radius:2px;
   -webkit-border-radius:2px;
   border-radius:2px;

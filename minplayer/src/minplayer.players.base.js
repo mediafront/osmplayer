@@ -434,6 +434,19 @@ minplayer.players.base.prototype.setStartStop = function() {
  */
 minplayer.players.base.prototype.onPlaying = function() {
 
+  // See if we need to autoseek.
+  if (!this.playing) {
+    var self = this;
+    this.getDuration(function(duration) {
+      if (self.startTime && (self.startTime < duration)) {
+        self.seek(self.startTime, null, true);
+        if (self.options.autoplay) {
+          self.play();
+        }
+      }
+    });
+  }
+
   // Trigger an event that we are playing.
   this.trigger('playing');
 
@@ -528,20 +541,6 @@ minplayer.players.base.prototype.onLoaded = function() {
 
   // Trigger this event.
   this.trigger('loadeddata');
-
-  // See if they would like to seek.
-  if (!isLoaded) {
-    this.getDuration((function(player) {
-      return function(duration) {
-        if (player.startTime && (player.startTime < duration)) {
-          player.seek(player.startTime, null, true);
-          if (player.options.autoplay) {
-            player.play();
-          }
-        }
-      };
-    })(this));
-  }
 };
 
 /**
@@ -835,7 +834,7 @@ minplayer.players.base.prototype.getCurrentTime = function(callback) {
         self.onComplete();
       });
     }
-    currentTime -= self.startTime;
+    currentTime -= self.offsetTime;
     callback(currentTime);
   });
 };
