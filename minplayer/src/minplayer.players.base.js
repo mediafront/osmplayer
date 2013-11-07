@@ -663,6 +663,11 @@ minplayer.players.base.prototype.load = function(file, callback) {
       callback.call(this);
     }
   }
+
+  // We still want to play the song if it isn't playing but has autoplay enabled.
+  else if (this.options.autoplay && !this.playing) {
+    this.play();
+  }
 };
 
 /**
