@@ -3870,6 +3870,9 @@ minplayer.players.base.prototype.onReady = function() {
     return;
   }
 
+  // Set the start and stop of the player.
+  this.setStartStop();
+
   // Set the ready flag.
   this.playerReady = true;
 
