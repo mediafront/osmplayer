@@ -1,6 +1,13 @@
-/** The minplayer namespace. */
 minplayer = minplayer || {};
-
+(function(exports) {
+/*!
+* screenfull
+* v1.1.1 - 2013-11-20
+* https://github.com/sindresorhus/screenfull.js
+* (c) Sindre Sorhus; MIT License
+*/
+!function(a,b){"use strict";var c="undefined"!=typeof Element&&"ALLOW_KEYBOARD_INPUT"in Element,d=function(){for(var a,c,d=[["requestFullscreen","exitFullscreen","fullscreenElement","fullscreenEnabled","fullscreenchange","fullscreenerror"],["webkitRequestFullscreen","webkitExitFullscreen","webkitFullscreenElement","webkitFullscreenEnabled","webkitfullscreenchange","webkitfullscreenerror"],["webkitRequestFullScreen","webkitCancelFullScreen","webkitCurrentFullScreenElement","webkitCancelFullScreen","webkitfullscreenchange","webkitfullscreenerror"],["mozRequestFullScreen","mozCancelFullScreen","mozFullScreenElement","mozFullScreenEnabled","mozfullscreenchange","mozfullscreenerror"],["msRequestFullscreen","msExitFullscreen","msFullscreenElement","msFullscreenEnabled","MSFullscreenChange","MSFullscreenError"]],e=0,f=d.length,g={};f>e;e++)if(a=d[e],a&&a[1]in b){for(e=0,c=a.length;c>e;e++)g[d[0][e]]=a[e];return g}return!1}(),e={request:function(a){var e=d.requestFullscreen;a=a||b.documentElement,/5\.1[\.\d]* Safari/.test(navigator.userAgent)?a[e]():a[e](c&&Element.ALLOW_KEYBOARD_INPUT)},exit:function(){b[d.exitFullscreen]()},toggle:function(a){this.isFullscreen?this.exit():this.request(a)},onchange:function(){},onerror:function(){},raw:d};return d?(Object.defineProperties(e,{isFullscreen:{get:function(){return!!b[d.fullscreenElement]}},element:{enumerable:!0,get:function(){return b[d.fullscreenElement]}},enabled:{enumerable:!0,get:function(){return!!b[d.fullscreenEnabled]}}}),b.addEventListener(d.fullscreenchange,function(a){e.onchange.call(e,a)}),b.addEventListener(d.fullscreenerror,function(a){e.onerror.call(e,a)}),a.screenfull=e,void 0):(a.screenfull=!1,void 0)}(window,document);exports.screenfull = screenfull;
+})(minplayer);
 /**
  * @constructor
  * @extends minplayer.plugin
@@ -267,18 +274,18 @@ minplayer.display.prototype.fullscreen = function(full) {
   var element = this.fullScreenElement();
   if (isFull && !full) {
     element.removeClass('fullscreen');
-    if (screenfull) {
-      screenfull.exit();
+    if (minplayer.screenfull) {
+      minplayer.screenfull.exit();
     }
     this.trigger('fullscreen', false);
   }
   else if (!isFull && full) {
     element.addClass('fullscreen');
-    if (screenfull) {
-      screenfull.request(element[0]);
-      screenfull.onchange = (function(display) {
+    if (minplayer.screenfull) {
+      minplayer.screenfull.request(element[0]);
+      minplayer.screenfull.onchange = (function(display) {
         return function(e) {
-          if (!screenfull.isFullscreen) {
+          if (!minplayer.screenfull.isFullscreen) {
             display.fullscreen(false);
           }
         };
@@ -341,86 +348,3 @@ minplayer.display.prototype.getScaledRect = function(ratio, rect) {
 minplayer.display.prototype.getElements = function() {
   return {};
 };
-
-/**
- * From https://github.com/sindresorhus/screenfull.js
- */
-/*global Element:true*/
-(function(window, document) {
-  'use strict';
-  var methods = (function() {
-    var methodMap = [
-      [
-        'requestFullscreen',
-        'exitFullscreen',
-        'fullscreenchange',
-        'fullscreen',
-        'fullscreenElement'
-      ],
-      [
-        'webkitRequestFullScreen',
-        'webkitCancelFullScreen',
-        'webkitfullscreenchange',
-        'webkitIsFullScreen',
-        'webkitCurrentFullScreenElement'
-      ],
-      [
-        'mozRequestFullScreen',
-        'mozCancelFullScreen',
-        'mozfullscreenchange',
-        'mozFullScreen',
-        'mozFullScreenElement'
-      ]
-    ];
-    for (var i = 0, l = methodMap.length; i < l; i++) {
-      if (methodMap.hasOwnProperty(i)) {
-        var val = methodMap[i];
-        if (val[1] in document) {
-          return val;
-        }
-      }
-    }
-  })();
-
-  if (!methods) {
-    window.screenfull = false;
-    return window.screenfull;
-  }
-
-  var keyboardAllowed = 'ALLOW_KEYBOARD_INPUT' in Element;
-
-  var screenfull = {
-    init: function() {
-      document.addEventListener(methods[2], function(e) {
-        screenfull.isFullscreen = document[methods[3]];
-        screenfull.element = document[methods[4]];
-        screenfull.onchange(e);
-      });
-      return this;
-    },
-    isFullscreen: document[methods[3]],
-    element: document[methods[4]],
-    request: function(elem) {
-      elem = elem || document.documentElement;
-      elem[methods[0]](keyboardAllowed && Element.ALLOW_KEYBOARD_INPUT);
-      // Work around Safari 5.1 bug: reports support for keyboard in fullscreen
-      // even though it doesn't.
-      if (!document.isFullscreen) {
-        elem[methods[0]]();
-      }
-    },
-    exit: function() {
-      document[methods[1]]();
-    },
-    toggle: function(elem) {
-      if (this.isFullscreen) {
-        this.exit();
-      } else {
-        this.request(elem);
-      }
-    },
-    onchange: function() {}
-  };
-
-  window.screenfull = screenfull.init();
-})(window, document);
