@@ -155,6 +155,10 @@
   line-height: 18px;
 }
 
+.player-ui .minplayer-default.fullscreen .minplayer-default-controls {
+  height: auto;
+}
+
 .player-ui.controller-only {
   height: 32px !important;
 }
