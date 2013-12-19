@@ -5755,6 +5755,9 @@ minplayer.players.kaltura.prototype.construct = function() {
 
   // Set the plugin name within the options.
   this.options.pluginName = 'kaltura';
+
+  // Determine if an ad is playing.
+  this.adPlaying = false;
 };
 
 /**
@@ -5798,6 +5801,15 @@ minplayer.players.kaltura.canPlay = function(file) {
   return (file.path.search(regex) === 0);
 };
 
+minplayer.players.kaltura.prototype.adStart = function(data) {
+  this.adPlaying = true;
+  this.onPlaying();
+};
+
+minplayer.players.kaltura.prototype.adEnd = function(data) {
+  this.adPlaying = false;
+};
+
 /**
  * Keep track when the player state changes.
  *
@@ -5805,20 +5817,22 @@ minplayer.players.kaltura.canPlay = function(file) {
  * @returns {undefined}
  */
 minplayer.players.kaltura.prototype.playerStateChange = function(data) {
-  switch (data) {
-    case 'ready':
-      this.onLoaded();
-      break;
-    case 'loading':
-    case 'buffering':
-      this.onWaiting();
-      break;
-    case 'playing':
-      this.onPlaying();
-      break;
-    case 'paused':
-      this.onPaused();
-      break;
+  if (!this.adPlaying) {
+    switch (data) {
+      case 'ready':
+        this.onLoaded();
+        break;
+      case 'loading':
+      case 'buffering':
+        this.onWaiting();
+        break;
+      case 'playing':
+        this.onPlaying();
+        break;
+      case 'paused':
+        this.onPaused();
+        break;
+    }
   }
 };
 
@@ -5884,6 +5898,8 @@ minplayer.players.kaltura.prototype.getInstance = function() {
  * @returns {undefined}
  */
 minplayer.players.kaltura.prototype.registerEvents = function() {
+  this.player.addJsListener("adStart", this.getInstance() + '.adStart');
+  this.player.addJsListener("adEnd", this.getInstance() + '.adEnd');
   this.player.addJsListener("playerStateChange", this.getInstance() + '.playerStateChange');
   this.player.addJsListener("durationChange", this.getInstance() + '.durationChange');
   this.player.addJsListener("mediaReady", this.getInstance() + '.mediaReady');
