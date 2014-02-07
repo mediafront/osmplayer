@@ -77,6 +77,9 @@ minplayer.players.html5.prototype.construct = function() {
   // Set the plugin name within the options.
   this.options.pluginName = 'html5';
 
+  // See when the player has ended.
+  this.hasEnded = false;
+
   // Add the player events.
   this.addPlayerEvents();
 };
@@ -141,6 +144,7 @@ minplayer.players.html5.prototype.addPlayerEvents = function() {
       this.onLoaded();
     });
     this.addPlayerEvent('ended', function() {
+      this.hasEnded = true;
       this.onComplete();
     });
     this.addPlayerEvent('pause', function() {
@@ -155,7 +159,7 @@ minplayer.players.html5.prototype.addPlayerEvents = function() {
 
     var errorSent = false;
     this.addPlayerEvent('error', function() {
-      if (!errorSent && this.player) {
+      if (!this.hasEnded && !errorSent && this.player) {
         errorSent = true;
         this.trigger('error', 'An error occured - ' + this.player.error.code);
       }
@@ -260,6 +264,9 @@ minplayer.players.html5.prototype.load = function(file, callback) {
   // See if a load is even necessary.
   minplayer.players.base.prototype.load.call(this, file, function() {
 
+    // Reset the has ended flag.
+    this.hasEnded = false;
+
     // Get the current source.
     var src = this.elements.media.attr('src');
     if (!src) {
@@ -279,8 +286,7 @@ minplayer.players.html5.prototype.load = function(file, callback) {
       this.addPlayerEvents();
 
       // Change the source...
-      var code = '<source src="' + file.path + '"></source>';
-      this.elements.media.removeAttr('src').empty().html(code);
+      this.player.src = file.path;
       if (callback) {
         callback.call(this);
       }
@@ -318,11 +324,20 @@ minplayer.players.html5.prototype.pause = function(callback) {
 minplayer.players.html5.prototype.stop = function(callback) {
   minplayer.players.base.prototype.stop.call(this, function() {
     this.player.pause();
-    this.player.src = '';
     if (callback) {
       callback.call(this);
     }
   });
+};
+
+/**
+ * Clears the media player.
+ */
+minplayer.players.html5.prototype.clear = function() {
+  minplayer.players.base.prototype.clear.call(this);
+  if (this.player) {
+    this.player.src = '';
+  }
 };
 
 /**
