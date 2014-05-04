@@ -1,8 +1,5 @@
 (function(template, osmplayer) {
 
-  /** The osmplayer namespace. */
-  var osmplayer = osmplayer || {};
-
   // templated player.
   osmplayer[template] = function(context, options) {
 
@@ -38,7 +35,7 @@
   osmplayer[template].prototype.getDisplay = function() {
 
     // If this is the bottom element, then we need to build.
-    if (this.context.children().length == 0) {
+    if (this.context.children().length === 0) {
 
       // Build out the player provided the base tag.
       this.context = this.context.attr({
@@ -51,9 +48,9 @@
       .wrap(jQuery(document.createElement('div')).attr({
         'class': 'minplayer-' + template
       })).parent('.minplayer-' + template)
-      .prepend('\
-        <div class="minplayer-' + template + '-logo"></div>\
-        <div class="minplayer-' + template + '-error"></div>'
+      .prepend(
+        '<div class="minplayer-' + template + '-logo"></div>' +
+        '<div class="minplayer-' + template + '-error"></div>'
       )
       .wrap(jQuery(document.createElement('div')).attr({
         'id': this.options.id,
@@ -65,7 +62,7 @@
     }
 
     return this.context;
-  }
+  };
 
   // Get the elements for this player.
   osmplayer[template].prototype.getElements = function() {
@@ -91,4 +88,4 @@
       logo:jQuery('.minplayer-' + template + '-logo', this.display)
     });
   };
-})('default', osmplayer);
+})('default', (osmplayer || {}));

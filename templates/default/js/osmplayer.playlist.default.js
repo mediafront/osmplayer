@@ -1,8 +1,5 @@
 (function(template, osmplayer) {
 
-  /** The osmplayer namespace. */
-  var osmplayer = osmplayer || {};
-
   // Define the busy object.
   osmplayer.playlist = osmplayer.playlist || {};
 
@@ -121,18 +118,19 @@
    */
   osmplayer.playlist[template].prototype.getDisplay = function() {
     if (this.options.build) {
-      this.context.append('\
-      <div class="osmplayer-' + template + '-playlist">\
-        <div class="osmplayer-' + template + '-hide-show-playlist ui-state-default">\
-          <span class="ui-icon"></span>\
-        </div>\
-        <div class="minplayer-' + template + '-loader-wrapper">\
-          <div class="minplayer-' + template + '-loader"></div>\
-        </div>\
-        <div class="osmplayer-' + template + '-playlist-scroll ui-widget-content">\
-          <div class="osmplayer-' + template + '-playlist-list"></div>\
-      </div>\
-      </div>');
+      this.context.append(
+        '<div class="osmplayer-' + template + '-playlist">' +
+          '<div class="osmplayer-' + template + '-hide-show-playlist ui-state-default">' +
+            '<span class="ui-icon"></span>' +
+          '</div>' +
+          '<div class="minplayer-' + template + '-loader-wrapper">' +
+            '<div class="minplayer-' + template + '-loader"></div>' +
+          '</div>' +
+          '<div class="osmplayer-' + template + '-playlist-scroll ui-widget-content">' +
+            '<div class="osmplayer-' + template + '-playlist-list"></div>' +
+          '</div>' +
+        '</div>'
+      );
     }
     return jQuery('.osmplayer-' + template + '-playlist', this.context);
   };
@@ -169,5 +167,5 @@
       hideShow: hideShow
     });
   };
-})('default', osmplayer);
+})('default', (osmplayer || {}));
 

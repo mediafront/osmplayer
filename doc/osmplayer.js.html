@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Documentation Source: osmplayer.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	
+	<link type="text/css" rel="stylesheet" href="styles/site.simplex.css">
+	
+</head>
+
+<body>
+<div class="container-fluid">
+	<div class="navbar navbar-fixed-top ">
+		<div class="navbar-inner">
+			<a class="brand" href="index.html">Documentation</a>
+			<ul class="nav">
+				
+				<li class="dropdown">
+					<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b
+						class="caret"></b></a>
+
+					<ul class="dropdown-menu ">
+						
+						<li>
+							<a href="prototype..html">Define a jQuery osmplayer prototype.</a>
+						</li>
+						
+						<li>
+							<a href="global.html#osmplayer">osmplayer</a>
+						</li>
+						
+						<li>
+							<a href="osmplayer.pager.html">pager</a>
+						</li>
+						
+						<li>
+							<a href="osmplayer.playlist.html">playlist</a>
+						</li>
+						
+						<li>
+							<a href="osmplayer.teaser.html">teaser</a>
+						</li>
+						
+
+					</ul>
+				</li>
+				
+			</ul>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+
+		
+			<div class="span12">
+				
+				<div id="main">
+					
+
+
+		<h1 class="page-title">Source: osmplayer.js</h1>
+    
+    <section>
+        <article>
+            <pre class="sunlight-highlight-javascript ">// Add a way to instanciate using jQuery prototype.
+if (!jQuery.fn.osmplayer) {
+
+  /**
+   * A special jQuery event to handle the player being removed from DOM.
+   *
+   * @this The element that is being triggered with.
+   **/
+  jQuery.event.special.playerdestroyed = {
+    remove: function(o) {
+      if (o.handler) {
+        o.handler(this);
+      }
+    }
+  };
+
+  /**
+   * @constructor
+   *
+   * Define a jQuery osmplayer prototype.
+   *
+   * @param {object} options The options for this jQuery prototype.
+   * @return {Array} jQuery object.
+   */
+  jQuery.fn.osmplayer = function(options) {
+    return jQuery(this).each(function() {
+      options = options || {};
+      options.id = options.id || jQuery(this).attr('id') || Math.random();
+      if (!minplayer.plugins[options.id]) {
+        options.template = options.template || 'default';
+        if (osmplayer[options.template]) {
+          new osmplayer[options.template](jQuery(this), options);
+        }
+        else {
+          new osmplayer(jQuery(this), options);
+        }
+      }
+    });
+  };
+}
+
+/**
+ * @constructor
+ * @extends minplayer
+ * @class The main osmplayer class.
+ *
+ * &lt;p>&lt;strong>Usage:&lt;/strong>
+ * &lt;pre>&lt;code>
+ *
+ *   // Create a media player.
+ *   var player = jQuery("#player").osmplayer({
+ *
+ *   });
+ *
+ * &lt;/code>&lt;/pre>
+ * &lt;/p>
+ *
+ * @param {object} context The jQuery context.
+ * @param {object} options This components options.
+ */
+osmplayer = function(context, options) {
+
+  // Derive from minplayer
+  minplayer.call(this, context, options);
+};
+
+/** Derive from minplayer. */
+osmplayer.prototype = new minplayer();
+
+/** Reset the constructor. */
+osmplayer.prototype.constructor = osmplayer;
+
+/**
+ * Creates a new plugin within this context.
+ *
+ * @param {string} name The name of the plugin you wish to create.
+ * @param {object} base The base object for this plugin.
+ * @param {object} context The context which you would like to create.
+ * @return {object} The new plugin object.
+ */
+osmplayer.prototype.create = function(name, base, context) {
+  return minplayer.prototype.create.call(this, name, 'osmplayer', context);
+};
+
+/**
+ * Get the default options for this plugin.
+ *
+ * @param {object} options The default options for this plugin.
+ */
+osmplayer.prototype.defaultOptions = function(options) {
+  options.playlist = '';
+  options.node = {};
+  options.link = 'http://www.mediafront.org';
+  options.logo = 'http://mediafront.org/assets/osmplayer/logo.png';
+  minplayer.prototype.defaultOptions.call(this, options);
+};
+
+/**
+ * @see minplayer.plugin.construct
+ */
+osmplayer.prototype.construct = function() {
+
+  // Call the minplayer display constructor.
+  minplayer.prototype.construct.call(this);
+
+  // We need to cleanup the player when it has been destroyed.
+  jQuery(this.display).bind('playerdestroyed', (function(player) {
+    return function(element) {
+      if (element === player.display.eq(0)[0]) {
+        for (var plugin in minplayer.plugins[player.options.id]) {
+          for (var index in minplayer.plugins[player.options.id][plugin]) {
+            minplayer.plugins[player.options.id][plugin][index].destroy();
+            delete minplayer.plugins[player.options.id][plugin][index];
+          }
+          minplayer.plugins[player.options.id][plugin].length = 0;
+        }
+        delete minplayer.plugins[player.options.id];
+        minplayer.plugins[player.options.id] = null;
+      }
+    };
+  })(this));
+
+  /** The play queue and index. */
+  this.playQueue = [];
+  this.playIndex = 0;
+  this.hasPlaylist = false;
+
+  /** The playlist for this media player. */
+  this.create('playlist', 'osmplayer');
+
+  /** Get the playlist or any other playlist that connects. */
+  this.get('playlist', function(playlist) {
+    playlist.ubind(this.uuid + ':nodeLoad', (function(player) {
+      return function(event, data) {
+        player.hasPlaylist = true;
+        if (!player.options.autoplay && !!data.autoplay) {
+          if (typeof player.options.originalAutoPlay == 'undefined') {
+            player.options.originalAutoPlay = player.options.autoplay;
+          }
+          player.options.autoplay = true;
+        }
+        player.loadNode(data);
+      };
+    })(this));
+  });
+
+  // Play each media sequentially...
+  this.get('media', function(media) {
+    media.ubind(this.uuid + ':ended', (function(player) {
+      return function() {
+        if (typeof player.options.originalAutoPlay == 'undefined') {
+          player.options.originalAutoPlay = player.options.autoplay;
+        }
+        player.options.autoplay = true;
+        player.playNext();
+      };
+    })(this));
+  });
+
+  // Load the node if one is provided.
+  this.loadNode(this.options.node);
+};
+
+/**
+ * Gets the full screen element.
+ *
+ * @return {object} The element that will go into fullscreen.
+ */
+osmplayer.prototype.fullScreenElement = function() {
+  return this.elements.minplayer;
+};
+
+/**
+ * Reset the osmplayer.
+ *
+ * @param {function} callback Called when it is done resetting.
+ */
+osmplayer.prototype.reset = function(callback) {
+
+  // Empty the playqueue.
+  this.playQueue.length = 0;
+  this.playQueue = [];
+  this.playIndex = 0;
+
+  // Clear the playloader.
+  if (this.playLoader && this.options.preview) {
+    this.options.preview = '';
+    this.playLoader.clear((function(player) {
+      return function() {
+        callback.call(player);
+      };
+    })(this));
+  }
+  else if (callback) {
+    callback.call(this);
+  }
+};
+
+/**
+ * The load node function.
+ *
+ * @param {object} node A media node object.
+ * @return {boolean} If the node was loaded.
+ */
+osmplayer.prototype.loadNode = function(node) {
+
+  // Make sure this is a valid node.
+  if (!node || (node.hasOwnProperty('length') && (node.length === 0))) {
+    return false;
+  }
+
+  // Reset the player.
+  this.reset(function() {
+
+    // Set the hasMedia flag.
+    this.hasMedia = node && node.mediafiles && node.mediafiles.media;
+    this.hasMedia = this.hasMedia || this.options.file;
+
+    // If this node is set and has files.
+    if (node && node.mediafiles) {
+
+      // Load the media files.
+      var media = node.mediafiles.media;
+      if (media) {
+        var file = null;
+        var types = [];
+
+        // For mobile devices, we should only show the main media.
+        if (minplayer.isAndroid || minplayer.isIDevice) {
+          types = ['media'];
+        }
+        else {
+          types = ['intro', 'commercial', 'prereel', 'media', 'postreel'];
+        }
+
+        // Iterate through the types.
+        jQuery.each(types, (function(player) {
+          return function(key, type) {
+            file = player.addToQueue(media[type]);
+            if (file) {
+              file.queueType = type;
+            }
+          };
+        })(this));
+      }
+      else {
+
+        // Add a class to the display to let themes handle this.
+        this.display.addClass('nomedia');
+      }
+
+      // Play the next media
+      this.playNext();
+
+      // Load the preview image.
+      osmplayer.getImage(node.mediafiles, 'preview', (function(player) {
+        return function(image) {
+          if (player.playLoader && (player.playLoader.display.length > 0)) {
+            player.playLoader.enabled = true;
+            player.playLoader.loadPreview(image.path);
+            player.playLoader.previewFlag.setFlag('media', true);
+            if (!player.hasMedia) {
+              player.playLoader.busy.setFlag('media', false);
+              player.playLoader.bigPlay.setFlag('media', false);
+            }
+            player.playLoader.checkVisibility();
+          }
+        };
+      })(this));
+    }
+  });
+};
+
+/**
+ * Adds a file to the play queue.
+ *
+ * @param {object} file The file to add to the queue.
+ * @return {object} The file that was added to the queue.
+ */
+osmplayer.prototype.addToQueue = function(file) {
+  file = minplayer.getMediaFile(file);
+  if (file) {
+    this.playQueue.push(file);
+  }
+  return file;
+};
+
+/**
+ * Plays the next media file in the queue.
+ */
+osmplayer.prototype.playNext = function() {
+  if (this.playQueue.length > this.playIndex) {
+    this.load(this.playQueue[this.playIndex]);
+    this.playIndex++;
+  }
+  else if (this.options.repeat) {
+    this.playIndex = 0;
+    this.playNext();
+  }
+  else if (this.playQueue.length > 0) {
+
+    // If we have a playlist, let them handle what to do next.
+    if (this.hasPlaylist && this.options.autoNext) {
+      this.trigger('player_ended');
+    }
+    else {
+      // If there is no playlist, and no repeat, we will
+      // just seek to the beginning and pause.
+      this.options.autoplay = false;
+      this.playIndex = 0;
+      this.playNext();
+    }
+  }
+  else if (this.media) {
+
+    // Reset the autoplay variable.
+    if (typeof this.options.originalAutoPlay != 'undefined') {
+      this.options.autoplay = this.options.originalAutoPlay;
+    }
+
+    this.media.stop();
+
+    // Load the media again.
+    if (this.options.file) {
+      this.load();
+    }
+    else {
+      this.loadNode();
+    }
+  }
+};
+
+/**
+ * Returns a node.
+ *
+ * @param {object} node The node to get.
+ * @param {function} callback Called when the node is retrieved.
+ */
+osmplayer.getNode = function(node, callback) {
+  if (node && node.mediafiles && node.mediafiles.media) {
+    var mediaFile = minplayer.getMediaFile(node.mediafiles.media.media);
+    if (mediaFile) {
+      var player = minplayer.players[mediaFile.player];
+      if (player && (typeof player.getNode === 'function')) {
+        player.getNode(mediaFile, function(node) {
+          callback(node);
+        });
+      }
+    }
+  }
+};
+
+/**
+ * Returns an image provided image array.
+ *
+ * @param {object} mediafiles The mediafiles to search within.
+ * @param {string} type The type of image to look for.
+ * @param {function} callback Called when the image is retrieved.
+ */
+osmplayer.getImage = function(mediafiles, type, callback) {
+
+  var image = '';
+  var images = mediafiles.image;
+  if (images) {
+
+    // If the image type exists, then just use that one...
+    if (images[type]) {
+      image = images[type];
+    }
+    // Or try the original image...
+    else if (images.image) {
+      image = images.image;
+    }
+    // Otherwise, just try ANY image...
+    else {
+
+      // Or, just pick the first one available.
+      for (type in images) {
+        if (images.hasOwnProperty(type)) {
+          image = images[type];
+          break;
+        }
+      }
+    }
+  }
+
+  // If the image exists, then callback with that image.
+  if (image) {
+    callback(new minplayer.file(image));
+  }
+  else {
+    // Get the image from the media player...
+    var mediaFile = minplayer.getMediaFile(mediafiles.media.media);
+    if (mediaFile) {
+      var player = minplayer.players[mediaFile.player];
+      if (player && (typeof player.getImage === 'function')) {
+        player.getImage(mediaFile, type, function(src) {
+          callback(new minplayer.file(src));
+        });
+      }
+    }
+  }
+};
+</pre>
+        </article>
+    </section>
+
+
+
+
+
+				</div>
+
+				<div class="clearfix"></div>
+				<footer>
+					
+					
+		<span class="jsdoc-message">
+		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
+		on Sun May 04 2014 16:06:33 GMT-0500 (CDT) using the <a href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
+		</span>
+				</footer>
+			</div>
+
+			
+			<br clear="both">
+		</div>
+
+	</div>
+	<script src="scripts/sunlight.js"></script>
+	<script src="scripts/sunlight.javascript.js"></script>
+	<script src="scripts/sunlight-plugin.doclinks.js"></script>
+	<script src="scripts/sunlight-plugin.linenumbers.js"></script>
+	<script src="scripts/sunlight-plugin.menu.js"></script>
+	<script src="scripts/jquery.min.js"></script>
+	<script src="scripts/jquery.scrollTo.js"></script>
+	<script src="scripts/jquery.localScroll.js"></script>
+	<script src="scripts/bootstrap-dropdown.js"></script>
+	<script src="scripts/toc.js"></script>
+
+
+	<script>  Sunlight.highlightAll({lineNumbers:,  showMenu: true, enableDoclinks :true}); </script>
+
+	<script>
+		$( function () {
+			$( "#toc" ).toc( {
+				selectors   : "h1,h2,h3,h4",
+				showAndHide : false,
+				scrollTo    : 60
+			} );
+			$( "#toc>ul" ).addClass( "nav nav-pills nav-stacked" );
+			$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+
+		} );
+	</script>
+
+	
+
+</body>
+</html>

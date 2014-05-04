@@ -1,8 +1,5 @@
 (function(template, osmplayer) {
 
-  /** The osmplayer namespace. */
-  var osmplayer = osmplayer || {};
-
   // Define the controller object.
   osmplayer.controller = osmplayer.controller || {};
 
@@ -61,7 +58,7 @@
         });
       });
     }
-  }
+  };
 
   /**
    * Return the display for this plugin.
@@ -72,44 +69,45 @@
     if (this.options.build) {
 
       // Prepend the control template.
-      jQuery('.minplayer-' + template, this.context).prepend('\
-      <div class="minplayer-' + template + '-controls ui-widget-header">\
-        <div class="minplayer-' + template + '-controls-left">\
-          <a class="minplayer-' + template + '-play minplayer-' + template + '-button ui-state-default ui-corner-all" title="Play">\
-            <span class="ui-icon ui-icon-play"></span>\
-          </a>\
-          <a class="minplayer-' + template + '-pause minplayer-' + template + '-button ui-state-default ui-corner-all" title="Pause">\
-            <span class="ui-icon ui-icon-pause"></span>\
-          </a>\
-        </div>\
-        <div class="minplayer-' + template + '-controls-right">\
-          <div class="minplayer-' + template + '-timer">00:00</div>\
-          <div class="minplayer-' + template + '-fullscreen ui-widget-content">\
-            <div class="minplayer-' + template + '-fullscreen-inner ui-state-default"></div>\
-          </div>\
-          <div class="minplayer-' + template + '-volume">\
-            <div class="minplayer-' + template + '-volume-slider"></div>\
-            <a class="minplayer-' + template + '-volume-mute minplayer-' + template + '-button ui-state-default ui-corner-all" title="Mute">\
-              <span class="ui-icon ui-icon-volume-on"></span>\
-            </a>\
-            <a class="minplayer-' + template + '-volume-unmute minplayer-' + template + '-button ui-state-default ui-corner-all" title="Unmute">\
-              <span class="ui-icon ui-icon-volume-off"></span>\
-            </a>\
-          </div>\
-        </div>\
-        <div class="minplayer-' + template + '-controls-mid">\
-          <div class="minplayer-' + template + '-seek">\
-            <div class="minplayer-' + template + '-progress ui-state-default"></div>\
-          </div>\
-        </div>\
-      </div>');
+      jQuery('.minplayer-' + template, this.context).prepend(
+        '<div class="minplayer-' + template + '-controls ui-widget-header">' +
+          '<div class="minplayer-' + template + '-controls-left">' +
+            '<a class="minplayer-' + template + '-play minplayer-' + template + '-button ui-state-default ui-corner-all" title="Play">' +
+              '<span class="ui-icon ui-icon-play"></span>' +
+            '</a>' +
+            '<a class="minplayer-' + template + '-pause minplayer-' + template + '-button ui-state-default ui-corner-all" title="Pause">' +
+              '<span class="ui-icon ui-icon-pause"></span>' +
+            '</a>' +
+          '</div>' +
+          '<div class="minplayer-' + template + '-controls-right">' +
+            '<div class="minplayer-' + template + '-timer">00:00</div>' +
+            '<div class="minplayer-' + template + '-fullscreen ui-widget-content">' +
+              '<div class="minplayer-' + template + '-fullscreen-inner ui-state-default"></div>' +
+            '</div>' +
+            '<div class="minplayer-' + template + '-volume">' +
+              '<div class="minplayer-' + template + '-volume-slider"></div>' +
+              '<a class="minplayer-' + template + '-volume-mute minplayer-' + template + '-button ui-state-default ui-corner-all" title="Mute">' +
+                '<span class="ui-icon ui-icon-volume-on"></span>' +
+              '</a>' +
+              '<a class="minplayer-' + template + '-volume-unmute minplayer-' + template + '-button ui-state-default ui-corner-all" title="Unmute">' +
+                '<span class="ui-icon ui-icon-volume-off"></span>' +
+              '</a>' +
+            '</div>' +
+          '</div>' +
+          '<div class="minplayer-' + template + '-controls-mid">' +
+            '<div class="minplayer-' + template + '-seek">' +
+              '<div class="minplayer-' + template + '-progress ui-state-default"></div>' +
+            '</div>' +
+          '</div>' +
+        '</div>'
+      );
     }
 
     // Let our template know we have a controller.
     this.context.addClass('with-controller');
 
     return jQuery('.minplayer-' + template + '-controls', this.context);
-  }
+  };
 
   // Return the elements
   osmplayer.controller[template].prototype.getElements = function() {
@@ -127,4 +125,4 @@
       duration:timer
     });
   };
-})('default', osmplayer);
+})('default', (osmplayer || {}));

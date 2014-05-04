@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Documentation Index</title>
+	<title>Documentation Source: osmplayer.parser.xspf.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -59,36 +59,63 @@
 	<div class="row-fluid">
 
 		
-		<div class="span8">
-			
+			<div class="span12">
+				
 				<div id="main">
 					
 
 
-	
-	<span class="page-title">Index</span>
-	
-	
+		<h1 class="page-title">Source: osmplayer.parser.xspf.js</h1>
+    
+    <section>
+        <article>
+            <pre class="sunlight-highlight-javascript ">/** The osmplayer namespace. */
+var osmplayer = osmplayer || {};
 
+/** The parser object. */
+osmplayer.parser = osmplayer.parser || {};
 
+/**
+ * The xsfp parser object.
+ *
+ * @return {object} The xsfp parser.
+ **/
+osmplayer.parser.xsfp = {
 
+  // The priority for this parser.
+  priority: 8,
 
+  // Return if this is a valid youtube feed.
+  valid: function(feed) {
+    feed = feed.replace(/(.*)\??(.*)/i, '$1');
+    return feed.match(/\.xml$/i) !== null;
+  },
 
+  // Returns the type of request to make.
+  getType: function(feed) {
+    return 'xml';
+  },
 
+  // Returns the feed provided the start and numItems.
+  getFeed: function(feed, start, numItems) {
+    return feed;
+  },
 
-
-
-
-
-
-	
-	
-
-
-
-
-
-
+  // Parse the feed.
+  parse: function(data) {
+    var playlist = {
+      total_rows: 0,
+      nodes: []
+    };
+    jQuery('playlist trackList track', data).each(function(index) {
+      osmplayer.parser.rss.addRSSItem(playlist, jQuery(this));
+    });
+    return playlist;
+  }
+};
+</pre>
+        </article>
+    </section>
 
 
 
@@ -107,10 +134,6 @@
 				</footer>
 			</div>
 
-			
-			<div class="span3">
-				<div id="toc"></div>
-			</div>
 			
 			<br clear="both">
 		</div>

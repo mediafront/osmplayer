@@ -1,8 +1,5 @@
 (function(template, osmplayer) {
 
-  /** The osmplayer namespace. */
-  var osmplayer = osmplayer || {};
-
   // Define the teaser object.
   osmplayer.teaser = osmplayer.teaser || {};
 
@@ -42,17 +39,18 @@
   osmplayer.teaser[template].prototype.getDisplay = function() {
 
     // Append this to the list.
-    this.context.append('\
-    <div class="osmplayer-' + template + '-teaser ui-widget-content">\
-      <div class="osmplayer-' + template + '-teaser-image"></div>\
-      <div class="osmplayer-' + template + '-teaser-info ui-state-default">\
-        <div class="osmplayer-' + template + '-teaser-title"></div>\
-      </div>\
-    </div>');
+    this.context.append(
+      '<div class="osmplayer-' + template + '-teaser ui-widget-content">' +
+        '<div class="osmplayer-' + template + '-teaser-image"></div>' +
+        '<div class="osmplayer-' + template + '-teaser-info ui-state-default">' +
+          '<div class="osmplayer-' + template + '-teaser-title"></div>' +
+        '</div>' +
+      '</div>'
+    );
 
     var teasers = jQuery('.osmplayer-' + template + '-teaser', this.context);
     return teasers.eq(teasers.length - 1);
-  }
+  };
 
   /**
    * Selects the teaser.
@@ -64,7 +62,7 @@
     else {
       this.elements.info.removeClass('ui-state-active');
     }
-  }
+  };
 
 
   // Return the elements
@@ -76,5 +74,5 @@
       image:jQuery('.osmplayer-' + template + '-teaser-image', this.display)
     });
   };
-})('default', osmplayer);
+})('default', (osmplayer || {}));
 
