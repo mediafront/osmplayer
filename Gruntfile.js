@@ -48,7 +48,7 @@ module.exports = function(grunt) {
       },
       build: {
         files: {
-          'bin/osmplayer.js': ['minplayer/bin/minplayer.min.js', iscrollPath].concat(files)
+          'bin/osmplayer.js': ['minplayer/bin/minplayer.js', iscrollPath].concat(files)
         }
       }
     },
