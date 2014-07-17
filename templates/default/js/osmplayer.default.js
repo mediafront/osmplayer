@@ -14,22 +14,6 @@
   osmplayer[template].prototype.constructor = osmplayer[template];
 
   /**
-   * The player constructor.
-   */
-  osmplayer[template].prototype.construct = function() {
-
-    // Make sure we provide default options...
-    this.options = jQuery.extend({
-      controllerOnly: false
-    }, this.options);
-
-    osmplayer.prototype.construct.call(this);
-    if (this.options.controllerOnly) {
-      this.display.addClass('controller-only');
-    }
-  };
-
-  /**
    * Return the display for this plugin.
    */
   osmplayer[template].prototype.getDisplay = function() {
