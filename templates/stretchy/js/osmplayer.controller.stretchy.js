@@ -36,7 +36,9 @@
 
     // Don't execute if we want to hide the controller.
     if (!this.options.showController) {
-      this.display.removeClass('with-controller');
+      this.get('player', function(player) {
+        player.display.removeClass('with-controller');
+      });
       return;
     }
 
