@@ -531,6 +531,10 @@
   -webkit-box-shadow:0px 5px 10px #333;/*no-important chrome*/
 }
 
+.player-ui.controller-only.osmplayer-default {
+  overflow: inherit;
+}
+
 .minplayer-default {
   position: absolute;
   top: 0px;
