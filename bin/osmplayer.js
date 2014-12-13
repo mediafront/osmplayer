@@ -7849,6 +7849,9 @@ osmplayer.prototype.loadNode = function(node) {
         };
       })(this));
     }
+
+    // Trigger the node has loaded.
+    this.trigger('nodeLoad', node);
   });
 };
 
