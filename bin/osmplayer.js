@@ -2975,6 +2975,14 @@ minplayer.players.base.prototype.onLoaded = function() {
   // See if we are loaded.
   var isLoaded = this.loaded;
 
+  // If we should autoplay, then just play now.
+  if (!this.loaded && this.options.autoplay) {
+    this.play();
+  }
+
+  // We are now loaded.
+  this.loaded = true;
+
   // Iterate through our ready queue.
   for (var i in this.loadedQueue) {
     if(this.loadedQueue.hasOwnProperty(i)) {
@@ -2985,14 +2993,6 @@ minplayer.players.base.prototype.onLoaded = function() {
   // Empty the loaded queue.
   this.loadedQueue.length = 0;
   this.loadedQueue = [];
-
-  // If we should autoplay, then just play now.
-  if (!this.loaded && this.options.autoplay) {
-    this.play();
-  }
-
-  // We are now loaded.
-  this.loaded = true;
 
   // Trigger this event.
   this.trigger('loadeddata');
