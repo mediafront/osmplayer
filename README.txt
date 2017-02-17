@@ -22,4 +22,4 @@ NEED HELP OR CUSTOMIZATIONS?
    If you require any assistance, please visit Alethia Design's website at http://www.alethia-inc.com and inquire
    using our Contact Form.  We will get back with you shortly.
    
-ENJOY!
+Enjoy the Open Standard Media Player!
