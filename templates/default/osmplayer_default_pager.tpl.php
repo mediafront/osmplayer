@@ -1,0 +1,12 @@
+<div class="<?php print $params['prefix']; ?>mediapager <?php print $params['prefix']; ?>ui-widget-header <?php print $params['prefix']; ?>ui-corner-bottom">    
+   <div class="<?php print $params['prefix']; ?>mediapagerleft">            
+	   <div class="<?php print $params['prefix']; ?>mediaprevpage <?php print $params['prefix']; ?>mediapagerlink <?php print $params['prefix']; ?>ui-state-default <?php print $params['prefix']; ?>ui-corner-all"><span class="<?php print $params['prefix']; ?>ui-icon <?php print $params['prefix']; ?>ui-icon-seek-prev"></span></div>
+	   <div class="<?php print $params['prefix']; ?>medialoadprev <?php print $params['prefix']; ?>mediapagerlink <?php print $params['prefix']; ?>ui-state-default <?php print $params['prefix']; ?>ui-corner-all"><span class="<?php print $params['prefix']; ?>ui-icon <?php print $params['prefix']; ?>ui-icon-triangle-1-w"></span></div>
+	   <div class="<?php print $params['prefix']; ?>mediaprev <?php print $params['prefix']; ?>mediapagerlink <?php print $params['prefix']; ?>ui-state-default <?php print $params['prefix']; ?>ui-corner-all"><span class="<?php print $params['prefix']; ?>ui-icon <?php print $params['prefix']; ?>ui-icon-carat-1-w"></span></div>
+   </div>
+   <div class="<?php print $params['prefix']; ?>mediapagerright">
+	   <div class="<?php print $params['prefix']; ?>medianext <?php print $params['prefix']; ?>mediapagerlink <?php print $params['prefix']; ?>ui-state-default <?php print $params['prefix']; ?>ui-corner-all"><span class="<?php print $params['prefix']; ?>ui-icon <?php print $params['prefix']; ?>ui-icon-carat-1-e"></span></div>
+	   <div class="<?php print $params['prefix']; ?>medialoadnext <?php print $params['prefix']; ?>mediapagerlink <?php print $params['prefix']; ?>ui-state-default <?php print $params['prefix']; ?>ui-corner-all"><span class="<?php print $params['prefix']; ?>ui-icon <?php print $params['prefix']; ?>ui-icon-triangle-1-e"></span></div>  
+	   <div class="<?php print $params['prefix']; ?>medianextpage <?php print $params['prefix']; ?>mediapagerlink <?php print $params['prefix']; ?>ui-state-default <?php print $params['prefix']; ?>ui-corner-all"><span class="<?php print $params['prefix']; ?>ui-icon <?php print $params['prefix']; ?>ui-icon-seek-next"></span></div>
+   </div>
+</div>

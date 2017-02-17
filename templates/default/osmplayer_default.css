@@ -1,0 +1,339 @@
+/****** Layout ******/
+.mediaplayerdialog div, .mediaplayerdialog img, .mediaplayerdialog a, .ui-dialog .ui-dialog-titlebar {
+   margin:0;
+   padding:0;
+   border:0;
+}
+
+.mediaplayerdialog {
+   padding:2px;	      
+   overflow:visible; 
+   position:absolute;    
+   margin-left:-1000000px;
+}
+
+.mediaplayer {
+   font-family:"Trebuchet MS", Helvetica, sans-serif;  
+   font-style:normal;
+   font-size:11px;  
+   line-height:110% !important;
+   margin:1px 0 0 0 !important; 
+   width:100%;   
+}
+
+.mediaplayerloading {
+   z-index:0;
+   position:absolute !important;	
+}
+
+.medianode {
+   margin-right:151px;
+}
+
+.mediaplaylist {
+   float:right; 
+}
+
+.mediaplaylist, .mediascroll, .mediascrollwrapper, .mediapager {
+   width:150px;	
+}
+
+.mediascrollbarwrapper {
+   float:right;
+}
+
+.mediascrollbar, .mediascrollbarwrapper {
+   width:18px;   
+}
+
+.mediascrollhandle {
+   position:absolute !important;
+}
+
+.mediascrollhandle span {
+   margin-left:1px;	
+}
+
+.mediascrollup, .mediascrolldown, .mediascrolltrack, .mediascrollhandle {
+   height:18px;
+   width:18px;
+   border:0 !important;
+}
+
+.hmediascrollbarwrapper {
+   float:left;
+   height:18px;
+}
+
+.hmediascrollleft {
+   float:left;	
+}
+
+.hmediascrollbar {
+   margin-left:20px !important;
+}
+
+.hmediascrollup {
+   float:left;
+   margin-right:1px !important;
+}
+
+.hmediascrolldown {
+   float:right;
+   margin-left:1px !important;   
+}
+
+.medialist, .mediaplaypause, .mediamute, .mediamenuclose {
+   cursor:pointer;   
+}
+
+.medialistmask, .medialist {
+   width:132px;        
+}
+
+.mediatitlebar, .mediacontrol, .mediapager {
+   height:22px;
+}
+
+.mediapager {
+   position:absolute !important;	
+   margin-top:1px !important;   
+}
+
+.mediacontrol {
+   position: absolute !important;
+   z-index:204;	
+}
+
+.mediatitlelinks {
+   float:right;
+   z-index:210;
+   width:64px;	
+}
+
+.mediatitlelinks a, .mediapager div.mediapagerlink {
+   float:left;
+   margin:2px 2px 0 0px !important;   
+}
+
+.mediapagerleft {
+   float:left;
+   margin-left:2px !important;	
+}
+
+.mediapagerright {
+   float:right;
+   margin-right:2px !important;	
+}
+
+.mediapager div.mediapagerlink {
+   margin-top:1px !important;
+}
+
+.medialinks {
+   height:25px;
+}
+
+.medialink {
+   float:left;
+   margin: 0 2px 0 0 !important;
+   text-align:center;
+}
+
+.medialinktext {
+   margin: 2px !important;  
+}
+
+.mediaregion {
+   position:relative;	
+}
+
+.mediadisplay {	
+	z-index:200;
+	position:absolute !important;
+   background-color:#000;   
+}
+
+.mediacontrolleft {
+   float:left;
+   width:60px;
+}
+
+.mediacontrolcenter {
+   margin:0 235px 0 60px !important;
+   min-width:50px;   
+}
+
+.mediacontrolright {
+	float:right;   
+   width:235px;      
+}
+
+.mediamute, .mediaplaypause {
+   float:left;
+   margin:2px 0 0 3px !important;    
+}
+
+.mediavolumebar {
+   float:left;
+	width:50px;	
+	padding-top:9px !important;
+   margin:0 5px 0 4px !important;   	
+}
+
+.mediaseekbar {  
+   padding-top:9px !important;	
+}
+
+.mediaseekhandle, .mediavolumehandle {
+   position:absolute !important;	
+   z-index: 206;  	
+	margin-top:-11px !important;
+}
+
+.mediaseekhandle span, .mediavolumehandle span {
+	margin-left:-6px !important;
+}
+
+.mediaseekupdate, .mediavolumeupdate {
+	position:absolute !important;
+   z-index: 205; 	  
+   height:4px !important;;     
+}
+
+.mediaseekprogress {
+   position:absolute !important;   
+   z-index: 204;  	
+   height:4px; 
+}
+
+.mediacurrenttime, .mediatotaltime {
+   float:left;  
+   text-align:right;
+   margin:4px 2px 0 4px !important;    
+   width:30px;
+}
+
+.mediamenu {
+	position: absolute !important;
+   z-index: 210;
+   width:300px;
+   height:150px;
+   display:none;
+   padding:2px;
+}
+
+.mediamenuclose {
+   float:right;	
+   margin:8px 6px 0 0 !important;
+}
+
+.mediabusy {
+   position: absolute !important;
+   z-index: 203;
+   background-image:url('images/mask.png');   
+}
+
+.mediabusy img {
+   width:32px;
+   height:32px;  	
+}
+
+.mediaplay {
+   position: absolute !important;
+   z-index: 202;  
+   background-image:url('images/mask.png');   
+}
+
+.mediaplay img {
+   cursor:pointer;
+   width:50px;
+   height:57px;   	
+}
+
+.mediapreview {
+   position: absolute !important;
+   background-color:#000;   
+   z-index: 201;  
+   width:100%; 
+}
+
+.mediateaser {
+	float:none;
+	height:90px;
+	width:125px;
+	margin:0 1px 2px 0 !important;
+	padding:2px !important; 
+	cursor:pointer;
+}
+
+.mediateaser .mediaimage {	
+	width:80px;
+	height:60px;
+   margin-bottom:1px !important;
+	float:left;
+}
+
+.medianodevoter {
+   float:left;
+   width:110px; 
+   margin-top:-3px !important;
+}
+
+.mediavoters .ui-icon {
+   width:12px;
+   height:12px;  
+}
+
+.mediacontrol .mediavoter div, .mediacontrol .mediauservoter div {
+   float:left;  
+   height:12px;  
+   border:0;
+   background:none;
+   text-decoration: none;
+}
+
+.mediateaser .mediavoter {
+   margin-left:83px !important;   
+}
+
+.mediateaser .mediatitle {
+	clear:left;
+   width:120px;
+   height:2.2em;
+}
+
+.mediateaser .mediavoter div {
+   width:14px;
+   border:0;   
+   background:none;
+   text-decoration: none;
+}
+
+.mediateaser .mediavoter span {
+   height:12px;   
+}
+
+.mediauservotertext, .mediavotertext {
+   text-align:right;
+}
+
+.mediavoterstext {
+   float:left;
+   line-height:100% !important;
+   margin-top:2px !important;
+}
+
+.mediavoter .ui-state-active, .mediavoter .ui-state-hover, .mediavoter .ui-state-highlight,
+.mediauservoter .ui-state-active, .mediauservoter .ui-state-hover, .mediauservoter .ui-state-highlight {
+   background:0;
+}
+
+.medialogo, .medialogo a, .medialogo a img {
+   background-color:transparent;
+}  
+
+.ui-icon {
+   width:17px;
+   height:18px;
+}

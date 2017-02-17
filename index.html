@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 TRANSITIONAL//EN">
+<html>
+	<head>
+		<title>Open Standard Media Player</title>
+		<script type="text/javascript" src="./jquery-ui/js/jquery.js"></script>			
+      <script type="text/javascript" src="./js/jquery.osmplayer.compressed.js"></script> 		    
+		<script type="text/javascript" src="./templates/default/jquery.media.template.default.compressed.js"></script>
+		<link rel="stylesheet" href="./jquery-ui/css/dark-hive/jquery-ui-1.8rc1.custom.css" type="text/css" media="screen" /> 
+	   <link rel="stylesheet" href="./templates/default/osmplayer_default.css" type="text/css" media="screen" /> 
+	   <!--[if IE]><link rel="stylesheet" type="text/css" href="./templates/default/osmplayer_default_ie.css" /><![endif]-->
+	</head>
+	<body>
+      <script type="text/javascript">
+         $(document).ready(function() {
+            $(".mediaplayerdialog").mediaplayer({
+               playlist:"playlist.xml"
+            });                    
+         });      
+      </script>
+      <h1>Open Standard Media Player</h1>
+      <div class="mediaplayerdialog ui-dialog ui-widget ui-widget-content ui-corner-all" id="mediaplayer" style="width:640px;height:480px;">
+         <div class="mediatitlebar ui-dialog-titlebar ui-widget-header ui-corner-top ui-helper-clearfix">
+            <div class="mediatitlelinks">
+               <a href="#fullscreen" class="mediafullbutton ui-state-default ui-corner-all"><span class="ui-icon ui-icon-extlink"></span></a>
+               <a href="#maximize" class="mediamaxbutton ui-state-default ui-corner-all"><span class="ui-icon ui-icon-arrow-4-diag"></span></a>
+               <a href="#menu" class="mediamenubutton ui-state-default ui-corner-all"><span class="ui-icon ui-icon-info"></span></a>
+            </div>
+         </div>
+	      <div class="mediaplayer ui-helper-clearfix">
+            <div class="mediamenu ui-tabs ui-widget ui-widget-content ui-corner-all" id="tabs">
+            	<div class="mediamenuclose">
+            		<span class="ui-icon ui-icon-circle-close"></span>
+            	</div>
+               <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+                  <li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active"><a href="#mediaembed">embed</a></li>
+                  <li class="ui-state-default ui-corner-top"><a href="#mediaelink">link</a></li>      
+                  <li class="ui-state-default ui-corner-top"><a href="#mediainfo">info</a></li>
+               </ul>
+               <div class="mediaembed ui-tabs-panel ui-widget-content ui-corner-bottom" id="mediaembed">
+            		<form action="" id="mediaembedForm" name="mediaembedForm">
+            			<label for="mediaembedCode">Embed</label>
+            			<input id="mediaembedCode" name="mediaembedCode" type="text" value="" readonly />
+            		</form>
+               </div>
+               <div class="mediaelink ui-tabs-panel ui-widget-content ui-corner-bottom" id="mediaelink">
+                  <form action="" id="mediaelinkForm" name="mediaelinkForm">
+                     <label for="mediaelinkCode">URL</label>
+            			<input id="mediaelinkCode" name="mediaelinkCode" type="text" value="" readonly />
+            		</form>
+               </div>
+               <div class="mediainfo ui-tabs-panel ui-widget-content ui-corner-bottom" id="mediainfo">
+                  <p>
+                     <a target="_blank" href="http://www.mediafront.org">Open Standard Media Player</a> version <?php print $params['version']; ?><br/><br/>
+                     Built by <a target="_blank" href="http://www.alethia-inc.com">Alethia Inc.</a>
+                  </p>
+               </div>                                 
+            </div>
+	         <div class="mediaplaylist">
+	            <div class="mediabusy ui-state-default ui-state-disabled"><img src="./templates/default/images/busy.gif" /></div> 
+	            <div class="mediascrollwrapper">           
+	               <div class="mediascroll ui-helper-clearfix">     
+		               <div class="mediascrollbarwrapper">
+                        <div class="mediascrollup ui-state-default"><span class="ui-icon ui-icon-triangle-1-n"></span></div>
+                        <div class="mediascrollbar">
+                           <div class="mediascrollhandle ui-state-default">
+                              <span class="ui-icon ui-icon-grip-dotted-horizontal"></span>
+                           </div>   
+                           <div class="mediascrolltrack ui-widget-content"></div>                                       
+                        </div>
+                        <div class="mediascrolldown ui-state-default"><span class="ui-icon ui-icon-triangle-1-s"></span></div>
+                     </div>		                         
+		               <div class="medialistmask">
+		                  <div class="medialist">
+		                     <div class="mediateaser ui-state-default">
+		                        <div class="mediaimage mediafield ui-widget-content" type="image" field="image"></div>
+		                        <div class="mediavoter" tag="vote">
+		                           <div vote="20"><span class="ui-icon ui-icon-star"></span></div>
+		                           <div vote="40"><span class="ui-icon ui-icon-star"></span></div>
+		                           <div vote="60"><span class="ui-icon ui-icon-star"></span></div>
+		                           <div vote="80"><span class="ui-icon ui-icon-star"></span></div>
+		                           <div vote="100"><span class="ui-icon ui-icon-star"></span></div>                       
+		                        </div>
+		                        <div class="mediatitle mediafield ui-helper-clearfix" type="text" field="title">Sample Title</div>
+		                     </div>
+		                  </div>
+		               </div>               
+	               </div>
+	            </div>
+               <div class="mediapager ui-helper-clearfix ui-widget-header ui-corner-bottom">    
+                  <div class="mediapagerleft">            
+               	   <div class="mediaprevpage mediapagerlink ui-state-default ui-corner-all"><span class="ui-icon ui-icon-seek-prev"></span></div>
+               	   <div class="medialoadprev mediapagerlink ui-state-default ui-corner-all"><span class="ui-icon ui-icon-triangle-1-w"></span></div>
+               	   <div class="mediaprev mediapagerlink ui-state-default ui-corner-all"><span class="ui-icon ui-icon-carat-1-w"></span></div>
+                  </div>
+                  <div class="mediapagerright">
+               	   <div class="medianext mediapagerlink ui-state-default ui-corner-all"><span class="ui-icon ui-icon-carat-1-e"></span></div>
+               	   <div class="medialoadnext mediapagerlink ui-state-default ui-corner-all"><span class="ui-icon ui-icon-triangle-1-e"></span></div>  
+               	   <div class="medianextpage mediapagerlink ui-state-default ui-corner-all"><span class="ui-icon ui-icon-seek-next"></span></div>
+                  </div>
+               </div>
+	         </div>
+	         <div class="medianode">
+               <div class="mediaregion">
+                  <div class="mediabusy"><img src="templates/default/images/busy.gif" /></div>
+                  <div class="mediaplay"><img src="templates/default/images/play.png" /></div>
+                  <div class="mediapreview"></div>
+                  <div class="mediadisplay"></div>
+                  <div class="mediacontrol ui-widget-header ui-corner-bottom">
+                     <div class="mediacontrolleft">
+                        <div class="mediaplaypause ui-state-default ui-corner-all">
+                           <div class="on">
+                              <span class="ui-icon ui-icon-play"></span>
+                           </div>
+                           <div class="off" style="display:none">
+                              <span class="ui-icon ui-icon-pause"></span>
+                           </div>
+                        </div>
+                        <div class="mediacurrenttime">00:00</div>
+                     </div>
+                     <div class="mediacontrolright">
+                        <div class="mediatotaltime">00:00</div>
+                        <div class="mediamute ui-state-default ui-corner-all">
+                           <div class="on" style="display:none">
+                              <span class="ui-icon ui-icon-volume-off"></span>
+                           </div>
+                           <div class="off">
+                              <span class="ui-icon ui-icon-volume-on"></span>
+                           </div>
+                        </div>
+                        <div class="mediavolumebar">
+                           <div class="mediavolumehandle">
+                              <span class="ui-icon ui-icon-triangle-1-s"></span>
+                           </div>
+                           <div class="mediavolume ui-state-default">
+                              <div class="mediavolumeupdate"><div class="ui-state-active"></div></div>
+                           </div>
+                        </div>
+                        <div class="medianodevoter">
+                           <div class="mediavoterstext">
+                              <div class="mediauservotertext">Vote:</div>
+                              <div class="mediavotertext">Average:</div>
+                           </div>
+      	                  <div class="mediavoters">
+      	                     <div class="mediauservoter" tag="vote">
+      	                        <div vote="20"><span class="ui-icon ui-icon-star"></span></div>
+      	                        <div vote="40"><span class="ui-icon ui-icon-star"></span></div>
+      	                        <div vote="60"><span class="ui-icon ui-icon-star"></span></div>
+      	                        <div vote="80"><span class="ui-icon ui-icon-star"></span></div>
+      	                        <div vote="100"><span class="ui-icon ui-icon-star"></span></div>                       
+      	                     </div>
+      	                     <div class="mediavoter" tag="vote">
+      	                        <div vote="20"><span class="ui-icon ui-icon-star"></span></div>
+      	                        <div vote="40"><span class="ui-icon ui-icon-star"></span></div>
+      	                        <div vote="60"><span class="ui-icon ui-icon-star"></span></div>
+      	                        <div vote="80"><span class="ui-icon ui-icon-star"></span></div>
+      	                        <div vote="100"><span class="ui-icon ui-icon-star"></span></div>                       
+      	                     </div>
+      	                  </div>  
+   	                  </div> 
+                     </div>
+                     <div class="mediacontrolcenter">
+                        <div class="mediaseekbar">
+                           <div class="mediaseekhandle">
+                              <span class="ui-icon ui-icon-triangle-1-s"></span>
+                           </div>
+                           <div class="mediaseek ui-state-default">
+                              <div class="mediaseekupdate"><div class="ui-state-active"></div></div>
+                              <div class="mediaseekprogress"><div class="ui-state-hover"></div></div>
+                           </div>
+                        </div>
+                     </div> 
+                  </div> 
+               </div> 
+	         </div>
+	      </div>
+      </div>   
+   </body>
+</html>
