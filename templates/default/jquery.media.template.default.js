@@ -242,6 +242,15 @@
                   mediaplayer.playlist.pager.display.hide();
                   mediaplayer.playlist.display.css("width", "0px");
                }
+               
+               // Setup an event where if they click on the media display, it will show the controls.
+               if( this.mediaDisplay ) {
+                  this.mediaDisplay.bind("click", function() {
+                     if( mediaplayer.fullScreen ) {
+                        _this.onFullScreenMouse();
+                     }
+                  });
+               }
             };
             
             // Resize the node.
