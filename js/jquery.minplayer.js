@@ -521,6 +521,17 @@
             }                       
          };    
          
+         this.reset = function() {
+            this.loaded = false;
+            clearInterval( this.progressInterval );
+            clearInterval( this.updateInterval );
+            clearTimeout( this.reflowInterval );  
+            this.playQueue.length = 0;                                  
+            this.playQueue = []; 
+            this.playerReady = false;
+            this.mediaFile = null;             
+         };         
+         
          this.resetContent = function() {
             this.display.empty();
             this.display.append( this.template );
@@ -534,7 +545,8 @@
          
          this.loadFiles = function( files ) {
             if( files ) {
-               this.playQueue.length = 0;
+               this.playQueue.length = 0;                                  
+               this.playQueue = []; 
                this.addToQueue( files.intro );
                this.addToQueue( files.commercial );
                this.addToQueue( files.prereel );
@@ -588,7 +600,7 @@
                // Send out an update about the initialize.
                this.onMediaUpdate({type:"initialize"});        
             }
-         };      
+         };    
 
          this.getMediaFile = function( file ) {
             var mFile = {};
@@ -692,6 +704,7 @@
                this.player.setVolume( (settings.volume / 100) );
                if( !settings.autostart ) {
                   this.player.pauseMedia();
+                  settings.autostart = true;
                }
                else {
                   this.display.trigger( "mediaupdate", data ); 
@@ -739,6 +752,7 @@
             this.loaded = false;
             clearInterval( this.progressInterval );
             clearInterval( this.updateInterval );
+            clearTimeout( this.reflowInterval );             
             if( this.playerReady ) {
                this.player.stopMedia();
             }              
@@ -865,7 +879,8 @@
                config:settings.config,
                id:settings.id,
                file:videoFile.path,
-               skin:settings.skin
+               skin:settings.skin,
+               autostart:settings.autostart
             };
             if( videoFile.stream ) {
                flashvars.stream = videoFile.stream;
@@ -1160,7 +1175,8 @@
       link:"http://www.mediafront.org",
       file:"",
       image:"",
-      timeout:2000
+      timeout:2000,
+      autoLoad:true
    }); 
 
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
@@ -1265,30 +1281,41 @@
 
          // Handle the control events.
          this.onControlUpdate = function( data ) {
-            if( this.media && this.media.playerReady ) {
-               switch( data.type ) {
-                  case "play":
-                     this.media.player.playMedia();
-                     break;
-                  case "pause":
-                     this.media.player.pauseMedia();
-                     break;
-                  case "seek":
-                     this.media.player.seekMedia( data.value );
-                     break;
-                  case "volume":
-                     this.media.player.setVolume( data.value );
-                     break;
-                  case "mute":
-                     this.media.mute( data.value );
-                     break;
+            if( this.media ) {
+               // If the player is ready.
+               if( this.media.playerReady ) {
+                  switch( data.type ) {
+                     case "play":
+                        this.media.player.playMedia();
+                        break;
+                     case "pause":
+                        this.media.player.pauseMedia();
+                        break;
+                     case "seek":
+                        this.media.player.seekMedia( data.value );
+                        break;
+                     case "volume":
+                        this.media.player.setVolume( data.value );
+                        break;
+                     case "mute":
+                        this.media.mute( data.value );
+                        break;
+                  }
                }
-               
+               // If there are files in the queue but no current media file.
+               else if( (this.media.playQueue.length > 0) && !this.media.mediaFile ) {
+                  // They interacted with the player.  Always autoload at this point on.
+                  settings.autoLoad = true;
+                  
+                  // Then play the next file in the queue.
+                  this.playNext();
+               }  
+
                // Let the template do something...
                if( settings.template && settings.template.onControlUpdate ) {             
                   settings.template.onControlUpdate( data ); 
-               }   
-            }          
+               }
+            }        
          }; 
          
          // Handle the full screen event requests.
@@ -1493,6 +1520,10 @@
             this.showPlay(false);
             this.showPreview(false);
             this.showBusy(true);
+            
+            if( this.media ) {
+               this.media.reset();
+            }
          };
          
          // Loads an image...
@@ -1512,10 +1543,9 @@
          // Expose the public load functions from the media display.
          this.loadFiles = function( files ) { 
             this.reset();
-            if( this.media ) { 
-               this.hasMedia = this.media.loadFiles( files ); 
+            if( this.media && this.media.loadFiles( files ) && settings.autoLoad ) {
+               this.media.playNext();
             }
-            return this.hasMedia;
          };
          
          // Play the next file.
