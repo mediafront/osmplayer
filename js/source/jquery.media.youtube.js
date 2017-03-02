@@ -59,6 +59,11 @@
             );
          };      
          
+         this.getId = function( path ) {
+            var regex = /^http[s]?\:\/\/(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9]+)/i;
+            return path.search(regex) == 0 ? path.replace(regex, "$2") : path;
+         };         
+         
          this.loadMedia = function( videoFile ) {
             if( this.player ) {
                this.loaded = false;            
@@ -68,7 +73,7 @@
                onUpdate( {type:"playerready"} );                 
                
                // Load our video.
-               this.player.loadVideoById( this.videoFile.path, 0 );
+               this.player.loadVideoById( this.getId( this.videoFile.path ), 0 );
             }
          };
          
@@ -103,7 +108,7 @@
                onUpdate( {type:"playerready"} );                
                
                // Load our video.
-               this.player.loadVideoById( this.videoFile.path, 0 );  
+               this.player.loadVideoById( this.getId( this.videoFile.path ), 0 );  
             }         
          };
          
