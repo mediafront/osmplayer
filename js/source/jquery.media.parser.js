@@ -36,10 +36,13 @@
                this.onLoaded = onLoaded;
                jQuery.ajax({
                   type: "GET",
-                  url: file,
-                  dataType: "xml",
+                  url:file,
+                  dataType:"xml",
                   success: function(xml) {
                      _this.parseXML( xml );
+                  },
+                  error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                     console.log( "Error: " + textStatus );
                   }
                });               
             }; 
