@@ -216,7 +216,7 @@ class OSMPlayer
       	$base_url .= "/$dir";
     	}
       
-      $this->base_path = str_replace( realpath('.') . '/', '', dirname(__FILE__));
+      $this->base_path = trim( str_replace( realpath('.'), '', dirname(__FILE__)), '/' );
       $this->base_url = $base_url . '/' . $this->base_path;
       $this->settings['playerurl'] = $this->base_url;
       
@@ -423,8 +423,8 @@ class OSMPlayer
    	
    	// The CSS files for this id.
    	$files = array(
-   		"/css/{$id}.css",
-   		"/css/{$id}_ie.css"   	
+   		"css/{$id}.css",
+   		"css/{$id}_ie.css"   	
    	);
    	
    	// If the CSS files do not exist, then create them.
@@ -458,19 +458,20 @@ class OSMPlayer
    {
    	$header = '';
 		$template = $this->settings['template'];
+      $base_path = $this->base_path ? $this->base_path . '/' : '';
       
       // Add all of the javascript files.
       $jsfiles = $this->getJSFiles();
       foreach( $jsfiles as $file ) {
-         $header .= '<script type="text/javascript" src="' . $this->base_path . $file .'"></script>';
+         $header .= '<script type="text/javascript" src="' . $base_path . $file .'"></script>';
          $header .= "\n";
       }
       
       // Add the CSS files.
    	$css_files = $this->getCSSFiles();
-   	$header .= '<link rel="stylesheet" type="text/css" href="' . $this->base_path . $css_files[0] . '" />';
+   	$header .= '<link rel="stylesheet" type="text/css" href="' . $base_path . $css_files[0] . '" />';
    	$header .= "\n";
-   	$header .= '<!--[if IE]><link rel="stylesheet" type="text/css" href="' . $this->base_path . $css_files[1] . '" /><![endif]-->';
+   	$header .= '<!--[if IE]><link rel="stylesheet" type="text/css" href="' . $base_path . $css_files[1] . '" /><![endif]-->';
    	$header .= "\n";
       
       // Return the header.
@@ -485,43 +486,43 @@ class OSMPlayer
 		$template = $this->settings['template'];   
       if( $this->settings['debug'] ) {
          return array(
-            "/js/source/jquery.media.debug.js",                                    
-            "/js/source/jquery.media.drupal.js",                                   
-            "/js/source/jquery.media.parser.js",                                   
-            "/js/source/jquery.media.auto.js",                                     
-            "/js/source/jquery.media.rpc.js",                                      
-            "/js/source/jquery.media.json.js",                                     
-            "/js/source/jquery.media.sha256.js",                                   
-            "/js/source/jquery.media.utils.js",                                    
-            "/js/source/jquery.media.control.js",                                  
-            "/js/source/jquery.media.flash.js",                                    
-            "/js/source/jquery.media.html5.js",                                    
-            "/js/source/jquery.media.image.js",                                    
-            "/js/source/jquery.media.link.js",                                     
-            "/js/source/jquery.media.links.js",                                    
-            "/js/source/jquery.media.display.js",                                  
-            "/js/source/jquery.media.minplayer.js",                                
-            "/js/source/jquery.media.menu.js",                                     
-            "/js/source/jquery.media.node.js",                                     
-            "/js/source/jquery.media.pager.js",                                    
-            "/js/source/jquery.media.player.js",                                   
-            "/js/source/jquery.media.playlist.js",                                 
-            "/js/source/jquery.media.playlistlink.js",                             
-            "/js/source/jquery.media.slider.js",                                   
-            "/js/source/jquery.media.teaser.js",                                   
-            "/js/source/jquery.media.titlebar.js",                                 
-            "/js/source/jquery.media.scroll.js",                                   
-            "/js/source/jquery.media.voter.js",                                    
-            "/js/source/jquery.media.youtube.js",                                  
-            "/js/source/jquery.media.vimeo.js",                                    
-            "/js/source/jquery.media.dailymotion.js", 	                          
-            "/templates/{$template}/jquery.media.template.{$template}.js"
+            "js/source/jquery.media.debug.js",                                    
+            "js/source/jquery.media.drupal.js",                                   
+            "js/source/jquery.media.parser.js",                                   
+            "js/source/jquery.media.auto.js",                                     
+            "js/source/jquery.media.rpc.js",                                      
+            "js/source/jquery.media.json.js",                                     
+            "js/source/jquery.media.sha256.js",                                   
+            "js/source/jquery.media.utils.js",                                    
+            "js/source/jquery.media.control.js",                                  
+            "js/source/jquery.media.flash.js",                                    
+            "js/source/jquery.media.html5.js",                                    
+            "js/source/jquery.media.image.js",                                    
+            "js/source/jquery.media.link.js",                                     
+            "js/source/jquery.media.links.js",                                    
+            "js/source/jquery.media.display.js",                                  
+            "js/source/jquery.media.minplayer.js",                                
+            "js/source/jquery.media.menu.js",                                     
+            "js/source/jquery.media.node.js",                                     
+            "js/source/jquery.media.pager.js",                                    
+            "js/source/jquery.media.player.js",                                   
+            "js/source/jquery.media.playlist.js",                                 
+            "js/source/jquery.media.playlistlink.js",                             
+            "js/source/jquery.media.slider.js",                                   
+            "js/source/jquery.media.teaser.js",                                   
+            "js/source/jquery.media.titlebar.js",                                 
+            "js/source/jquery.media.scroll.js",                                   
+            "js/source/jquery.media.voter.js",                                    
+            "js/source/jquery.media.youtube.js",                                  
+            "js/source/jquery.media.vimeo.js",                                    
+            "js/source/jquery.media.dailymotion.js", 	                          
+            "templates/{$template}/jquery.media.template.{$template}.js"
          );      
       }
       else {
          return array(
-            "/js/jquery.osmplayer.compressed.js",
-            "/templates/{$template}/jquery.media.template.{$template}.compressed.js"
+            "js/jquery.osmplayer.compressed.js",
+            "templates/{$template}/jquery.media.template.{$template}.compressed.js"
          );   
       }
    }
