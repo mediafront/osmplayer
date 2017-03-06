@@ -1,6 +1,4 @@
 <?php
-require_once("mediafrontutils.php");
-
 // Define our xml schema's
 define('SCHEMA_XSPF', 'xml');
 define('SCHEMA_ASX', 'asx');
@@ -74,13 +72,13 @@ class Playlist
       $this->schema = $_schema;
       
       // Set the base path and url of this class.
-		$base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
-		$base_url = $base_root .= '://'. $_SERVER['HTTP_HOST'];
-		if ($dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/')) {
-      	$base_url .= "/$dir";
-    	}
+      $base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+      $base_url = $base_root .= '://'. $_SERVER['HTTP_HOST'];
+      if ($dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/')) {
+         $base_url .= "/$dir";
+      }
       
-      $this->base_path = str_replace( realpath('.') . '/', '', dirname(__FILE__));
+      $this->base_path = trim( str_replace( realpath('.'), '', dirname(__FILE__)), '/' );
       $this->base_url = $base_url . '/' . $this->base_path;      
    }
    
@@ -161,7 +159,7 @@ class Playlist
          $this->get_media_files( $playlist_dir, $files );
          if( $files )
          {
-            $url = mediafront_base_url();
+            $url = $this->base_url;
             $numfiles = count($files);
             
             // Iterate through all the files.
