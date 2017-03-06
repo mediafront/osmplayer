@@ -1,0 +1,1 @@
+This is the folder to contain all of the cached CSS files.  Do not place anything in this directory.
