@@ -38,18 +38,18 @@
 class OSMPlayer
 {
    // The parameters passed into the player.
-	private $params; 
-	
-	// The complete settings of the media player.
-	private $settings;
-	
-	// The base path where this script is loaded.
-	private $base_path = '';
-	
-	// The base url where this script is loaded.
-	private $base_url = '';
-	
-	// The prefix for the media player to keep html/css collisions from occuring.
+   private $params; 
+   
+   // The complete settings of the media player.
+   private $settings;
+   
+   // The base path where this script is loaded.
+   private $base_path = '';
+   
+   // The base url where this script is loaded.
+   private $base_url = '';
+   
+   // The prefix for the media player to keep html/css collisions from occuring.
    private $prefix = 'player';
    
    // The playlists connected to this media player.
@@ -119,7 +119,7 @@ class OSMPlayer
       'showPlaylist' => true,   
       'file' => '',
       'flashplayer' => './flash/mediafront.swf',
-      'image' => '', 	
+      'image' => '',    
       'volume' => 80, 
       'autostart' => false, 
       'autoLoad' => true,
@@ -168,19 +168,19 @@ class OSMPlayer
    );
 
    // All of the settings that can be used to control the function of the player (not passed to the js player).
-	private $playerSettings = array(
-		'width' => 640,
-		'height' => 480,
-		'theme' => 'dark-hive',
-		'version' => '0.01',
-		'showController' => true,
-		'disablePlaylist' => false,
-		'playlistOnly' => false,
-		'controllerOnly' => false,
-		'showNodeVoter' => true,
-		'showTeaserVoter' => true,
-		'showTitleBar' => true
-	);
+   private $playerSettings = array(
+      'width' => 640,
+      'height' => 480,
+      'theme' => 'dark-hive',
+      'version' => '0.01',
+      'showController' => true,
+      'disablePlaylist' => false,
+      'playlistOnly' => false,
+      'controllerOnly' => false,
+      'showNodeVoter' => true,
+      'showTeaserVoter' => true,
+      'showTitleBar' => true
+   );
 
    /**
     * Constructor.
@@ -197,24 +197,24 @@ class OSMPlayer
     */
    public function OSMPlayer( $_params = array() )
    {
-   	// Store the users passed in parameters.
-   	$this->params = $_params;
+      // Store the users passed in parameters.
+      $this->params = $_params;
    
-   	// First set the defaults.
-   	$this->settings = array_merge( $this->playerParams, $this->playerSettings );
+      // First set the defaults.
+      $this->settings = array_merge( $this->playerParams, $this->playerSettings );
    
-   	// Set the parameters ( which will override the defaults ).
+      // Set the parameters ( which will override the defaults ).
       $this->settings = array_merge( $this->settings, $_params ); 
       
       // Make sure the ID is set as a unique id.
       $this->setId( isset($_params['id']) ? $_params['id'] : 'player' );
       
       // Set the base path and url of this class.
-		$base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
-		$base_url = $base_root .= '://'. $_SERVER['HTTP_HOST'];
-		if ($dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/')) {
-      	$base_url .= "/$dir";
-    	}
+      $base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+      $base_url = $base_root .= '://'. $_SERVER['HTTP_HOST'];
+      if ($dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/')) {
+         $base_url .= "/$dir";
+      }
       
       $this->base_path = trim( str_replace( realpath('.'), '', dirname(__FILE__)), '/' );
       $this->base_url = $base_url . '/' . $this->base_path;
@@ -273,7 +273,7 @@ class OSMPlayer
     *    ));
     *
     *    $player = new OSMPlayer(array(
-    *			'playlist' => 'http://www.mysite.com/myplaylist.xml
+    *       'playlist' => 'http://www.mysite.com/myplaylist.xml
     *    )); 
     *
     *    $player->addController( $controller );
@@ -288,26 +288,26 @@ class OSMPlayer
     */   
    public function getThemeCSS()
    {
-		$theme_folder = 'jquery-ui/css/' . $this->settings['theme'];
-		$theme_css = '';
-		
-		// Now search this folder for the CSS file...
-		if($contents = opendir( dirname(__FILE__) . '/' . $theme_folder)) {
-			while(($node = readdir($contents)) !== false) {
-				if( preg_match('/\.css$/', $node) ) {
-					$theme_css = $node;
-					break;
-				}
-			}
-		}
-		
-		// Add the theme.
-		if( $theme_css ) {
-			return ($theme_folder . '/' . $theme_css);
-		}
-		else {
-			return '';
-		}   
+      $theme_folder = 'jquery-ui/css/' . $this->settings['theme'];
+      $theme_css = '';
+      
+      // Now search this folder for the CSS file...
+      if($contents = opendir( dirname(__FILE__) . '/' . $theme_folder)) {
+         while(($node = readdir($contents)) !== false) {
+            if( preg_match('/\.css$/', $node) ) {
+               $theme_css = $node;
+               break;
+            }
+         }
+      }
+      
+      // Add the theme.
+      if( $theme_css ) {
+         return ($theme_folder . '/' . $theme_css);
+      }
+      else {
+         return '';
+      }   
    }
 
    /**
@@ -316,43 +316,43 @@ class OSMPlayer
     */   
    private function writeCSS( $css, $handle )
    {
-		// Get the file contents and length.
-		$contents = file_get_contents( dirname(__FILE__) . '/' . $css);
-		
-		// Change all of the images to the correct path...
-		$contents = str_replace( 'images/', $this->base_url . '/' . str_replace( basename($css), '', $css ) . 'images/', $contents );
-		
-		// Get the length of the contents.
-		$len = strlen( $contents );
-		
-		// Make sure we don't overwrite anything within brackets...
-		$match = 0;
-		$matches = array();
-		preg_match_all('/\{.*\}/sU', $contents, $matches, PREG_OFFSET_CAPTURE);
-	
-		$match_len = strlen( $matches[0][$match][0] );
-		
-		// Iterate through all the characters.
-		for( $i=0; $i<$len; $i++ ) {
-		
-			// See if we need to increment the current match.   
-			if( isset( $matches[0][$match+1] ) && ($i > $matches[0][$match+1][1]) ) {
-				$match++;
-				$match_len = strlen( $matches[0][$match][0] );
-			}
-			
-			// Get the char at this index.
-			$char = $contents[$i];
-			
-			// If this is a class or an id, and is not within brackets...
-			if( (($char == '#') || ($char == '.')) && 
-				 !(($i > $matches[0][$match][1]) && ($i <= ($matches[0][$match][1]+$match_len))) ) {
-				fwrite( $handle, $char . $this->settings['id'] . '_' );
-			}
-			else {
-				fwrite( $handle, $char );
-			}
-		}   
+      // Get the file contents and length.
+      $contents = file_get_contents( dirname(__FILE__) . '/' . $css);
+      
+      // Change all of the images to the correct path...
+      $contents = str_replace( 'images/', $this->base_url . '/' . str_replace( basename($css), '', $css ) . 'images/', $contents );
+      
+      // Get the length of the contents.
+      $len = strlen( $contents );
+      
+      // Make sure we don't overwrite anything within brackets...
+      $match = 0;
+      $matches = array();
+      preg_match_all('/\{.*\}/sU', $contents, $matches, PREG_OFFSET_CAPTURE);
+   
+      $match_len = strlen( $matches[0][$match][0] );
+      
+      // Iterate through all the characters.
+      for( $i=0; $i<$len; $i++ ) {
+      
+         // See if we need to increment the current match.   
+         if( isset( $matches[0][$match+1] ) && ($i > $matches[0][$match+1][1]) ) {
+            $match++;
+            $match_len = strlen( $matches[0][$match][0] );
+         }
+         
+         // Get the char at this index.
+         $char = $contents[$i];
+         
+         // If this is a class or an id, and is not within brackets...
+         if( (($char == '#') || ($char == '.')) && 
+             !(($i > $matches[0][$match][1]) && ($i <= ($matches[0][$match][1]+$match_len))) ) {
+            fwrite( $handle, $char . $this->settings['id'] . '_' );
+         }
+         else {
+            fwrite( $handle, $char );
+         }
+      }   
    }
 
    /**
@@ -361,11 +361,11 @@ class OSMPlayer
     * a cached version of them within the css folder.
     */   
    public function createCSS()
-   {   	
-   	// Store the template and theme names.
-   	$template = $this->settings['template'];
-   	$to_path = dirname(__FILE__) . '/css/' . $this->settings['id'];
-   	$from_path = 'templates/' . $template . '/osmplayer_' . $template;
+   {     
+      // Store the template and theme names.
+      $template = $this->settings['template'];
+      $to_path = dirname(__FILE__) . '/css/' . $this->settings['id'];
+      $from_path = 'templates/' . $template . '/osmplayer_' . $template;
 
       // Setup the files array.
       $files = array(
@@ -386,12 +386,12 @@ class OSMPlayer
             // Iterate through all the files that will be combined to
             // create this css file.
             foreach( $contents as $content ) {
-         		// Write to the css file.
-         		$this->writeCSS( $content, $handle );
-         	}
-         	
-         	// Close the file.
-         	fclose( $handle );
+               // Write to the css file.
+               $this->writeCSS( $content, $handle );
+            }
+            
+            // Close the file.
+            fclose( $handle );
          }           
       }   
    }
@@ -401,16 +401,16 @@ class OSMPlayer
     */   
    public function deleteCSS()
    {
-   	$css_path = dirname(__FILE__) . '/css/' . $this->settings['id'];
-   	$css = $css_path . '.css';
-		if( is_file( $css ) ) {
-			unlink( $css ); 
-		}
+      $css_path = dirname(__FILE__) . '/css/' . $this->settings['id'];
+      $css = $css_path . '.css';
+      if( is_file( $css ) ) {
+         unlink( $css ); 
+      }
 
-   	$css = $css_path . '_ie.css';		
-		if( is_file( $css ) ) {
-			unlink( $css );	
-		}		
+      $css = $css_path . '_ie.css';    
+      if( is_file( $css ) ) {
+         unlink( $css );   
+      }     
    }
 
    /**
@@ -418,34 +418,34 @@ class OSMPlayer
     */   
    public function getCSSFiles()
    {
-   	// Cache the prefix name.
-   	$id = $this->settings['id'];
-   	
-   	// The CSS files for this id.
-   	$files = array(
-   		"css/{$id}.css",
-   		"css/{$id}_ie.css"   	
-   	);
-   	
-   	// If the CSS files do not exist, then create them.
-   	if( !is_file( dirname(__FILE__) . $files[0] ) ) {
-   		$this->createCSS();
-   	}
-   	
-   	// Return the CSS files.
-   	return $files;
+      // Cache the prefix name.
+      $id = $this->settings['id'];
+      
+      // The CSS files for this id.
+      $files = array(
+         "css/{$id}.css",
+         "css/{$id}_ie.css"      
+      );
+      
+      // If the CSS files do not exist, then create them.
+      if( !is_file( dirname(__FILE__) . $files[0] ) ) {
+         $this->createCSS();
+      }
+      
+      // Return the CSS files.
+      return $files;
    }
 
    /**
     * Set the id for this media player.
     */   
    public function setId( $newId )
-   {   	
-   	// The id and the prefix are the same thing.
-   	$this->settings['id'] = $newId;
-		$this->settings['prefix'] = $this->params['prefix'] = $newId . '_';
-		
-   	// Iterate through all the id's and add the id.  
+   {     
+      // The id and the prefix are the same thing.
+      $this->settings['id'] = $newId;
+      $this->settings['prefix'] = $this->params['prefix'] = $newId . '_';
+      
+      // Iterate through all the id's and add the id.  
       foreach( $this->ids as $index => $id ) {
          $this->ids[$index] = $id[0] . $this->params['prefix'] . substr( $id, 1 );          
       }    
@@ -456,8 +456,8 @@ class OSMPlayer
     */   
    public function getHeader()
    {
-   	$header = '';
-		$template = $this->settings['template'];
+      $header = '';
+      $template = $this->settings['template'];
       $base_path = $this->base_path ? $this->base_path . '/' : '';
       
       // Add all of the javascript files.
@@ -468,11 +468,11 @@ class OSMPlayer
       }
       
       // Add the CSS files.
-   	$css_files = $this->getCSSFiles();
-   	$header .= '<link rel="stylesheet" type="text/css" href="' . $base_path . $css_files[0] . '" />';
-   	$header .= "\n";
-   	$header .= '<!--[if IE]><link rel="stylesheet" type="text/css" href="' . $base_path . $css_files[1] . '" /><![endif]-->';
-   	$header .= "\n";
+      $css_files = $this->getCSSFiles();
+      $header .= '<link rel="stylesheet" type="text/css" href="' . $base_path . $css_files[0] . '" />';
+      $header .= "\n";
+      $header .= '<!--[if IE]><link rel="stylesheet" type="text/css" href="' . $base_path . $css_files[1] . '" /><![endif]-->';
+      $header .= "\n";
       
       // Return the header.
       return $header;
@@ -483,7 +483,7 @@ class OSMPlayer
     */      
    public function getJSFiles()
    {
-		$template = $this->settings['template'];   
+      $template = $this->settings['template'];   
       if( $this->settings['debug'] ) {
          return array(
             "js/source/jquery.media.debug.js",                                    
@@ -515,7 +515,7 @@ class OSMPlayer
             "js/source/jquery.media.voter.js",                                    
             "js/source/jquery.media.youtube.js",                                  
             "js/source/jquery.media.vimeo.js",                                    
-            "js/source/jquery.media.dailymotion.js", 	                          
+            "js/source/jquery.media.dailymotion.js",                            
             "templates/{$template}/jquery.media.template.{$template}.js"
          );      
       }
@@ -539,28 +539,28 @@ class OSMPlayer
             switch( gettype($value) ) {
                case 'array':
                case 'object':
-                  $params[] = $param . ':' . json_encode($value);	
+                  $params[] = $param . ':' . json_encode($value); 
                   break;
                case 'string':
                   // Make sure we are not dealing with a JSON string here.  If so, then don't include the quotes.
-         		  	$params[] = (substr($value, 0, 1) == '{') ? ($param . ':' . $value) : ($param . ':"' . str_replace( '"', "'", $value ) . '"');
-         		  	break;
+                  $params[] = (substr($value, 0, 1) == '{') ? ($param . ':' . $value) : ($param . ':"' . str_replace( '"', "'", $value ) . '"');
+                  break;
                case 'boolean':
-         		  	$params[] = $param . ':' . ($value ? 'true' : 'false');
-         		  	break;
+                  $params[] = $param . ':' . ($value ? 'true' : 'false');
+                  break;
                default:
-         	      $params[] = $param . ':' . $value;
-         	      break;
-      	   }
+                  $params[] = $param . ':' . $value;
+                  break;
+            }
          }   
       }
       
       $ids = array();
       foreach( $this->ids as $id => $value ) {
-      	$ids[] = $id . ':"' . $value . '"';
+         $ids[] = $id . ':"' . $value . '"';
       }
       // Now add all the Id's to the settings.
-   	$params[] = 'ids:{' . implode(',', $ids) . '}';      
+      $params[] = 'ids:{' . implode(',', $ids) . '}';      
       return $params;      
    }
 
@@ -647,7 +647,7 @@ class OSMPlayer
          $variables['scrollBar'] = $this->theme( $variables,  '_scrollbar' );
       }
       else {
-      	$variables['scrollBar'] = $this->theme( $variables,  '_hscrollbar' );
+         $variables['scrollBar'] = $this->theme( $variables,  '_hscrollbar' );
       }
       
       $variables['links'] = $variables['params']['links'] ? theme( $variables,  '_links' ) : '';  
@@ -662,8 +662,8 @@ class OSMPlayer
       $template = $variables['params']['template'];
       $preprocess = 'theme_preprocess' . $subtemplate;
       if( method_exists( $this, $preprocess ) ) {
-      	$this->{$preprocess}( $variables );   
-     	}
+         $this->{$preprocess}( $variables );   
+      }
       extract($variables, EXTR_SKIP);  // Extract the variables to a local namespace
       ob_start();                      // Start output buffering
       include "templates/{$template}/osmplayer_{$template}{$subtemplate}.tpl.php";               
@@ -681,9 +681,9 @@ class OSMPlayer
     */   
    public function getPlayer()
    {
-   	$output = $this->getJS();
-   	$output .= "\n";
-   	$output .= $this->theme( array('params' => $this->settings) );  
+      $output = $this->getJS();
+      $output .= "\n";
+      $output .= $this->theme( array('params' => $this->settings) );  
       return $output;      
    }   
 }
