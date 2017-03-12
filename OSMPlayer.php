@@ -25,6 +25,10 @@
  *  THE SOFTWARE.
  */
  
+// Define the default width and height.
+define('OSMPLAYER_DEFAULT_WIDTH', 550);
+define('OSMPLAYER_DEFAULT_HEIGHT', 400);
+
 /**
  * PHP wrapper class for the Open Standard Media (OSM) player.
  *
@@ -36,10 +40,7 @@
  * http://www.mediafront.org/documentation.  
  */
 class OSMPlayer
-{
-   // The parameters passed into the player.
-   private $params; 
-   
+{  
    // The complete settings of the media player.
    private $settings;
    
@@ -57,6 +58,9 @@ class OSMPlayer
    
    // The controllers connected to this media player.
    private $controllers = array();  
+   
+   // The version of this player.
+   private $version = '';
    
    // All the configurable id's for the elements within this player.
    private $ids = array(
@@ -115,10 +119,10 @@ class OSMPlayer
 
    // All of the player specific parameters that can be changed.
    private $playerParams = array( 
-      'id' => 'mediaplayer',
+      'id' => 'player',
       'showPlaylist' => true,   
       'file' => '',
-      'flashplayer' => './flash/mediafront.swf',
+      'flashplayer' => 'flash/mediafront.swf',
       'image' => '',    
       'volume' => 80, 
       'autostart' => false, 
@@ -130,9 +134,9 @@ class OSMPlayer
       'version' => 6,
       'links' => array(),
       'linksvertical' => false,
-      'logo' => './logo.png',
+      'logo' => 'logo.png',
       'link' => "http://www.mediafront.org",
-       'logopos' => 'sw',
+      'logopos' => 'sw',
       'logoWidth' => 49,
       'logoHeight' => 15,
       'logox' => 5,
@@ -169,8 +173,8 @@ class OSMPlayer
 
    // All of the settings that can be used to control the function of the player (not passed to the js player).
    private $playerSettings = array(
-      'width' => 640,
-      'height' => 480,
+      'width' => OSMPLAYER_DEFAULT_WIDTH,
+      'height' => OSMPLAYER_DEFAULT_HEIGHT,
       'theme' => 'dark-hive',
       'version' => '0.01',
       'showController' => true,
@@ -196,18 +200,17 @@ class OSMPlayer
     *    ));
     */
    public function OSMPlayer( $_params = array() )
-   {
-      // Store the users passed in parameters.
-      $this->params = $_params;
-   
+   {   
       // First set the defaults.
       $this->settings = array_merge( $this->playerParams, $this->playerSettings );
-   
-      // Set the parameters ( which will override the defaults ).
-      $this->settings = array_merge( $this->settings, $_params ); 
       
-      // Make sure the ID is set as a unique id.
-      $this->setId( isset($_params['id']) ? $_params['id'] : 'player' );
+      if( $_params ) {   
+         // Set the parameters ( which will override the defaults ).
+         $this->settings = array_merge( $this->settings, $_params ); 
+      }
+      
+      // Make sure we set the ID.
+      $this->setId( $this->settings['id'] );
       
       // Set the base path and url of this class.
       $base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
@@ -220,8 +223,9 @@ class OSMPlayer
       $this->base_url = $base_url . '/' . $this->base_path;
       $this->settings['playerurl'] = $this->base_url;
       
-      // Set the correct flash player url path.
-      $this->params['flashplayer'] = isset($_params['flashplayer']) ? $_params['flashplayer'] : ($this->base_url . '/flash/mediafront.swf');
+      // Set the correct flash player and logo url path.
+      $this->settings['flashplayer'] = isset($_params['flashplayer']) ? $_params['flashplayer'] : ($this->base_url . '/flash/mediafront.swf');
+      $this->settings['logo'] = isset($_params['logo']) ? $_params['logo'] : ($this->base_url . '/logo.png');
    }   
    
    /**
@@ -230,6 +234,46 @@ class OSMPlayer
    public function getId()
    {
       return $this->settings['id'];  
+   }
+   
+   /**
+    * Returns the player settings.
+    */
+   public function getPlayerSettings()
+   {
+      return $this->playerSettings;  
+   }
+
+   /**
+    * Returns the player parameters.
+    */
+   public function getPlayerParams()
+   {
+      return $this->playerParams;  
+   }
+
+   /**
+    * Set's the current session id for this player.
+    */
+   public function setSessionId( $sessid ) 
+   {
+      $this->settings['sessid'] = $sessid;
+   }
+
+   /**
+    * Get's the current template.
+    */
+   public function getTemplate()
+   {
+      return $this->settings['template'];
+   }
+   
+   /**
+    * Get's the current theme.
+    */   
+   public function getTheme()
+   {
+      return $this->settings['theme'];
    }
 
    /**
@@ -252,11 +296,11 @@ class OSMPlayer
     *       'disablePlaylist' => true
     *    )); 
     *
-    *    $player->addPlaylist( $playlist );
+    *    $player->addPlaylist( $playlist->getId() );
     */   
-   public function addPlaylist( $player )
+   public function addPlaylist( $playerId )
    {
-      $this->playlists[] = $player->getId();
+      $this->playlists[] = $playerId;
    }
 
    /**
@@ -276,11 +320,11 @@ class OSMPlayer
     *       'playlist' => 'http://www.mysite.com/myplaylist.xml
     *    )); 
     *
-    *    $player->addController( $controller );
+    *    $player->addController( $controller->getId() );
     */   
-   public function addController( $player )
+   public function addController( $playerId )
    {
-      $this->controllers[] = $player->getId();
+      $this->controllers[] = $playerId;
    }
 
    /**
@@ -443,12 +487,21 @@ class OSMPlayer
    {     
       // The id and the prefix are the same thing.
       $this->settings['id'] = $newId;
-      $this->settings['prefix'] = $this->params['prefix'] = $newId . '_';
+      $this->settings['prefix'] = $newId . '_';
       
       // Iterate through all the id's and add the id.  
       foreach( $this->ids as $index => $id ) {
-         $this->ids[$index] = $id[0] . $this->params['prefix'] . substr( $id, 1 );          
+         $this->ids[$index] = $id[0] . $this->settings['prefix'] . substr( $id, 1 );          
       }    
+   }
+
+   /**
+    * Get's the player version number.
+    */
+   public function getVersion()
+   {
+      $this->version = $this->version ? $this->version : file_get_contents( dirname(__FILE__) . '/version' );
+      return $this->version;
    }
 
    /**
@@ -534,8 +587,9 @@ class OSMPlayer
    public function getParams() 
    {
       $params = array();     
-      foreach( $this->params as $param => $value ) {
-         if( array_key_exists( $param, $this->playerParams ) ) {
+      foreach( $this->settings as $param => $value ) {
+         if( array_key_exists( $param, $this->playerParams ) && 
+             ($this->playerParams[$param] != $value) ) {
             switch( gettype($value) ) {
                case 'array':
                case 'object':
@@ -618,6 +672,14 @@ class OSMPlayer
    public function theme_preprocess_node( &$variables )
    {   
       $variables['controlBar'] = $this->theme( $variables,  '_controlbar' );  
+   }
+
+   /**
+    * A theme preprocess function for the menu.
+    */
+   public function theme_preprocess_menu( &$variables )
+   {   
+      $variables['version'] = $this->getVersion();  
    }
 
    /**
