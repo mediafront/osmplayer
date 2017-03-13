@@ -406,9 +406,21 @@ class OSMPlayer
     */   
    public function createCSS()
    {     
+      // Store the CSS directory for later usage.
+      $css_dir = dirname(__FILE__) . '/css';
+   	
+   	  // Make sure this directory exists.
+   	  if( !is_dir( $css_dir ) ) {
+   	    // Create the directory.
+   	    mkdir( $css_dir, 0775, true );
+   	  }
+   	
+   	  // Now make sure the directory has the right permissions.
+   	  chmod( $css_dir, 0775 );
+   	
       // Store the template and theme names.
       $template = $this->settings['template'];
-      $to_path = dirname(__FILE__) . '/css/' . $this->settings['id'];
+      $to_path = $css_dir . '/' . $this->settings['id'];
       $from_path = 'templates/' . $template . '/osmplayer_' . $template;
 
       // Setup the files array.
@@ -436,7 +448,10 @@ class OSMPlayer
             
             // Close the file.
             fclose( $handle );
-         }           
+         }  
+
+         // Now set the file permissions to 775.
+         chmod( $file, 0775 );
       }   
    }
 
@@ -717,7 +732,8 @@ class OSMPlayer
    }      
 
    /**
-    * 
+    * This is the core theme function for the media player.  It allows for recursive themes to be
+    * declared where a preprocessor for each theme can be employed using a theme_preprocess_{$subtemplate} name.
     */   
    public function theme( $variables, $subtemplate = '' )
    {
