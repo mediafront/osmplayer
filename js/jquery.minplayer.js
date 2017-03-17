@@ -1678,7 +1678,7 @@
          
          this.getId = function( path ) {
             var regex = /^http[s]?\:\/\/(www\.)?vimeo\.com\/([0-9]+)/i;
-            return path.search(regex) == 0 ? path.replace(regex, "$2") : path;
+            return (path.search(regex) == 0) ? path.replace(regex, "$2") : path;
          };
          
          this.loadMedia = function( videoFile ) {
@@ -1843,7 +1843,7 @@
          
          this.getId = function( path ) {
             var regex = /^http[s]?\:\/\/(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9]+)/i;
-            return path.search(regex) == 0 ? path.replace(regex, "$2") : path;
+            return (path.search(regex) == 0) ? path.replace(regex, "$2") : path;
          };         
          
          this.loadMedia = function( videoFile ) {

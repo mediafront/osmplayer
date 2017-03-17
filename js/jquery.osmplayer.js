@@ -2967,10 +2967,13 @@
                this.onLoaded = onLoaded;
                jQuery.ajax({
                   type: "GET",
-                  url: file,
-                  dataType: "xml",
+                  url:file,
+                  dataType:"xml",
                   success: function(xml) {
                      _this.parseXML( xml );
+                  },
+                  error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                     console.log( "Error: " + textStatus );
                   }
                });               
             }; 
@@ -3216,6 +3219,15 @@
          // Get all of the setting overrides used in this template.
          settings = jQuery.extend( settings, settings.template.getSettings() );       
          
+         // Add some keyboard event handlers.
+         $(window).keypress( function( event ) {
+            switch( event.keyCode ) {
+               case 27:  /* ESC Key */
+                  _this.onEscKey();
+                  break;
+            }
+         });
+         
          // First get the communication protocol.
          if( jQuery.media[settings.protocol] ) {
             this.protocol = jQuery.media[settings.protocol]( settings );
@@ -3255,6 +3267,17 @@
               this.menuOn = show;
               settings.template.onMenu( this.menuOn, true );   
             }         
+         };
+         
+         // Called when the user presses the ESC key.
+         this.onEscKey = function() {
+            // If they are in full screen mode, then escape when they press the ESC key.
+            if( this.fullScreen ) {
+               this.fullScreen = false;
+               if( this.node && this.node.player ) {
+                  this.node.player.fullScreen( this.fullScreen );
+               }              
+            }            
          };
          
          // Setup the title bar.
@@ -5058,7 +5081,7 @@
          
          this.getId = function( path ) {
             var regex = /^http[s]?\:\/\/(www\.)?vimeo\.com\/([0-9]+)/i;
-            return path.search(regex) == 0 ? path.replace(regex, "$2") : path;
+            return (path.search(regex) == 0) ? path.replace(regex, "$2") : path;
          };
          
          this.loadMedia = function( videoFile ) {
@@ -5343,7 +5366,7 @@
          
          this.getId = function( path ) {
             var regex = /^http[s]?\:\/\/(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9]+)/i;
-            return path.search(regex) == 0 ? path.replace(regex, "$2") : path;
+            return (path.search(regex) == 0) ? path.replace(regex, "$2") : path;
          };         
          
          this.loadMedia = function( videoFile ) {

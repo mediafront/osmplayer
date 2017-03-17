@@ -121,6 +121,15 @@
          // Get all of the setting overrides used in this template.
          settings = jQuery.extend( settings, settings.template.getSettings() );       
          
+         // Add some keyboard event handlers.
+         $(window).keypress( function( event ) {
+            switch( event.keyCode ) {
+               case 27:  /* ESC Key */
+                  _this.onEscKey();
+                  break;
+            }
+         });
+         
          // First get the communication protocol.
          if( jQuery.media[settings.protocol] ) {
             this.protocol = jQuery.media[settings.protocol]( settings );
@@ -160,6 +169,17 @@
               this.menuOn = show;
               settings.template.onMenu( this.menuOn, true );   
             }         
+         };
+         
+         // Called when the user presses the ESC key.
+         this.onEscKey = function() {
+            // If they are in full screen mode, then escape when they press the ESC key.
+            if( this.fullScreen ) {
+               this.fullScreen = false;
+               if( this.node && this.node.player ) {
+                  this.node.player.fullScreen( this.fullScreen );
+               }              
+            }            
          };
          
          // Setup the title bar.
