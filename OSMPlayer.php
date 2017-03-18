@@ -280,9 +280,7 @@ class OSMPlayer
    }
 
    /**
-    * Used to add another playlist from another media player instance.
-    * You can use this to have another player instance's playlist control this
-    * player instance.  i.e. Remote Playlist.
+    * Connect the playlist of this media player to another media player.
     *
     * Usage:
     *
@@ -299,17 +297,15 @@ class OSMPlayer
     *       'disablePlaylist' => true
     *    )); 
     *
-    *    $player->addPlaylist( $playlist->getId() );
+    *    $playlist->addPlaylistTo( $player );
     */   
-   public function addPlaylist( $playerId )
+   public function addPlaylistTo( $player )
    {
-      $this->playlists[] = $playerId;
+      $this->playlists[] = is_string($player) ? $player : $player->getId();
    }
 
    /**
-    * Used to add another controller from another media player instance.
-    * You can use this to have another player instance's playlist control this
-    * player instance.  i.e. Remote Control.
+    * Connect the controlbar of this media player to another media player.
     *
     * Usage:
     *
@@ -323,11 +319,11 @@ class OSMPlayer
     *       'playlist' => 'http://www.mysite.com/myplaylist.xml
     *    )); 
     *
-    *    $player->addController( $controller->getId() );
+    *    $controller->addControllerTo( $player );
     */   
-   public function addController( $playerId )
+   public function addControllerTo( $player )
    {
-      $this->controllers[] = $playerId;
+      $this->controllers[] = is_string($player) ? $player : $player->getId();
    }
 
    /**
@@ -523,6 +519,24 @@ class OSMPlayer
    }
 
    /**
+    * Get the CSS header for this player.
+    */
+   public function getCSSHeader()
+   {
+      $base_path = $this->base_path ? $this->base_path . '/' : '';   	
+   	
+      // Add the CSS files.
+      $css_files = $this->getCSSFiles();
+      $header = '<link rel="stylesheet" type="text/css" href="' . $base_path . $css_files[0] . '" />';
+      $header .= "\n";
+      $header .= '<!--[if IE]><link rel="stylesheet" type="text/css" href="' . $base_path . $css_files[1] . '" /><![endif]-->';
+      $header .= "\n";
+      
+      // Return the header.
+      return $header;   	
+   }
+   
+   /**
     * Get the header for this media player.
     */   
    public function getHeader()
@@ -539,11 +553,7 @@ class OSMPlayer
       }
       
       // Add the CSS files.
-      $css_files = $this->getCSSFiles();
-      $header .= '<link rel="stylesheet" type="text/css" href="' . $base_path . $css_files[0] . '" />';
-      $header .= "\n";
-      $header .= '<!--[if IE]><link rel="stylesheet" type="text/css" href="' . $base_path . $css_files[1] . '" /><![endif]-->';
-      $header .= "\n";
+      $header .= $this->getCSSHeader();
       
       // Return the header.
       return $header;
