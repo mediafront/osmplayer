@@ -576,8 +576,7 @@ class OSMPlayer
    {
       $template = $this->settings['template'];   
       if( $this->settings['debug'] ) {
-         return array(
-            "js/source/jquery.media.debug.js",                                    
+         return array(                               
             "js/source/jquery.media.drupal.js",                                   
             "js/source/jquery.media.parser.js",                                   
             "js/source/jquery.media.auto.js",                                     
