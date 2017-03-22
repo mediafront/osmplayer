@@ -469,7 +469,8 @@ class OSMPlayer
     */   
    public function deleteCSS()
    {
-      $css_path = dirname(__FILE__) . '/css/' . $this->settings['id'];
+      $css_path = $this->css_dir ? $this->css_dir : dirname(__FILE__) . '/css';
+      $css_path .= '/' . $this->settings['id'];
       $css = $css_path . '.css';
       if( is_file( $css ) ) {
          unlink( $css ); 
