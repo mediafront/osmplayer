@@ -86,7 +86,7 @@ class OSMPlayer
       'mute' => '.mediamute',
       'linkText' => '.medialinktext',   
       'linkScroll' => '.medialinkscroll',
-      'close' => '#mediamenuclose',
+      'close' => '.mediamenuclose',
       'embed' => '#mediaembed',
       'elink' => '#mediaelink',
       'email' => '#mediaemail',
