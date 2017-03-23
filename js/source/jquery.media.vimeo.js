@@ -81,6 +81,7 @@
                this.display.width(), 
                this.display.height(),
                flashvars,
+               options.wmode,
                function( obj ) {
                   _this.player = obj; 
                   _this.loadPlayer();  

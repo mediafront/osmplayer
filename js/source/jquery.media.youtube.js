@@ -52,6 +52,7 @@
                this.display.width(), 
                this.display.height(),
                {},
+               options.wmode,
                function( obj ) {
                   _this.player = obj; 
                   _this.loadPlayer();  

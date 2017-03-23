@@ -257,6 +257,7 @@
                this.display.width(), 
                this.display.height(),
                {},
+               options.wmode,
                function( obj ) {
                   _this.player = obj;  
                   _this.loadPlayer(); 
@@ -457,7 +458,8 @@
       autostart:false,
       streamer:"",
       embedWidth:450,
-      embedHeight:337
+      embedHeight:337,
+      wmode:"transparent"
    }); 
 
    jQuery.fn.mediadisplay = function( settings ) {  
@@ -907,6 +909,7 @@
                this.display.width(), 
                this.display.height(),
                flashvars,
+               settings.wmode,               
                function( obj ) {
                   _this.player = obj; 
                   _this.loadPlayer();  
@@ -1002,8 +1005,9 @@
                settings.flashplayer,
                "mediafront_player", 
                settings.embedWidth, 
-               settings.embedHeight, 
-               flashVars );
+               settings.embedHeight,
+               flashVars,
+               settings.wmode );
          };         
          
          // Not implemented yet...
@@ -1666,6 +1670,7 @@
                this.display.width(), 
                this.display.height(),
                flashvars,
+               options.wmode,
                function( obj ) {
                   _this.player = obj; 
                   _this.loadPlayer();  
@@ -1831,6 +1836,7 @@
                this.display.width(), 
                this.display.height(),
                {},
+               options.wmode,
                function( obj ) {
                   _this.player = obj; 
                   _this.loadPlayer();  
