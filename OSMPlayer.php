@@ -224,6 +224,7 @@ class OSMPlayer
       }
       
       $this->base_path = isset($params['base_path']) ? $params['base_path'] : trim( str_replace( realpath('.'), '', dirname(__FILE__)), '/' );
+      $this->base_path = trim(str_replace('\\', '/', $this->base_path), '/');
       $this->base_url = isset($params['base_url']) ? $params['base_url'] : $base_url . '/' . $this->base_path;
       $this->settings['playerurl'] = $this->base_url;
       
@@ -342,11 +343,11 @@ class OSMPlayer
     */   
    public function getThemeCSS()
    {
-      $theme_folder = 'jquery-ui/css/' . $this->settings['theme'];
+      $theme_folder = 'jquery-ui' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . $this->settings['theme'];
       $theme_css = '';
       
       // Now search this folder for the CSS file...
-      if($contents = opendir( dirname(__FILE__) . '/' . $theme_folder)) {
+      if($contents = opendir( dirname(__FILE__) . DIRECTORY_SEPARATOR . $theme_folder)) {
          while(($node = readdir($contents)) !== false) {
             if( preg_match('/\.css$/', $node) ) {
                $theme_css = $node;
@@ -357,7 +358,7 @@ class OSMPlayer
       
       // Add the theme.
       if( $theme_css ) {
-         return ($theme_folder . '/' . $theme_css);
+         return ($theme_folder . DIRECTORY_SEPARATOR . $theme_css);
       }
       else {
          return '';
@@ -371,7 +372,7 @@ class OSMPlayer
    private function writeCSS( $css, $handle )
    {
       // Get the file contents and length.
-      $contents = file_get_contents( dirname(__FILE__) . '/' . $css);
+      $contents = file_get_contents( dirname(__FILE__) . DIRECTORY_SEPARATOR . $css);
       
       // Change all of the images to the correct path...
       $contents = str_replace( 'images/', $this->base_url . '/' . str_replace( basename($css), '', $css ) . 'images/', $contents );
@@ -417,7 +418,7 @@ class OSMPlayer
    public function createCSS()
    {     
       // Store the CSS directory for later usage.
-      $dir = $this->css_dir ? $this->css_dir : dirname(__FILE__) . '/css';
+      $dir = $this->css_dir ? $this->css_dir : dirname(__FILE__) . DIRECTORY_SEPARATOR . 'css';
       
       // Make sure this directory exists.
       if( !is_dir( $dir ) ) {
@@ -430,8 +431,8 @@ class OSMPlayer
       
       // Store the template and theme names.
       $template = $this->settings['template'];
-      $to_path = $dir . '/' . $this->settings['id'];
-      $from_path = 'templates/' . $template . '/osmplayer_' . $template;
+      $to_path = $dir . DIRECTORY_SEPARATOR . $this->settings['id'];
+      $from_path = 'templates' . DIRECTORY_SEPARATOR . $template . DIRECTORY_SEPARATOR . 'osmplayer_' . $template;
 
       // Setup the files array.
       $files = array(
@@ -470,8 +471,8 @@ class OSMPlayer
     */   
    public function deleteCSS()
    {
-      $css_path = $this->css_dir ? $this->css_dir : dirname(__FILE__) . '/css';
-      $css_path .= '/' . $this->settings['id'];
+      $css_path = $this->css_dir ? $this->css_dir : dirname(__FILE__) . DIRECTORY_SEPARATOR . 'css';
+      $css_path .= DIRECTORY_SEPARATOR . $this->settings['id'];
       $css = $css_path . '.css';
       if( is_file( $css ) ) {
          unlink( $css ); 
@@ -490,21 +491,24 @@ class OSMPlayer
    {
       // Get the CSS path.
       $css_path = $this->css_dir ? $this->css_dir : dirname(__FILE__);
-      $css_local_path = $this->css_dir ? '' : 'css/';
+      
+      // url's always have forward slashes, while paths need to handle windows vs. unix systems.
+      $css_local_url = $this->css_dir ? '' : 'css/';
+      $css_local_path = $this->css_dir ? '' : 'css' . DIRECTORY_SEPARATOR;
       
       // Cache the prefix name.
       $id = $this->settings['id'];
       
-      // The CSS files for this id.
-      $files = array(
-         $css_local_path . "{$id}.css",
-         $css_local_path . "{$id}_ie.css"      
-      );
-      
       // If the CSS files do not exist, then create them.
-      if( !is_file( $css_path . '/' . $files[0] ) ) {
+      if( !is_file( $css_path . DIRECTORY_SEPARATOR . $css_local_path . $id . ".css" ) ) {
          $this->createCSS();
       }
+      
+      // The CSS files for this id.
+      $files = array(
+         $css_local_url . "{$id}.css",
+         $css_local_url . "{$id}_ie.css"      
+      );      
       
       // Return the CSS files.
       return $files;
@@ -530,7 +534,7 @@ class OSMPlayer
     */
    public function getVersion()
    {
-      $this->version = $this->version ? $this->version : file_get_contents( dirname(__FILE__) . '/version.txt' );
+      $this->version = $this->version ? $this->version : file_get_contents( dirname(__FILE__) . DIRECTORY_SEPARATOR . 'version.txt' );
       return $this->version;
    }
 
@@ -770,12 +774,24 @@ class OSMPlayer
       if( method_exists( $this, $preprocess ) ) {
          $this->{$preprocess}( $variables );   
       }
-      extract($variables, EXTR_SKIP);  // Extract the variables to a local namespace
-      ob_start();                      // Start output buffering
-      include "templates/{$template}/osmplayer_{$template}{$subtemplate}.tpl.php";               
-      $contents = ob_get_contents();   // Get the contents of the buffer
-      ob_end_clean();                  // End buffering and discard
-      return $contents;                // Return the contents      
+      
+      // Extract the variables to a local namespace
+      extract($variables, EXTR_SKIP);
+      
+      // Start output buffering
+      ob_start();
+      
+      // Include the template.
+      include "templates" . DIRECTORY_SEPARATOR . $template . DIRECTORY_SEPARATOR . "osmplayer_{$template}{$subtemplate}.tpl.php";   
+                  
+      // Get the contents of the buffer
+      $contents = ob_get_contents();
+      
+      // End buffering and discard
+      ob_end_clean();
+      
+      // Return the contents   
+      return $contents;   
    }
 
    /**
