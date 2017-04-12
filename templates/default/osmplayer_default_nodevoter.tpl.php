@@ -1,10 +1,10 @@
-<div class="<?php print $params['prefix']; ?>medianodevoter">
-   <div class="<?php print $params['prefix']; ?>mediavoterstext">
-      <div class="<?php print $params['prefix']; ?>mediauservotertext">Vote:</div>
-      <div class="<?php print $params['prefix']; ?>mediavotertext">Average:</div>
+<div id="<?php print $params['prefix']; ?>medianodevoter">
+   <div id="<?php print $params['prefix']; ?>mediavoterstext">
+      <div id="<?php print $params['prefix']; ?>mediauservotertext">Vote:</div>
+      <div id="<?php print $params['prefix']; ?>mediavotertext">Average:</div>
    </div>
-   <div class="<?php print $params['prefix']; ?>mediavoters">
-      <div class="<?php print $params['prefix']; ?>mediauservoter" tag="vote">
+   <div id="<?php print $params['prefix']; ?>mediavoters">
+      <div id="<?php print $params['prefix']; ?>mediauservoter" tag="vote">
          <div vote="20">
             <span class="<?php print $params['prefix']; ?>ui-icon <?php print $params['prefix']; ?>ui-icon-star"></span>
          </div>
@@ -21,7 +21,7 @@
             <span class="<?php print $params['prefix']; ?>ui-icon <?php print $params['prefix']; ?>ui-icon-star"></span>
          </div>
       </div>
-      <div class="<?php print $params['prefix']; ?>mediavoter" tag="vote">
+      <div id="<?php print $params['prefix']; ?>mediavoter" tag="vote">
          <div vote="20">
             <span class="<?php print $params['prefix']; ?>ui-icon <?php print $params['prefix']; ?>ui-icon-star"></span>
          </div>

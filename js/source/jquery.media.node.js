@@ -32,9 +32,9 @@
    }); 
 
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      voter:".mediavoter",
-      uservoter:".mediauservoter",
-      mediaRegion:".mediaregion",
+      voter:"#mediavoter",
+      uservoter:"#mediauservoter",
+      mediaRegion:"#mediaregion",
       field:".mediafield"                 
    });   
    

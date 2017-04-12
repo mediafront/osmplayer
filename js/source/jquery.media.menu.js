@@ -28,7 +28,7 @@
    
    // Set up our defaults for this component.
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      close:".mediamenuclose",
+      close:"#mediamenuclose",
       embed:"#mediaembed",
       elink:"#mediaelink",
       email:"#mediaemail"           

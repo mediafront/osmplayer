@@ -76,17 +76,17 @@
    
    // Set up our defaults for this component.
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      currentTime:".mediacurrenttime",
-      totalTime:".mediatotaltime",
-      playPause:".mediaplaypause",
-      seekUpdate:".mediaseekupdate",
-      seekProgress:".mediaseekprogress",
-      seekBar:".mediaseekbar",
-      seekHandle:".mediaseekhandle",
-      volumeUpdate:".mediavolumeupdate",
-      volumeBar:".mediavolumebar",
-      volumeHandle:".mediavolumehandle",
-      mute:".mediamute"   
+      currentTime:"#mediacurrenttime",
+      totalTime:"#mediatotaltime",
+      playPause:"#mediaplaypause",
+      seekUpdate:"#mediaseekupdate",
+      seekProgress:"#mediaseekprogress",
+      seekBar:"#mediaseekbar",
+      seekHandle:"#mediaseekhandle",
+      volumeUpdate:"#mediavolumeupdate",
+      volumeBar:"#mediavolumebar",
+      volumeHandle:"#mediavolumehandle",
+      mute:"#mediamute"   
    });    
    
    jQuery.fn.mediacontrol = function( settings ) { 
@@ -473,82 +473,6 @@
       })( this, options, onUpdate );
    };
   /**
- *  Copyright (c) 2010 Alethia Inc,
- *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
- *
- *  License:  GPL version 3.
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
- *  
- *  The above copyright notice and this permission notice shall be included in
- *  all copies or substantial portions of the Software.
-
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *  THE SOFTWARE.
- */
-
-   jQuery.media = jQuery.extend( {}, {
-      checkPoints : {},
-      checkPoint : function( name ) {
-         var thisTime = new Date().getTime();
-         var lastTime = jQuery.media.checkPoints[name] ? jQuery.media.checkPoints[name] : 0;
-         jQuery.media.checkPoints[name] = thisTime - lastTime;
-      },
-      finalPoint : function() {
-         jQuery.media.debug( jQuery.media.checkPoints );
-         jQuery.media.checkPoints = {};            
-      },
-      debug : function( text ) {
-         var _this = this;
-
-         this.dump = function(arr, level) {
-            var dumped_text = "";
-            var level_padding = "";
-                        
-            if(!level) {
-               level = 0;
-            }
-            
-            for(var j=0;j<=level;j++) {
-               level_padding += "   ";
-            }
-            if(typeof(arr) == 'object') {
-               for(var key in arr) {
-                  if( arr.hasOwnProperty(key) ) {
-                     var value = arr[key];
-                     if(typeof(value) == 'object') {
-                        dumped_text += level_padding + "'" + key + "' ...\n";
-                        dumped_text += _this.dump(value,level+1);
-                     } else {
-                        dumped_text += level_padding + "'" + key + "' => \"" + value + "\"\n";
-                     }                      
-                  }
-               }
-            } else {
-               dumped_text = "- "+ arr +" ("+typeof(arr)+")";
-            }
-            return dumped_text;
-         };   
-
-         if( arguments[1] ) {
-            jQuery(".mediadebug").empty();
-         }
-         jQuery(".mediadebug").append( "<pre>" + this.dump( text ) + "</pre><br/>" );
-      }
-   }, jQuery.media );  
-
-/**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
  *  Developed by Travis Tidwell | travist at alethia-inc.com 
@@ -1815,7 +1739,7 @@
    }); 
 
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      linkScroll:".medialinkscroll"               
+      linkScroll:"#medialinkscroll"               
    });    
    
    jQuery.fn.medialinks = function( settings ) {  
@@ -1902,7 +1826,7 @@
    
    // Set up our defaults for this component.
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      close:".mediamenuclose",
+      close:"#mediamenuclose",
       embed:"#mediaembed",
       elink:"#mediaelink",
       email:"#mediaemail"           
@@ -2030,11 +1954,11 @@
    }); 
 
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      busy:".mediabusy",
-      preview:".mediapreview",
-      play:".mediaplay",
-      media:".mediadisplay",
-      control:".mediacontrol"                 
+      busy:"#mediabusy",
+      preview:"#mediapreview",
+      play:"#mediaplay",
+      media:"#mediadisplay",
+      control:"#mediacontrol"                 
    });    
    
    jQuery.fn.minplayer = function( settings ) {
@@ -2069,7 +1993,7 @@
          });
          this.playImg = this.play.find("img");
          this.playWidth = this.playImg.width();
-         this.playHeight = this.playImg.height();         
+         this.playHeight = this.playImg.height();
          
          // Store the preview image.
          this.preview = player.find( settings.ids.preview ).mediaimage();
@@ -2088,6 +2012,7 @@
          this.previewVisible = false;
          this.controllerVisible = true;
          this.hasMedia = false;
+         this.playing = false;         
          
          // Cache the width and height.
          this.width = this.display.width();
@@ -2193,15 +2118,18 @@
          this.onMediaUpdate = function( data ) {
             switch( data.type ) {
                case "paused":
+                  this.playing = false;
                   this.showPlay(true);
                   this.showBusy(false);
                   break;
                case "playing":
+                  this.playing = true;
                   this.showPlay(false);
                   this.showBusy(false);
                   this.showPreview((this.media.mediaFile.type == "audio"));
                   break;
                case "initialize":
+                  this.playing = false;
                   this.showPlay(true);
                   this.showBusy(true);
                   this.showPreview(true);
@@ -2358,6 +2286,7 @@
          // Reset to previous state...
          this.reset = function() {
             this.hasMedia = false;
+            this.playing = false;
             if( this.controller ) {
                this.controller.reset();   
             }
@@ -2455,9 +2384,9 @@
    }); 
 
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      voter:".mediavoter",
-      uservoter:".mediauservoter",
-      mediaRegion:".mediaregion",
+      voter:"#mediavoter",
+      uservoter:"#mediauservoter",
+      mediaRegion:"#mediaregion",
       field:".mediafield"                 
    });   
    
@@ -2712,12 +2641,12 @@
    });
 
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      prev:".mediaprev",
-      next:".medianext",
-      loadPrev:".medialoadprev",
-      loadNext:".medialoadnext",
-      prevPage:".mediaprevpage",
-      nextPage:".medianextpage"         
+      prev:"#mediaprev",
+      next:"#medianext",
+      loadPrev:"#medialoadprev",
+      loadNext:"#medialoadnext",
+      prevPage:"#mediaprevpage",
+      nextPage:"#medianextpage"         
    });   
    
    jQuery.fn.mediapager = function( settings ){
@@ -3193,12 +3122,12 @@
    });    
 
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      loading:".mediaplayerloading",
-      player:".mediaplayer",
-      menu:".mediamenu",
-      titleBar:".mediatitlebar",
-      node:".medianode",
-      playlist:".mediaplaylist"   
+      loading:"#mediaplayerloading",
+      player:"#mediaplayer",
+      menu:"#mediamenu",
+      titleBar:"#mediatitlebar",
+      node:"#medianode",
+      playlist:"#mediaplaylist"   
    });   
    
    // Initialize our players, playlists, and controllers.   
@@ -3276,6 +3205,9 @@
          // Add some keyboard event handlers.
          $(window).keypress( function( event ) {
             switch( event.keyCode ) {
+               case 0:   /* SpaceBar */
+                  _this.onSpaceBar();
+                  break;
                case 27:  /* ESC Key */
                   _this.onEscKey();
                   break;
@@ -3332,6 +3264,20 @@
                   this.node.player.fullScreen( this.fullScreen );
                }              
             }            
+         };
+         
+         // When they press the space bar, we will toggle the player play/pause state.
+         this.onSpaceBar = function() {
+            if( this.fullScreen ) {            
+               if( this.node && this.node.player && this.node.player.media && this.node.player.media.player ) {
+                  if( this.node.player.playing ) {
+                     this.node.player.media.player.pauseMedia();  
+                  }
+                  else {
+                     this.node.player.media.player.playMedia(); 
+                  }
+               } 
+            }
          };
          
          // Setup the title bar.
@@ -3580,10 +3526,10 @@
    }); 
 
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      pager:".mediapager",
-      scroll:".mediascroll",
-      busy:".mediabusy",
-      links:".medialinks"       
+      pager:"#mediapager",
+      scroll:"#mediascroll",
+      busy:"#mediabusy",
+      links:"#medialinks"       
    });   
    
    jQuery.fn.mediaplaylist = function( server, settings ) {
@@ -3920,7 +3866,7 @@
    
    // Set up our defaults for this component.
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      linkText:".medialinktext"
+      linkText:"#medialinktext"
    });    
    
    jQuery.fn.playlistlink = function( settings, linkInfo ) {  
@@ -4337,14 +4283,14 @@
    });   
 
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      listMask:".medialistmask",
-      list:".medialist",
-      scrollWrapper:".mediascrollbarwrapper",
-      scrollBar:".mediascrollbar",
-      scrollTrack:".mediascrolltrack",
-      scrollHandle:".mediascrollhandle",
-      scrollUp:".mediascrollup",
-      scrollDown:".mediascrolldown"        
+      listMask:"#medialistmask",
+      list:"#medialist",
+      scrollWrapper:"#mediascrollbarwrapper",
+      scrollBar:"#mediascrollbar",
+      scrollTrack:"#mediascrolltrack",
+      scrollHandle:"#mediascrollhandle",
+      scrollUp:"#mediascrollup",
+      scrollDown:"#mediascrolldown"        
    });     
    
    jQuery.fn.mediascroll = function( settings ) {
@@ -4515,7 +4461,7 @@
             this.setScrollSize( settings.vertical ? this.listMask.height() : this.listMask.width() );                                 
 
             // Now reset the list position.
-            this.setScrollPos( this.listPos );
+            this.setScrollPos( /*this.listPos*/0, true );
          };
          
          // Refreshes the scroll region.
@@ -4963,7 +4909,7 @@
  */
  
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      titleLinks:".mediatitlelinks"                 
+      titleLinks:"#mediatitlelinks"                 
    });     
    
    jQuery.fn.mediatitlebar = function( settings ) { 

@@ -28,7 +28,8 @@
    
    // Set up our defaults for this component.
    jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
-      prefix:""
+      prefix:"",
+      controllerOnly:false
    });   
    
    jQuery.media.templates = jQuery.extend( {}, {
@@ -202,16 +203,16 @@
                }               
                
                // If there is no voter, then we need to decrease the right control sections size.
-               var voterWidth = mediaplayer.node ? mediaplayer.node.display.find("." + settings.prefix + "medianodevoter").width() : null;
+               var voterWidth = mediaplayer.node ? mediaplayer.node.display.find("#" + settings.prefix + "medianodevoter").width() : null;
                if( this.controlBar && !voterWidth ) {
-                  var controlRight = this.controlBar.display.find("." + settings.prefix + "mediacontrolright");
+                  var controlRight = this.controlBar.display.find("#" + settings.prefix + "mediacontrolright");
                   var controlRightWidth = controlRight.width();
                   var newWidth = 0;
                   controlRight.children().each( function() {
                      newWidth += $(this).outerWidth(true);   
                   });
                   controlRight.css("width", newWidth); 
-                  this.controlBar.display.find("." + settings.prefix + "mediacontrolcenter").css("marginRight", newWidth);
+                  this.controlBar.display.find("#" + settings.prefix + "mediacontrolcenter").css("marginRight", newWidth);
                   this.controlBar.onResize( (controlRightWidth - newWidth), 0 );                  
                }                
                
@@ -226,7 +227,8 @@
                }
                
                // See if we only have a control bar.
-               if( this.controlBar && !mediaplayer.playlist && !this.mediaDisplay ) {
+               if( this.controlBar && settings.controllerOnly ) {
+                  this.mediaDisplay.display.css({position:"absolute", zIndex:1000, marginLeft:-100000});
                   mediaplayer.dialog.css({height:(this.controlHeight + playerPosition.top)});
                   this.controlBar.display.css({marginTop:0});
                   this.controlBar.display.removeClass(settings.prefix + 'ui-corner-bottom');
