@@ -190,6 +190,7 @@
          
          // Handle when the preview image loads.
          this.onPreviewLoaded = function() {
+            this.previewVisible = true;
             // If we don't have any media, then we will assume that they 
             // just want an image viewer.  Trigger a complete event after the timeout
             // interval.
