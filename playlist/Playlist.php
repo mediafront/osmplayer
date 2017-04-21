@@ -126,7 +126,7 @@ class Playlist
    
    public function clearCache()
    {
-      unlink( dirname(__FILE__) . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $this->playlist . '.xml' );
+      unlink( dirname(__FILE__) . '/' . 'cache' . '/' . $this->playlist . '.xml' );
    }
    
    /**
@@ -161,8 +161,8 @@ class Playlist
       // Initialize some variables.
       $xml = '';
       $dirname = dirname(__FILE__);
-      $playlist_dir = $dirname . DIRECTORY_SEPARATOR . 'playlists' . DIRECTORY_SEPARATOR . $this->playlist;   
-      $playlist_file = $dirname . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $this->playlist . '.xml';
+      $playlist_dir = $dirname . '/' . 'playlists' . '/' . $this->playlist;
+      $playlist_file = $dirname . '/' . 'cache' . '/' . $this->playlist . '.xml';
 
       // If there is already a cache file, then we will just want to use it.
       if( $this->cache && file_exists($playlist_file) ) 
@@ -301,7 +301,7 @@ class Playlist
                if($node!="." && $node!="..") {
                  
                  	// Cache the full node path.
-                  $node = $path.DIRECTORY_SEPARATOR.$node;
+                  $node = $path.'/'.$node;
                   
                   // If this node is a directory, then we will want to recurse.
                   $directory = is_dir($node);
