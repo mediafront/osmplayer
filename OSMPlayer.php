@@ -629,7 +629,7 @@ class OSMPlayer
 	/**
 	 * Converts a PHP variable into its Javascript equivalent.
 	 */
-	private function osm_json_encode($var) {
+	public function osm_json_encode($var) {
 	  switch (gettype($var)) {
 		 case 'boolean':
 			return $var ? 'true' : 'false'; // Lowercase necessary!
@@ -648,7 +648,7 @@ class OSMPlayer
 			if (empty ($var) || array_keys($var) === range(0, sizeof($var) - 1)) {
 			  $output = array();
 			  foreach ($var as $v) {
-				 $output[] = osm_json_encode($v);
+				 $output[] = $this->osm_json_encode($v);
 			  }
 			  return '['. implode(',', $output) .']';
 			}
@@ -656,7 +656,7 @@ class OSMPlayer
 		 case 'object':
 			$output = array();
 			foreach ($var as $k => $v) {
-			  $output[] = osm_json_encode(strval($k)) .': '. osm_json_encode($v);
+			  $output[] = $this->osm_json_encode(strval($k)) .': '. $this->osm_json_encode($v);
 			}
 			return '{'. implode(',', $output) .'}';
 		 default:
@@ -677,7 +677,7 @@ class OSMPlayer
             switch( gettype($value) ) {
                case 'array':
                case 'object':
-                  $params[] = $param . ':' . osm_json_encode($value);
+                  $params[] = $param . ':' . $this->osm_json_encode($value);
                   break;
                case 'string':
                   // Make sure we are not dealing with a JSON string here.  If so, then don't include the quotes.
