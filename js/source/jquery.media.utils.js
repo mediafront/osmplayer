@@ -71,7 +71,32 @@
             }
 
             return scaledRect;         
-         },             
+         },
+
+         // Checks all parents visibility, and resets them and adds those items to a passed in
+         // array which can be used to reset their visibiltiy at a later point by calling
+         // resetVisibility
+         checkVisibility : function( display, invisibleParents ) {
+            var isVisible = true;
+            display.parents().each( function() {
+                var jObject = jQuery(this);
+                if( !jObject.is(':visible') ) {
+                    isVisible = false;
+                    var attrClass = jObject.attr("class");
+                    invisibleParents.push( {obj:jObject, attr:attrClass} );
+                    jObject.removeClass(attrClass);
+                }
+            });
+         },
+
+         // Reset's the visibility of the passed in parent elements.
+         resetVisibility : function( invisibleParents ) {
+            // Now iterate through all of the invisible objects and rehide them.
+            var i = invisibleParents.length;
+            while(i--){
+                invisibleParents[i].obj.addClass(invisibleParents[i].attr);
+            }
+         },
          
          getFlash : function( player, id, width, height, flashvars, wmode ) {
             // Get the protocol.
