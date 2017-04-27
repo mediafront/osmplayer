@@ -33,7 +33,8 @@
       streamer:"",
       embedWidth:450,
       embedHeight:337,
-      wmode:"transparent"
+      wmode:"transparent",
+      forceOverflow:false
    }); 
 
    jQuery.fn.mediadisplay = function( settings ) {  
@@ -53,7 +54,15 @@
          this.mediaFile = null; 
          this.width = 0;
          this.height = 0;
-         
+
+         // If they provide the forceOverflow variable, then that means they
+         // wish to force the media player to override all parents overflow settings.
+         if( settings.forceOverflow ) {
+            // Make sure that all parents have overflow visible so that
+            // browser full screen will always work.
+            this.display.parents().css("overflow", "visible");
+         }
+
          this.checkPlayType = function( elem, playType ) {
             if( (typeof elem.canPlayType) == 'function' ) { 
                return ("no" != elem.canPlayType(playType)) && ("" != elem.canPlayType(playType));
@@ -355,16 +364,19 @@
             }
          };
 
+         this.reflowPlayer = function() {
+            var _marginLeft = parseInt( this.display.css("marginLeft"), 10 );
+            this.display.css({marginLeft:(_marginLeft+1)});
+            setTimeout( function() {
+                _this.display.css({marginLeft:_marginLeft});
+            }, 1 );
+         };
+
          this.startReflow = function() {
             clearTimeout( this.reflowInterval );
             this.reflowInterval = setTimeout( function() {
-               // If the player does not register after two seconds, try to wiggle it... just a little bit!
-               // No seriously... this is needed for Firefox in Windows for some odd reason.
-               var marginLeft = parseInt( _this.display.css("marginLeft"), 10 );
-               _this.display.css({marginLeft:(marginLeft+1)});
-               setTimeout( function() {
-                  _this.display.css({marginLeft:marginLeft});
-               }, 1 );
+               // If the player does not register after two seconds, try a reflow.
+               _this.reflowPlayer();
             }, 2000 );      
          };         
          
