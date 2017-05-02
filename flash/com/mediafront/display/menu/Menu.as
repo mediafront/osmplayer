@@ -25,48 +25,48 @@
  */
 package com.mediafront.display.menu
 {
-	import com.mediafront.plugin.SkinablePlugin;
-	import com.mediafront.utils.Settings;
-	import com.mediafront.utils.MenuSettings;
-	import com.mediafront.display.menu.MenuEvent;
-	import com.mediafront.display.media.controls.ControlEvent;
-	
-	import flash.display.MovieClip;
-	
-	public class Menu extends SkinablePlugin
-	{	
-		public override function loadSettings( _settings:Settings ) : void
-		{
-			super.loadSettings( new MenuSettings( _settings ) );
-			super.loadSkin( settings.menu );						
-		}
-		
-		public override function setSkin( _skin:MovieClip ) : void
+   import com.mediafront.plugin.SkinablePlugin;
+   import com.mediafront.utils.Settings;
+   import com.mediafront.utils.MenuSettings;
+   import com.mediafront.display.menu.MenuEvent;
+   import com.mediafront.display.media.controls.ControlEvent;
+   
+   import flash.display.MovieClip;
+   
+   public class Menu extends SkinablePlugin
+   {  
+      public override function loadSettings( _settings:Settings ) : void
       {
-			menuContent = _skin.menuContent;
-			_skin.visible = menuVisible;
-			super.setSkin( _skin );
-      }		
-		
-		public override function initialize( comps:Object ) : void
-		{
-			super.initialize( comps );
-			components.controlBar.addEventListener( ControlEvent.MENU, onMenuButton );
-		}
-		
-		public function registerMenuItem( menuTitle:String, menuItem:* ) 
-		{
-			trace( menuItem.name );
-			menuContent.addChild( menuItem.skin );
-		}
-		
-		private function onMenuButton( event:* ) 
-		{
-			menuVisible = !menuVisible;
-			skin.show( menuVisible );
-		}
-		
-		public var menuContent:MovieClip;
-		private var menuVisible:Boolean = false;
-	}	
+         super.loadSettings( new MenuSettings( _settings ) );
+         super.loadSkin( settings.menu );                
+      }
+      
+      public override function setSkin( _skin:MovieClip ) : void
+      {
+         menuContent = _skin.menuContent;
+         _skin.visible = menuVisible;
+         super.setSkin( _skin );
+      }     
+      
+      public override function initialize( comps:Object ) : void
+      {
+         super.initialize( comps );
+         components.controlBar.addEventListener( ControlEvent.MENU, onMenuButton );
+      }
+      
+      public function registerMenuItem( menuTitle:String, menuItem:* ) 
+      {
+         trace( menuItem.name );
+         menuContent.addChild( menuItem.skin );
+      }
+      
+      private function onMenuButton( event:* ) 
+      {
+         menuVisible = !menuVisible;
+         skin.show( menuVisible );
+      }
+      
+      public var menuContent:MovieClip;
+      private var menuVisible:Boolean = false;
+   }  
 }

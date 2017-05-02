@@ -28,7 +28,7 @@ package com.mediafront.display.media.spinner
    import flash.events.*;
 
    public class PlayloaderEvent extends Event
-   {	
+   {  
 
       public function PlayloaderEvent( type:String, a:Object = null )
       {

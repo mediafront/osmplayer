@@ -22,4 +22,17 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
- */package com.mediafront.utils{  	public class ControlSettings extends Settings   {              public function ControlSettings( settings:Object )      {			super( settings );			loadSettings();      } 					public var controlBar:String = "controlBar";   }}
+ */
+package com.mediafront.utils
+{  
+   public class ControlSettings extends Settings
+   {        
+      public function ControlSettings( settings:Object )
+      {
+         super( settings );
+         loadSettings();
+      }    
+     
+      public var controlBar:String = "controlBar";
+   }
+}

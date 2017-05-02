@@ -25,7 +25,7 @@
  */
 package com.mediafront.display
 {
-	import com.mediafront.utils.Utils;
+   import com.mediafront.utils.Utils;
    
    import flash.net.*;
    import flash.display.*;
@@ -36,9 +36,9 @@ package com.mediafront.display
    {
       public function loadImage( imagePath:String, _boundingRect:Rectangle = null ) : void
       {
-			boundingRect = _boundingRect;
-			boundingRect = boundingRect ? boundingRect : getRect( this );
-			
+         boundingRect = _boundingRect;
+         boundingRect = boundingRect ? boundingRect : getRect( this );
+         
          // Only load an image who's path is defined.
          if( imagePath ) {
             currentLoader = createImageLoader();
@@ -51,7 +51,7 @@ package com.mediafront.display
                currentLoader.load(request);
             } catch (e:Error) {
                Utils.debug( "Error loading image." );
-            }	
+            }  
          }
       }
 
@@ -122,7 +122,7 @@ package com.mediafront.display
       private var currentLoader:Loader;
 
       // The bounding rectangle for this image.
-		private var boundingRect:Rectangle;
+      private var boundingRect:Rectangle;
 
       // The width/height ratio of the loaded image.
       public var imageRatio:Number = 1.3333;

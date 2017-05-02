@@ -25,96 +25,98 @@
  */
 package com.mediafront.display.media.controls
 {
-	import com.mediafront.display.Skinable;
-	import com.mediafront.display.media.MediaEvent;	
-	import com.mediafront.plugin.IPlugin;
-	import com.mediafront.plugin.PluginEvent;
-	import com.mediafront.utils.Settings;			
-	import com.mediafront.utils.PlayLoaderSettings;	
-	
+   import com.mediafront.display.Skinable;
+   import com.mediafront.display.media.MediaEvent; 
+   import com.mediafront.display.Image;
+   import com.mediafront.plugin.IPlugin;
+   import com.mediafront.plugin.PluginEvent;
+   import com.mediafront.utils.Settings;        
+   import com.mediafront.utils.PlayLoaderSettings; 
+   
    import flash.display.*;
-	import flash.text.TextField;
-	import flash.events.*;
-	import flash.system.Security;		
+   import flash.text.TextField;
+   import flash.events.*;
+   import flash.system.Security;    
 
    public class PlayLoader extends Skinable implements IPlugin
    {
-		public function PlayLoader()
-		{
-			super();
-			Security.allowDomain("*");		
-		}
-		
-		public function loadSettings( settings:Settings ) : void
-		{
-			_settings = new PlayLoaderSettings( settings );
-			loadSkin( settings.baseURL + "/skins/" + _settings.skin + "/" + _settings.playLoader + ".swf" );			
-		}
-		
-		public function initialize( comps:Object ) : void
-		{
-			components = comps;
-			components.mediaPlayer.addEventListener( MediaEvent.PLAYING, onMediaEvent );
-			components.mediaPlayer.addEventListener( MediaEvent.PAUSED, onMediaEvent );		
-			components.mediaPlayer.addEventListener( MediaEvent.BUFFERING, onMediaEvent );	
-		}		
-		
-		public function onReady() : void {}
-		
-		public override function setSkin( _skin:MovieClip )
+      public function PlayLoader()
+      {
+         super();
+         Security.allowDomain("*");    
+      }
+      
+      public function loadSettings( settings:Settings ) : void
+      {
+         _settings = new PlayLoaderSettings( settings );
+         loadSkin( settings.baseURL + "/skins/" + _settings.skin + "/" + _settings.playLoader + ".swf" );         
+      }
+      
+      public function initialize( comps:Object ) : void
+      {
+         components = comps;
+         components.mediaPlayer.addEventListener( MediaEvent.PLAYING, onMediaEvent );
+         components.mediaPlayer.addEventListener( MediaEvent.PAUSED, onMediaEvent );      
+         components.mediaPlayer.addEventListener( MediaEvent.BUFFERING, onMediaEvent );   
+      }     
+      
+      public function onReady() : void {}
+      
+      public override function setSkin( _skin:MovieClip )
       {
          playButton = _skin.playButton;
-			if( playButton ) {
-				playButton.buttonMode = true;
-				playButton.mouseChildren = false;
-				playButton.addEventListener( MouseEvent.CLICK, onPlay );
-			}
+         if( playButton ) {
+            playButton.buttonMode = true;
+            playButton.mouseChildren = false;
+            playButton.addEventListener( MouseEvent.CLICK, onPlay );
+         }
          loader = _skin.loader;
          setPlayLoadState( true, true, false );
-			dispatchEvent( new PluginEvent( PluginEvent.PLUGIN_LOADED ) );
-      }		
-		
-		public function onPlay( event:MouseEvent )
-		{
-			onMediaEvent( new MediaEvent( MediaEvent.PLAYING ) );	
-			components.mediaPlayer.playMedia();
-		}		
-		
-		public function onMediaEvent( event:* )
-		{		
-		   if( skin ) {
-			   switch( event.type ) {
-			      case MediaEvent.BUFFERING:
-			         setPlayLoadState( true, true, false );
-			         break;
-				   case MediaEvent.PLAYING:
-	               setPlayLoadState( false, false, false );					
-					   break;
-				   case MediaEvent.PAUSED:
-				      setPlayLoadState( true, false, true );
-					   break;
-			   }	
-			}		
-		}		
-		
-		public function setPlayLoadState( showSkin:Boolean, showLoader:Boolean, showPlay:Boolean ) 
-		{
-		   if( skin ) {
-		      skin.visible = showSkin;
-		   }
-   		
-		   if( loader ) {
-		      loader.visible = showLoader;
-		   }
-   		
-		   if( playButton ) {
-		      playButton.visible = showPlay;
-		   }		   
-		}
-		
+         dispatchEvent( new PluginEvent( PluginEvent.PLUGIN_LOADED ) );
+      }     
+      
+      public function onPlay( event:MouseEvent )
+      {
+         onMediaEvent( new MediaEvent( MediaEvent.PLAYING ) ); 
+         components.mediaPlayer.playMedia();
+      }     
+      
+      public function onMediaEvent( event:* )
+      {     
+         if( skin ) {
+            switch( event.type ) {
+               case MediaEvent.BUFFERING:
+                  setPlayLoadState( true, true, false );
+                  break;
+               case MediaEvent.PLAYING:
+                  setPlayLoadState( false, false, false );              
+                  break;
+               case MediaEvent.PAUSED:
+                  setPlayLoadState( true, false, true );
+                  break;
+            }  
+         }     
+      }     
+      
+      public function setPlayLoadState( showSkin:Boolean, showLoader:Boolean, showPlay:Boolean ) 
+      {
+         if( skin ) {
+            skin.visible = showSkin;
+         }
+         
+         if( loader ) {
+            loader.visible = showLoader;
+         }
+         
+         if( playButton ) {
+            playButton.visible = showPlay;
+         }        
+      }
+      
       public var playButton:MovieClip;
       public var loader:MovieClip;
-		private var components:Object;
-		private var _settings:PlayLoaderSettings;
+      public var preview:MovieClip;
+      private var components:Object;
+      private var _settings:PlayLoaderSettings;
    }
 }

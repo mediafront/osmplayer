@@ -25,24 +25,24 @@
  */
 package com.mediafront.display.menu.menuitem
 {
-	import com.mediafront.plugin.SkinablePlugin;
-	import com.mediafront.utils.Settings;	
-	import com.mediafront.utils.MenuSettings;
-	
-	import flash.display.MovieClip;
-	
-	public class Embed extends SkinablePlugin
-	{		
-		public override function loadSettings( _settings:Settings ) : void
-		{
-			super.loadSettings( new MenuSettings( _settings ) );
-			super.loadSkin( settings.embed );						
-		}
-		
-		public override function initialize( comps:Object ) : void
-		{
-			super.initialize( comps );
-			components.menu.registerMenuItem( "Embed", this );
-		}
-	}
+   import com.mediafront.plugin.SkinablePlugin;
+   import com.mediafront.utils.Settings;  
+   import com.mediafront.utils.MenuSettings;
+   
+   import flash.display.MovieClip;
+   
+   public class Embed extends SkinablePlugin
+   {     
+      public override function loadSettings( _settings:Settings ) : void
+      {
+         super.loadSettings( new MenuSettings( _settings ) );
+         super.loadSkin( settings.embed );                  
+      }
+      
+      public override function initialize( comps:Object ) : void
+      {
+         super.initialize( comps );
+         components.menu.registerMenuItem( "Embed", this );
+      }
+   }
 }
