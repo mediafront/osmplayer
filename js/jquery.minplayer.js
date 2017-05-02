@@ -244,7 +244,7 @@
          this.loaded = false;
          this.ready = false;
          
-         this.createMedia = function( videoFile ) {
+         this.createMedia = function( videoFile, preview ) {
             this.videoFile = videoFile;
             this.ready = false;
             var playerId = (options.id + "_media");
@@ -471,6 +471,7 @@
          var _this = this;
          this.volume = 0;
          this.player = null;
+         this.preview = '';
          this.reflowInterval = null;
          this.updateInterval = null;
          this.progressInterval = null;
@@ -618,7 +619,7 @@
                   
                   if( this.player ) {
                      // Create our media player.                     
-                     this.player.createMedia( file ); 
+                     this.player.createMedia( file, this.preview );
                      
                      // Reflow the player if it does not show up.
                      this.startReflow();
@@ -934,6 +935,7 @@
          var _this = this;
          this.player = null;
          this.videoFile = null;
+         this.preview = '';
          this.ready = false;
          
          // Translate the messages.
@@ -947,8 +949,9 @@
             "mediaMeta":"meta"        
          };
          
-         this.createMedia = function( videoFile ) {
+         this.createMedia = function( videoFile, preview ) {
             this.videoFile = videoFile;
+            this.preview = preview;
             this.ready = false;
             var playerId = (settings.id + "_media");            
             var rand = Math.floor(Math.random() * 1000000); 
@@ -1060,6 +1063,7 @@
                config:"config",
                id:"mediafront_player",
                file:this.videoFile.path,
+               image:this.preview,
                skin:settings.skin
             };
             if( this.videoFile.stream ) {
@@ -1117,7 +1121,7 @@
          this.mediaType = "";    
          
          // Create a new HTML5 player.
-         this.createMedia = function( mediaFile ) {
+         this.createMedia = function( mediaFile, preview ) {
             // Remove any previous Flash players.
             jQuery.media.utils.removeFlash( this.display, options.id + "_media" );
             this.display.children().remove();    
@@ -1613,6 +1617,11 @@
          this.loadImage = function( image ) {
             if( this.preview ) {
                this.preview.loadImage( image );
+
+               // Now set the preview image in the media player.
+               if( this.media ) {
+                  this.media.preview = image;
+               }
             }
          };
          
@@ -1719,7 +1728,7 @@
          this.bytesTotal = 0;
          this.currentVolume = 1;
          
-         this.createMedia = function( videoFile ) {
+         this.createMedia = function( videoFile, preview ) {
             this.videoFile = videoFile;
             this.ready = false;
             var playerId = (options.id + "_media");
@@ -1893,7 +1902,7 @@
          this.loaded = false;
          this.ready = false;
          
-         this.createMedia = function( videoFile ) {
+         this.createMedia = function( videoFile, preview ) {
             this.videoFile = videoFile;
             this.ready = false;
             var playerId = (options.id + "_media");            
