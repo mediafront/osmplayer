@@ -60,7 +60,7 @@
          this.bytesTotal = 0;
          this.currentVolume = 1;
          
-         this.createMedia = function( videoFile ) {
+         this.createMedia = function( videoFile, preview ) {
             this.videoFile = videoFile;
             this.ready = false;
             var playerId = (options.id + "_media");

@@ -40,7 +40,7 @@
          this.loaded = false;
          this.ready = false;
          
-         this.createMedia = function( videoFile ) {
+         this.createMedia = function( videoFile, preview ) {
             this.videoFile = videoFile;
             this.ready = false;
             var playerId = (options.id + "_media");
