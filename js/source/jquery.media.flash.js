@@ -75,7 +75,6 @@
                config:settings.config,
                id:settings.id,
                file:videoFile.path,
-               image:preview,
                skin:settings.skin,
                autostart:settings.autostart
             };
