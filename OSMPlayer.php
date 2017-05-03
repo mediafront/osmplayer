@@ -428,7 +428,7 @@ class OSMPlayer
       }
 
       // Now make sure the directory has the right permissions.
-      chmod( $dir, 0775 );
+      @chmod( $dir, 0775 );
 
       // Store the template and theme names.
       $template = $this->settings['template'];
@@ -463,7 +463,7 @@ class OSMPlayer
          }
 
          // Now set the file permissions to 775.
-         chmod( $file, 0775 );
+         @chmod( $file, 0775 );
       }
    }
 
