@@ -1,7 +1,6 @@
 <?php
    include("OSMPlayer.php");
    $player = new OSMPlayer(array(
-      'debug' => true,
       'playlist' => 'playlist.xml'
    ));
 ?>
