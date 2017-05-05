@@ -26,8 +26,9 @@
  */
 if( class_exists('Template') != TRUE ) {
   $base_path = trim( str_replace( realpath('.'), '', dirname(__FILE__)), '/' );
-  $base_path = trim(str_replace('\\', '/', $base_path), '/');
+  $base_path = trim( str_replace('\\', '/', $base_path), '/' );
   $base_path = str_replace('/templates/default', '', $base_path);
+  $base_path = $base_path ? $base_path : '../..';
   require_once( $base_path . '/OSMTemplate.php');
 
   class Template extends OSMTemplate {
