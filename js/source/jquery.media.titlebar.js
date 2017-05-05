@@ -29,7 +29,9 @@
    });     
    
    jQuery.fn.mediatitlebar = function( settings ) { 
-      if( this.length === 0 ) { return null; }
+      if( this.length === 0 ) {
+         return null;
+      }
       return new (function( titleBar, settings ) {        
          // Save the jQuery display.
          var _this = this;
@@ -43,7 +45,10 @@
             $(this).medialink( settings, function( event ) {
                event.preventDefault(); 
                _this.display.trigger( event.data.id );               
-            }, {id:linkId.substr(1), obj:$(this)} );           
+            }, {
+               id:linkId.substr(1),
+               obj:$(this)
+               } );
          });
       })( this, settings );
    };

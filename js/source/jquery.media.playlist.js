@@ -41,7 +41,9 @@
    });   
    
    jQuery.fn.mediaplaylist = function( server, settings ) {
-      if( this.length === 0 ) { return null; }
+      if( this.length === 0 ) {
+         return null;
+      }
       return new (function( server, playlist, settings ) {
          settings = jQuery.media.utils.getSettings(settings);
          
@@ -122,7 +124,10 @@
                }
                
                // Resize the busy symbol.
-               this.busy.css({width:this.width, height:this.height});
+               this.busy.css({
+                  width:this.width,
+                  height:this.height
+                  });
                this.busyImg.css({
                   marginLeft:((this.width - this.busyWidth)/2) + "px", 
                   marginTop:((this.height - this.busyHeight)/2) + "px" 
@@ -143,7 +148,9 @@
          // Handler for the loadpage event.         
          this.pager.display.bind( "loadpage", function( event, data ) {
             _this.setActive = data.active;
-            _this.loadPlaylist( {pageIndex:data.index} );
+            _this.loadPlaylist( {
+               pageIndex:data.index
+               } );
          });
 
          // Handler for when a link is clicked.
@@ -157,16 +164,19 @@
             var newArgs = [];
             newArgs[index] = link.arg;
             this.pager.reset();
-            this.loadPlaylist( {playlist:newPlaylist, args:newArgs} );           
+            this.loadPlaylist( {
+               playlist:newPlaylist,
+               args:newArgs
+            } );
          };
 
          // Function to load the playlist.
          this.loadPlaylist = function( _args ) {
             var defaults = {
-                  playlist:settings.playlist,
-                  pageLimit:settings.pageLimit,
-                  pageIndex:this.pager.activePage,
-                  args:{}
+               playlist:settings.playlist,
+               pageLimit:settings.pageLimit,
+               pageIndex:this.pager.activePage,
+               args:{}
             };          
 
             var playlistArgs = jQuery.extend( {}, defaults, _args );
@@ -314,7 +324,7 @@
 
             // Set the current active teaser to false.
             if( this.selectedTeaser ) {
-              this.selectedTeaser.setSelected( false );
+               this.selectedTeaser.setSelected( false );
             }
             
             // Store the active teaser for next time.                                   
@@ -336,7 +346,7 @@
             
             // Set the current active teaser to false.
             if( this.activeTeaser ) {
-              this.activeTeaser.setActive( false );
+               this.activeTeaser.setActive( false );
             }
             
             // Store the active teaser for next time.                                   

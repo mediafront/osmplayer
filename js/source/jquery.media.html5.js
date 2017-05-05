@@ -46,13 +46,41 @@
             this.display.append( html );
             this.player = this.display.find('#' + playerId).eq(0)[0];
 
-            this.player.addEventListener( "abort", function() { onUpdate( {type:"stopped"} ); }, true);
-            this.player.addEventListener( "loadstart", function() { onUpdate( {type:"ready"} ); }, true);
-            this.player.addEventListener( "loadedmetadata", function() { onUpdate( {type:"meta"} ); }, true);
-            this.player.addEventListener( "ended", function() { onUpdate( {type:"complete"} ); }, true);
-            this.player.addEventListener( "pause", function() { onUpdate( {type:"paused"} ); }, true);
-            this.player.addEventListener( "play", function() { onUpdate( {type:"playing"} ); }, true);
-            this.player.addEventListener( "error", function() { onUpdate( {type:"error"} ); }, true);
+            this.player.addEventListener( "abort", function() {
+               onUpdate( {
+                  type:"stopped"
+               } );
+            }, true);
+            this.player.addEventListener( "loadstart", function() {
+               onUpdate( {
+                  type:"ready"
+               } );
+            }, true);
+            this.player.addEventListener( "loadedmetadata", function() {
+               onUpdate( {
+                  type:"meta"
+               } );
+            }, true);
+            this.player.addEventListener( "ended", function() {
+               onUpdate( {
+                  type:"complete"
+               } );
+            }, true);
+            this.player.addEventListener( "pause", function() {
+               onUpdate( {
+                  type:"paused"
+               } );
+            }, true);
+            this.player.addEventListener( "play", function() {
+               onUpdate( {
+                  type:"playing"
+               } );
+            }, true);
+            this.player.addEventListener( "error", function() {
+               onUpdate( {
+                  type:"error"
+               } );
+            }, true);
             
             // Now add the event for getting the progress indication.
             this.player.addEventListener( "progress", function( event ) {
@@ -63,7 +91,9 @@
             this.player.autoplay = true;
             this.player.autobuffer = true;   
             
-            onUpdate( {type:"playerready"} );
+            onUpdate( {
+               type:"playerready"
+            } );
          };      
          
          // Load new media into the HTML5 player.
@@ -125,12 +155,20 @@
          
          // Not implemented yet...
          this.setQuality = function( quality ) {};         
-         this.getQuality = function() { return ""; };
-         this.hasControls = function() { return false; };            
+         this.getQuality = function() {
+            return "";
+         };
+         this.hasControls = function() {
+            return false;
+         };
          this.showControls = function(show) {};          
          this.setSize = function( newWidth, newHeight ) {};           
-         this.getEmbedCode = function() { return "This media cannot be embedded."; };        
-         this.getMediaLink = function() { return "This media currently does not have a link."; };                
+         this.getEmbedCode = function() {
+            return "This media cannot be embedded.";
+         };
+         this.getMediaLink = function() {
+            return "This media currently does not have a link.";
+         };
       })( this, options, onUpdate );
    };
 })(jQuery);         

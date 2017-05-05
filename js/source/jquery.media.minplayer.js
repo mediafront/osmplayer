@@ -50,7 +50,9 @@
    });    
    
    jQuery.fn.minplayer = function( settings ) {
-      if( this.length === 0 ) { return null; }
+      if( this.length === 0 ) {
+         return null;
+      }
       return new (function( player, settings ) {
          // Get the settings.
          settings = jQuery.media.utils.getSettings(settings);
@@ -184,10 +186,10 @@
          // Handle when the preview image loads.
          this.onPreviewLoaded = function() {
             this.previewVisible = true;
-            // If we don't have any media, then we will assume that they 
-            // just want an image viewer.  Trigger a complete event after the timeout
-            // interval.
-            /* Doesn't quite work... need to investigate further.
+         // If we don't have any media, then we will assume that they
+         // just want an image viewer.  Trigger a complete event after the timeout
+         // interval.
+         /* Doesn't quite work... need to investigate further.
             if( !this.hasMedia ) {
                setTimeout( function() {
                   _this.display.trigger("mediaupdate", {type:"complete"});
@@ -289,14 +291,20 @@
                }           
                
                // Resize the busy symbol.
-               this.busy.css({width:this.width, height:this.height});
+               this.busy.css({
+                  width:this.width,
+                  height:this.height
+                  });
                this.busyImg.css({
                   marginLeft:((this.width - this.busyWidth)/2) + "px", 
                   marginTop:((this.height - this.busyHeight)/2) + "px" 
                });
 
                // Resize the play symbol.
-               this.play.css({width:this.width, height:this.height});
+               this.play.css({
+                  width:this.width,
+                  height:this.height
+                  });
                this.playImg.css({
                   marginLeft:((this.width - this.playWidth)/2) + "px", 
                   marginTop:((this.height - this.playHeight)/2) + "px" 
@@ -304,7 +312,10 @@
                
                // Resize the media.
                if( this.media ) {
-                  this.media.display.css({width:this.width, height:this.height});
+                  this.media.display.css({
+                     width:this.width,
+                     height:this.height
+                     });
                   this.media.setSize( this.width, this.height );
                }
             }
@@ -338,7 +349,10 @@
          if( this.media ) {
             this.display.prepend('<div class="medialogo"></div>');
             this.logo = this.display.find(".medialogo").mediaimage( settings.link );
-            this.logo.display.css({position:"absolute", zIndex:10000});
+            this.logo.display.css({
+               position:"absolute",
+               zIndex:10000
+            });
             this.logo.width = settings.logoWidth;
             this.logo.height = settings.logoHeight;
             this.logo.loadImage( settings.logo );
@@ -351,7 +365,10 @@
                var mediaLeft = parseInt(this.media.display.css("marginLeft"), 0);
                var marginTop = (settings.logopos=="se" || settings.logopos=="sw") ? (mediaTop + this.height - this.logo.height - settings.logoy) : mediaTop + settings.logoy;
                var marginLeft = (settings.logopos=="ne" || settings.logopos=="se") ? (mediaLeft + this.width - this.logo.width - settings.logox) : mediaLeft + settings.logox;
-               this.logo.display.css({marginTop:marginTop,marginLeft:marginLeft});
+               this.logo.display.css({
+                  marginTop:marginTop,
+                  marginLeft:marginLeft
+               });
             }            
          };
 

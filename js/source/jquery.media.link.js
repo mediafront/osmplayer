@@ -25,7 +25,9 @@
  */
 (function($) { 
    jQuery.fn.medialink = function( settings, onClick, data ) { 
-      data = data ? data : {noargs:true};
+      data = data ? data : {
+         noargs:true
+      };
       return new (function( link, settings, onClick, data ) {
          var _this = this;
          this.display = link;     

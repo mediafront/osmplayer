@@ -57,7 +57,7 @@
                   _this.player = obj; 
                   _this.loadPlayer();  
                }
-            );
+               );
          };      
          
          this.getId = function( path ) {
@@ -71,7 +71,9 @@
                this.videoFile = videoFile;
                
                // Let them know the player is ready.          
-               onUpdate( {type:"playerready"} );                 
+               onUpdate( {
+                  type:"playerready"
+               } );
                
                // Load our video.
                this.player.loadVideoById( this.getId( this.videoFile.path ), 0 );
@@ -106,7 +108,9 @@
                this.player.addEventListener('onPlaybackQualityChange', options.id + 'QualityChange');
                
                // Let them know the player is ready.          
-               onUpdate( {type:"playerready"} );                
+               onUpdate( {
+                  type:"playerready"
+               } );
                
                // Load our video.
                this.player.loadVideoById( this.getId( this.videoFile.path ), 0 );  
@@ -116,14 +120,18 @@
          // Called when the YouTube player state changes.
          this.onStateChange = function( newState ) {
             var playerState = this.getPlayerState( newState );
-            onUpdate( {type:playerState} ); 
+            onUpdate( {
+               type:playerState
+            } );
             
             if( !this.loaded && playerState == "playing" ) {
                // Set this player to loaded.
                this.loaded = true;
                
                // Update our meta data.
-               onUpdate( {type:"meta"} );                   
+               onUpdate( {
+                  type:"meta"
+               } );
             }          
          };
          
@@ -138,29 +146,41 @@
                errorText = "The video requested does not allow playback in an embedded player.";
             }
             console.log(errorText);
-            onUpdate( {type:"error", data:errorText} );            
+            onUpdate( {
+               type:"error",
+               data:errorText
+            } );
          };
          
          // Translates the player state for the YouTube API player.
          this.getPlayerState = function( playerState ) {
             switch (playerState) {
-               case 5:  return 'ready';
-               case 3:  return 'buffering';
-               case 2:  return 'paused';
-               case 1:  return 'playing';
-               case 0:  return 'complete';
-               case -1: return 'stopped';
-               default: return 'unknown';
+               case 5:
+                  return 'ready';
+               case 3:
+                  return 'buffering';
+               case 2:
+                  return 'paused';
+               case 1:
+                  return 'playing';
+               case 0:
+                  return 'complete';
+               case -1:
+                  return 'stopped';
+               default:
+                  return 'unknown';
             }
             return 'unknown';
          };                  
          
          this.setSize = function( newWidth, newHeight ) {                
-            //this.player.setSize(newWidth, newHeight);
+         //this.player.setSize(newWidth, newHeight);
          };           
          
          this.playMedia = function() {
-            onUpdate({type:"buffering"});
+            onUpdate({
+               type:"buffering"
+            });
             this.player.playVideo();
          };
          
@@ -173,7 +193,9 @@
          };
          
          this.seekMedia = function( pos ) {
-            onUpdate({type:"buffering"});
+            onUpdate({
+               type:"buffering"
+            });
             this.player.seekTo( pos, true );           
          };
          
@@ -217,7 +239,9 @@
             return this.player.getVideoBytesTotal();
          };  
          
-         this.hasControls = function() { return false; };            
+         this.hasControls = function() {
+            return false;
+         };
          this.showControls = function(show) {};           
       })( this, options, onUpdate );
    };

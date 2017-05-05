@@ -33,7 +33,9 @@
    });  
 
    jQuery.fn.mediarotator = function( settings ) {
-      if( this.length === 0 ) { return null; }
+      if( this.length === 0 ) {
+         return null;
+      }
       return new (function( rotator, settings ) {
          settings = jQuery.media.utils.getSettings(settings);   
          var _this = this;     
@@ -46,10 +48,16 @@
          this.onImageLoaded = function() {
             this.width = this.images[0].imgLoader.width;
             this.height = this.images[0].imgLoader.height;
-            rotator.css({width:this.width + "px", height:this.height + "px"});
+            rotator.css({
+               width:this.width + "px",
+               height:this.height + "px"
+               });
             var sliderWidth = (settings.rotatorTransition == "hscroll") ? (2*this.width) : this.width;
             var sliderHeight = (settings.rotatorTransition == "vscroll") ? (2*this.height) : this.height;
-            this.display.css({width:sliderWidth, height:sliderHeight});      
+            this.display.css({
+               width:sliderWidth,
+               height:sliderHeight
+            });
          };
          
          this.addImage = function() {
@@ -57,10 +65,17 @@
             this.display.append( image.display );
             
             if( (settings.rotatorTransition == "hscroll") || (settings.rotatorTransition == "vscroll") ) {
-               image.display.css({"float":"left"});
+               image.display.css({
+                  "float":"left"
+               });
             }
             else {
-               image.display.css({position:"absolute",zIndex:(200 - this.images.length), top:0, left:0});
+               image.display.css({
+                  position:"absolute",
+                  zIndex:(200 - this.images.length),
+                  top:0,
+                  left:0
+               });
             }
             return image;         
          };
@@ -110,7 +125,10 @@
                image.fadeIn(settings.rotatorSpeed);
             }
             else {
-               image.css({marginLeft:0, marginTop:0}).show();
+               image.css({
+                  marginLeft:0,
+                  marginTop:0
+               }).show();
             }    
          };
          
@@ -120,14 +138,22 @@
                   image.fadeOut(settings.rotatorSpeed);
                   break;
                case "hscroll":
-                  image.animate({marginLeft:-this.width}, settings.rotatorSpeed, settings.rotatorEasing, function() {
-                     image.css({marginLeft:0}).remove();
+                  image.animate({
+                     marginLeft:-this.width
+                     }, settings.rotatorSpeed, settings.rotatorEasing, function() {
+                     image.css({
+                        marginLeft:0
+                     }).remove();
                      _this.display.append( image );
                   });
                   break;             
                case "vscroll":
-                  image.animate({marginTop:-this.height}, settings.rotatorSpeed, settings.rotatorEasing, function() {
-                     image.css({marginTop:0}).remove();
+                  image.animate({
+                     marginTop:-this.height
+                     }, settings.rotatorSpeed, settings.rotatorEasing, function() {
+                     image.css({
+                        marginTop:0
+                     }).remove();
                      _this.display.append( image );
                   });
                   break;                                            
@@ -151,6 +177,6 @@
          if( _images.length ) {
             this.loadImages( _images );
          }
-    })( this, settings );
-  };
+      })( this, settings );
+   };
 })(jQuery);

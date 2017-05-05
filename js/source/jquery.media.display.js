@@ -38,7 +38,9 @@
    }); 
 
    jQuery.fn.mediadisplay = function( settings ) {  
-      if( this.length === 0 ) { return null; }
+      if( this.length === 0 ) {
+         return null;
+      }
       return new (function( mediaWrapper, settings ) {
          settings = jQuery.media.utils.getSettings( settings ); 
          this.display = mediaWrapper;
@@ -98,7 +100,10 @@
             this.height = newHeight ? newHeight : this.height;
             
             // Set the width and height of this media region.
-            this.display.css({height:this.height + "px", width:this.width + "px"});  
+            this.display.css({
+               height:this.height + "px",
+               width:this.width + "px"
+               });
             
             // Now resize the player.
             if( this.playerReady && this.width && this.height ) {
@@ -208,14 +213,18 @@
                this.mediaFile = file;
                
                // Send out an update about the initialize.
-               this.onMediaUpdate({type:"initialize"});        
+               this.onMediaUpdate({
+                  type:"initialize"
+               });
             }
          };    
 
          // Returns a media file object.
          this.getMediaFile = function( file ) {
             var mFile = {};
-            file = (typeof file === "string") ? {path:file} : file;
+            file = (typeof file === "string") ? {
+               path:file
+            } : file;
             mFile.duration = file.duration ? file.duration : 0;
             mFile.bytesTotal = file.bytesTotal ? file.bytesTotal : 0;
             mFile.quality = file.quality ? file.quality : 0;
@@ -252,7 +261,7 @@
                case "mp3":
                   return this.playTypes.mp3 ? "html5" : "flash";
                   
-               case "swf":case "flv":case "f4v":case "mov":case "3g2":case "m4a":case "aac":case "wav":case "aif":case "wma":            
+               case "swf":case "flv":case "f4v":case "mov":case "3g2":case "m4a":case "aac":case "wav":case "aif":case "wma":
                   return "flash"; 
                    
                default:
@@ -367,9 +376,13 @@
 
          this.reflowPlayer = function() {
             var _marginLeft = parseInt( this.display.css("marginLeft"), 10 );
-            this.display.css({marginLeft:(_marginLeft+1)});
+            this.display.css({
+               marginLeft:(_marginLeft+1)
+               });
             setTimeout( function() {
-                _this.display.css({marginLeft:_marginLeft});
+               _this.display.css({
+                  marginLeft:_marginLeft
+               });
             }, 1 );
          };
 
@@ -385,7 +398,9 @@
             if( this.playerReady ) {
                clearInterval( this.progressInterval );
                this.progressInterval = setInterval( function() {
-                  _this.onMediaUpdate( {type:"progress"} );
+                  _this.onMediaUpdate( {
+                     type:"progress"
+                  } );
                }, 500 ); 
             }        
          };
@@ -395,7 +410,9 @@
                clearInterval( this.updateInterval );
                this.updateInterval = setInterval( function() {
                   if( _this.playerReady ) {
-                     _this.onMediaUpdate( {type:"update"} );
+                     _this.onMediaUpdate( {
+                        type:"update"
+                     } );
                   }
                }, 1000 );   
             }

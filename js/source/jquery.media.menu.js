@@ -35,7 +35,9 @@
    });   
    
    jQuery.fn.mediamenu = function( server, settings ) {  
-      if( this.length === 0 ) { return null; }
+      if( this.length === 0 ) {
+         return null;
+      }
       return new (function( server, menu, settings ) {
          settings = jQuery.media.utils.getSettings(settings);  
          var _this = this;
@@ -44,7 +46,11 @@
          this.on = false;
          
          this.contents = [];
-         this.prevItem = {id:0, link:null, contents:null};
+         this.prevItem = {
+            id:0,
+            link:null,
+            contents:null
+         };
          
          this.close = this.display.find( settings.ids.close );
          this.close.bind( "click", function() {
@@ -58,7 +64,11 @@
                }
                var contents = this.contents[itemId];
                settings.template.onMenuSelect( link, contents, true );
-               this.prevItem = {id:itemId, link:link, contents:contents};
+               this.prevItem = {
+                  id:itemId,
+                  link:link,
+                  contents:contents
+               };
             }
          };         
          
@@ -97,7 +107,10 @@
                settings.template.onMenuOut( event.data );   
             });
             
-            link.bind("click", {id:linkId, obj:$(this)}, function( event ) {
+            link.bind("click", {
+               id:linkId,
+               obj:$(this)
+               }, function( event ) {
                event.preventDefault(); 
                _this.setMenuItem( event.data.obj, event.data.id );
             });
