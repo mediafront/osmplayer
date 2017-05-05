@@ -85,11 +85,11 @@ class OSMPlayer {
        $base_url .= "/$dir";
     }
 
-    $base_path = isset($params['base_path']) ? $params['base_path'] : trim( str_replace( realpath('.'), '', dirname(__FILE__)), '/' );
+    $base_path = isset($_params['base_path']) ? $_params['base_path'] : trim( str_replace( realpath('.'), '', dirname(__FILE__)), '/' );
     $this->settings['base_path'] = trim(str_replace('\\', '/', $base_path), '/');
-    $this->settings['base_url'] = isset($params['base_url']) ? $params['base_url'] : $base_url . '/' . $this->settings['base_path'];
+    $this->settings['base_url'] = isset($_params['base_url']) ? $_params['base_url'] : $base_url . '/' . $this->settings['base_path'];
     $this->settings['playerurl'] = $this->settings['base_url'];
-
+    
     // Set the correct flash player and logo url path.
     if( $_SERVER['HTTP_HOST'] ) {
       $this->settings['flashplayer'] = isset($_params['flashplayer']) ? $_params['flashplayer'] : ($this->settings['base_url'] . '/flash/mediafront.swf');
