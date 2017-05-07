@@ -27,6 +27,11 @@
    jQuery.media = jQuery.media ? jQuery.media : {};
    
    // Set up our defaults for this component.
+   jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
+      volumeVertical:false                  
+   });   
+   
+   // Set up our defaults for this component.
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
       currentTime:"#mediacurrenttime",
       totalTime:"#mediatotaltime",
@@ -99,7 +104,19 @@
          this.allowResize = true;
          this.currentTime = controlBar.find( settings.ids.currentTime ).text( zeroTime.time );
          this.totalTime = controlBar.find( settings.ids.totalTime ).text( zeroTime.time );
-         
+
+         // Allow them to attach custom links to the control bar that perform player functions.
+         this.display.find("a.mediaplayerlink").each( function() {
+            var linkId = $(this).attr("href");
+            $(this).medialink( settings, function( event ) {
+               event.preventDefault();
+               _this.display.trigger( event.data.id );
+            }, {
+               id:linkId.substr(1),
+               obj:$(this)
+            } );
+         });
+
          // Set up the play pause button.
          this.playPauseButton = controlBar.find( settings.ids.playPause ).medialink( settings, function( event, target ) {
             _this.playState = !_this.playState;
@@ -129,19 +146,31 @@
             this.currentTime.text( this.formatTime( value * this.duration ).time );
          };
          
+         this.setVolume = function( vol ) {
+            if( this.volumeBar ) {
+               var pos = (vol * this.volumeBar.trackSize);
+               if( settings.volumeVertical ) {
+                  this.volumeUpdate.css( {"height":(pos + "px"), "margin-top":(-pos + "px")} );
+               }
+               else {
+                  this.volumeUpdate.css( "width", pos + "px" );
+               }  
+            }
+         };
+         
          // Set up the volume bar.
          this.volumeUpdate = controlBar.find( settings.ids.volumeUpdate );
-         this.volumeBar = controlBar.find( settings.ids.volumeBar ).mediaslider( settings.ids.volumeHandle, false );
+         this.volumeBar = controlBar.find( settings.ids.volumeBar ).mediaslider( settings.ids.volumeHandle, settings.volumeVertical );
          if( this.volumeBar ) {
             this.volumeBar.display.bind("setvalue", function( event, data ) {
-               _this.volumeUpdate.css( "width", (data * _this.volumeBar.trackSize) + "px" );
+               _this.setVolume( data );
                _this.display.trigger( "controlupdate", {
                   type:"volume",
                   value:data
                });
             });
             this.volumeBar.display.bind("updatevalue", function( event, data ) {
-               _this.volumeUpdate.css( "width", (data * _this.volumeBar.trackSize) + "px" );
+               _this.setVolume( data );
                _this.volume = data;
             });
          }
@@ -188,12 +217,16 @@
                   break;
                case "progress":
                   this.percentLoaded = data.percentLoaded;
-                  this.seekProgress.css( "width", (this.percentLoaded * this.seekBar.trackSize) + "px" );
+                  if( this.seekProgress ) {
+                     this.seekProgress.css( "width", (this.percentLoaded * this.seekBar.trackSize) + "px" );
+                  }
                   break;
                case "meta":
                case "update":
                   this.timeUpdate( data.currentTime, data.totalTime );
-                  this.volumeBar.updateValue( data.volume );
+                  if( this.volumeBar ) {
+                     this.volumeBar.updateValue( data.volume );
+                  }
                   break;
                default:
                   break;

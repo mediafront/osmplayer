@@ -48,7 +48,7 @@
             }, {
                id:linkId.substr(1),
                obj:$(this)
-               } );
+            } );
          });
       })( this, settings );
    };
