@@ -98,7 +98,6 @@ class OSMPlayer {
     }
 
     // Create our template.
-    $base_path = $base_path ? $base_path : '../..';
     $templateClass = ucfirst( $this->settings['template'] ) . 'Template';
     include "templates/" . $this->settings['template'] . "/template.php";
     $this->template = new $templateClass( $this->settings );
