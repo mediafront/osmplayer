@@ -43,7 +43,7 @@
 }
 
 #mediascrollbar, #mediascrollbarwrapper {
-   width:18px;   
+   width:18px;  
 }
 
 #mediascrollhandle {
@@ -66,21 +66,19 @@
 }
 
 .hmediascrollleft {
-   float:left;	
+   float:left;
 }
 
 .hmediascrollbar {
-   margin-left:19px;
+   float:left;
 }
 
 .hmediascrollup {
    float:left;
-   margin-right:1px;
 }
 
 .hmediascrolldown {
    float:right;
-   margin-left:1px;   
 }
 
 #medialist, #mediaplaypause, #mediamute, #mediamenuclose {
