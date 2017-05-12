@@ -103,7 +103,7 @@
             this.display.css({
                height:this.height + "px",
                width:this.width + "px"
-               });
+            });
             
             // Now resize the player.
             if( this.playerReady && this.width && this.height ) {
@@ -375,14 +375,28 @@
          };
 
          this.reflowPlayer = function() {
-            var _marginLeft = parseInt( this.display.css("marginLeft"), 10 );
+            // Store the CSS state before the reflow...
+            var displayCSS = {
+               marginLeft:parseInt( this.display.css("marginLeft"), 10 ),
+               height:this.display.css("height")
+            };
+
+            // Is the margin-left positive?
+            var isPositive = (displayCSS.marginLeft >=0);
+
+            // Now reflow the player by setting the margin-left value.  If the player
+            // has a margin-left value ( typically means it is off the screen ), then
+            // we need to give it a positive CSS value to trigger a reflow event.
             this.display.css({
-               marginLeft:(_marginLeft+1)
-               });
+               marginLeft:(isPositive ? (displayCSS.marginLeft+1) : 0),
+               height:(isPositive ? displayCSS.height : 0)
+            });
+
+            // Now set a timeout to set everything back 1ms later.
             setTimeout( function() {
-               _this.display.css({
-                  marginLeft:_marginLeft
-               });
+
+               // Restore the display state.
+               _this.display.css(displayCSS);
             }, 1 );
          };
 
