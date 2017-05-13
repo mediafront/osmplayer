@@ -240,13 +240,19 @@
                value:state
             });
          };
-         
+
+         this.setProgress = function( percent ) {
+            if( this.seekProgress ) {
+               this.seekProgress.css( "width", (percent * (this.seekBar.trackSize + this.seekBar.handleSize)) + "px" );
+            }
+         };
+
          this.onResize = function( deltaX, deltaY ) {
             if( this.allowResize ) {
                if( this.seekBar ) {
                   this.seekBar.onResize( deltaX, deltaY );
                }
-               this.seekProgress.css( "width", (this.percentLoaded * this.seekBar.trackSize) + "px" );
+               this.setProgress( this.percentLoaded );
             }
          };
          
@@ -267,9 +273,7 @@
                   break;
                case "progress":
                   this.percentLoaded = data.percentLoaded;
-                  if( this.seekProgress ) {
-                     this.seekProgress.css( "width", (this.percentLoaded * this.seekBar.trackSize) + "px" );
-                  }
+                  this.setProgress( this.percentLoaded );
                   break;
                case "meta":
                case "update":
@@ -619,35 +623,7 @@
             // Make sure that all parents have overflow visible so that
             // browser full screen will always work.
             this.display.parents().css("overflow", "visible");
-         }
-
-         this.checkPlayType = function( elem, playType ) {
-            if( (typeof elem.canPlayType) == 'function' ) { 
-               return ("no" != elem.canPlayType(playType)) && ("" != elem.canPlayType(playType));
-            }
-            else {
-               return false;   
-            }
-         };
-         
-         // Get all the types of media that this browser can play.
-         this.getPlayTypes = function() {
-            var types = {};
-            
-            // Check for video types...
-            var elem = document.createElement("video");
-            types.ogg  = this.checkPlayType( elem, "video/ogg");  
-            types.h264  = this.checkPlayType( elem, "video/mp4");
-            types.webm = this.checkPlayType( elem, "video/x-webm");
-               
-            // Now check for audio types...
-            elem = document.createElement("audio");
-            types.audioOgg = this.checkPlayType( elem, "audio/ogg");
-            types.mp3 = this.checkPlayType( elem, "audio/mpeg");  
-                            
-            return types;            
-         };
-         this.playTypes = this.getPlayTypes();    
+         }   
          
          // Set the size of this media display region.
          this.setSize = function( newWidth, newHeight ) {
@@ -685,14 +661,12 @@
          };
          
          // Adds a media file to the play queue.
-         this.addToQueue = function( file ) {
-            // Check to see if this file is an array... then we
-            // have several files to pick the best one to play.
-            if( (typeof file) == 'array' ) {
-               file = this.getPlayableMedia( file ); 
-            }
-            
+         this.addToQueue = function( file ) {            
             if( file ) {
+               if( file[0] ) {
+                  file = this.getPlayableMedia( file );
+               }
+
                this.playQueue.push( file );
             }
          };
@@ -703,7 +677,7 @@
             var mFile = null;
             var i = files.length;
             while(i--) {
-               var tempFile = this.getMediaFile( files[i] );
+               var tempFile = new jQuery.media.file( files[i], settings );
                if( !mFile || (tempFile.weight < mFile.weight) ) {
                   mFile = tempFile;
                }
@@ -733,7 +707,7 @@
          this.loadMedia = function( file ) {
             if( file ) {
                // Get the media file object.
-               file = this.getMediaFile( file );
+               file = new jQuery.media.file( file, settings );
                
                // Stop the current player.
                this.stopMedia();  
@@ -773,99 +747,6 @@
                });
             }
          };    
-
-         // Returns a media file object.
-         this.getMediaFile = function( file ) {
-            var mFile = {};
-            file = (typeof file === "string") ? {
-               path:file
-            } : file;
-            mFile.duration = file.duration ? file.duration : 0;
-            mFile.bytesTotal = file.bytesTotal ? file.bytesTotal : 0;
-            mFile.quality = file.quality ? file.quality : 0;
-            mFile.stream = settings.streamer ? settings.streamer : file.stream;
-            mFile.path = file.path ? jQuery.trim(file.path) : ( settings.baseURL + jQuery.trim(file.filepath) );
-            mFile.extension = file.extension ? file.extension : this.getFileExtension(mFile.path);
-            mFile.weight = file.weight ? file.weight : this.getWeight( mFile.extension );
-            mFile.player = file.player ? file.player : this.getPlayer(mFile.extension, mFile.path);
-            mFile.type = file.type ? file.type : this.getType(mFile.extension);
-            return mFile;       
-         };
-         
-         // Get the file extension.
-         this.getFileExtension = function( file ) {
-            return file.substring(file.lastIndexOf(".") + 1).toLowerCase();
-         };
-         
-         // Get the player for this media.
-         this.getPlayer = function( extension, path ) {
-            switch( extension )
-            {
-               case "ogg":case "ogv":
-                  return this.playTypes.ogg ? "html5" : "flash";
-               
-               case "mp4":case "m4v":
-                  return this.playTypes.h264 ? "html5" : "flash";               
-               
-               case "webm":
-                  return this.playTypes.webm ? "html5" : "flash";
-               
-               case "oga":
-                  return this.playTypes.audioOgg ? "html5" : "flash";
-                  
-               case "mp3":
-                  return this.playTypes.mp3 ? "html5" : "flash";
-                  
-               case "swf":case "flv":case "f4v":case "mov":case "3g2":case "m4a":case "aac":case "wav":case "aif":case "wma":
-                  return "flash"; 
-                   
-               default:
-                  if( extension.substring(0,3).toLowerCase() == "com" ) {
-                     // Is this a vimeo path...
-                     if( path.search(/^http(s)?\:\/\/(www\.)?vimeo\.com/i) == 0 ) {
-                        return "vimeo";
-                     }
-                     
-                     // This is a youtube path...
-                     else if( path.search(/^http(s)?\:\/\/(www\.)?youtube\.com/i) == 0 ) {
-                        return "youtube";
-                     }
-                  }
-            }           
-            return "";
-         };
-         
-         // Get the type of media this is...
-         this.getType = function( extension ) {
-            switch( extension ) {  
-               case"swf":case "webm":case "ogg":case "ogv":case "mp4":case "m4v":case "flv":case "f4v":case "mov":case "3g2":
-                  return "video";
-               case "oga":case "mp3":case "m4a":case "aac":case "wav":case "aif":case "wma":
-                  return "audio";
-            }
-         };
-
-         // Get the preference "weight" of this media type.  
-         // The lower the number, the higher the preference.
-         this.getWeight = function( extension ) {
-            switch( extension ) {  
-               case 'mp4':case 'm4v':case 'm4a':case'webm':
-                  return 5;
-               case 'ogg':case 'ogv':
-                  return this.playTypes.ogg ? 5 : 10;
-               case 'oga':
-                  return this.playTypes.audioOgg ? 5 : 10;               
-               case 'mp3':
-                  return 6;
-               case 'mov':case'swf':case 'flv':case 'f4v':case '3g2':
-                  return 7;
-               case 'wav':case 'aif':case 'aac':
-                  return 8;
-               case 'wma':
-                  return 9;
-                  
-            }
-         };
 
          this.onMediaUpdate = function( data ) {
             // Now trigger the media update message.
@@ -1232,6 +1113,206 @@
  *  THE SOFTWARE.
  */
 
+        
+   
+   // Checks the file type for browser compatibilty.
+   jQuery.media.checkPlayType = function( elem, playType ) {
+      if( (typeof elem.canPlayType) == 'function' ) { 
+         return ("no" != elem.canPlayType(playType)) && ("" != elem.canPlayType(playType));
+      }
+      else {
+         return false;   
+      }
+   };   
+   
+   // Get's all of the types that this browser can play.
+   jQuery.media.getPlayTypes = function() {
+      var types = {};
+      
+      // Check for video types...
+      var elem = document.createElement("video");
+      types.ogg  = jQuery.media.checkPlayType( elem, "video/ogg");  
+      types.h264  = jQuery.media.checkPlayType( elem, "video/mp4");
+      types.webm = jQuery.media.checkPlayType( elem, "video/x-webm");
+         
+      // Now check for audio types...
+      elem = document.createElement("audio");
+      types.audioOgg = jQuery.media.checkPlayType( elem, "audio/ogg");
+      types.mp3 = jQuery.media.checkPlayType( elem, "audio/mpeg");  
+                      
+      return types;      
+   };
+   
+   // The play types for the media player.
+   jQuery.media.playTypes = null;
+   
+   // The constructor for our media file object.
+   jQuery.media.file = function( file, settings ) {
+      // Only set the play types if it has not already been set.
+      if( !jQuery.media.playTypes ) {
+         jQuery.media.playTypes = jQuery.media.getPlayTypes();
+      }
+      
+      // Normalize the file object passed to this constructor.
+      file = (typeof file === "string") ? {
+         path:file
+      } : file;      
+      
+      // The duration of the media file.
+      this.duration = file.duration ? file.duration : 0;
+      this.bytesTotal = file.bytesTotal ? file.bytesTotal : 0;
+      this.quality = file.quality ? file.quality : 0;
+      this.stream = settings.streamer ? settings.streamer : file.stream;
+      this.path = file.path ? jQuery.trim(file.path) : ( settings.baseURL + jQuery.trim(file.filepath) );
+      this.extension = file.extension ? file.extension : this.getFileExtension();
+      this.weight = file.weight ? file.weight : this.getWeight( this.extension );
+      this.player = file.player ? file.player : this.getPlayer(this.extension, this.path);
+      this.mimetype = file.mimetype ? file.mimetype : this.getMimeType( this.extension );
+      this.type = file.type ? file.type : this.getType(this.extension);;      
+   };
+
+   // Get the file extension.
+   jQuery.media.file.prototype.getFileExtension = function() {
+      return this.path.substring(this.path.lastIndexOf(".") + 1).toLowerCase();
+   };
+   
+   // Get the player for this media.
+   jQuery.media.file.prototype.getPlayer = function() {
+      switch( this.extension )
+      {
+         case "ogg":case "ogv":
+            return jQuery.media.playTypes.ogg ? "html5" : "flash";
+         
+         case "mp4":case "m4v":
+            return jQuery.media.playTypes.h264 ? "html5" : "flash";               
+         
+         case "webm":
+            return jQuery.media.playTypes.webm ? "html5" : "flash";
+         
+         case "oga":
+            return jQuery.media.playTypes.audioOgg ? "html5" : "flash";
+            
+         case "mp3":
+            return jQuery.media.playTypes.mp3 ? "html5" : "flash";
+            
+         case "swf":case "flv":case "f4v":case "f4a":
+         case "mov":case "3g2":case "3gp":case "3gpp":
+         case "m4a":case "aac":case "wav":case "aif":
+         case "wma":
+            return "flash"; 
+             
+         default:
+            if( this.extension.substring(0,3).toLowerCase() == "com" ) {
+               // Is this a vimeo this.path...
+               if( this.path.search(/^http(s)?\:\/\/(www\.)?vimeo\.com/i) == 0 ) {
+                  return "vimeo";
+               }
+               
+               // This is a youtube path...
+               else if( this.path.search(/^http(s)?\:\/\/(www\.)?youtube\.com/i) == 0 ) {
+                  return "youtube";
+               }
+            }
+      }           
+      return "";
+   };
+   
+   // Get the type of media this is...
+   jQuery.media.file.prototype.getType = function() {
+      switch( this.extension ) {  
+         case"swf":case "webm":case "ogg":case "ogv":
+         case "mp4":case "m4v":case "flv":case "f4v":
+         case "mov":case "3g2":case "3gp":case "3gpp":
+            return "video";
+         case "oga":case "mp3":case "f4a":case "m4a":
+         case "aac":case "wav":case "aif":case "wma":
+            return "audio";
+      }
+   };
+
+   // Get the preference "weight" of this media type.  
+   // The lower the number, the higher the preference.
+   jQuery.media.file.prototype.getWeight = function() {
+      switch( this.extension ) {  
+         case 'mp4':case 'm4v':case 'm4a':
+            return jQuery.media.playTypes.h264 ? 3 : 7;
+         case'webm':
+            return jQuery.media.playTypes.webm ? 4 : 8;
+         case 'ogg':case 'ogv':
+            return jQuery.media.playTypes.ogg ? 5 : 20;
+         case 'oga':
+            return jQuery.media.playTypes.audioOgg ? 5 : 20;               
+         case 'mp3':
+            return 6;
+         case 'mov':case'swf':case 'flv':case 'f4v':
+         case 'f4a':case '3g2':case '3gp':case '3gpp':
+            return 9;
+         case 'wav':case 'aif':case 'aac':
+            return 10;
+         case 'wma':
+            return 11;
+            
+      }
+   };
+
+   // Return the best guess mime type for the given file.
+   jQuery.media.file.prototype.getMimeType = function() {
+      switch( this.extension ) {  
+         case 'mp4':case 'm4v':case 'flv':case 'f4v':
+            return 'video/mp4';
+         case'webm':
+            return 'video/x-webm';
+         case 'ogg':case 'ogv':
+            return 'video/ogg';
+         case '3g2':
+            return 'video/3gpp2';
+         case '3gpp':
+         case '3gp':
+            return 'video/3gpp';
+         case 'mov':
+            return 'video/quicktime';
+         case'swf':
+            return 'application/x-shockwave-flash';
+         case 'oga':
+            return 'audio/ogg';               
+         case 'mp3':
+            return 'audio/mpeg';
+         case 'm4a':case 'f4a':
+            return 'audio/mp4';                  
+         case 'aac':
+            return 'audio/aac';
+         case 'wav':
+            return 'audio/vnd.wave';
+         case 'wma':
+            return 'audio/x-ms-wma';        
+      }
+   };
+/**
+ *  Copyright (c) 2010 Alethia Inc,
+ *  http://www.alethia-inc.com
+ *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *
+ *  License:  GPL version 3.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+
    window.onFlashPlayerReady = function( id ) {
       jQuery.media.players[id].node.player.media.player.onReady();   
    };
@@ -1455,18 +1536,34 @@
          this.bytesTotal = 0;
          this.mediaType = "";    
          
+         this.getPlayer = function( mediaFile ) {
+            var playerId = options.id + '_' + this.mediaType;            
+            var html = '<' + this.mediaType + ' style="position:absolute" id="' + playerId + '"';
+            html += (this.mediaType == "video") ? ' width="' + this.display.width() + 'px" height="' + this.display.height() + 'px"' : '';
+            
+            if( typeof mediaFile === 'array' ) {
+               html += '>';
+               var i = mediaFile.length;
+               while( i-- ) {
+                  html += '<source src="' + mediaFile[i].path + '" type="' + mediaFile[i].mimetype + '">';
+               }
+            }
+            else {
+               html += ' src="' + mediaFile.path + '">Unable to display media.';
+            } 
+            
+            html += '</' + this.mediaType + '>';
+            this.display.append( html );
+            return this.display.find('#' + playerId).eq(0)[0];;           
+         };
+         
          // Create a new HTML5 player.
          this.createMedia = function( mediaFile, preview ) {
             // Remove any previous Flash players.
             jQuery.media.utils.removeFlash( this.display, options.id + "_media" );
             this.display.children().remove();    
-            this.mediaType = this.getMediaType( mediaFile.extension );            
-            var playerId = options.id + '_' + this.mediaType;     
-            var html = '<' + this.mediaType + ' style="position:absolute" id="' + playerId + '" src="' + mediaFile.path + '"';
-            html += (this.mediaType == "video") ? ' width="' + this.display.width() + 'px" height="' + this.display.height() + 'px"' : '';
-            html += '>Unable to display media.</' + this.mediaType + '>';
-            this.display.append( html );
-            this.player = this.display.find('#' + playerId).eq(0)[0];
+            this.mediaType = this.getMediaType( mediaFile );            
+            this.player = this.getPlayer( mediaFile );
 
             this.player.addEventListener( "abort", function() {
                onUpdate( {
@@ -1523,8 +1620,9 @@
             this.createMedia( mediaFile );
          };                       
          
-         this.getMediaType = function( ext ) {
-            switch( ext ) {
+         this.getMediaType = function( mediaFile ) {
+            var extension = (typeof mediaFile === 'array') ? mediaFile[0].extension : mediaFile.extension;
+            switch( extension ) {
                case "ogg": case "ogv": case "mp4": case "m4v":
                   return "video";
                   

@@ -44,8 +44,6 @@
             // Cache all of the sizes that we care about.
             this.windowWidth = 0;
             this.windowHeight = 0;            
-            this.dialogWidth = 0;
-            this.dialogHeight = 0;
             this.playerWidth = 0;
             this.playerHeight = 0;            
             this.nodeWidth = 0;
@@ -136,12 +134,12 @@
                this.menuHeight = mediaplayer.menu ? mediaplayer.menu.display.height() : 0;
                this.windowWidth = $(window).width();
                this.windowHeight = $(window).height();
-               this.dialogWidth = mediaplayer.dialog ? mediaplayer.dialog.width() : 0;
-               this.dialogHeight = mediaplayer.dialog ? mediaplayer.dialog.height() : 0;
                
                // Base the player width and height off the dialog.
-               this.playerWidth = this.dialogWidth;
-               this.playerHeight = this.dialogHeight - playerPosition.top;               
+               if( mediaplayer.dialog ) {
+                  this.playerWidth = mediaplayer.dialog.width();
+                  this.playerHeight = mediaplayer.dialog.height() - playerPosition.top; 
+               }                              
                
                // Get temporary variables of the playlist width and height...
                this.playlistWidth = mediaplayer.playlist ? mediaplayer.playlist.width : 0;

@@ -192,13 +192,19 @@
                value:state
             });
          };
-         
+
+         this.setProgress = function( percent ) {
+            if( this.seekProgress ) {
+               this.seekProgress.css( "width", (percent * (this.seekBar.trackSize + this.seekBar.handleSize)) + "px" );
+            }
+         };
+
          this.onResize = function( deltaX, deltaY ) {
             if( this.allowResize ) {
                if( this.seekBar ) {
                   this.seekBar.onResize( deltaX, deltaY );
                }
-               this.seekProgress.css( "width", (this.percentLoaded * this.seekBar.trackSize) + "px" );
+               this.setProgress( this.percentLoaded );
             }
          };
          
@@ -219,9 +225,7 @@
                   break;
                case "progress":
                   this.percentLoaded = data.percentLoaded;
-                  if( this.seekProgress ) {
-                     this.seekProgress.css( "width", (this.percentLoaded * this.seekBar.trackSize) + "px" );
-                  }
+                  this.setProgress( this.percentLoaded );
                   break;
                case "meta":
                case "update":

@@ -173,7 +173,7 @@ class OSMTemplate
     $css_files = $this->getCSSFiles();
     $header = '<link rel="stylesheet" type="text/css" href="' . $base_path . $css_files['template'] . '" />';
     $header .= "\n";
-    if( $css_files['template_ie'] ) {
+    if( isset($css_files['template_ie']) ) {
       $header .= '<!--[if IE]><link rel="stylesheet" type="text/css" href="' . $base_path . $css_files['template_ie'] . '" /><![endif]-->';
       $header .= "\n";
     }
