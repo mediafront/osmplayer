@@ -101,17 +101,6 @@
             this.display.append( this.template );
          };
          
-         // Adds a media file to the play queue.
-         this.addToQueue = function( file ) {            
-            if( file ) {
-               if( file[0] ) {
-                  file = this.getPlayableMedia( file );
-               }
-
-               this.playQueue.push( file );
-            }
-         };
-         
          // Returns the media that has the lowest weight value, which means
          // this player prefers that media over the others.
          this.getPlayableMedia = function( files ) {
@@ -126,6 +115,24 @@
             return mFile;
          };
          
+         // Returns a valid media file for this browser.
+         this.getMediaFile = function( file ) {
+            if( file ) {
+               var type = typeof file;
+               if( ((type === 'object') || (type === 'array')) && file[0] ) {
+                  file = this.getPlayableMedia( file );
+               }               
+            }
+            return file;
+         };         
+         
+         // Adds a media file to the play queue.
+         this.addToQueue = function( file ) {            
+            if( file ) {
+               this.playQueue.push( this.getMediaFile( file ) );
+            }
+         };
+                 
          this.loadFiles = function( files ) {
             if( files ) {
                this.playQueue.length = 0;                                  
@@ -148,7 +155,7 @@
          this.loadMedia = function( file ) {
             if( file ) {
                // Get the media file object.
-               file = new jQuery.media.file( file, settings );
+               file = new jQuery.media.file( this.getMediaFile( file ), settings );
                
                // Stop the current player.
                this.stopMedia();  
