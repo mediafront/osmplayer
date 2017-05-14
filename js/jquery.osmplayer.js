@@ -2327,7 +2327,7 @@
          
          // The internal player controls.
          this.usePlayerControls = false;
-         this.busyVisible = true;
+         this.busyFlags = 0;
          this.playVisible = false;
          this.previewVisible = false;
          this.controllerVisible = true;
@@ -2355,9 +2355,14 @@
             this.showElement( this.play, show, tween );
          };
 
-         this.showBusy = function( show, tween ) {
-            this.busyVisible = show;
-            this.showElement( this.busy, show, tween );
+         this.showBusy = function( id, show, tween ) {
+            if( show ) {
+               this.busyFlags |= (1 << id);
+            }
+            else {
+               this.busyFlags &= ~(1 << id)
+            }
+            this.showElement( this.busy, (this.busyFlags > 0), tween );
          }; 
          
          this.showPreview = function( show, tween ) {
@@ -2441,23 +2446,23 @@
                case "paused":
                   this.playing = false;
                   this.showPlay(true);
-                  this.showBusy(false);
+                  this.showBusy(1, false);
                   break;
                case "playing":
                   this.playing = true;
                   this.showPlay(false);
-                  this.showBusy(false);
+                  this.showBusy(1, false);
                   this.showPreview((this.media.mediaFile.type == "audio"));
                   break;
                case "initialize":
                   this.playing = false;
                   this.showPlay(true);
-                  this.showBusy(true);
+                  this.showBusy(1, true);
                   this.showPreview(true);
                   break;
                case "buffering":
                   this.showPlay(true);
-                  this.showBusy(true);
+                  this.showBusy(1, true);
                   this.showPreview((this.media.mediaFile.type == "audio"));
                   break;
             }
@@ -2573,7 +2578,7 @@
                   }
                }
                else {
-                  this.showBusy( this.busyVisible );
+                  this.showBusy( 1, ((this.busyFlags & 0x2) == 0x2) );
                   this.showPlay( this.playVisible );
                   this.showPreview( this.previewVisible );
                   this.showController( this.controllerVisible );
@@ -2631,7 +2636,7 @@
             }
             this.showPlay(false);
             this.showPreview(false);
-            this.showBusy(true);
+            this.showBusy(1, true);
             
             if( this.media ) {
                this.media.reset();
@@ -2760,9 +2765,6 @@
          // Store all loaded images.
          this.images = [];
          
-         // Indicator to let us know we are waiting on something...
-         this.waiting = false;
-         
          // Get the width and height.
          this.width = this.display.width();
          this.height = this.display.height();
@@ -2772,20 +2774,13 @@
          this.uservoter = this.display.find(settings.ids.uservoter).mediavoter( settings, server, true );
          if( this.uservoter && this.voter ) {
             this.uservoter.display.bind( "processing", function() {
-               _this.waiting = true;
-               _this.player.busy.show();
+               _this.player.showBusy(2, true);
             });
             this.uservoter.display.bind( "voteGet", function() {
-               if( _this.waiting ) {
-                  _this.waiting = false;
-                  _this.player.busy.hide();
-               }
+               _this.player.showBusy(2, false);
             });            
             this.uservoter.display.bind( "voteSet", function( event, vote ) {
-               if( _this.waiting ) {
-                  _this.waiting = false;
-                  _this.player.busy.hide();
-               }
+               _this.player.showBusy(2, false);
                _this.voter.updateVote( vote );   
             });
          }
