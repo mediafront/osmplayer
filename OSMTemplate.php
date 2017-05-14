@@ -167,14 +167,14 @@ class OSMTemplate
    * Get the CSS header for this player.
    */
   public function getCSSHeader() {
-    $base_path = $this->playerSettings['base_path'] ? $this->playerSettings['base_path'] . '/' : '';
+    $playerPath = $this->playerSettings['playerPath'] ? $this->playerSettings['playerPath'] . '/' : '';
 
     // Add the CSS files.
     $css_files = $this->getCSSFiles();
-    $header = '<link rel="stylesheet" type="text/css" href="' . $base_path . $css_files['template'] . '" />';
+    $header = '<link rel="stylesheet" type="text/css" href="' . $playerPath . $css_files['template'] . '" />';
     $header .= "\n";
     if( isset($css_files['template_ie']) ) {
-      $header .= '<!--[if IE]><link rel="stylesheet" type="text/css" href="' . $base_path . $css_files['template_ie'] . '" /><![endif]-->';
+      $header .= '<!--[if IE]><link rel="stylesheet" type="text/css" href="' . $playerPath . $css_files['template_ie'] . '" /><![endif]-->';
       $header .= "\n";
     }
 
@@ -223,7 +223,7 @@ class OSMTemplate
     $contents = file_get_contents( dirname(__FILE__) . '/' . $css);
 
     // Change all of the images to the correct path...
-    $contents = str_replace( 'images/', $this->playerSettings['base_url'] . '/' . str_replace( basename($css), '', $css ) . 'images/', $contents );
+    $contents = str_replace( 'images/', $this->playerSettings['playerURL'] . '/' . str_replace( basename($css), '', $css ) . 'images/', $contents );
 
     // Get the length of the contents.
     $len = strlen( $contents );
