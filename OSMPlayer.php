@@ -96,7 +96,7 @@ class OSMPlayer {
     // Create our template.
     $base_path = $this->settings['playerPath'];
     $templateClass = ucfirst( $this->settings['template'] ) . 'Template';
-    include "templates/" . $this->settings['template'] . "/template.php";
+    require_once( "templates/" . $this->settings['template'] . "/template.php" );
     $this->template = new $templateClass( $this->settings );
     
     // Make sure we set the Prefix.
