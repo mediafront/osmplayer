@@ -73,10 +73,10 @@
                js_swf_id:playerId
             };
             var rand = Math.floor(Math.random() * 1000000); 
-            var flashplayer = 'http://vimeo.com/moogaloop.swf?rand=' + rand;
+            var flashPlayer = 'http://vimeo.com/moogaloop.swf?rand=' + rand;
             jQuery.media.utils.insertFlash( 
                this.display, 
-               flashplayer, 
+               flashPlayer,
                playerId, 
                this.display.width(), 
                this.display.height(),

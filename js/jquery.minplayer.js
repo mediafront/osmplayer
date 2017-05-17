@@ -306,10 +306,10 @@
             this.ready = false;
             var playerId = (options.id + "_media");
             var rand = Math.floor(Math.random() * 1000000);  
-            var flashplayer = 'http://www.dailymotion.com/swf/' + videoFile.path + '?rand=' + rand + '&amp;enablejsapi=1&amp;playerapiid=' + playerId;            
+            var flashPlayer = 'http://www.dailymotion.com/swf/' + videoFile.path + '?rand=' + rand + '&amp;enablejsapi=1&amp;playerapiid=' + playerId;
             jQuery.media.utils.insertFlash( 
                this.display, 
-               flashplayer, 
+               flashPlayer,
                playerId, 
                this.display.width(), 
                this.display.height(),
@@ -1123,7 +1123,7 @@
 
    // Set up our defaults for this component.
    jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
-      flashplayer:"./flash/mediafront.swf",
+      flashPlayer:"./flash/mediafront.swf",
       skin:"default",
       config:"nocontrols"
    });    
@@ -1155,7 +1155,7 @@
             this.ready = false;
             var playerId = (settings.id + "_media");            
             var rand = Math.floor(Math.random() * 1000000); 
-            var flashplayer = settings.flashplayer + "?rand=" + rand;
+            var flashPlayer = settings.flashPlayer + "?rand=" + rand;
             var flashvars = {
                config:settings.config,
                id:settings.id,
@@ -1171,7 +1171,7 @@
             }
             jQuery.media.utils.insertFlash( 
                this.display, 
-               flashplayer, 
+               flashPlayer,
                playerId, 
                this.display.width(), 
                this.display.height(),
@@ -1278,7 +1278,7 @@
                flashVars.stream = this.videoFile.stream;
             }                    
             return jQuery.media.utils.getFlash( 
-               settings.flashplayer,
+               settings.flashPlayer,
                "mediafront_player", 
                settings.embedWidth, 
                settings.embedHeight,
@@ -1886,8 +1886,7 @@
             if( this.activeController ) {
                this.activeController.reset();   
             }
-            this.showPlay(false);
-            this.showPreview(false);
+
             this.showBusy(1, true);
             
             if( this.media ) {
@@ -2034,10 +2033,10 @@
                js_swf_id:playerId
             };
             var rand = Math.floor(Math.random() * 1000000); 
-            var flashplayer = 'http://vimeo.com/moogaloop.swf?rand=' + rand;
+            var flashPlayer = 'http://vimeo.com/moogaloop.swf?rand=' + rand;
             jQuery.media.utils.insertFlash( 
                this.display, 
-               flashplayer, 
+               flashPlayer,
                playerId, 
                this.display.width(), 
                this.display.height(),
@@ -2218,10 +2217,10 @@
             this.ready = false;
             var playerId = (options.id + "_media");            
             var rand = Math.floor(Math.random() * 1000000);             
-            var flashplayer = 'http://www.youtube.com/apiplayer?rand=' + rand + '&amp;version=3&amp;enablejsapi=1&amp;playerapiid=' + playerId;            
+            var flashPlayer = 'http://www.youtube.com/apiplayer?rand=' + rand + '&amp;version=3&amp;enablejsapi=1&amp;playerapiid=' + playerId;
             jQuery.media.utils.insertFlash( 
                this.display, 
-               flashplayer, 
+               flashPlayer,
                playerId, 
                this.display.width(), 
                this.display.height(),
