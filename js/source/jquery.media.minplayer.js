@@ -273,7 +273,7 @@
          this.controller = this.addController( this.display.find( settings.ids.control ).mediacontrol( settings ), false ); 
          
          // Now add any queued controllers...
-         if( jQuery.media.controllers && jQuery.media.controllers[settings.id] ) {
+         if( jQuery.media.controllers[settings.id] ) {
             var controllers = jQuery.media.controllers[settings.id];
             var i = controllers.length;
             while(i--) {

@@ -2510,7 +2510,7 @@
          this.controller = this.addController( this.display.find( settings.ids.control ).mediacontrol( settings ), false ); 
          
          // Now add any queued controllers...
-         if( jQuery.media.controllers && jQuery.media.controllers[settings.id] ) {
+         if( jQuery.media.controllers[settings.id] ) {
             var controllers = jQuery.media.controllers[settings.id];
             var i = controllers.length;
             while(i--) {
@@ -3543,10 +3543,25 @@
    });   
    
    // Initialize our players, playlists, and controllers.   
-   jQuery.media.players = {};        
+   jQuery.media.players = {};
+   jQuery.media.loadCallbacks = {};
    jQuery.media.playlists = {}; 
    jQuery.media.controllers = {};   
    
+   // Use this function to trigger when the player has finished registering and loaded.
+   jQuery.media.onLoaded = function( playerId, callback ) {
+      var player = jQuery.media.players[playerId];
+      if( player && player.display && player.loaded ) {
+         callback( player );
+      }
+      else {
+         if( !jQuery.media.loadCallbacks[playerId] ) {
+            jQuery.media.loadCallbacks[playerId] = [];
+         }
+         jQuery.media.loadCallbacks[playerId].push( callback );
+      }
+   };
+
    // To add a new controller to any existing or future-included players.
    jQuery.media.addController = function( playerId, fromPlayer ) {
       // Check to make sure the fromPlayer has a controller.
@@ -3617,7 +3632,10 @@
          jQuery.media.utils.checkVisibility( this.display, invisibleParents );
 
          // Add this player to the players object.
-         jQuery.media.players[settings.id] = this;                  
+         jQuery.media.players[settings.id] = this;
+
+         // Variable to keep track if this player has finished loading.
+         this.loaded = false;
          
          // Set the template object.
          settings.template = jQuery.media.templates[settings.template]( this, settings );
@@ -3861,7 +3879,7 @@
          this.playlist = this.addPlaylist( this.display.find( settings.ids.playlist ).mediaplaylist( this.server, settings ) );
          
          // Now add any queued playlists...
-         if( jQuery.media.playlists && jQuery.media.playlists[settings.id] ) {
+         if( jQuery.media.playlists[settings.id] ) {
             var playlists = jQuery.media.playlists[settings.id];
             var i = playlists.length;
             while(i--) {
@@ -3924,7 +3942,20 @@
             this.dialog.css("position","relative");
             this.dialog.css("marginLeft",0);  
             this.dialog.css("overflow","visible");
-            
+
+            // Set our loaded flag to true.
+            this.loaded = true;
+            this.display.trigger( "playerLoaded", this );
+
+            // Call all of our queued onLoaded callback functions.
+            if( jQuery.media.loadCallbacks[settings.id] ) {
+               var callbacks = jQuery.media.loadCallbacks[settings.id];
+               var i = callbacks.length;
+               while(i--) {
+                  callbacks[i]( this );
+               }
+            }
+
             // Connect to the server.
             this.server.connect( function( result ) {
                _this.loadContent();
@@ -4355,7 +4386,7 @@
                }
                
                // Trigger an even that the teaser has been activated.
-               jQuery.event.trigger( "playlistload", teaser.node.nodeInfo ); 
+               this.display.trigger( "playlistload", teaser.node.nodeInfo );
             }
          };
       })( server, this, settings );
