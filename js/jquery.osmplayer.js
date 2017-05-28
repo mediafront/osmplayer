@@ -333,11 +333,20 @@
  *  THE SOFTWARE.
  */
 
+   
+
    // Called when the YouTube player is ready.
    window.onDailymotionPlayerReady = function( playerId ) {
       playerId = playerId.replace("_media", "");      
       jQuery.media.players[playerId].node.player.media.player.onReady();   
    };
+
+   // Tell the media player how to determine if a file path is a YouTube media type.
+   jQuery.media.playerTypes = jQuery.extend( jQuery.media.playerTypes, {
+      "dailymotion":function( file ) {
+         return (file.search(/^http(s)?\:\/\/(www\.)?dailymotion\.com/i) === 0);      
+      }
+   });
 
    jQuery.fn.mediadailymotion = function( options, onUpdate ) {  
       return new (function( video, options, onUpdate ) {
@@ -593,7 +602,8 @@
       embedWidth:450,
       embedHeight:337,
       wmode:"transparent",
-      forceOverflow:false
+      forceOverflow:false,
+      quality:"default"
    }); 
 
    jQuery.fn.mediadisplay = function( settings ) {  
@@ -1039,7 +1049,7 @@
                if( method ) {
                   protocol.call( method, onSuccess, onFailed, args, type );
                }
-               else {
+               else if( onSuccess ) {
                   onSuccess( null );   
                }
             };
@@ -1209,15 +1219,12 @@
             return "flash"; 
              
          default:
-            if( this.extension.substring(0,3).toLowerCase() == "com" ) {
-               // Is this a vimeo this.path...
-               if( this.path.search(/^http(s)?\:\/\/(www\.)?vimeo\.com/i) == 0 ) {
-                  return "vimeo";
-               }
-               
-               // This is a youtube path...
-               else if( this.path.search(/^http(s)?\:\/\/(www\.)?youtube\.com/i) == 0 ) {
-                  return "youtube";
+            // Now iterate through all of our registered players.
+            for( var player in jQuery.media.playerTypes ) {
+               if( jQuery.media.playerTypes.hasOwnProperty( player ) ) {
+                  if( jQuery.media.playerTypes[player]( this.path ) ) {
+                     return player;
+                  }
                }
             }
       }           
@@ -1543,10 +1550,11 @@
          this.bytesTotal = 0;
          this.mediaType = "";    
          
-         this.getPlayer = function( mediaFile ) {
+         this.getPlayer = function( mediaFile, preview ) {
             var playerId = options.id + '_' + this.mediaType;            
             var html = '<' + this.mediaType + ' style="position:absolute" id="' + playerId + '"';
             html += (this.mediaType == "video") ? ' width="' + this.display.width() + 'px" height="' + this.display.height() + 'px"' : '';
+            html += preview ? ' poster="' + preview + '"' : '';
             
             if( typeof mediaFile === 'array' ) {
                html += '>';
@@ -1570,7 +1578,7 @@
             jQuery.media.utils.removeFlash( this.display, options.id + "_media" );
             this.display.children().remove();    
             this.mediaType = this.getMediaType( mediaFile );            
-            this.player = this.getPlayer( mediaFile );
+            this.player = this.getPlayer( mediaFile, preview );
 
             this.player.addEventListener( "abort", function() {
                onUpdate( {
@@ -1956,11 +1964,13 @@
                         }
                      },
                      "success": function( data ) {
-                        onSuccess( data );
+                        if( onSuccess ) {
+                           onSuccess( data );
+                        }
                      }             
                   });
                } 
-               else {
+               else if( onSuccess ) {
                   onSuccess( null );
                }     
             };
@@ -2360,7 +2370,7 @@
                this.busyFlags |= (1 << id);
             }
             else {
-               this.busyFlags &= ~(1 << id)
+               this.busyFlags &= ~(1 << id);
             }
             this.showElement( this.busy, (this.busyFlags > 0), tween );
          }; 
@@ -2464,7 +2474,7 @@
                   this.showPlay(true);
                   this.showBusy(1, true);
                   this.showPreview((this.media.mediaFile.type == "audio"));
-                  break;
+                  break;                 
             }
             
             // Update our controller.
@@ -2736,7 +2746,8 @@
    
    // Set up our defaults for this component.
    jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
-      node:""                  
+      node:"",
+      incrementTime:5             
    }); 
 
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
@@ -2756,10 +2767,16 @@
          // Save the jQuery display.
          this.display = node;
          this.nodeInfo = {};
+         this.incremented = false;
          var _this = this;
          
          // Add the min player as the player for this node.
          this.player = this.display.find(settings.ids.mediaRegion).minplayer( settings );  
+         if( this.player && this.player.media && (settings.incrementTime !== 0)) {
+            this.player.media.display.bind( "mediaupdate", function( event, data ) {
+               _this.onMediaUpdate( data );            
+            });  
+         }         
          
          // Store all loaded images.
          this.images = [];
@@ -2783,6 +2800,28 @@
                _this.voter.updateVote( vote );   
             });
          }
+         
+         // Handle the media events.
+         this.onMediaUpdate = function( data ) {
+            if( !this.incremented ) {
+               switch( data.type ) {
+                  case "update":
+                     // Increment node counter if the increment time is positive and is less than the current time.
+                     if( (settings.incrementTime > 0) && (data.currentTime > settings.incrementTime) ) {
+                        this.incremented = true;
+                        server.call( jQuery.media.commands.incrementCounter, null, null, _this.nodeInfo.nid );
+                     }
+                     break;
+                  case "complete":
+                     // If the increment time is negative, then that means to increment on media completion.
+                     if( settings.incrementTime < 0 ) {
+                        this.incremented = true;
+                        server.call( jQuery.media.commands.incrementCounter, null, null, _this.nodeInfo.nid );
+                     }
+                     break;
+               }
+            }
+         };         
          
          this.loadNode = function( _nodeInfo ) {
             this.getNode( this.translateNode( _nodeInfo ) );
@@ -2845,6 +2884,7 @@
             if( _nodeInfo ) {
                // Set the node information object.
                this.nodeInfo = _nodeInfo;
+               this.incremented = false;
    
                // Load the media...
                if( this.player && this.nodeInfo.mediafiles ) {
@@ -4815,7 +4855,7 @@
                               console.dir( xml.error );
                            }
                         }
-                        else {
+                        else if( onSuccess ) {
                            onSuccess( xml.result );
                         }
                      },
@@ -4823,7 +4863,7 @@
                      "contentType": "text/xml"
                   });
                }
-               else {
+               else if( onSuccess ) {
                   onSuccess( null ); 
                }
             };
@@ -5845,6 +5885,8 @@
  *  THE SOFTWARE.
  */
 
+    
+
    window.onVimeoReady = function( playerId ) {
       playerId = playerId.replace("_media", "");      
       jQuery.media.players[playerId].node.player.media.player.onReady();     
@@ -5869,6 +5911,13 @@
       playerId = playerId.replace("_media", "");           
       jQuery.media.players[playerId].node.player.media.player.onPaused();   
    };
+
+   // Tell the media player how to determine if a file path is a YouTube media type.
+   jQuery.media.playerTypes = jQuery.extend( jQuery.media.playerTypes, {
+      "vimeo":function( file ) {
+         return (file.search(/^http(s)?\:\/\/(www\.)?vimeo\.com/i) === 0);      
+      }
+   });
 
    jQuery.fn.mediavimeo = function( options, onUpdate ) {  
       return new (function( video, options, onUpdate ) {
@@ -6189,11 +6238,20 @@
  *  THE SOFTWARE.
  */
 
+      
+
    // Called when the YouTube player is ready.
    window.onYouTubePlayerReady = function( playerId ) {
       playerId = playerId.replace("_media", "");
       jQuery.media.players[playerId].node.player.media.player.onReady();   
    };
+
+   // Tell the media player how to determine if a file path is a YouTube media type.
+   jQuery.media.playerTypes = jQuery.extend( jQuery.media.playerTypes, {
+      "youtube":function( file ) {
+         return (file.search(/^http(s)?\:\/\/(www\.)?youtube\.com/i) === 0);      
+      }
+   });
 
    jQuery.fn.mediayoutube = function( options, onUpdate ) {  
       return new (function( video, options, onUpdate ) {
@@ -6241,7 +6299,7 @@
                } );
                
                // Load our video.
-               this.player.loadVideoById( this.getId( this.videoFile.path ), 0 );
+               this.player.loadVideoById( this.getId( this.videoFile.path ), 0, options.quality );
             }
          };
          

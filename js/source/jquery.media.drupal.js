@@ -106,7 +106,7 @@
                if( method ) {
                   protocol.call( method, onSuccess, onFailed, args, type );
                }
-               else {
+               else if( onSuccess ) {
                   onSuccess( null );   
                }
             };

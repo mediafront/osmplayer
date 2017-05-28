@@ -28,7 +28,8 @@
    
    // Set up our defaults for this component.
    jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
-      node:""                  
+      node:"",
+      incrementTime:5             
    }); 
 
    jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
@@ -48,10 +49,16 @@
          // Save the jQuery display.
          this.display = node;
          this.nodeInfo = {};
+         this.incremented = false;
          var _this = this;
          
          // Add the min player as the player for this node.
          this.player = this.display.find(settings.ids.mediaRegion).minplayer( settings );  
+         if( this.player && this.player.media && (settings.incrementTime !== 0)) {
+            this.player.media.display.bind( "mediaupdate", function( event, data ) {
+               _this.onMediaUpdate( data );            
+            });  
+         }         
          
          // Store all loaded images.
          this.images = [];
@@ -75,6 +82,28 @@
                _this.voter.updateVote( vote );   
             });
          }
+         
+         // Handle the media events.
+         this.onMediaUpdate = function( data ) {
+            if( !this.incremented ) {
+               switch( data.type ) {
+                  case "update":
+                     // Increment node counter if the increment time is positive and is less than the current time.
+                     if( (settings.incrementTime > 0) && (data.currentTime > settings.incrementTime) ) {
+                        this.incremented = true;
+                        server.call( jQuery.media.commands.incrementCounter, null, null, _this.nodeInfo.nid );
+                     }
+                     break;
+                  case "complete":
+                     // If the increment time is negative, then that means to increment on media completion.
+                     if( settings.incrementTime < 0 ) {
+                        this.incremented = true;
+                        server.call( jQuery.media.commands.incrementCounter, null, null, _this.nodeInfo.nid );
+                     }
+                     break;
+               }
+            }
+         };         
          
          this.loadNode = function( _nodeInfo ) {
             this.getNode( this.translateNode( _nodeInfo ) );
@@ -137,6 +166,7 @@
             if( _nodeInfo ) {
                // Set the node information object.
                this.nodeInfo = _nodeInfo;
+               this.incremented = false;
    
                // Load the media...
                if( this.player && this.nodeInfo.mediafiles ) {

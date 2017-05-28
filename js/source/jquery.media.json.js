@@ -150,11 +150,13 @@
                         }
                      },
                      "success": function( data ) {
-                        onSuccess( data );
+                        if( onSuccess ) {
+                           onSuccess( data );
+                        }
                      }             
                   });
                } 
-               else {
+               else if( onSuccess ) {
                   onSuccess( null );
                }     
             };

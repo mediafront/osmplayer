@@ -24,6 +24,8 @@
  *  THE SOFTWARE.
  */
 (function($) {
+   jQuery.media = jQuery.media ? jQuery.media : {}; 
+
    window.onVimeoReady = function( playerId ) {
       playerId = playerId.replace("_media", "");      
       jQuery.media.players[playerId].node.player.media.player.onReady();     
@@ -48,6 +50,13 @@
       playerId = playerId.replace("_media", "");           
       jQuery.media.players[playerId].node.player.media.player.onPaused();   
    };
+
+   // Tell the media player how to determine if a file path is a YouTube media type.
+   jQuery.media.playerTypes = jQuery.extend( jQuery.media.playerTypes, {
+      "vimeo":function( file ) {
+         return (file.search(/^http(s)?\:\/\/(www\.)?vimeo\.com/i) === 0);      
+      }
+   });
 
    jQuery.fn.mediavimeo = function( options, onUpdate ) {  
       return new (function( video, options, onUpdate ) {

@@ -33,10 +33,11 @@
          this.bytesTotal = 0;
          this.mediaType = "";    
          
-         this.getPlayer = function( mediaFile ) {
+         this.getPlayer = function( mediaFile, preview ) {
             var playerId = options.id + '_' + this.mediaType;            
             var html = '<' + this.mediaType + ' style="position:absolute" id="' + playerId + '"';
             html += (this.mediaType == "video") ? ' width="' + this.display.width() + 'px" height="' + this.display.height() + 'px"' : '';
+            html += preview ? ' poster="' + preview + '"' : '';
             
             if( typeof mediaFile === 'array' ) {
                html += '>';
@@ -60,7 +61,7 @@
             jQuery.media.utils.removeFlash( this.display, options.id + "_media" );
             this.display.children().remove();    
             this.mediaType = this.getMediaType( mediaFile );            
-            this.player = this.getPlayer( mediaFile );
+            this.player = this.getPlayer( mediaFile, preview );
 
             this.player.addEventListener( "abort", function() {
                onUpdate( {
