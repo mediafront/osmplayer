@@ -218,15 +218,8 @@
          
          // When they press the space bar, we will toggle the player play/pause state.
          this.onSpaceBar = function() {
-            if( this.fullScreen ) {            
-               if( this.node && this.node.player && this.node.player.media && this.node.player.media.player ) {
-                  if( this.node.player.playing ) {
-                     this.node.player.media.player.pauseMedia();  
-                  }
-                  else {
-                     this.node.player.media.player.playMedia(); 
-                  }
-               } 
+            if( this.fullScreen && this.node && this.node.player ) {            
+               this.node.player.togglePlayPause();
             }
          };
 
