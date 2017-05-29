@@ -76,7 +76,7 @@
                id:settings.id,
                file:videoFile.path,
                skin:settings.skin,
-               autostart:settings.autostart
+               autostart:(settings.autostart || !settings.autoLoad)
             };
             if( videoFile.stream ) {
                flashvars.stream = videoFile.stream;

@@ -61,6 +61,9 @@
          this.display = player;
          var _this = this;
 
+         // If the player should auto load or not.
+         this.autoLoad = settings.autoLoad;
+
          // Our attached controller.
          this.controller = null;
          
@@ -166,7 +169,7 @@
                // If there are files in the queue but no current media file.
                else if( (this.media.playQueue.length > 0) && !this.media.mediaFile ) {
                   // They interacted with the player.  Always autoload at this point on.
-                  settings.autoLoad = true;
+                  this.autoLoad = true;
                   
                   // Then play the next file in the queue.
                   this.playNext();
@@ -218,7 +221,7 @@
                case "initialize":
                   this.playing = false;
                   this.showPlay(true);
-                  this.showBusy(1, true);
+                  this.showBusy(1, this.autoLoad);
                   this.showPreview(true);
                   break;
                case "buffering":
@@ -401,7 +404,7 @@
                this.activeController.reset();   
             }
 
-            this.showBusy(1, true);
+            this.showBusy(1, this.autoLoad);
             
             if( this.media ) {
                this.media.reset();
@@ -410,14 +413,23 @@
          
          // Toggle the play/pause state.
          this.togglePlayPause = function() {
-            if( this.media && this.media.playerReady ) {
-               if( this.playing ) {
-                  this.showPlay(true);
-                  this.media.player.pauseMedia();  
+            if( this.media ) {
+               if( this.media.playerReady ) {
+                  if( this.playing ) {
+                     this.showPlay(true);
+                     this.media.player.pauseMedia();
+                  }
+                  else {
+                     this.showPlay(false);
+                     this.media.player.playMedia();
+                  }
                }
-               else {
-                  this.showPlay(false);
-                  this.media.player.playMedia(); 
+               else if( (this.media.playQueue.length > 0) && !this.media.mediaFile ) {
+                  // They interacted with the player.  Always autoload at this point on.
+                  this.autoLoad = true;
+
+                  // Then play the next file in the queue.
+                  this.playNext();
                }
             }
          };
@@ -455,7 +467,7 @@
          // Expose the public load functions from the media display.
          this.loadFiles = function( files ) { 
             this.reset();
-            if( this.media && this.media.loadFiles( files ) && settings.autoLoad ) {
+            if( this.media && this.media.loadFiles( files ) && this.autoLoad ) {
                this.media.playNext();
             }
          };
