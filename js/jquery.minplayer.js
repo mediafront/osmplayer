@@ -555,15 +555,16 @@
       embedHeight:337,
       wmode:"transparent",
       forceOverflow:false,
-      quality:"default"
+      quality:"default",
+      repeat:false
    }); 
 
-   jQuery.fn.mediadisplay = function( settings ) {  
+   jQuery.fn.mediadisplay = function( options ) {
       if( this.length === 0 ) {
          return null;
       }
-      return new (function( mediaWrapper, settings ) {
-         settings = jQuery.media.utils.getSettings( settings ); 
+      return new (function( mediaWrapper, options ) {
+         this.settings = jQuery.media.utils.getSettings( options );
          this.display = mediaWrapper;
          var _this = this;
          this.volume = 0;
@@ -572,7 +573,8 @@
          this.reflowInterval = null;
          this.updateInterval = null;
          this.progressInterval = null;
-         this.playQueue = []; 
+         this.playQueue = [];
+         this.playIndex = 0;
          this.playerReady = false;
          this.loaded = false;
          this.mediaFile = null; 
@@ -581,7 +583,7 @@
 
          // If they provide the forceOverflow variable, then that means they
          // wish to force the media player to override all parents overflow settings.
-         if( settings.forceOverflow ) {
+         if( this.settings.forceOverflow ) {
             // Make sure that all parents have overflow visible so that
             // browser full screen will always work.
             this.display.parents().css("overflow", "visible");
@@ -612,7 +614,8 @@
             clearInterval( this.updateInterval );
             clearTimeout( this.reflowInterval );  
             this.playQueue.length = 0;                                  
-            this.playQueue = []; 
+            this.playQueue = [];
+            this.playIndex = 0;
             this.playerReady = false;
             this.mediaFile = null;             
          };         
@@ -628,7 +631,7 @@
             var mFile = null;
             var i = files.length;
             while(i--) {
-               var tempFile = new jQuery.media.file( files[i], settings );
+               var tempFile = new jQuery.media.file( files[i], this.settings );
                if( !mFile || (tempFile.weight < mFile.weight) ) {
                   mFile = tempFile;
                }
@@ -657,7 +660,8 @@
          this.loadFiles = function( files ) {
             if( files ) {
                this.playQueue.length = 0;                                  
-               this.playQueue = []; 
+               this.playQueue = [];
+               this.playIndex = 0;
                this.addToQueue( files.intro );
                this.addToQueue( files.commercial );
                this.addToQueue( files.prereel );
@@ -668,15 +672,23 @@
          };        
          
          this.playNext = function() {
-            if( this.playQueue.length > 0 ) {
-               this.loadMedia( this.playQueue.shift() );
+            if( this.playQueue.length > this.playIndex ) {
+               this.loadMedia( this.playQueue[this.playIndex] );
+               this.playIndex++;
+            }
+            else if( this.settings.repeat ) {
+               this.playIndex = 0;
+               this.playNext();
+            }
+            else {
+               this.reset();
             }
          };
          
          this.loadMedia = function( file ) {
             if( file ) {
                // Get the media file object.
-               file = new jQuery.media.file( this.getMediaFile( file ), settings );
+               file = new jQuery.media.file( this.getMediaFile( file ), this.settings );
                
                // Stop the current player.
                this.stopMedia();  
@@ -689,7 +701,7 @@
                   // Create a new media player.
                   if( file.player ) {                 
                      // Set the new media player.
-                     this.player = this.display["media" + file.player]( settings, function( data ) {
+                     this.player = this.display["media" + file.player]( this.settings, function( data ) {
                         _this.onMediaUpdate( data );                      
                      });
                   }
@@ -765,10 +777,10 @@
             // If this is the playing state, we want to pause the video.
             if( data.type=="playing" && !this.loaded ) {
                this.loaded = true;
-               this.player.setVolume( (settings.volume / 100) );
-               if( settings.autoLoad && !settings.autostart ) {
+               this.player.setVolume( (this.settings.volume / 100) );
+               if( this.settings.autoLoad && !this.settings.autostart ) {
                   this.player.pauseMedia();
-                  settings.autostart = true;
+                  this.settings.autostart = true;
                }
                else {
                   this.display.trigger( "mediaupdate", data ); 
@@ -891,7 +903,7 @@
          };  
          
          this.setSize( this.display.width(), this.display.height() );
-      })( this, settings );
+      })( this, options );
    };
 /**
  *  Copyright (c) 2010 Alethia Inc,
