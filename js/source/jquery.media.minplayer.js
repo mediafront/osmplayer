@@ -297,6 +297,8 @@
                }           
                
                // Resize the busy symbol.
+               var busyMLeft = Math.ceil((this.width - this.busyWidth)/2);
+               var busyMTop = Math.ceil((this.height - this.busyHeight)/2);
                this.busy.css({
                   width:this.width,
                   height:this.height
