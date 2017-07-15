@@ -2566,13 +2566,15 @@
                });
 
                // Resize the play symbol.
+               var playMLeft = Math.ceil((this.width - this.playWidth)/2);
+               var playMTop = Math.ceil((this.height - this.playHeight)/2);
                this.play.css({
                   width:this.width,
                   height:this.height
                   });
                this.playImg.css({
-                  marginLeft:((this.width - this.playWidth)/2) + "px", 
-                  marginTop:((this.height - this.playHeight)/2) + "px" 
+                  marginLeft:playMLeft + "px",
+                  marginTop:playMTop + "px"
                });            
                
                // Resize the media.
