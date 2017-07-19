@@ -76,8 +76,8 @@
             
             // Set the width and height of this media region.
             this.display.css({
-               height:this.height + "px",
-               width:this.width + "px"
+               height:this.height,
+               width:this.width
             });
             
             // Now resize the player.

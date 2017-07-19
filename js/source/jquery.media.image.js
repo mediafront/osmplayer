@@ -63,20 +63,20 @@
             if( this.width && this.height && loaded ) {  
                // Resize the wrapper.
                this.display.css({
-                  width:this.width,
-                  height:this.height
-                  });
+                 width:this.width,
+                 height:this.height
+               });
                
                // Now resize the image in the container...
                var rect = jQuery.media.utils.getScaledRect( ratio, {
-                  width:this.width,
-                  height:this.height
-                  } );
+                 width:this.width,
+                 height:this.height
+               });
                this.image.attr( "src", this.imgLoader.src ).css({
-                  marginLeft:rect.x, 
-                  marginTop:rect.y, 
-                  width:rect.width + "px", 
-                  height:rect.height + "px"
+                 marginLeft:rect.x, 
+                 marginTop:rect.y, 
+                 width:rect.width, 
+                 height:rect.height
                }).show();
             }
          };

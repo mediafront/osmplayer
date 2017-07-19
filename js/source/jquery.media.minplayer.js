@@ -304,8 +304,8 @@
                   height:this.height
                   });
                this.busyImg.css({
-                  marginLeft:busyMLeft + "px",
-                  marginTop:busyMTop + "px"
+                  marginLeft:busyMLeft,
+                  marginTop:busyMTop
                });
 
                // Resize the play symbol.
@@ -316,8 +316,8 @@
                   height:this.height
                   });
                this.playImg.css({
-                  marginLeft:playMLeft + "px",
-                  marginTop:playMTop + "px"
+                  marginLeft:playMLeft,
+                  marginTop:playMTop
                });            
                
                // Resize the media.

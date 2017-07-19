@@ -175,8 +175,8 @@
          });
          
          // Set up the seek bar...
-         this.seekUpdate = controlBar.find( settings.ids.seekUpdate ).css("width", "0px");
-         this.seekProgress = controlBar.find( settings.ids.seekProgress ).css("width", "0px");
+         this.seekUpdate = controlBar.find( settings.ids.seekUpdate ).css("width", 0);
+         this.seekProgress = controlBar.find( settings.ids.seekProgress ).css("width", 0);
          this.seekBar = controlBar.find( settings.ids.seekBar ).mediaslider( settings.ids.seekHandle, false );
          this.seekBar.display.bind( "setvalue", function( event, data ) {
             _this.updateSeek( data );
@@ -190,7 +190,7 @@
          });
 
          this.updateSeek = function( value ) {
-            this.seekUpdate.css( "width", (value * this.seekBar.trackSize) + "px" );
+            this.seekUpdate.css( "width", (value * this.seekBar.trackSize) );
             this.currentTime.text( this.formatTime( value * this.duration ).time );
          };
          
@@ -198,12 +198,12 @@
             if( this.volumeBar ) {
                if( settings.volumeVertical ) {
                   this.volumeUpdate.css({
-                     "marginTop":(this.volumeBar.handlePos + this.volumeBar.handleMid + this.volumeBar.handleOffset) + "px",
-                     "height":(this.volumeBar.trackSize - this.volumeBar.handlePos) + "px"
+                     "marginTop":(this.volumeBar.handlePos + this.volumeBar.handleMid + this.volumeBar.handleOffset),
+                     "height":(this.volumeBar.trackSize - this.volumeBar.handlePos)
                   });
                }
                else {
-                  this.volumeUpdate.css( "width", (vol * this.volumeBar.trackSize) + "px" );
+                  this.volumeUpdate.css( "width", (vol * this.volumeBar.trackSize) );
                }  
             }
          };
@@ -243,7 +243,7 @@
 
          this.setProgress = function( percent ) {
             if( this.seekProgress ) {
-               this.seekProgress.css( "width", (percent * (this.seekBar.trackSize + this.seekBar.handleSize)) + "px" );
+               this.seekProgress.css( "width", (percent * (this.seekBar.trackSize + this.seekBar.handleSize)) );
             }
          };
 
@@ -644,8 +644,8 @@
             
             // Set the width and height of this media region.
             this.display.css({
-               height:this.height + "px",
-               width:this.width + "px"
+               height:this.height,
+               width:this.width
             });
             
             // Now resize the player.
@@ -1783,20 +1783,20 @@
             if( this.width && this.height && loaded ) {  
                // Resize the wrapper.
                this.display.css({
-                  width:this.width,
-                  height:this.height
-                  });
+                 width:this.width,
+                 height:this.height
+               });
                
                // Now resize the image in the container...
                var rect = jQuery.media.utils.getScaledRect( ratio, {
-                  width:this.width,
-                  height:this.height
-                  } );
+                 width:this.width,
+                 height:this.height
+               });
                this.image.attr( "src", this.imgLoader.src ).css({
-                  marginLeft:rect.x, 
-                  marginTop:rect.y, 
-                  width:rect.width + "px", 
-                  height:rect.height + "px"
+                 marginLeft:rect.x, 
+                 marginTop:rect.y, 
+                 width:rect.width, 
+                 height:rect.height
                }).show();
             }
          };
@@ -2563,8 +2563,8 @@
                   height:this.height
                   });
                this.busyImg.css({
-                  marginLeft:busyMLeft + "px",
-                  marginTop:busyMTop + "px"
+                  marginLeft:busyMLeft,
+                  marginTop:busyMTop
                });
 
                // Resize the play symbol.
@@ -2575,8 +2575,8 @@
                   height:this.height
                   });
                this.playImg.css({
-                  marginLeft:playMLeft + "px",
-                  marginTop:playMTop + "px"
+                  marginLeft:playMLeft,
+                  marginTop:playMTop
                });            
                
                // Resize the media.
@@ -4211,8 +4211,8 @@
                   height:this.height
                });
                this.busyImg.css({
-                  marginLeft:((this.width - this.busyWidth)/2) + "px", 
-                  marginTop:((this.height - this.busyHeight)/2) + "px" 
+                  marginLeft:((this.width - this.busyWidth)/2), 
+                  marginTop:((this.height - this.busyHeight)/2) 
                });                 
             }   
          };              
@@ -4586,161 +4586,161 @@
  *  THE SOFTWARE.
  */
 
-   jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
-      rotatorTimeout:5000,
-      rotatorTransition:"fade",
-      rotatorEasing:"swing",
-      rotatorSpeed:"slow",
-      rotatorHover:false       
-   });  
+  jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
+    rotatorTimeout:5000,
+    rotatorTransition:"fade",
+    rotatorEasing:"swing",
+    rotatorSpeed:"slow",
+    rotatorHover:false
+  });
 
-   jQuery.fn.mediarotator = function( settings ) {
-      if( this.length === 0 ) {
-         return null;
-      }
-      return new (function( rotator, settings ) {
-         settings = jQuery.media.utils.getSettings(settings);   
-         var _this = this;     
-         this.images = []; 
-         this.imageIndex = 0;
-         this.imageInterval = null;
-         this.width = 0;
-         this.height = 0;
+  jQuery.fn.mediarotator = function( settings ) {
+    if( this.length === 0 ) {
+      return null;
+    }
+    return new (function( rotator, settings ) {
+      settings = jQuery.media.utils.getSettings(settings);
+      var _this = this;
+      this.images = [];
+      this.imageIndex = 0;
+      this.imageInterval = null;
+      this.width = 0;
+      this.height = 0;
          
-         this.onImageLoaded = function() {
-            this.width = this.images[0].imgLoader.width;
-            this.height = this.images[0].imgLoader.height;
-            rotator.css({
-               width:this.width + "px",
-               height:this.height + "px"
-               });
-            var sliderWidth = (settings.rotatorTransition == "hscroll") ? (2*this.width) : this.width;
-            var sliderHeight = (settings.rotatorTransition == "vscroll") ? (2*this.height) : this.height;
-            this.display.css({
-               width:sliderWidth,
-               height:sliderHeight
-            });
-         };
+      this.onImageLoaded = function() {
+        this.width = this.images[0].imgLoader.width;
+        this.height = this.images[0].imgLoader.height;
+        rotator.css({
+          width:this.width,
+          height:this.height
+        });
+        var sliderWidth = (settings.rotatorTransition == "hscroll") ? (2*this.width) : this.width;
+        var sliderHeight = (settings.rotatorTransition == "vscroll") ? (2*this.height) : this.height;
+        this.display.css({
+          width:sliderWidth,
+          height:sliderHeight
+        });
+      };
          
-         this.addImage = function() {
-            var image = $("<div></div>").mediaimage(null, true);
-            this.display.append( image.display );
+      this.addImage = function() {
+        var image = $("<div></div>").mediaimage(null, true);
+        this.display.append( image.display );
             
-            if( (settings.rotatorTransition == "hscroll") || (settings.rotatorTransition == "vscroll") ) {
-               image.display.css({
-                  "float":"left"
-               });
-            }
-            else {
-               image.display.css({
-                  position:"absolute",
-                  zIndex:(200 - this.images.length),
-                  top:0,
-                  left:0
-               });
-            }
-            return image;         
-         };
+        if( (settings.rotatorTransition == "hscroll") || (settings.rotatorTransition == "vscroll") ) {
+          image.display.css({
+            "float":"left"
+          });
+        }
+        else {
+          image.display.css({
+            position:"absolute",
+            zIndex:(200 - this.images.length),
+            top:0,
+            left:0
+          });
+        }
+        return image;
+      };
          
-         this.loadImages = function( _images ) {
-            this.images = [];
-            this.imageIndex = 0;
+      this.loadImages = function( _images ) {
+        this.images = [];
+        this.imageIndex = 0;
             
-            jQuery.each( _images, function( index ) {
-               var image = _this.addImage();
-               if( index === 0 ) {
-                  image.display.bind("imageLoaded", function() {
-                     _this.onImageLoaded();
-                  }).show();
-               }   
-               image.loadImage( this );
-               _this.images.push( image );
-            });
+        jQuery.each( _images, function( index ) {
+          var image = _this.addImage();
+          if( index === 0 ) {
+            image.display.bind("imageLoaded", function() {
+              _this.onImageLoaded();
+            }).show();
+          }
+          image.loadImage( this );
+          _this.images.push( image );
+        });
             
-            if( settings.rotatorHover ) {
-               this.display.bind( "mouseenter", function() {
-                  _this.startRotator();
-               }).bind( "mouseleave", function() {
-                  clearInterval( _this.imageInterval );
-               });
-            }
-            else {
-               this.startRotator();
-            }     
-         };
+        if( settings.rotatorHover ) {
+          this.display.bind( "mouseenter", function() {
+            _this.startRotator();
+          }).bind( "mouseleave", function() {
+            clearInterval( _this.imageInterval );
+          });
+        }
+        else {
+          this.startRotator();
+        }
+      };
       
-         this.startRotator = function() {
-            clearInterval( this.imageInterval );
-            this.imageInterval = setInterval( function() {
-               _this.showNextImage();
-            }, settings.rotatorTimeout );     
-         };
+      this.startRotator = function() {
+        clearInterval( this.imageInterval );
+        this.imageInterval = setInterval( function() {
+          _this.showNextImage();
+        }, settings.rotatorTimeout );
+      };
          
-         this.showNextImage = function() {
-            this.hideImage( this.images[this.imageIndex].display );
-            this.imageIndex = (this.imageIndex + 1) % this.images.length;         
-            this.showImage( this.images[this.imageIndex].display );
-         };     
+      this.showNextImage = function() {
+        this.hideImage( this.images[this.imageIndex].display );
+        this.imageIndex = (this.imageIndex + 1) % this.images.length;
+        this.showImage( this.images[this.imageIndex].display );
+      };
       
-         this.showImage = function( image ) {
-            if( settings.rotatorTransition === 'fade' ) {
-               image.fadeIn(settings.rotatorSpeed);
-            }
-            else {
-               image.css({
-                  marginLeft:0,
-                  marginTop:0
-               }).show();
-            }    
-         };
+      this.showImage = function( image ) {
+        if( settings.rotatorTransition === 'fade' ) {
+          image.fadeIn(settings.rotatorSpeed);
+        }
+        else {
+          image.css({
+            marginLeft:0,
+            marginTop:0
+          }).show();
+        }
+      };
          
-         this.hideImage = function( image ) {
-            switch( settings.rotatorTransition ) {
-               case "fade":
-                  image.fadeOut(settings.rotatorSpeed);
-                  break;
-               case "hscroll":
-                  image.animate({
-                     marginLeft:-this.width
-                     }, settings.rotatorSpeed, settings.rotatorEasing, function() {
-                     image.css({
-                        marginLeft:0
-                     }).remove();
-                     _this.display.append( image );
-                  });
-                  break;             
-               case "vscroll":
-                  image.animate({
-                     marginTop:-this.height
-                     }, settings.rotatorSpeed, settings.rotatorEasing, function() {
-                     image.css({
-                        marginTop:0
-                     }).remove();
-                     _this.display.append( image );
-                  });
-                  break;                                            
-               default:
-                  image.hide();
-                  break;
-            }         
-         };
+      this.hideImage = function( image ) {
+        switch( settings.rotatorTransition ) {
+          case "fade":
+            image.fadeOut(settings.rotatorSpeed);
+            break;
+          case "hscroll":
+            image.animate({
+              marginLeft:-this.width
+            }, settings.rotatorSpeed, settings.rotatorEasing, function() {
+              image.css({
+                marginLeft:0
+              }).remove();
+              _this.display.append( image );
+            });
+            break;
+          case "vscroll":
+            image.animate({
+              marginTop:-this.height
+            }, settings.rotatorSpeed, settings.rotatorEasing, function() {
+              image.css({
+                marginTop:0
+              }).remove();
+              _this.display.append( image );
+            });
+            break;
+          default:
+            image.hide();
+            break;
+        }
+      };
    
-         // Find all the images in the rotator container.
-         var _images = [];
-         rotator.find("img").each( function() {
-            _images.push( $(this).attr("src") );
-         });
+      // Find all the images in the rotator container.
+      var _images = [];
+      rotator.find("img").each( function() {
+        _images.push( $(this).attr("src") );
+      });
          
-         // Empty the container and setup the inner rotator.
-         rotator.empty().css("overflow", "hidden").append( $('<div class="imagerotatorinner"></div>') );
-         this.display = rotator.find(".imagerotatorinner");      
+      // Empty the container and setup the inner rotator.
+      rotator.empty().css("overflow", "hidden").append( $('<div class="imagerotatorinner"></div>') );
+      this.display = rotator.find(".imagerotatorinner");
 
-         // If they provided images, then we will want to load them.
-         if( _images.length ) {
-            this.loadImages( _images );
-         }
-      })( this, settings );
-   };
+      // If they provided images, then we will want to load them.
+      if( _images.length ) {
+        this.loadImages( _images );
+      }
+    })( this, settings );
+  };
 /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
@@ -5151,7 +5151,7 @@
             this.scrolling = false;
             this.elements = [];
             this.listSize = 0;
-            this.list.css( this.margin, "0px" );
+            this.list.css( this.margin, 0 );
             this.list.children().unbind();
             clearInterval( this.scrollInterval );
             this.list.empty();     
@@ -5328,17 +5328,17 @@
             if( tween ) {
                if( settings.vertical ) {
                   this.list.animate({
-                     marginTop: -this.listPos + "px"
+                     marginTop: -this.listPos
                      }, (settings.scrollSpeed*10));
                }
                else {
                   this.list.animate({
-                     marginLeft: -this.listPos + "px"
+                     marginLeft: -this.listPos
                      }, (settings.scrollSpeed*10));
                }
             }
             else {
-               this.list.css( this.margin, -this.listPos + "px" );
+               this.list.css( this.margin, -this.listPos );
             }
          };               
       })( this, settings );

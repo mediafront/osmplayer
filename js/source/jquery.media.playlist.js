@@ -137,8 +137,8 @@
                   height:this.height
                });
                this.busyImg.css({
-                  marginLeft:((this.width - this.busyWidth)/2) + "px", 
-                  marginTop:((this.height - this.busyHeight)/2) + "px" 
+                  marginLeft:((this.width - this.busyWidth)/2), 
+                  marginTop:((this.height - this.busyHeight)/2) 
                });                 
             }   
          };              
