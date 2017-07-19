@@ -83,10 +83,10 @@
             this.handlePos *= this.trackSize;
 
             if( vertical ) {
-               this.handle.css( "marginTop", this.handlePos + "px" );
+               this.handle.css( "marginTop", this.handlePos );
             }
             else {
-               this.handle.css( "marginLeft", this.handlePos + "px" ); 
+               this.handle.css( "marginLeft", this.handlePos ); 
             }
          };
          
