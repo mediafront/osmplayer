@@ -58,6 +58,7 @@
       this.playerReady = false;
       this.loaded = false;
       this.mediaFile = null;
+      this.hasPlaylist = false;
       this.width = 0;
       this.height = 0;
 
@@ -160,8 +161,16 @@
           this.playIndex = 0;
           this.playNext();
         }
-        else {
+        else if( this.hasPlaylist ) {
           this.reset();
+        }
+        else {
+          // If there is no playlist, and no repeat, we will
+          // just seek to the beginning and pause.
+          this.loaded = false;
+          this.settings.autostart = false;
+          this.playIndex = 0;
+          this.playNext();
         }
       };
          
@@ -257,13 +266,17 @@
             
         // If this is the playing state, we want to pause the video.
         if( data.type=="playing" && !this.loaded ) {
-          this.loaded = true;
-          this.player.setVolume( (this.settings.volume / 100) );
           if( this.settings.autoLoad && !this.settings.autostart ) {
-            this.player.pauseMedia();
-            this.settings.autostart = true;
+            setTimeout( function() {
+              _this.player.setVolume( (_this.settings.volume / 100) );
+              _this.player.pauseMedia();
+              _this.settings.autostart = true;
+              _this.loaded = true;
+            }, 100 );
           }
           else {
+            this.loaded = true;
+            this.player.setVolume( (this.settings.volume / 100) );
             this.display.trigger( "mediaupdate", data );
           }
         }
