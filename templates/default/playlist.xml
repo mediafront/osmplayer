@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<playlist version="1" xmlns="http://xspf.org/ns/0/">
+   <trackList>
+      <track>
+         <location>http://upload.wikimedia.org/wikipedia/commons/6/69/RoboCupSoccer_Robot_Football_at_2009_German_Open.ogg</location>
+         <creator>Mike1024</creator>
+         <title>OGG Video: Robocup Soccer</title>
+         <annotation>A robotic soccer tournament.</annotation>
+         <image>http://upload.wikimedia.org/wikipedia/commons/thumb/6/69/RoboCupSoccer_Robot_Football_at_2009_German_Open.ogg/mid-RoboCupSoccer_Robot_Football_at_2009_German_Open.ogg.jpg</image>
+         <info>http://commons.wikimedia.org/wiki/File:RoboCupSoccer_Robot_Football_at_2009_German_Open.ogg</info>
+      </track>
+      <track>
+         <location>http://upload.wikimedia.org/wikipedia/commons/2/2f/Levitron-levitating-top-demonstrating-Roy-M-Harrigans-spin-stabilized-magnetic-levitation.ogg</location>
+         <creator>Scott Stevenson</creator>
+         <title>OGG Video: Levitron</title>
+         <annotation>Wikipedia demonstration video of the Levitron levitating top device which partially explains its reliance upon the principle of spin stabilized magnetic levitation. A phenomenon discovered through invention in the late 1970's by Roy M. Harrigan (for which he received a patent in 1983 #4,382,245).</annotation>
+         <image>http://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Levitron-levitating-top-demonstrating-Roy-M-Harrigans-spin-stabilized-magnetic-levitation.ogg/mid-Levitron-levitating-top-demonstrating-Roy-M-Harrigans-spin-stabilized-magnetic-levitation.ogg.jpg</image>
+         <info>http://commons.wikimedia.org/wiki/File:Levitron-levitating-top-demonstrating-Roy-M-Harrigans-spin-stabilized-magnetic-levitation.ogg</info>
+      </track>
+      <track>
+         <location>http://www.vimeo.com/5653474</location>
+         <creator>nesthor</creator>
+         <title>Vimeo Example: Kuroshio Sea</title>
+         <annotation>Vimeo Example.</annotation>
+         <image>http://ats.vimeo.com/192/971/19297174_100.jpg</image>
+      </track>
+      <track>
+         <location>http://www.youtube.com/watch?v=oPmhTCaDkGA</location>
+         <creator>Ok Go!</creator>
+         <title>YouTube Example: Ok Go!</title>
+         <annotation>YouTube Example.</annotation>
+         <image>http://i1.ytimg.com/vi/dTAAsCNK7RA/hqdefault.jpg</image>
+      </track> 
+      <track>
+         <location>http://download.blender.org/peach/bigbuckbunny_movies/BigBuckBunny_640x360.m4v</location>
+         <creator>www.bigbuckbunny.org</creator>
+         <title>M4V Example: Big Buck Bunny</title>
+         <annotation>M4V Example.</annotation>
+         <image>http://upload.wikimedia.org/wikipedia/commons/5/5f/BBB-Bunny.png</image>
+      </track> 
+      <track>
+         <location>http://mirror.cs.umn.edu/blender.org/peach/trailer/trailer_480p.mov</location>
+         <creator>www.bigbuckbunny.org</creator>
+         <title>MOV (Flash) Example: Big Buck Bunny Trailer</title>
+         <annotation>MOV Example.</annotation>
+         <image>http://peach.blender.org/wp-content/uploads/watchtrailer.gif</image>
+      </track> 
+      <track>
+         <location>http://upload.wikimedia.org/wikipedia/commons/c/cf/Big_Buck_Bunny_8_seconds_bird_clip.ogv</location>
+         <creator>www.bigbuckbunny.org</creator>
+         <title>OGV Example: Bird in Tree</title>
+         <annotation>OGV Example.</annotation>
+         <image>http://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Big_Buck_Bunny_8_seconds_bird_clip.ogv/mid-Big_Buck_Bunny_8_seconds_bird_clip.ogv.jpg</image>
+      </track>      
+   </trackList>
+</playlist>
