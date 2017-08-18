@@ -116,10 +116,8 @@
       };
          
       this.showPlay = function( show, tween ) {
-        if( this.playVisible != show ) {
-          this.playVisible = show;
-          this.showElement( this.play, show, tween );
-        }
+        this.playVisible = show;
+        this.showElement( this.play, show, tween );
       };
 
       this.showBusy = function( id, show, tween ) {
@@ -131,28 +129,21 @@
         }
 
         // Set the busy cursor visiblility.
-        var _busyVisible = (this.busyFlags > 0);
-        if( this.busyVisible != _busyVisible ) {
-          this.busyVisible = _busyVisible;
-          this.showElement( this.busy, this.busyVisible, tween );
-        }
+        this.busyVisible = (this.busyFlags > 0);
+        this.showElement( this.busy, this.busyVisible, tween );
       };
          
       this.showPreview = function( show, tween ) {
-        if( this.previewVisible != show ) {
-          this.previewVisible = show;
-          if( this.preview ) {
-            this.showElement( this.preview.display, show, tween );
-          }
+        this.previewVisible = show;
+        if( this.preview ) {
+          this.showElement( this.preview.display, show, tween );
         }
       };
 
       this.showController = function( show, tween ) {
-        if( this.controllerVisible != show ) {
-          this.controllerVisible = show;
-          if( this.controller ) {
-            this.showElement( this.controller.display, show, tween );
-          }
+        this.controllerVisible = show;
+        if( this.controller ) {
+          this.showElement( this.controller.display, show, tween );
         }
       };
 

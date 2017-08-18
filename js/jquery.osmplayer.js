@@ -2240,31 +2240,33 @@
          this.links = this.display.find("ul li");
          this.links.each( function() {
             var link = $(this).find("a");
-            var linkId = link.attr("href");
-            var contents = _this.display.find(linkId);
-            contents.hide();
-            _this.contents[linkId] = contents; 
-            
-            link.bind("mouseenter", $(this), function( event ) {
-               settings.template.onMenuOver( event.data );   
-            });
-            
-            link.bind("mouseleave", $(this), function( event ) {
-               settings.template.onMenuOut( event.data );   
-            });
-            
-            link.bind("click", {
-               id:linkId,
-               obj:$(this)
-               }, function( event ) {
-               event.preventDefault(); 
-               _this.setMenuItem( event.data.obj, event.data.id );
-            });
-            
-            if( linkIndex === 0 ) {
-               _this.setMenuItem( $(this), linkId );   
+            if( link.length > 0 ) {
+              var linkId = link.attr("href");
+              var contents = _this.display.find(linkId);
+              contents.hide();
+              _this.contents[linkId] = contents;
+
+              link.bind("mouseenter", $(this), function( event ) {
+                 settings.template.onMenuOver( event.data );
+              });
+
+              link.bind("mouseleave", $(this), function( event ) {
+                 settings.template.onMenuOut( event.data );
+              });
+
+              link.bind("click", {
+                 id:linkId,
+                 obj:$(this)
+                 }, function( event ) {
+                 event.preventDefault();
+                 _this.setMenuItem( event.data.obj, event.data.id );
+              });
+
+              if( linkIndex === 0 ) {
+                 _this.setMenuItem( $(this), linkId );
+              }
+              linkIndex++;
             }
-            linkIndex++;
          });
         
          
@@ -2389,10 +2391,8 @@
       };
          
       this.showPlay = function( show, tween ) {
-        if( this.playVisible != show ) {
-          this.playVisible = show;
-          this.showElement( this.play, show, tween );
-        }
+        this.playVisible = show;
+        this.showElement( this.play, show, tween );
       };
 
       this.showBusy = function( id, show, tween ) {
@@ -2404,28 +2404,21 @@
         }
 
         // Set the busy cursor visiblility.
-        var _busyVisible = (this.busyFlags > 0);
-        if( this.busyVisible != _busyVisible ) {
-          this.busyVisible = _busyVisible;
-          this.showElement( this.busy, this.busyVisible, tween );
-        }
+        this.busyVisible = (this.busyFlags > 0);
+        this.showElement( this.busy, this.busyVisible, tween );
       };
          
       this.showPreview = function( show, tween ) {
-        if( this.previewVisible != show ) {
-          this.previewVisible = show;
-          if( this.preview ) {
-            this.showElement( this.preview.display, show, tween );
-          }
+        this.previewVisible = show;
+        if( this.preview ) {
+          this.showElement( this.preview.display, show, tween );
         }
       };
 
       this.showController = function( show, tween ) {
-        if( this.controllerVisible != show ) {
-          this.controllerVisible = show;
-          if( this.controller ) {
-            this.showElement( this.controller.display, show, tween );
-          }
+        this.controllerVisible = show;
+        if( this.controller ) {
+          this.showElement( this.controller.display, show, tween );
         }
       };
 
