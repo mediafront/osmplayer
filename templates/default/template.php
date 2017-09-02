@@ -125,21 +125,6 @@ class DefaultTemplate extends OSMTemplate {
         'scrollUp' => '#mediascrollup',
         'scrollDown' => '#mediascrolldown',
         'titleLinks' => '#mediatitlelinks'
-      ),
-      
-      'template' => array(
-        'titlebar' => TRUE,
-        'menu' => TRUE,
-        'node' => array(
-          'controlBar' => array(
-            'voter' => TRUE
-          )
-        ),
-        'playlist' => array(
-          'teaser' => TRUE,
-          
-          
-        )
       )
     );
   }
