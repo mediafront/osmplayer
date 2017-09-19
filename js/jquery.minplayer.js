@@ -24,7 +24,267 @@
  *  THE SOFTWARE.
  */
 (function($) {
-   jQuery.media = jQuery.media ? jQuery.media : {};
+  jQuery.media = jQuery.media ? jQuery.media : {};
+
+  // Called when the YouTube player is ready.
+  window.onYouTubePlayerReady = function( playerId ) {
+    playerId = playerId.replace("_media", "");
+    jQuery.media.players[playerId].node.player.media.player.onReady();
+  };
+
+  // Tell the media player how to determine if a file path is a YouTube media type.
+  jQuery.media.playerTypes = jQuery.extend( jQuery.media.playerTypes, {
+    "youtube":function( file ) {
+      return (file.search(/^http(s)?\:\/\/(www\.)?youtube\.com/i) === 0);
+    }
+  });
+
+  jQuery.fn.mediayoutube = function( options, onUpdate ) {
+    return new (function( video, options, onUpdate ) {
+      this.display = video;
+      var _this = this;
+      this.player = null;
+      this.videoFile = null;
+      this.loaded = false;
+      this.ready = false;
+      this.qualities = [];
+
+      this.createMedia = function( videoFile, preview ) {
+        this.videoFile = videoFile;
+        this.ready = false;
+        var playerId = (options.id + "_media");
+        var rand = Math.floor(Math.random() * 1000000);
+        var flashPlayer = 'http://www.youtube.com/apiplayer?rand=' + rand + '&amp;version=3&amp;enablejsapi=1&amp;playerapiid=' + playerId;
+        jQuery.media.utils.insertFlash(
+          this.display,
+          flashPlayer,
+          playerId,
+          this.display.width(),
+          this.display.height(),
+          {},
+          options.wmode,
+          function( obj ) {
+            _this.player = obj;
+            _this.loadPlayer();
+          }
+          );
+      };
+         
+      this.getId = function( path ) {
+        var regex = /^http[s]?\:\/\/(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9]+)/i;
+        return (path.search(regex) == 0) ? path.replace(regex, "$2") : path;
+      };
+         
+      this.loadMedia = function( videoFile ) {
+        if( this.player ) {
+          this.loaded = false;
+          this.videoFile = videoFile;
+               
+          // Let them know the player is ready.
+          onUpdate( {
+            type:"playerready"
+          } );
+               
+          // Load our video.
+          this.player.loadVideoById( this.getId( this.videoFile.path ), 0, options.quality );
+        }
+      };
+         
+      // Called when the player has finished loading.
+      this.onReady = function() {
+        this.ready = true;
+        this.loadPlayer();
+      };
+         
+      // Try to load the player.
+      this.loadPlayer = function() {
+        if( this.ready && this.player ) {
+          // Create our callback functions.
+          window[options.id + 'StateChange'] = function( newState ) {
+            _this.onStateChange( newState );
+          };
+   
+          window[options.id + 'PlayerError'] = function( errorCode ) {
+            _this.onError( errorCode );
+          };
+               
+          window[options.id + 'QualityChange'] = function( newQuality ) {
+            _this.quality = newQuality;
+          };
+               
+          // Add our event listeners.
+          this.player.addEventListener('onStateChange', options.id + 'StateChange');
+          this.player.addEventListener('onError', options.id + 'PlayerError');
+          this.player.addEventListener('onPlaybackQualityChange', options.id + 'QualityChange');
+
+          // Get all of the quality levels.
+          this.qualities = this.player.getAvailableQualityLevels();
+
+          // Let them know the player is ready.
+          onUpdate( {
+            type:"playerready"
+          } );
+               
+          // Load our video.
+          this.player.loadVideoById( this.getId( this.videoFile.path ), 0 );
+        }
+      };
+         
+      // Called when the YouTube player state changes.
+      this.onStateChange = function( newState ) {
+        var playerState = this.getPlayerState( newState );
+        onUpdate( {
+          type:playerState
+        } );
+            
+        if( !this.loaded && playerState == "playing" ) {
+          // Set this player to loaded.
+          this.loaded = true;
+               
+          // Update our meta data.
+          onUpdate( {
+            type:"meta"
+          } );
+        }
+      };
+         
+      // Called when the YouTube player has an error.
+      this.onError = function( errorCode ) {
+        var errorText = "An unknown error has occured: " + errorCode;
+        if( errorCode == 100 ) {
+          errorText = "The requested video was not found.  ";
+          errorText += "This occurs when a video has been removed (for any reason), ";
+          errorText += "or it has been marked as private.";
+        } else if( (errorCode == 101) || (errorCode == 150) ) {
+          errorText = "The video requested does not allow playback in an embedded player.";
+        }
+        console.log(errorText);
+        onUpdate( {
+          type:"error",
+          data:errorText
+        } );
+      };
+         
+      // Translates the player state for the YouTube API player.
+      this.getPlayerState = function( playerState ) {
+        switch (playerState) {
+          case 5:
+            return 'ready';
+          case 3:
+            return 'buffering';
+          case 2:
+            return 'paused';
+          case 1:
+            return 'playing';
+          case 0:
+            return 'complete';
+          case -1:
+            return 'stopped';
+          default:
+            return 'unknown';
+        }
+        return 'unknown';
+      };
+         
+      this.setSize = function( newWidth, newHeight ) {
+      //this.player.setSize(newWidth, newHeight);
+      };
+         
+      this.playMedia = function() {
+        onUpdate({
+          type:"buffering"
+        });
+        this.player.playVideo();
+      };
+         
+      this.pauseMedia = function() {
+        this.player.pauseVideo();
+      };
+         
+      this.stopMedia = function() {
+        this.player.stopVideo();
+      };
+         
+      this.seekMedia = function( pos ) {
+        onUpdate({
+          type:"buffering"
+        });
+        this.player.seekTo( pos, true );
+      };
+         
+      this.setVolume = function( vol ) {
+        this.player.setVolume( vol * 100 );
+      };
+         
+      this.setQuality = function( quality ) {
+        this.player.setPlaybackQuality( quality );
+      };
+         
+      this.getVolume = function() {
+        return (this.player.getVolume() / 100);
+      };
+         
+      this.getDuration = function() {
+        return this.player.getDuration();
+      };
+         
+      this.getCurrentTime = function() {
+        return this.player.getCurrentTime();
+      };
+         
+      this.getQuality = function() {
+        return this.player.getPlaybackQuality();
+      };
+
+      this.getEmbedCode = function() {
+        return this.player.getVideoEmbedCode();
+      };
+         
+      this.getMediaLink = function() {
+        return this.player.getVideoUrl();
+      };
+
+      this.getBytesLoaded = function() {
+        return this.player.getVideoBytesLoaded();
+      };
+         
+      this.getBytesTotal = function() {
+        return this.player.getVideoBytesTotal();
+      };
+         
+      this.hasControls = function() {
+        return false;
+      };
+      this.showControls = function(show) {};
+    })( this, options, onUpdate );
+  };
+         /**
+ *  Copyright (c) 2010 Alethia Inc,
+ *  http://www.alethia-inc.com
+ *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *
+ *  License:  GPL version 3.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+
+   
    
    // Set up our defaults for this component.
    jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
@@ -260,6 +520,1137 @@
       })( this, settings );
    };
 /**
+ *  Copyright (c) 2010 Alethia Inc,
+ *  http://www.alethia-inc.com
+ *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *
+ *  License:  GPL version 3.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+
+  
+   
+  // Set up our defaults for this component.
+  jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
+    logo:"logo.png",
+    logoWidth:49,
+    logoHeight:15,
+    logopos:"sw",
+    logox:5,
+    logoy:5,
+    link:"http://www.mediafront.org",
+    file:"",
+    image:"",
+    timeout:2000,
+    autoLoad:true
+  });
+
+  jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
+    busy:"#mediabusy",
+    preview:"#mediapreview",
+    play:"#mediaplay",
+    media:"#mediadisplay",
+    control:"#mediacontrol"
+  });
+   
+  jQuery.fn.minplayer = function( settings ) {
+    if( this.length === 0 ) {
+      return null;
+    }
+    return new (function( player, settings ) {
+      // Get the settings.
+      settings = jQuery.media.utils.getSettings(settings);
+         
+      // Save the jQuery display.
+      this.display = player;
+      var _this = this;
+
+      // If the player should auto load or not.
+      this.autoLoad = settings.autoLoad;
+
+      // Our attached controller.
+      this.controller = null;
+         
+      // The active controller.
+      this.activeController = null;
+
+      // Store the busy cursor and data.
+      this.busy = player.find( settings.ids.busy );
+      this.busyImg = this.busy.find("img");
+      this.busyWidth = this.busyImg.width();
+      this.busyHeight = this.busyImg.height();
+         
+      // Store the play overlay.
+      this.play = player.find( settings.ids.play );
+      // Toggle the play/pause state if they click on the play button.
+      this.play.bind("click", function() {
+        _this.togglePlayPause();
+      });
+      this.playImg = this.play.find("img");
+      this.playWidth = this.playImg.width();
+      this.playHeight = this.playImg.height();
+         
+      // Store the preview image.
+      this.preview = null;
+         
+      // The internal player controls.
+      this.usePlayerControls = false;
+      this.busyFlags = 0;
+      this.busyVisible = false;
+      this.playVisible = false;
+      this.previewVisible = false;
+      this.controllerVisible = true;
+      this.hasMedia = false;
+      this.playing = false;
+         
+      // Cache the width and height.
+      this.width = this.display.width();
+      this.height = this.display.height();
+      
+      // Hide or show an element.
+      this.showElement = function( element, show, tween ) {
+        if( element && !this.usePlayerControls ) {
+          if( show ) {
+            element.show(tween);
+          }
+          else {
+            element.hide(tween);
+          }
+        }
+      };
+         
+      this.showPlay = function( show, tween ) {
+        this.playVisible = show;
+        this.showElement( this.play, show, tween );
+      };
+
+      this.showBusy = function( id, show, tween ) {
+        if( show ) {
+          this.busyFlags |= (1 << id);
+        }
+        else {
+          this.busyFlags &= ~(1 << id);
+        }
+
+        // Set the busy cursor visiblility.
+        this.busyVisible = (this.busyFlags > 0);
+        this.showElement( this.busy, this.busyVisible, tween );
+      };
+         
+      this.showPreview = function( show, tween ) {
+        this.previewVisible = show;
+        if( this.preview ) {
+          this.showElement( this.preview.display, show, tween );
+        }
+      };
+
+      this.showController = function( show, tween ) {
+        this.controllerVisible = show;
+        if( this.controller ) {
+          this.showElement( this.controller.display, show, tween );
+        }
+      };
+
+      // Handle the control events.
+      this.onControlUpdate = function( data ) {
+        if( this.media ) {
+          // If the player is ready.
+          if( this.media.playerReady ) {
+            switch( data.type ) {
+              case "play":
+                this.media.player.playMedia();
+                break;
+              case "pause":
+                this.media.player.pauseMedia();
+                break;
+              case "seek":
+                this.media.player.seekMedia( data.value );
+                break;
+              case "volume":
+                this.media.player.setVolume( data.value );
+                break;
+              case "mute":
+                this.media.mute( data.value );
+                break;
+            }
+          }
+          // If there are files in the queue but no current media file.
+          else if( (this.media.playQueue.length > 0) && !this.media.mediaFile ) {
+            // They interacted with the player.  Always autoload at this point on.
+            this.autoLoad = true;
+                  
+            // Then play the next file in the queue.
+            this.playNext();
+          }
+
+          // Let the template do something...
+          if( settings.template && settings.template.onControlUpdate ) {
+            settings.template.onControlUpdate( data );
+          }
+        }
+      };
+         
+      // Handle the full screen event requests.
+      this.fullScreen = function( full ) {
+        if( settings.template.onFullScreen ) {
+          settings.template.onFullScreen( full );
+        }
+      };
+         
+      // Handle when the preview image loads.
+      this.onPreviewLoaded = function() {
+        this.previewVisible = true;
+      // If we don't have any media, then we will assume that they
+      // just want an image viewer.  Trigger a complete event after the timeout
+      // interval.
+      /* Doesn't quite work... need to investigate further.
+            if( !this.hasMedia ) {
+               setTimeout( function() {
+                  _this.display.trigger("mediaupdate", {type:"complete"});
+               }, settings.timeout );
+            }
+            */
+      };
+         
+      // Handle the media events.
+      this.onMediaUpdate = function( data ) {
+        switch( data.type ) {
+          case "paused":
+            this.playing = false;
+            this.showPlay(true);
+            this.showBusy(1, false);
+            break;
+          case "update":
+          case "playing":
+            this.playing = true;
+            this.showPlay(false);
+            this.showBusy(1, false);
+            this.showPreview((this.media.mediaFile.type == "audio"));
+            break;
+          case "initialize":
+            this.playing = false;
+            this.showPlay(true);
+            this.showBusy(1, this.autoLoad);
+            this.showPreview(true);
+            break;
+          case "buffering":
+            this.showPlay(true);
+            this.showBusy(1, true);
+            this.showPreview((this.media.mediaFile.type == "audio"));
+            break;
+        }
+            
+        // Update our controller.
+        if( this.controller ) {
+          this.controller.onMediaUpdate( data );
+        }
+            
+        // Update our active controller.
+        if( this.activeController ) {
+          this.activeController.onMediaUpdate( data );
+        }
+            
+        // Let the template do something...
+        if( settings.template && settings.template.onMediaUpdate ) {
+          settings.template.onMediaUpdate( data );
+        }
+      };
+         
+      // Allow mulitple controllers to control this media.
+      this.addController = function( newController, active ) {
+        if( newController ) {
+          newController.display.bind( "controlupdate", newController, function( event, data ) {
+            _this.activeController = event.data;
+            _this.onControlUpdate( data );
+          });
+               
+          if( active && !this.activeController ) {
+            this.activeController = newController;
+          }
+        }
+        return newController;
+      };
+
+      // Set the media player.
+      this.media = this.display.find( settings.ids.media ).mediadisplay( settings );
+      if( this.media ) {
+        this.media.display.bind( "mediaupdate", function( event, data ) {
+          _this.onMediaUpdate( data );
+        });
+      }
+         
+      // Add the control bar to the media.
+      this.controller = this.addController( this.display.find( settings.ids.control ).mediacontrol( settings ), false );
+         
+      // Now add any queued controllers...
+      if( jQuery.media.controllers[settings.id] ) {
+        var controllers = jQuery.media.controllers[settings.id];
+        var i = controllers.length;
+        while(i--) {
+          this.addController( controllers[i], true );
+        }
+      }
+         
+      // Set the size of this media player.
+      this.setSize = function( newWidth, newHeight ) {
+        this.width = newWidth ? newWidth : this.width;
+        this.height = newHeight ? newHeight : this.height;
+
+        if( (this.width > 0) && (this.height > 0) ) {
+          // Set the position of the logo.
+          this.setLogoPos();
+
+          // Resize the preview image.
+          if( this.preview ) {
+            this.preview.resize( this.width, this.height );
+          }
+               
+          // Resize the busy symbol.
+          var busyMLeft = Math.ceil((this.width - this.busyWidth)/2);
+          var busyMTop = Math.ceil((this.height - this.busyHeight)/2);
+          this.busy.css({
+            width:this.width,
+            height:this.height
+          });
+          this.busyImg.css({
+            marginLeft:busyMLeft,
+            marginTop:busyMTop
+          });
+
+          // Resize the play symbol.
+          var playMLeft = Math.ceil((this.width - this.playWidth)/2);
+          var playMTop = Math.ceil((this.height - this.playHeight)/2);
+          this.play.css({
+            width:this.width,
+            height:this.height
+          });
+          this.playImg.css({
+            marginLeft:playMLeft,
+            marginTop:playMTop
+          });
+               
+          // Resize the media.
+          if( this.media ) {
+            this.media.display.css({
+              width:this.width,
+              height:this.height
+            });
+            this.media.setSize( this.width, this.height );
+          }
+        }
+      };
+         
+      // Function to show the built in controls or not.
+      this.showPlayerController = function( show ) {
+        if( this.media && this.media.hasControls() ) {
+          this.usePlayerControls = show;
+          if( show ) {
+            this.busy.hide();
+            this.play.hide();
+            if( this.preview ) {
+              this.preview.display.hide();
+            }
+            if( this.controller ) {
+              this.controller.display.hide();
+            }
+          }
+          else {
+            this.showBusy( 1, ((this.busyFlags & 0x2) == 0x2) );
+            this.showPlay( this.playVisible );
+            this.showPreview( this.previewVisible );
+            this.showController( this.controllerVisible );
+          }
+          this.media.showControls( show );
+        }
+      };
+         
+      // Add the logo.
+      if( this.media ) {
+        this.display.prepend('<div class="medialogo"></div>');
+        this.logo = this.display.find(".medialogo").mediaimage( settings.link );
+        this.logo.display.css({
+          position:"absolute",
+          zIndex:490
+        });
+        this.logo.width = settings.logoWidth;
+        this.logo.height = settings.logoHeight;
+        this.logo.loadImage( settings.logo );
+      }
+
+      // Sets the logo position.
+      this.setLogoPos = function() {
+        if( this.logo ) {
+          var mediaTop = parseInt(this.media.display.css("marginTop"), 0);
+          var mediaLeft = parseInt(this.media.display.css("marginLeft"), 0);
+          var marginTop = (settings.logopos=="se" || settings.logopos=="sw") ? (mediaTop + this.height - this.logo.height - settings.logoy) : mediaTop + settings.logoy;
+          var marginLeft = (settings.logopos=="ne" || settings.logopos=="se") ? (mediaLeft + this.width - this.logo.width - settings.logox) : mediaLeft + settings.logox;
+          this.logo.display.css({
+            marginTop:marginTop,
+            marginLeft:marginLeft
+          });
+        }
+      };
+
+      this.onResize = function( deltaX, deltaY ) {
+        // Resize the attached control region.
+        if( this.controller ) {
+          this.controller.onResize( deltaX, deltaY );
+        }
+            
+        // Resize the media region.
+        this.setSize( this.width + deltaX, this.height + deltaY );
+      };
+         
+      // Reset to previous state...
+      this.reset = function() {
+        this.hasMedia = false;
+        this.playing = false;
+        if( this.controller ) {
+          this.controller.reset();
+        }
+        if( this.activeController ) {
+          this.activeController.reset();
+        }
+
+        this.showBusy(1, this.autoLoad);
+            
+        if( this.media ) {
+          this.media.reset();
+        }
+      };
+         
+      // Toggle the play/pause state.
+      this.togglePlayPause = function() {
+        if( this.media ) {
+          if( this.media.playerReady ) {
+            if( this.playing ) {
+              this.showPlay(true);
+              this.media.player.pauseMedia();
+            }
+            else {
+              this.showPlay(false);
+              this.media.player.playMedia();
+            }
+          }
+          else if( (this.media.playQueue.length > 0) && !this.media.mediaFile ) {
+            // They interacted with the player.  Always autoload at this point on.
+            this.autoLoad = true;
+
+            // Then play the next file in the queue.
+            this.playNext();
+          }
+        }
+      };
+         
+      // Loads an image...
+      this.loadImage = function( image ) {
+        this.preview = player.find( settings.ids.preview ).mediaimage();
+
+        if( this.preview ) {
+          // Set the size of the preview.
+          this.preview.resize( this.width, this.height );
+
+          // Bind to the image loaded event.
+          this.preview.display.bind("imageLoaded", function() {
+            _this.onPreviewLoaded();
+          });
+
+          // Load the image.
+          this.preview.loadImage( image );
+
+          // Now set the preview image in the media player.
+          if( this.media ) {
+            this.media.preview = image;
+          }
+        }
+      };
+         
+      // Clears the loaded image.
+      this.clearImage = function() {
+        if( this.preview ) {
+          this.preview.clear();
+        }
+      };
+         
+      // Expose the public load functions from the media display.
+      this.loadFiles = function( files ) {
+        this.reset();
+        if( this.media && this.media.loadFiles( files ) && this.autoLoad ) {
+          this.media.playNext();
+        }
+      };
+         
+      // Play the next file.
+      this.playNext = function() {
+        if( this.media ) {
+          this.media.playNext();
+        }
+      };
+         
+      // Loads a single media file.
+      this.loadMedia = function( file ) {
+        this.reset();
+        if( this.media ) {
+          this.media.loadMedia( file );
+        }
+      };
+         
+      // If they provide a file, then load it.
+      if( settings.file ) {
+        this.loadMedia( settings.file );
+      }
+         
+      // If they provide the image, then load it.
+      if( settings.image ) {
+        this.loadImage( settings.image );
+      }
+    })( this, settings );
+  };
+/**
+ *  Copyright (c) 2010 Alethia Inc,
+ *  http://www.alethia-inc.com
+ *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *
+ *  License:  GPL version 3.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+
+   jQuery.fn.mediahtml5 = function( options, onUpdate ) {  
+      return new (function( media, options, onUpdate ) {
+         this.display = media;
+         var _this = this;
+         this.player = null;
+         this.bytesLoaded = 0;
+         this.bytesTotal = 0;
+         this.mediaType = "";    
+         
+         this.getPlayer = function( mediaFile, preview ) {
+            var playerId = options.id + '_' + this.mediaType;            
+            var html = '<' + this.mediaType + ' style="position:absolute" id="' + playerId + '"';
+            html += (this.mediaType == "video") ? ' width="' + this.display.width() + 'px" height="' + this.display.height() + 'px"' : '';
+            html += preview ? ' poster="' + preview + '"' : '';
+            
+            if( typeof mediaFile === 'array' ) {
+               html += '>';
+               var i = mediaFile.length;
+               while( i-- ) {
+                  html += '<source src="' + mediaFile[i].path + '" type="' + mediaFile[i].mimetype + '">';
+               }
+            }
+            else {
+               html += ' src="' + mediaFile.path + '">Unable to display media.';
+            } 
+            
+            html += '</' + this.mediaType + '>';
+            this.display.append( html );
+            return this.display.find('#' + playerId).eq(0)[0];;           
+         };
+         
+         // Create a new HTML5 player.
+         this.createMedia = function( mediaFile, preview ) {
+            // Remove any previous Flash players.
+            jQuery.media.utils.removeFlash( this.display, options.id + "_media" );
+            this.display.children().remove();    
+            this.mediaType = this.getMediaType( mediaFile );            
+            this.player = this.getPlayer( mediaFile, preview );
+
+            this.player.addEventListener( "abort", function() {
+               onUpdate( {
+                  type:"stopped"
+               } );
+            }, true);
+            this.player.addEventListener( "loadstart", function() {
+               onUpdate( {
+                  type:"ready"
+               } );
+            }, true);
+            this.player.addEventListener( "loadedmetadata", function() {
+               onUpdate( {
+                  type:"meta"
+               } );
+            }, true);
+            this.player.addEventListener( "ended", function() {
+               onUpdate( {
+                  type:"complete"
+               } );
+            }, true);
+            this.player.addEventListener( "pause", function() {
+               onUpdate( {
+                  type:"paused"
+               } );
+            }, true);
+            this.player.addEventListener( "play", function() {
+               onUpdate( {
+                  type:"playing"
+               } );
+            }, true);
+            this.player.addEventListener( "error", function() {
+               onUpdate( {
+                  type:"error"
+               } );
+            }, true);
+            
+            // Now add the event for getting the progress indication.
+            this.player.addEventListener( "progress", function( event ) {
+               _this.bytesLoaded = event.loaded;
+               _this.bytesTotal = event.total;
+            }, true);
+            
+            this.player.autoplay = true;
+            this.player.autobuffer = true;   
+            
+            onUpdate( {
+               type:"playerready"
+            } );
+         };      
+         
+         // Load new media into the HTML5 player.
+         this.loadMedia = function( mediaFile ) {
+            this.createMedia( mediaFile );
+         };                       
+         
+         this.getMediaType = function( mediaFile ) {
+            var extension = (typeof mediaFile === 'array') ? mediaFile[0].extension : mediaFile.extension;
+            switch( extension ) {
+               case "ogg": case "ogv": case "mp4": case "m4v":
+                  return "video";
+                  
+               case "oga": case "mp3":
+                  return "audio";
+            }
+            return "video";
+         };
+         
+         this.playMedia = function() {
+            this.player.play();  
+         };
+         
+         this.pauseMedia = function() {
+            this.player.pause();             
+         };
+         
+         this.stopMedia = function() {
+            this.pauseMedia();
+            this.player.src = "";           
+         };
+         
+         this.seekMedia = function( pos ) {
+            this.player.currentTime = pos;            
+         };
+         
+         this.setVolume = function( vol ) {
+            this.player.volume = vol;   
+         };
+         
+         this.getVolume = function() {   
+            return this.player.volume;       
+         };
+         
+         this.getDuration = function() {
+            return this.player.duration;           
+         };
+         
+         this.getCurrentTime = function() {
+            return this.player.currentTime;
+         };
+
+         this.getBytesLoaded = function() {
+            return this.bytesLoaded;
+         };
+         
+         this.getBytesTotal = function() {
+            return this.bytesTotal;
+         };          
+         
+         // Not implemented yet...
+         this.setQuality = function( quality ) {};         
+         this.getQuality = function() {
+            return "";
+         };
+         this.hasControls = function() {
+            return false;
+         };
+         this.showControls = function(show) {};          
+         this.setSize = function( newWidth, newHeight ) {};           
+         this.getEmbedCode = function() {
+            return "This media cannot be embedded.";
+         };
+         this.getMediaLink = function() {
+            return "This media currently does not have a link.";
+         };
+      })( this, options, onUpdate );
+   };
+         /**
+ *  Copyright (c) 2010 Alethia Inc,
+ *  http://www.alethia-inc.com
+ *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *
+ *  License:  GPL version 3.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+
+   window.onFlashPlayerReady = function( id ) {
+      jQuery.media.players[id].node.player.media.player.onReady();   
+   };
+
+   window.onFlashPlayerUpdate = function( id, eventType ) {
+      jQuery.media.players[id].node.player.media.player.onMediaUpdate( eventType );   
+   };
+   
+   window.onFlashPlayerDebug = function( debug ) {
+      console.log( debug );
+   };
+
+   // Set up our defaults for this component.
+   jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
+      flashPlayer:"./flash/mediafront.swf",
+      skin:"default",
+      config:"nocontrols"
+   });    
+   
+   jQuery.fn.mediaflash = function( settings, onUpdate ) {  
+      return new (function( video, settings, onUpdate ) {
+         settings = jQuery.media.utils.getSettings( settings );
+         this.display = video;
+         var _this = this;
+         this.player = null;
+         this.videoFile = null;
+         this.preview = '';
+         this.ready = false;
+         
+         // Translate the messages.
+         this.translate = {
+            "mediaConnected":"connected",
+            "mediaBuffering":"buffering",
+            "mediaPaused":"paused",
+            "mediaPlaying":"playing",
+            "mediaStopped":"stopped",
+            "mediaComplete":"complete",
+            "mediaMeta":"meta"        
+         };
+         
+         this.createMedia = function( videoFile, preview ) {
+            this.videoFile = videoFile;
+            this.preview = preview;
+            this.ready = false;
+            var playerId = (settings.id + "_media");            
+            var rand = Math.floor(Math.random() * 1000000); 
+            var flashPlayer = settings.flashPlayer + "?rand=" + rand;
+            var flashvars = {
+               config:settings.config,
+               id:settings.id,
+               file:videoFile.path,
+               skin:settings.skin,
+               autostart:(settings.autostart || !settings.autoLoad)
+            };
+            if( videoFile.stream ) {
+               flashvars.stream = videoFile.stream;
+            }
+            if( settings.debug ) {
+               flashvars.debug = "1";
+            }
+            jQuery.media.utils.insertFlash( 
+               this.display, 
+               flashPlayer,
+               playerId, 
+               this.display.width(), 
+               this.display.height(),
+               flashvars,
+               settings.wmode,               
+               function( obj ) {
+                  _this.player = obj; 
+                  _this.loadPlayer();  
+               }
+               );
+         };
+         
+         this.loadMedia = function( videoFile ) {
+            if( this.player ) {
+               this.videoFile = videoFile;             
+               
+               // Load the new media file into the Flash player.
+               this.player.loadMedia( videoFile.path, videoFile.stream ); 
+               
+               // Let them know the player is ready.          
+               onUpdate( {
+                  type:"playerready"
+               } );
+            } 
+         };      
+
+         this.onReady = function() { 
+            this.ready = true;   
+            this.loadPlayer();
+         };           
+         
+         this.loadPlayer = function() {
+            if( this.ready && this.player ) {
+               onUpdate( {
+                  type:"playerready"
+               } );
+            }         
+         };
+         
+         this.onMediaUpdate = function( eventType ) {
+            onUpdate( {
+               type:this.translate[eventType]
+               } );
+         };         
+         
+         this.playMedia = function() {
+            this.player.playMedia();  
+         };
+         
+         this.pauseMedia = function() {
+            this.player.pauseMedia();             
+         };
+         
+         this.stopMedia = function() {
+            this.player.stopMedia();           
+         };
+         
+         this.seekMedia = function( pos ) {
+            this.player.seekMedia( pos );           
+         };
+         
+         this.setVolume = function( vol ) {
+            this.player.setVolume( vol ); 
+         };
+         
+         this.getVolume = function() {
+            return this.player.getVolume();       
+         };
+         
+         this.getDuration = function() {
+            return this.player.getDuration();           
+         };
+         
+         this.getCurrentTime = function() {
+            return this.player.getCurrentTime();
+         };
+
+         this.getBytesLoaded = function() {
+            return this.player.getMediaBytesLoaded();
+         };
+         
+         this.getBytesTotal = function() {
+            return this.player.getMediaBytesTotal();
+         };  
+
+         this.hasControls = function() {
+            return true;
+         };
+         
+         this.showControls = function(show) {
+            this.player.showPlugin("controlBar", show);
+            this.player.showPlugin("playLoader", show);
+         };         
+         
+         this.getEmbedCode = function() { 
+            var flashVars = {
+               config:"config",
+               id:"mediafront_player",
+               file:this.videoFile.path,
+               image:this.preview,
+               skin:settings.skin
+            };
+            if( this.videoFile.stream ) {
+               flashVars.stream = this.videoFile.stream;
+            }                    
+            return jQuery.media.utils.getFlash( 
+               settings.flashPlayer,
+               "mediafront_player", 
+               settings.embedWidth, 
+               settings.embedHeight,
+               flashVars,
+               settings.wmode );
+         };         
+         
+         // Not implemented yet...
+         this.setQuality = function( quality ) {};         
+         this.getQuality = function() {
+            return "";
+         };
+         this.setSize = function( newWidth, newHeight ) {};           
+         this.getMediaLink = function() {
+            return "This video currently does not have a link.";
+         };
+      })( this, settings, onUpdate );
+   };
+         /**
+ *  Copyright (c) 2010 Alethia Inc,
+ *  http://www.alethia-inc.com
+ *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *
+ *  License:  GPL version 3.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in
+ *  all copies or substantial portions of the Software.
+
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+
+    
+
+   window.onVimeoReady = function( playerId ) {
+      playerId = playerId.replace("_media", "");      
+      jQuery.media.players[playerId].node.player.media.player.onReady();     
+   };
+
+   window.onVimeoFinish = function( playerId ) {
+      playerId = playerId.replace("_media", "");           
+      jQuery.media.players[playerId].node.player.media.player.onFinished();     
+   };
+
+   window.onVimeoLoading = function( data, playerId ) {
+      playerId = playerId.replace("_media", "");           
+      jQuery.media.players[playerId].node.player.media.player.onLoading( data );       
+   };
+
+   window.onVimeoPlay = function( playerId ) {
+      playerId = playerId.replace("_media", "");           
+      jQuery.media.players[playerId].node.player.media.player.onPlaying();    
+   };
+
+   window.onVimeoPause = function( playerId ) {
+      playerId = playerId.replace("_media", "");           
+      jQuery.media.players[playerId].node.player.media.player.onPaused();   
+   };
+
+   // Tell the media player how to determine if a file path is a YouTube media type.
+   jQuery.media.playerTypes = jQuery.extend( jQuery.media.playerTypes, {
+      "vimeo":function( file ) {
+         return (file.search(/^http(s)?\:\/\/(www\.)?vimeo\.com/i) === 0);      
+      }
+   });
+
+   jQuery.fn.mediavimeo = function( options, onUpdate ) {  
+      return new (function( video, options, onUpdate ) {
+         this.display = video;
+         var _this = this;
+         this.player = null;
+         this.videoFile = null;
+         this.ready = false;
+         this.bytesLoaded = 0;
+         this.bytesTotal = 0;
+         this.currentVolume = 1;
+         
+         this.createMedia = function( videoFile, preview ) {
+            this.videoFile = videoFile;
+            this.ready = false;
+            var playerId = (options.id + "_media");
+            var flashvars = {
+               clip_id:this.getId(videoFile.path),
+               width:this.display.width(),
+               height:this.display.height(),
+               js_api:'1',
+               js_onLoad:'onVimeoReady',
+               js_swf_id:playerId
+            };
+            var rand = Math.floor(Math.random() * 1000000); 
+            var flashPlayer = 'http://vimeo.com/moogaloop.swf?rand=' + rand;
+            jQuery.media.utils.insertFlash( 
+               this.display, 
+               flashPlayer,
+               playerId, 
+               this.display.width(), 
+               this.display.height(),
+               flashvars,
+               options.wmode,
+               function( obj ) {
+                  _this.player = obj; 
+                  _this.loadPlayer();  
+               }
+               );
+         };      
+         
+         this.getId = function( path ) {
+            var regex = /^http[s]?\:\/\/(www\.)?vimeo\.com\/([0-9]+)/i;
+            return (path.search(regex) == 0) ? path.replace(regex, "$2") : path;
+         };
+         
+         this.loadMedia = function( videoFile ) {
+            this.bytesLoaded = 0;
+            this.bytesTotal = 0;
+            this.createMedia( videoFile );
+         };
+         
+         // Called when the player has finished loading.
+         this.onReady = function() { 
+            this.ready = true; 
+            this.loadPlayer();
+         };                    
+         
+         // Load the player.
+         this.loadPlayer = function() {
+            if( this.ready && this.player ) {                              
+               // Add our event listeners.
+               this.player.api_addEventListener('onFinish', 'onVimeoFinish');
+               this.player.api_addEventListener('onLoading', 'onVimeoLoading');
+               this.player.api_addEventListener('onPlay', 'onVimeoPlay');
+               this.player.api_addEventListener('onPause', 'onVimeoPause');
+               
+               // Let them know the player is ready.          
+               onUpdate( {
+                  type:"playerready"
+               } );
+               
+               this.playMedia();
+            }         
+         };
+         
+         this.onFinished = function() {
+            onUpdate( {
+               type:"complete"
+            } );
+         };
+
+         this.onLoading = function( data ) {
+            this.bytesLoaded = data.bytesLoaded;
+            this.bytesTotal = data.bytesTotal;
+         };
+         
+         this.onPlaying = function() {
+            onUpdate( {
+               type:"playing"
+            } );
+         };                 
+
+         this.onPaused = function() {
+            onUpdate( {
+               type:"paused"
+            } );
+         };                  
+         
+         this.playMedia = function() {
+            onUpdate({
+               type:"buffering"
+            });
+            this.player.api_play();
+         };
+         
+         this.pauseMedia = function() {
+            this.player.api_pause();           
+         };
+         
+         this.stopMedia = function() {
+            this.pauseMedia();  
+            this.player.api_unload();            
+         };
+         
+         this.seekMedia = function( pos ) {
+            this.player.api_seekTo( pos );           
+         };
+         
+         this.setVolume = function( vol ) {
+            this.currentVolume = vol;
+            this.player.api_setVolume( (vol*100) );          
+         };
+         
+         // For some crazy reason... Vimeo has not implemented this... so just cache the value.
+         this.getVolume = function() { 
+            return this.currentVolume; 
+         };         
+         
+         this.getDuration = function() {
+            return this.player.api_getDuration();           
+         };
+         
+         this.getCurrentTime = function() {
+            return this.player.api_getCurrentTime();
+         };
+
+         this.getBytesLoaded = function() {
+            return this.bytesLoaded;
+         };
+         
+         this.getBytesTotal = function() {
+            return this.bytesTotal;
+         };           
+         
+         // Not implemented yet...
+         this.setQuality = function( quality ) {};         
+         this.getQuality = function() {
+            return "";
+         };
+         this.hasControls = function() {
+            return true;
+         };
+         this.showControls = function(show) {};           
+         this.setSize = function( newWidth, newHeight ) {};         
+         this.getEmbedCode = function() {
+            return "This video cannot be embedded.";
+         };
+         this.getMediaLink = function() {
+            return "This video currently does not have a link.";
+         };
+      })( this, options, onUpdate );
+   };
+         /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
  *  Developed by Travis Tidwell | travist at alethia-inc.com 
@@ -919,1395 +2310,4 @@
       this.setSize( this.display.width(), this.display.height() );
     })( this, options );
   };
-/**
- *  Copyright (c) 2010 Alethia Inc,
- *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
- *
- *  License:  GPL version 3.
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
- *  
- *  The above copyright notice and this permission notice shall be included in
- *  all copies or substantial portions of the Software.
-
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *  THE SOFTWARE.
- */
-
-   window.onFlashPlayerReady = function( id ) {
-      jQuery.media.players[id].node.player.media.player.onReady();   
-   };
-
-   window.onFlashPlayerUpdate = function( id, eventType ) {
-      jQuery.media.players[id].node.player.media.player.onMediaUpdate( eventType );   
-   };
-   
-   window.onFlashPlayerDebug = function( debug ) {
-      console.log( debug );
-   };
-
-   // Set up our defaults for this component.
-   jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
-      flashPlayer:"./flash/mediafront.swf",
-      skin:"default",
-      config:"nocontrols"
-   });    
-   
-   jQuery.fn.mediaflash = function( settings, onUpdate ) {  
-      return new (function( video, settings, onUpdate ) {
-         settings = jQuery.media.utils.getSettings( settings );
-         this.display = video;
-         var _this = this;
-         this.player = null;
-         this.videoFile = null;
-         this.preview = '';
-         this.ready = false;
-         
-         // Translate the messages.
-         this.translate = {
-            "mediaConnected":"connected",
-            "mediaBuffering":"buffering",
-            "mediaPaused":"paused",
-            "mediaPlaying":"playing",
-            "mediaStopped":"stopped",
-            "mediaComplete":"complete",
-            "mediaMeta":"meta"        
-         };
-         
-         this.createMedia = function( videoFile, preview ) {
-            this.videoFile = videoFile;
-            this.preview = preview;
-            this.ready = false;
-            var playerId = (settings.id + "_media");            
-            var rand = Math.floor(Math.random() * 1000000); 
-            var flashPlayer = settings.flashPlayer + "?rand=" + rand;
-            var flashvars = {
-               config:settings.config,
-               id:settings.id,
-               file:videoFile.path,
-               skin:settings.skin,
-               autostart:(settings.autostart || !settings.autoLoad)
-            };
-            if( videoFile.stream ) {
-               flashvars.stream = videoFile.stream;
-            }
-            if( settings.debug ) {
-               flashvars.debug = "1";
-            }
-            jQuery.media.utils.insertFlash( 
-               this.display, 
-               flashPlayer,
-               playerId, 
-               this.display.width(), 
-               this.display.height(),
-               flashvars,
-               settings.wmode,               
-               function( obj ) {
-                  _this.player = obj; 
-                  _this.loadPlayer();  
-               }
-               );
-         };
-         
-         this.loadMedia = function( videoFile ) {
-            if( this.player ) {
-               this.videoFile = videoFile;             
-               
-               // Load the new media file into the Flash player.
-               this.player.loadMedia( videoFile.path, videoFile.stream ); 
-               
-               // Let them know the player is ready.          
-               onUpdate( {
-                  type:"playerready"
-               } );
-            } 
-         };      
-
-         this.onReady = function() { 
-            this.ready = true;   
-            this.loadPlayer();
-         };           
-         
-         this.loadPlayer = function() {
-            if( this.ready && this.player ) {
-               onUpdate( {
-                  type:"playerready"
-               } );
-            }         
-         };
-         
-         this.onMediaUpdate = function( eventType ) {
-            onUpdate( {
-               type:this.translate[eventType]
-               } );
-         };         
-         
-         this.playMedia = function() {
-            this.player.playMedia();  
-         };
-         
-         this.pauseMedia = function() {
-            this.player.pauseMedia();             
-         };
-         
-         this.stopMedia = function() {
-            this.player.stopMedia();           
-         };
-         
-         this.seekMedia = function( pos ) {
-            this.player.seekMedia( pos );           
-         };
-         
-         this.setVolume = function( vol ) {
-            this.player.setVolume( vol ); 
-         };
-         
-         this.getVolume = function() {
-            return this.player.getVolume();       
-         };
-         
-         this.getDuration = function() {
-            return this.player.getDuration();           
-         };
-         
-         this.getCurrentTime = function() {
-            return this.player.getCurrentTime();
-         };
-
-         this.getBytesLoaded = function() {
-            return this.player.getMediaBytesLoaded();
-         };
-         
-         this.getBytesTotal = function() {
-            return this.player.getMediaBytesTotal();
-         };  
-
-         this.hasControls = function() {
-            return true;
-         };
-         
-         this.showControls = function(show) {
-            this.player.showPlugin("controlBar", show);
-            this.player.showPlugin("playLoader", show);
-         };         
-         
-         this.getEmbedCode = function() { 
-            var flashVars = {
-               config:"config",
-               id:"mediafront_player",
-               file:this.videoFile.path,
-               image:this.preview,
-               skin:settings.skin
-            };
-            if( this.videoFile.stream ) {
-               flashVars.stream = this.videoFile.stream;
-            }                    
-            return jQuery.media.utils.getFlash( 
-               settings.flashPlayer,
-               "mediafront_player", 
-               settings.embedWidth, 
-               settings.embedHeight,
-               flashVars,
-               settings.wmode );
-         };         
-         
-         // Not implemented yet...
-         this.setQuality = function( quality ) {};         
-         this.getQuality = function() {
-            return "";
-         };
-         this.setSize = function( newWidth, newHeight ) {};           
-         this.getMediaLink = function() {
-            return "This video currently does not have a link.";
-         };
-      })( this, settings, onUpdate );
-   };
-         /**
- *  Copyright (c) 2010 Alethia Inc,
- *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
- *
- *  License:  GPL version 3.
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
- *  
- *  The above copyright notice and this permission notice shall be included in
- *  all copies or substantial portions of the Software.
-
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *  THE SOFTWARE.
- */
-
-   jQuery.fn.mediahtml5 = function( options, onUpdate ) {  
-      return new (function( media, options, onUpdate ) {
-         this.display = media;
-         var _this = this;
-         this.player = null;
-         this.bytesLoaded = 0;
-         this.bytesTotal = 0;
-         this.mediaType = "";    
-         
-         this.getPlayer = function( mediaFile, preview ) {
-            var playerId = options.id + '_' + this.mediaType;            
-            var html = '<' + this.mediaType + ' style="position:absolute" id="' + playerId + '"';
-            html += (this.mediaType == "video") ? ' width="' + this.display.width() + 'px" height="' + this.display.height() + 'px"' : '';
-            html += preview ? ' poster="' + preview + '"' : '';
-            
-            if( typeof mediaFile === 'array' ) {
-               html += '>';
-               var i = mediaFile.length;
-               while( i-- ) {
-                  html += '<source src="' + mediaFile[i].path + '" type="' + mediaFile[i].mimetype + '">';
-               }
-            }
-            else {
-               html += ' src="' + mediaFile.path + '">Unable to display media.';
-            } 
-            
-            html += '</' + this.mediaType + '>';
-            this.display.append( html );
-            return this.display.find('#' + playerId).eq(0)[0];;           
-         };
-         
-         // Create a new HTML5 player.
-         this.createMedia = function( mediaFile, preview ) {
-            // Remove any previous Flash players.
-            jQuery.media.utils.removeFlash( this.display, options.id + "_media" );
-            this.display.children().remove();    
-            this.mediaType = this.getMediaType( mediaFile );            
-            this.player = this.getPlayer( mediaFile, preview );
-
-            this.player.addEventListener( "abort", function() {
-               onUpdate( {
-                  type:"stopped"
-               } );
-            }, true);
-            this.player.addEventListener( "loadstart", function() {
-               onUpdate( {
-                  type:"ready"
-               } );
-            }, true);
-            this.player.addEventListener( "loadedmetadata", function() {
-               onUpdate( {
-                  type:"meta"
-               } );
-            }, true);
-            this.player.addEventListener( "ended", function() {
-               onUpdate( {
-                  type:"complete"
-               } );
-            }, true);
-            this.player.addEventListener( "pause", function() {
-               onUpdate( {
-                  type:"paused"
-               } );
-            }, true);
-            this.player.addEventListener( "play", function() {
-               onUpdate( {
-                  type:"playing"
-               } );
-            }, true);
-            this.player.addEventListener( "error", function() {
-               onUpdate( {
-                  type:"error"
-               } );
-            }, true);
-            
-            // Now add the event for getting the progress indication.
-            this.player.addEventListener( "progress", function( event ) {
-               _this.bytesLoaded = event.loaded;
-               _this.bytesTotal = event.total;
-            }, true);
-            
-            this.player.autoplay = true;
-            this.player.autobuffer = true;   
-            
-            onUpdate( {
-               type:"playerready"
-            } );
-         };      
-         
-         // Load new media into the HTML5 player.
-         this.loadMedia = function( mediaFile ) {
-            this.createMedia( mediaFile );
-         };                       
-         
-         this.getMediaType = function( mediaFile ) {
-            var extension = (typeof mediaFile === 'array') ? mediaFile[0].extension : mediaFile.extension;
-            switch( extension ) {
-               case "ogg": case "ogv": case "mp4": case "m4v":
-                  return "video";
-                  
-               case "oga": case "mp3":
-                  return "audio";
-            }
-            return "video";
-         };
-         
-         this.playMedia = function() {
-            this.player.play();  
-         };
-         
-         this.pauseMedia = function() {
-            this.player.pause();             
-         };
-         
-         this.stopMedia = function() {
-            this.pauseMedia();
-            this.player.src = "";           
-         };
-         
-         this.seekMedia = function( pos ) {
-            this.player.currentTime = pos;            
-         };
-         
-         this.setVolume = function( vol ) {
-            this.player.volume = vol;   
-         };
-         
-         this.getVolume = function() {   
-            return this.player.volume;       
-         };
-         
-         this.getDuration = function() {
-            return this.player.duration;           
-         };
-         
-         this.getCurrentTime = function() {
-            return this.player.currentTime;
-         };
-
-         this.getBytesLoaded = function() {
-            return this.bytesLoaded;
-         };
-         
-         this.getBytesTotal = function() {
-            return this.bytesTotal;
-         };          
-         
-         // Not implemented yet...
-         this.setQuality = function( quality ) {};         
-         this.getQuality = function() {
-            return "";
-         };
-         this.hasControls = function() {
-            return false;
-         };
-         this.showControls = function(show) {};          
-         this.setSize = function( newWidth, newHeight ) {};           
-         this.getEmbedCode = function() {
-            return "This media cannot be embedded.";
-         };
-         this.getMediaLink = function() {
-            return "This media currently does not have a link.";
-         };
-      })( this, options, onUpdate );
-   };
-         /**
- *  Copyright (c) 2010 Alethia Inc,
- *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
- *
- *  License:  GPL version 3.
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
- *  
- *  The above copyright notice and this permission notice shall be included in
- *  all copies or substantial portions of the Software.
-
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *  THE SOFTWARE.
- */
-
-  
-   
-  // Set up our defaults for this component.
-  jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
-    logo:"logo.png",
-    logoWidth:49,
-    logoHeight:15,
-    logopos:"sw",
-    logox:5,
-    logoy:5,
-    link:"http://www.mediafront.org",
-    file:"",
-    image:"",
-    timeout:2000,
-    autoLoad:true
-  });
-
-  jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-    busy:"#mediabusy",
-    preview:"#mediapreview",
-    play:"#mediaplay",
-    media:"#mediadisplay",
-    control:"#mediacontrol"
-  });
-   
-  jQuery.fn.minplayer = function( settings ) {
-    if( this.length === 0 ) {
-      return null;
-    }
-    return new (function( player, settings ) {
-      // Get the settings.
-      settings = jQuery.media.utils.getSettings(settings);
-         
-      // Save the jQuery display.
-      this.display = player;
-      var _this = this;
-
-      // If the player should auto load or not.
-      this.autoLoad = settings.autoLoad;
-
-      // Our attached controller.
-      this.controller = null;
-         
-      // The active controller.
-      this.activeController = null;
-
-      // Store the busy cursor and data.
-      this.busy = player.find( settings.ids.busy );
-      this.busyImg = this.busy.find("img");
-      this.busyWidth = this.busyImg.width();
-      this.busyHeight = this.busyImg.height();
-         
-      // Store the play overlay.
-      this.play = player.find( settings.ids.play );
-      // Toggle the play/pause state if they click on the play button.
-      this.play.bind("click", function() {
-        _this.togglePlayPause();
-      });
-      this.playImg = this.play.find("img");
-      this.playWidth = this.playImg.width();
-      this.playHeight = this.playImg.height();
-         
-      // Store the preview image.
-      this.preview = null;
-         
-      // The internal player controls.
-      this.usePlayerControls = false;
-      this.busyFlags = 0;
-      this.busyVisible = false;
-      this.playVisible = false;
-      this.previewVisible = false;
-      this.controllerVisible = true;
-      this.hasMedia = false;
-      this.playing = false;
-         
-      // Cache the width and height.
-      this.width = this.display.width();
-      this.height = this.display.height();
-      
-      // Hide or show an element.
-      this.showElement = function( element, show, tween ) {
-        if( element && !this.usePlayerControls ) {
-          if( show ) {
-            element.show(tween);
-          }
-          else {
-            element.hide(tween);
-          }
-        }
-      };
-         
-      this.showPlay = function( show, tween ) {
-        this.playVisible = show;
-        this.showElement( this.play, show, tween );
-      };
-
-      this.showBusy = function( id, show, tween ) {
-        if( show ) {
-          this.busyFlags |= (1 << id);
-        }
-        else {
-          this.busyFlags &= ~(1 << id);
-        }
-
-        // Set the busy cursor visiblility.
-        this.busyVisible = (this.busyFlags > 0);
-        this.showElement( this.busy, this.busyVisible, tween );
-      };
-         
-      this.showPreview = function( show, tween ) {
-        this.previewVisible = show;
-        if( this.preview ) {
-          this.showElement( this.preview.display, show, tween );
-        }
-      };
-
-      this.showController = function( show, tween ) {
-        this.controllerVisible = show;
-        if( this.controller ) {
-          this.showElement( this.controller.display, show, tween );
-        }
-      };
-
-      // Handle the control events.
-      this.onControlUpdate = function( data ) {
-        if( this.media ) {
-          // If the player is ready.
-          if( this.media.playerReady ) {
-            switch( data.type ) {
-              case "play":
-                this.media.player.playMedia();
-                break;
-              case "pause":
-                this.media.player.pauseMedia();
-                break;
-              case "seek":
-                this.media.player.seekMedia( data.value );
-                break;
-              case "volume":
-                this.media.player.setVolume( data.value );
-                break;
-              case "mute":
-                this.media.mute( data.value );
-                break;
-            }
-          }
-          // If there are files in the queue but no current media file.
-          else if( (this.media.playQueue.length > 0) && !this.media.mediaFile ) {
-            // They interacted with the player.  Always autoload at this point on.
-            this.autoLoad = true;
-                  
-            // Then play the next file in the queue.
-            this.playNext();
-          }
-
-          // Let the template do something...
-          if( settings.template && settings.template.onControlUpdate ) {
-            settings.template.onControlUpdate( data );
-          }
-        }
-      };
-         
-      // Handle the full screen event requests.
-      this.fullScreen = function( full ) {
-        if( settings.template.onFullScreen ) {
-          settings.template.onFullScreen( full );
-        }
-      };
-         
-      // Handle when the preview image loads.
-      this.onPreviewLoaded = function() {
-        this.previewVisible = true;
-      // If we don't have any media, then we will assume that they
-      // just want an image viewer.  Trigger a complete event after the timeout
-      // interval.
-      /* Doesn't quite work... need to investigate further.
-            if( !this.hasMedia ) {
-               setTimeout( function() {
-                  _this.display.trigger("mediaupdate", {type:"complete"});
-               }, settings.timeout );
-            }
-            */
-      };
-         
-      // Handle the media events.
-      this.onMediaUpdate = function( data ) {
-        switch( data.type ) {
-          case "paused":
-            this.playing = false;
-            this.showPlay(true);
-            this.showBusy(1, false);
-            break;
-          case "update":
-          case "playing":
-            this.playing = true;
-            this.showPlay(false);
-            this.showBusy(1, false);
-            this.showPreview((this.media.mediaFile.type == "audio"));
-            break;
-          case "initialize":
-            this.playing = false;
-            this.showPlay(true);
-            this.showBusy(1, this.autoLoad);
-            this.showPreview(true);
-            break;
-          case "buffering":
-            this.showPlay(true);
-            this.showBusy(1, true);
-            this.showPreview((this.media.mediaFile.type == "audio"));
-            break;
-        }
-            
-        // Update our controller.
-        if( this.controller ) {
-          this.controller.onMediaUpdate( data );
-        }
-            
-        // Update our active controller.
-        if( this.activeController ) {
-          this.activeController.onMediaUpdate( data );
-        }
-            
-        // Let the template do something...
-        if( settings.template && settings.template.onMediaUpdate ) {
-          settings.template.onMediaUpdate( data );
-        }
-      };
-         
-      // Allow mulitple controllers to control this media.
-      this.addController = function( newController, active ) {
-        if( newController ) {
-          newController.display.bind( "controlupdate", newController, function( event, data ) {
-            _this.activeController = event.data;
-            _this.onControlUpdate( data );
-          });
-               
-          if( active && !this.activeController ) {
-            this.activeController = newController;
-          }
-        }
-        return newController;
-      };
-
-      // Set the media player.
-      this.media = this.display.find( settings.ids.media ).mediadisplay( settings );
-      if( this.media ) {
-        this.media.display.bind( "mediaupdate", function( event, data ) {
-          _this.onMediaUpdate( data );
-        });
-      }
-         
-      // Add the control bar to the media.
-      this.controller = this.addController( this.display.find( settings.ids.control ).mediacontrol( settings ), false );
-         
-      // Now add any queued controllers...
-      if( jQuery.media.controllers[settings.id] ) {
-        var controllers = jQuery.media.controllers[settings.id];
-        var i = controllers.length;
-        while(i--) {
-          this.addController( controllers[i], true );
-        }
-      }
-         
-      // Set the size of this media player.
-      this.setSize = function( newWidth, newHeight ) {
-        this.width = newWidth ? newWidth : this.width;
-        this.height = newHeight ? newHeight : this.height;
-
-        if( (this.width > 0) && (this.height > 0) ) {
-          // Set the position of the logo.
-          this.setLogoPos();
-
-          // Resize the preview image.
-          if( this.preview ) {
-            this.preview.resize( this.width, this.height );
-          }
-               
-          // Resize the busy symbol.
-          var busyMLeft = Math.ceil((this.width - this.busyWidth)/2);
-          var busyMTop = Math.ceil((this.height - this.busyHeight)/2);
-          this.busy.css({
-            width:this.width,
-            height:this.height
-          });
-          this.busyImg.css({
-            marginLeft:busyMLeft,
-            marginTop:busyMTop
-          });
-
-          // Resize the play symbol.
-          var playMLeft = Math.ceil((this.width - this.playWidth)/2);
-          var playMTop = Math.ceil((this.height - this.playHeight)/2);
-          this.play.css({
-            width:this.width,
-            height:this.height
-          });
-          this.playImg.css({
-            marginLeft:playMLeft,
-            marginTop:playMTop
-          });
-               
-          // Resize the media.
-          if( this.media ) {
-            this.media.display.css({
-              width:this.width,
-              height:this.height
-            });
-            this.media.setSize( this.width, this.height );
-          }
-        }
-      };
-         
-      // Function to show the built in controls or not.
-      this.showPlayerController = function( show ) {
-        if( this.media && this.media.hasControls() ) {
-          this.usePlayerControls = show;
-          if( show ) {
-            this.busy.hide();
-            this.play.hide();
-            if( this.preview ) {
-              this.preview.display.hide();
-            }
-            if( this.controller ) {
-              this.controller.display.hide();
-            }
-          }
-          else {
-            this.showBusy( 1, ((this.busyFlags & 0x2) == 0x2) );
-            this.showPlay( this.playVisible );
-            this.showPreview( this.previewVisible );
-            this.showController( this.controllerVisible );
-          }
-          this.media.showControls( show );
-        }
-      };
-         
-      // Add the logo.
-      if( this.media ) {
-        this.display.prepend('<div class="medialogo"></div>');
-        this.logo = this.display.find(".medialogo").mediaimage( settings.link );
-        this.logo.display.css({
-          position:"absolute",
-          zIndex:490
-        });
-        this.logo.width = settings.logoWidth;
-        this.logo.height = settings.logoHeight;
-        this.logo.loadImage( settings.logo );
-      }
-
-      // Sets the logo position.
-      this.setLogoPos = function() {
-        if( this.logo ) {
-          var mediaTop = parseInt(this.media.display.css("marginTop"), 0);
-          var mediaLeft = parseInt(this.media.display.css("marginLeft"), 0);
-          var marginTop = (settings.logopos=="se" || settings.logopos=="sw") ? (mediaTop + this.height - this.logo.height - settings.logoy) : mediaTop + settings.logoy;
-          var marginLeft = (settings.logopos=="ne" || settings.logopos=="se") ? (mediaLeft + this.width - this.logo.width - settings.logox) : mediaLeft + settings.logox;
-          this.logo.display.css({
-            marginTop:marginTop,
-            marginLeft:marginLeft
-          });
-        }
-      };
-
-      this.onResize = function( deltaX, deltaY ) {
-        // Resize the attached control region.
-        if( this.controller ) {
-          this.controller.onResize( deltaX, deltaY );
-        }
-            
-        // Resize the media region.
-        this.setSize( this.width + deltaX, this.height + deltaY );
-      };
-         
-      // Reset to previous state...
-      this.reset = function() {
-        this.hasMedia = false;
-        this.playing = false;
-        if( this.controller ) {
-          this.controller.reset();
-        }
-        if( this.activeController ) {
-          this.activeController.reset();
-        }
-
-        this.showBusy(1, this.autoLoad);
-            
-        if( this.media ) {
-          this.media.reset();
-        }
-      };
-         
-      // Toggle the play/pause state.
-      this.togglePlayPause = function() {
-        if( this.media ) {
-          if( this.media.playerReady ) {
-            if( this.playing ) {
-              this.showPlay(true);
-              this.media.player.pauseMedia();
-            }
-            else {
-              this.showPlay(false);
-              this.media.player.playMedia();
-            }
-          }
-          else if( (this.media.playQueue.length > 0) && !this.media.mediaFile ) {
-            // They interacted with the player.  Always autoload at this point on.
-            this.autoLoad = true;
-
-            // Then play the next file in the queue.
-            this.playNext();
-          }
-        }
-      };
-         
-      // Loads an image...
-      this.loadImage = function( image ) {
-        this.preview = player.find( settings.ids.preview ).mediaimage();
-
-        if( this.preview ) {
-          // Set the size of the preview.
-          this.preview.resize( this.width, this.height );
-
-          // Bind to the image loaded event.
-          this.preview.display.bind("imageLoaded", function() {
-            _this.onPreviewLoaded();
-          });
-
-          // Load the image.
-          this.preview.loadImage( image );
-
-          // Now set the preview image in the media player.
-          if( this.media ) {
-            this.media.preview = image;
-          }
-        }
-      };
-         
-      // Clears the loaded image.
-      this.clearImage = function() {
-        if( this.preview ) {
-          this.preview.clear();
-        }
-      };
-         
-      // Expose the public load functions from the media display.
-      this.loadFiles = function( files ) {
-        this.reset();
-        if( this.media && this.media.loadFiles( files ) && this.autoLoad ) {
-          this.media.playNext();
-        }
-      };
-         
-      // Play the next file.
-      this.playNext = function() {
-        if( this.media ) {
-          this.media.playNext();
-        }
-      };
-         
-      // Loads a single media file.
-      this.loadMedia = function( file ) {
-        this.reset();
-        if( this.media ) {
-          this.media.loadMedia( file );
-        }
-      };
-         
-      // If they provide a file, then load it.
-      if( settings.file ) {
-        this.loadMedia( settings.file );
-      }
-         
-      // If they provide the image, then load it.
-      if( settings.image ) {
-        this.loadImage( settings.image );
-      }
-    })( this, settings );
-  };
-/**
- *  Copyright (c) 2010 Alethia Inc,
- *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
- *
- *  License:  GPL version 3.
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
- *  
- *  The above copyright notice and this permission notice shall be included in
- *  all copies or substantial portions of the Software.
-
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *  THE SOFTWARE.
- */
-
-    
-
-   window.onVimeoReady = function( playerId ) {
-      playerId = playerId.replace("_media", "");      
-      jQuery.media.players[playerId].node.player.media.player.onReady();     
-   };
-
-   window.onVimeoFinish = function( playerId ) {
-      playerId = playerId.replace("_media", "");           
-      jQuery.media.players[playerId].node.player.media.player.onFinished();     
-   };
-
-   window.onVimeoLoading = function( data, playerId ) {
-      playerId = playerId.replace("_media", "");           
-      jQuery.media.players[playerId].node.player.media.player.onLoading( data );       
-   };
-
-   window.onVimeoPlay = function( playerId ) {
-      playerId = playerId.replace("_media", "");           
-      jQuery.media.players[playerId].node.player.media.player.onPlaying();    
-   };
-
-   window.onVimeoPause = function( playerId ) {
-      playerId = playerId.replace("_media", "");           
-      jQuery.media.players[playerId].node.player.media.player.onPaused();   
-   };
-
-   // Tell the media player how to determine if a file path is a YouTube media type.
-   jQuery.media.playerTypes = jQuery.extend( jQuery.media.playerTypes, {
-      "vimeo":function( file ) {
-         return (file.search(/^http(s)?\:\/\/(www\.)?vimeo\.com/i) === 0);      
-      }
-   });
-
-   jQuery.fn.mediavimeo = function( options, onUpdate ) {  
-      return new (function( video, options, onUpdate ) {
-         this.display = video;
-         var _this = this;
-         this.player = null;
-         this.videoFile = null;
-         this.ready = false;
-         this.bytesLoaded = 0;
-         this.bytesTotal = 0;
-         this.currentVolume = 1;
-         
-         this.createMedia = function( videoFile, preview ) {
-            this.videoFile = videoFile;
-            this.ready = false;
-            var playerId = (options.id + "_media");
-            var flashvars = {
-               clip_id:this.getId(videoFile.path),
-               width:this.display.width(),
-               height:this.display.height(),
-               js_api:'1',
-               js_onLoad:'onVimeoReady',
-               js_swf_id:playerId
-            };
-            var rand = Math.floor(Math.random() * 1000000); 
-            var flashPlayer = 'http://vimeo.com/moogaloop.swf?rand=' + rand;
-            jQuery.media.utils.insertFlash( 
-               this.display, 
-               flashPlayer,
-               playerId, 
-               this.display.width(), 
-               this.display.height(),
-               flashvars,
-               options.wmode,
-               function( obj ) {
-                  _this.player = obj; 
-                  _this.loadPlayer();  
-               }
-               );
-         };      
-         
-         this.getId = function( path ) {
-            var regex = /^http[s]?\:\/\/(www\.)?vimeo\.com\/([0-9]+)/i;
-            return (path.search(regex) == 0) ? path.replace(regex, "$2") : path;
-         };
-         
-         this.loadMedia = function( videoFile ) {
-            this.bytesLoaded = 0;
-            this.bytesTotal = 0;
-            this.createMedia( videoFile );
-         };
-         
-         // Called when the player has finished loading.
-         this.onReady = function() { 
-            this.ready = true; 
-            this.loadPlayer();
-         };                    
-         
-         // Load the player.
-         this.loadPlayer = function() {
-            if( this.ready && this.player ) {                              
-               // Add our event listeners.
-               this.player.api_addEventListener('onFinish', 'onVimeoFinish');
-               this.player.api_addEventListener('onLoading', 'onVimeoLoading');
-               this.player.api_addEventListener('onPlay', 'onVimeoPlay');
-               this.player.api_addEventListener('onPause', 'onVimeoPause');
-               
-               // Let them know the player is ready.          
-               onUpdate( {
-                  type:"playerready"
-               } );
-               
-               this.playMedia();
-            }         
-         };
-         
-         this.onFinished = function() {
-            onUpdate( {
-               type:"complete"
-            } );
-         };
-
-         this.onLoading = function( data ) {
-            this.bytesLoaded = data.bytesLoaded;
-            this.bytesTotal = data.bytesTotal;
-         };
-         
-         this.onPlaying = function() {
-            onUpdate( {
-               type:"playing"
-            } );
-         };                 
-
-         this.onPaused = function() {
-            onUpdate( {
-               type:"paused"
-            } );
-         };                  
-         
-         this.playMedia = function() {
-            onUpdate({
-               type:"buffering"
-            });
-            this.player.api_play();
-         };
-         
-         this.pauseMedia = function() {
-            this.player.api_pause();           
-         };
-         
-         this.stopMedia = function() {
-            this.pauseMedia();  
-            this.player.api_unload();            
-         };
-         
-         this.seekMedia = function( pos ) {
-            this.player.api_seekTo( pos );           
-         };
-         
-         this.setVolume = function( vol ) {
-            this.currentVolume = vol;
-            this.player.api_setVolume( (vol*100) );          
-         };
-         
-         // For some crazy reason... Vimeo has not implemented this... so just cache the value.
-         this.getVolume = function() { 
-            return this.currentVolume; 
-         };         
-         
-         this.getDuration = function() {
-            return this.player.api_getDuration();           
-         };
-         
-         this.getCurrentTime = function() {
-            return this.player.api_getCurrentTime();
-         };
-
-         this.getBytesLoaded = function() {
-            return this.bytesLoaded;
-         };
-         
-         this.getBytesTotal = function() {
-            return this.bytesTotal;
-         };           
-         
-         // Not implemented yet...
-         this.setQuality = function( quality ) {};         
-         this.getQuality = function() {
-            return "";
-         };
-         this.hasControls = function() {
-            return true;
-         };
-         this.showControls = function(show) {};           
-         this.setSize = function( newWidth, newHeight ) {};         
-         this.getEmbedCode = function() {
-            return "This video cannot be embedded.";
-         };
-         this.getMediaLink = function() {
-            return "This video currently does not have a link.";
-         };
-      })( this, options, onUpdate );
-   };
-         /**
- *  Copyright (c) 2010 Alethia Inc,
- *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
- *
- *  License:  GPL version 3.
- *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
- *  
- *  The above copyright notice and this permission notice shall be included in
- *  all copies or substantial portions of the Software.
-
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *  THE SOFTWARE.
- */
-
-  
-
-  // Called when the YouTube player is ready.
-  window.onYouTubePlayerReady = function( playerId ) {
-    playerId = playerId.replace("_media", "");
-    jQuery.media.players[playerId].node.player.media.player.onReady();
-  };
-
-  // Tell the media player how to determine if a file path is a YouTube media type.
-  jQuery.media.playerTypes = jQuery.extend( jQuery.media.playerTypes, {
-    "youtube":function( file ) {
-      return (file.search(/^http(s)?\:\/\/(www\.)?youtube\.com/i) === 0);
-    }
-  });
-
-  jQuery.fn.mediayoutube = function( options, onUpdate ) {
-    return new (function( video, options, onUpdate ) {
-      this.display = video;
-      var _this = this;
-      this.player = null;
-      this.videoFile = null;
-      this.loaded = false;
-      this.ready = false;
-      this.qualities = [];
-
-      this.createMedia = function( videoFile, preview ) {
-        this.videoFile = videoFile;
-        this.ready = false;
-        var playerId = (options.id + "_media");
-        var rand = Math.floor(Math.random() * 1000000);
-        var flashPlayer = 'http://www.youtube.com/apiplayer?rand=' + rand + '&amp;version=3&amp;enablejsapi=1&amp;playerapiid=' + playerId;
-        jQuery.media.utils.insertFlash(
-          this.display,
-          flashPlayer,
-          playerId,
-          this.display.width(),
-          this.display.height(),
-          {},
-          options.wmode,
-          function( obj ) {
-            _this.player = obj;
-            _this.loadPlayer();
-          }
-          );
-      };
-         
-      this.getId = function( path ) {
-        var regex = /^http[s]?\:\/\/(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9]+)/i;
-        return (path.search(regex) == 0) ? path.replace(regex, "$2") : path;
-      };
-         
-      this.loadMedia = function( videoFile ) {
-        if( this.player ) {
-          this.loaded = false;
-          this.videoFile = videoFile;
-               
-          // Let them know the player is ready.
-          onUpdate( {
-            type:"playerready"
-          } );
-               
-          // Load our video.
-          this.player.loadVideoById( this.getId( this.videoFile.path ), 0, options.quality );
-        }
-      };
-         
-      // Called when the player has finished loading.
-      this.onReady = function() {
-        this.ready = true;
-        this.loadPlayer();
-      };
-         
-      // Try to load the player.
-      this.loadPlayer = function() {
-        if( this.ready && this.player ) {
-          // Create our callback functions.
-          window[options.id + 'StateChange'] = function( newState ) {
-            _this.onStateChange( newState );
-          };
-   
-          window[options.id + 'PlayerError'] = function( errorCode ) {
-            _this.onError( errorCode );
-          };
-               
-          window[options.id + 'QualityChange'] = function( newQuality ) {
-            _this.quality = newQuality;
-          };
-               
-          // Add our event listeners.
-          this.player.addEventListener('onStateChange', options.id + 'StateChange');
-          this.player.addEventListener('onError', options.id + 'PlayerError');
-          this.player.addEventListener('onPlaybackQualityChange', options.id + 'QualityChange');
-
-          // Get all of the quality levels.
-          this.qualities = this.player.getAvailableQualityLevels();
-
-          // Let them know the player is ready.
-          onUpdate( {
-            type:"playerready"
-          } );
-               
-          // Load our video.
-          this.player.loadVideoById( this.getId( this.videoFile.path ), 0 );
-        }
-      };
-         
-      // Called when the YouTube player state changes.
-      this.onStateChange = function( newState ) {
-        var playerState = this.getPlayerState( newState );
-        onUpdate( {
-          type:playerState
-        } );
-            
-        if( !this.loaded && playerState == "playing" ) {
-          // Set this player to loaded.
-          this.loaded = true;
-               
-          // Update our meta data.
-          onUpdate( {
-            type:"meta"
-          } );
-        }
-      };
-         
-      // Called when the YouTube player has an error.
-      this.onError = function( errorCode ) {
-        var errorText = "An unknown error has occured: " + errorCode;
-        if( errorCode == 100 ) {
-          errorText = "The requested video was not found.  ";
-          errorText += "This occurs when a video has been removed (for any reason), ";
-          errorText += "or it has been marked as private.";
-        } else if( (errorCode == 101) || (errorCode == 150) ) {
-          errorText = "The video requested does not allow playback in an embedded player.";
-        }
-        console.log(errorText);
-        onUpdate( {
-          type:"error",
-          data:errorText
-        } );
-      };
-         
-      // Translates the player state for the YouTube API player.
-      this.getPlayerState = function( playerState ) {
-        switch (playerState) {
-          case 5:
-            return 'ready';
-          case 3:
-            return 'buffering';
-          case 2:
-            return 'paused';
-          case 1:
-            return 'playing';
-          case 0:
-            return 'complete';
-          case -1:
-            return 'stopped';
-          default:
-            return 'unknown';
-        }
-        return 'unknown';
-      };
-         
-      this.setSize = function( newWidth, newHeight ) {
-      //this.player.setSize(newWidth, newHeight);
-      };
-         
-      this.playMedia = function() {
-        onUpdate({
-          type:"buffering"
-        });
-        this.player.playVideo();
-      };
-         
-      this.pauseMedia = function() {
-        this.player.pauseVideo();
-      };
-         
-      this.stopMedia = function() {
-        this.player.stopVideo();
-      };
-         
-      this.seekMedia = function( pos ) {
-        onUpdate({
-          type:"buffering"
-        });
-        this.player.seekTo( pos, true );
-      };
-         
-      this.setVolume = function( vol ) {
-        this.player.setVolume( vol * 100 );
-      };
-         
-      this.setQuality = function( quality ) {
-        this.player.setPlaybackQuality( quality );
-      };
-         
-      this.getVolume = function() {
-        return (this.player.getVolume() / 100);
-      };
-         
-      this.getDuration = function() {
-        return this.player.getDuration();
-      };
-         
-      this.getCurrentTime = function() {
-        return this.player.getCurrentTime();
-      };
-         
-      this.getQuality = function() {
-        return this.player.getPlaybackQuality();
-      };
-
-      this.getEmbedCode = function() {
-        return this.player.getVideoEmbedCode();
-      };
-         
-      this.getMediaLink = function() {
-        return this.player.getVideoUrl();
-      };
-
-      this.getBytesLoaded = function() {
-        return this.player.getVideoBytesLoaded();
-      };
-         
-      this.getBytesTotal = function() {
-        return this.player.getVideoBytesTotal();
-      };
-         
-      this.hasControls = function() {
-        return false;
-      };
-      this.showControls = function(show) {};
-    })( this, options, onUpdate );
-  };
-})(jQuery);         
+})(jQuery);
