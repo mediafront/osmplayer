@@ -615,11 +615,12 @@
       }
          
       // Add some keyboard event handlers.
-      $(window).keypress( function( event ) {
+      $(window).keyup( function( event ) {
         switch( event.keyCode ) {
           case 0:   /* SpaceBar */
             _this.onSpaceBar();
             break;
+          case 113: /* Q key */
           case 27:  /* ESC Key */
             _this.onEscKey();
             break;
