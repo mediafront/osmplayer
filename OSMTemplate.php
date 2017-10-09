@@ -230,6 +230,13 @@ class OSMTemplate
     // Change all of the images to the correct path...
     $contents = str_replace( 'images/', $this->playerSettings['playerURL'] . '/' . str_replace( basename($css), '', $css ) . 'images/', $contents );
 
+    // Locate all of the z-index elements.
+    $contents = preg_replace_callback('/z-index\s*:\s*([0-9]+)/', create_function(
+      '$match',
+      '$zIndex = intval($match[1]);
+       return $zIndex ? "z-index:" . (' . $this->playerSettings['zIndex'] . ' + $zIndex) : $zIndex;'
+    ), $contents);
+
     // Get the length of the contents.
     $len = strlen( $contents );
 

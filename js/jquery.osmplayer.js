@@ -499,7 +499,8 @@
     resizable:false,
     showPlaylist:true,
     autoNext:true,
-    prefix:""
+    prefix:"",
+    zIndex:400
   });
 
   jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
@@ -2148,7 +2149,7 @@
         this.logo = this.display.find(".medialogo").mediaimage( settings.link );
         this.logo.display.css({
           position:"absolute",
-          zIndex:490
+          zIndex:(settings.zIndex + 90)
         });
         this.logo.width = settings.logoWidth;
         this.logo.height = settings.logoHeight;
@@ -2759,7 +2760,7 @@
             this.player.addEventListener( "loadstart", function() {
                onUpdate( {
                   type:"ready"
-               } );
+               });
 
                _this.onReady();
             }, true);
@@ -2798,9 +2799,9 @@
             this.player.autoplay = true;
             this.player.autobuffer = true;   
             
-            onUpdate( {
+            onUpdate({
                type:"playerready"
-            } );
+            });
          };      
 
          // Called when the media has started loading.

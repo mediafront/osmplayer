@@ -195,7 +195,8 @@ class OSMPlayer {
       'forceOverflow' => false,
       'volumeVertical' => false,
       'incrementTime' => 5,
-      'quality' => 'default'
+      'quality' => 'default',
+      'zIndex' => 400
     );
   }
 
