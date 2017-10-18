@@ -215,6 +215,9 @@
             this.playing = false;
             this.showPlay(true);
             this.showBusy(1, false);
+            if( !this.media.loaded ) {
+              this.showPreview(true);
+            }
             break;
           case "update":
           case "playing":
