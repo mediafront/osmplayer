@@ -335,9 +335,9 @@
           clearInterval( this.updateInterval );
           this.updateInterval = setInterval( function() {
             if( _this.playerReady ) {
-              _this.onMediaUpdate( {
+              _this.onMediaUpdate({
                 type:"update"
-              } );
+              });
             }
           }, 1000 );
         }
