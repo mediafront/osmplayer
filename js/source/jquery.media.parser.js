@@ -24,171 +24,171 @@
  *  THE SOFTWARE.
  */
 (function($) {
-   jQuery.media = jQuery.extend( {}, {
-      parser : function( settings ) {
-         // Return a new parser object.
-         return new (function( settings ) {  
-            var _this = this;
-            this.onLoaded = null;
+  jQuery.media = jQuery.extend( {}, {
+    parser : function( settings ) {
+      // Return a new parser object.
+      return new (function( settings ) {
+        var _this = this;
+        this.onLoaded = null;
                      
-            // Parse the contents from a file.
-            this.parseFile = function( file, onLoaded ) {
-               this.onLoaded = onLoaded;
-               jQuery.ajax({
-                  type: "GET",
-                  url:file,
-                  dataType:"xml",
-                  success: function(xml) {
-                     _this.parseXML( xml );
+        // Parse the contents from a file.
+        this.parseFile = function( file, onLoaded ) {
+          this.onLoaded = onLoaded;
+          jQuery.ajax({
+            type: "GET",
+            url:file,
+            dataType:"xml",
+            success: function(xml) {
+              _this.parseXML( xml );
+            },
+            error: function( XMLHttpRequest, textStatus, errorThrown ) {
+              console.log( "Error: " + textStatus );
+            }
+          });
+        };
+            
+        // Parse an xml string.
+        this.parseXML = function( xml ) {
+          // Try to parse a playlist in any format...
+          var playlist = this.parseXSPF( xml );
+          if( playlist.total_rows === 0 ) {
+            playlist = this.parseASX( xml );
+          }
+          if( playlist.total_rows === 0 ) {
+            playlist = this.parseRSS( xml );
+          }
+          if( this.onLoaded && playlist.total_rows ) {
+            this.onLoaded( playlist );
+          }
+          return playlist;
+        };
+            
+        // Parse XSPF contents.
+        this.parseXSPF = function( xml ) {
+          var playlist = {
+            total_rows:0,
+            nodes:[]
+          };
+          var trackList = jQuery("playlist trackList track", xml);
+          if( trackList.length > 0 ) {
+            trackList.each( function(index) {
+              playlist.total_rows++;
+              playlist.nodes.push({
+                nid:playlist.total_rows,
+                title: $(this).find("title").text(),
+                description: $(this).find("annotation").text(),
+                mediafiles: {
+                  images:{
+                    "image":{
+                      path:$(this).find("image").text()
+                    }
                   },
-                  error: function( XMLHttpRequest, textStatus, errorThrown ) {
-                     console.log( "Error: " + textStatus );
+                  media:{
+                    "media":{
+                      path:$(this).find("location").text()
+                    }
                   }
-               });               
-            }; 
-            
-            // Parse an xml string.
-            this.parseXML = function( xml ) {
-               // Try to parse a playlist in any format...
-               var playlist = this.parseXSPF( xml );
-               if( playlist.total_rows === 0 ) {
-                  playlist = this.parseASX( xml );
-               }
-               if( playlist.total_rows === 0 ) {
-                  playlist = this.parseRSS( xml );
-               }                            
-               if( this.onLoaded && playlist.total_rows ) {
-                  this.onLoaded( playlist ); 
-               }              
-               return playlist;  
-            };
-            
-            // Parse XSPF contents.
-            this.parseXSPF = function( xml ) {
-               var playlist = {
-                  total_rows:0,
-                  nodes:[]
-               };
-               var trackList = jQuery("playlist trackList track", xml);
-               if( trackList.length > 0 ) {
-                  trackList.each( function(index) {
-                     playlist.total_rows++;
-                     playlist.nodes.push({   
-                        nid:playlist.total_rows, 
-                        title: $(this).find("title").text(),
-                        description: $(this).find("annotation").text(),
-                        mediafiles: {
-                           images:{
-                              "image":{
-                                 path:$(this).find("image").text()
-                                 }
-                           },
-                           media:{
-                              "media":{
-                                 path:$(this).find("location").text()
-                                 }
-                           }
-                        }
-                     });
-                  }); 
-               }
-               return playlist;                 
-            };
+                }
+              });
+            });
+          }
+          return playlist;
+        };
 
-            // Parse ASX contents.
-            this.parseASX = function( xml ) {
-               var playlist = {
-                  total_rows:0,
-                  nodes:[]
-               };
-               var trackList = jQuery("asx entry", xml);         
-               if( trackList.length > 0 ) {
-                  trackList.each( function(index) {
-                     playlist.total_rows++;
-                     playlist.nodes.push({   
-                        nid:playlist.total_rows, 
-                        title: $(this).find("title").text(),
-                        mediafiles: {
-                           images:{
-                              "image":{
-                                 path:$(this).find("image").text()
-                                 }
-                           },
-                           media:{
-                              "media":{
-                                 path:$(this).find("location").text()
-                                 }
-                           }
-                        }                        
-                     });
-                  }); 
-               }
-               return playlist;              
-            };
+        // Parse ASX contents.
+        this.parseASX = function( xml ) {
+          var playlist = {
+            total_rows:0,
+            nodes:[]
+          };
+          var trackList = jQuery("asx entry", xml);
+          if( trackList.length > 0 ) {
+            trackList.each( function(index) {
+              playlist.total_rows++;
+              playlist.nodes.push({
+                nid:playlist.total_rows,
+                title: $(this).find("title").text(),
+                mediafiles: {
+                  images:{
+                    "image":{
+                      path:$(this).find("image").text()
+                    }
+                  },
+                  media:{
+                    "media":{
+                      path:$(this).find("location").text()
+                    }
+                  }
+                }
+              });
+            });
+          }
+          return playlist;
+        };
 
-            // Parse RSS contents.
-            this.parseRSS = function( xml ) {
-               var playlist = {
-                  total_rows:0,
-                  nodes:[]
-               };
-               var channel = jQuery("rss channel", xml);         
-               if( channel.length > 0 ) {
-                  var youTube = (channel.find("generator").text() == "YouTube data API");
+        // Parse RSS contents.
+        this.parseRSS = function( xml ) {
+          var playlist = {
+            total_rows:0,
+            nodes:[]
+          };
+          var channel = jQuery("rss channel", xml);
+          if( channel.length > 0 ) {
+            var youTube = (channel.find("generator").text() == "YouTube data API");
                   
-                  // Iterate through all the items.
-                  channel.find("item").each( function(index) {
-                     playlist.total_rows++;
-                     var item = {};
-                     item = youTube ? _this.parseYouTubeItem( $(this) ) : _this.parseRSSItem( $(this) );
-                     item.nid = playlist.total_rows;
-                     playlist.nodes.push(item);
-                  }); 
-               }
-               return playlist;                             
-            };
+            // Iterate through all the items.
+            channel.find("item").each( function(index) {
+              playlist.total_rows++;
+              var item = {};
+              item = youTube ? _this.parseYouTubeItem( $(this) ) : _this.parseRSSItem( $(this) );
+              item.nid = playlist.total_rows;
+              playlist.nodes.push(item);
+            });
+          }
+          return playlist;
+        };
             
-            // Parse a default RSS Item.
-            this.parseRSSItem = function( item ) {
-               return {   
-                  title: item.find("title").text(),
-                  mediafiles: {
-                     images:{
-                        "image":{
-                           path:item.find("image").text()
-                           }
-                     },
-                     media:{
-                        "media":{
-                           path:item.find("location").text()
-                           }
-                     }
-                  }                  
-               };
-            };
+        // Parse a default RSS Item.
+        this.parseRSSItem = function( item ) {
+          return {
+            title: item.find("title").text(),
+            mediafiles: {
+              images:{
+                "image":{
+                  path:item.find("image").text()
+                }
+              },
+              media:{
+                "media":{
+                  path:item.find("location").text()
+                }
+              }
+            }
+          };
+        };
             
-            // Parse a YouTube item.
-            this.parseYouTubeItem = function( item ) {
-               var description = item.find("description").text();
-               var media = item.find("link").text().replace("&feature=youtube_gdata", ""); 
-               return {
-                  title: item.find("title").text(),
-                  mediafiles: {
-                     images:{
-                        "image":{
-                           path:jQuery("img", description).eq(0).attr("src")
-                           }
-                     },
-                     media:{
-                        "media":{
-                           path:media,
-                           player:"youtube"
-                        }
-                     }
-                  }                                   
-               };
-            };                       
-         })( settings );
-      }           
-   }, jQuery.media );  
+        // Parse a YouTube item.
+        this.parseYouTubeItem = function( item ) {
+          var description = item.find("description").text();
+          var media = item.find("link").text().replace("&feature=youtube_gdata", "");
+          return {
+            title: item.find("title").text(),
+            mediafiles: {
+              images:{
+                "image":{
+                  path:jQuery("img", description).eq(0).attr("src")
+                }
+              },
+              media:{
+                "media":{
+                  path:media,
+                  player:"youtube"
+                }
+              }
+            }
+          };
+        };
+      })( settings );
+    }
+  }, jQuery.media );
 })(jQuery);

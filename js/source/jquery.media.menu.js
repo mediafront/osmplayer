@@ -24,106 +24,102 @@
  *  THE SOFTWARE.
  */
 (function($) {
-   jQuery.media = jQuery.media ? jQuery.media : {};     
+  jQuery.media = jQuery.media ? jQuery.media : {};
    
-   // Set up our defaults for this component.
-   jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      close:"#mediamenuclose",
-      embed:"#mediaembed",
-      elink:"#mediaelink",
-      email:"#mediaemail"           
-   });   
+  // Set up our defaults for this component.
+  jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
+    close:"#mediamenuclose",
+    embed:"#mediaembed",
+    elink:"#mediaelink",
+    email:"#mediaemail"
+  });
    
-   jQuery.fn.mediamenu = function( server, settings ) {  
-      if( this.length === 0 ) {
-         return null;
-      }
-      return new (function( server, menu, settings ) {
-         settings = jQuery.media.utils.getSettings(settings);  
-         var _this = this;
-         this.display = menu;
+  jQuery.fn.mediamenu = function( server, settings ) {
+    if( this.length === 0 ) {
+      return null;
+    }
+    return new (function( server, menu, settings ) {
+      settings = jQuery.media.utils.getSettings(settings);
+      var _this = this;
+      this.display = menu;
          
-         this.on = false;
+      this.on = false;
          
-         this.contents = [];
-         this.prevItem = {
-            id:0,
-            link:null,
-            contents:null
-         };
+      this.contents = [];
+      this.prevItem = {
+        id:0,
+        link:null,
+        contents:null
+      };
          
-         this.close = this.display.find( settings.ids.close );
-         this.close.bind( "click", function() {
-            _this.display.trigger( "menuclose" );
-         });
+      this.close = this.display.find( settings.ids.close );
+      this.close.bind( "click", function() {
+        _this.display.trigger( "menuclose" );
+      });
          
-         this.setMenuItem = function( link, itemId ) {
-            if( this.prevItem.id != itemId ) {
-               if( this.prevItem.id ) {
-                  settings.template.onMenuSelect( this.prevItem.link, this.prevItem.contents, false );
-               }
-               var contents = this.contents[itemId];
-               settings.template.onMenuSelect( link, contents, true );
-               this.prevItem = {
-                  id:itemId,
-                  link:link,
-                  contents:contents
-               };
-            }
-         };         
-         
-         this.setEmbedCode = function( embed ) {
-            this.setInputItem( settings.ids.embed, embed );
-         };
-         
-         
-         this.setMediaLink = function( mediaLink ) {
-            this.setInputItem( settings.ids.elink , mediaLink );
-         };
-         
-         this.setInputItem = function( id, value ) {
-            var input = this.contents[id].find("input");
-            input.unbind();
-            input.bind("click", function() {
-               $(this).select().focus();   
-            });
-            input.attr("value", value );            
-         };
-         
-         var linkIndex = 0;
-         this.links = this.display.find("ul li");
-         this.links.each( function() {
-            var link = $(this).find("a");
-            if( link.length > 0 ) {
-              var linkId = link.attr("href");
-              var contents = _this.display.find(linkId);
-              contents.hide();
-              _this.contents[linkId] = contents;
+      this.setMenuItem = function( link, itemId ) {
+        if( this.prevItem.id != itemId ) {
+          if( this.prevItem.id && settings.template.onMenuSelect ) {
+            settings.template.onMenuSelect( this.prevItem.link, this.prevItem.contents, false );
+          }
+          
+          var contents = this.contents[itemId];
 
-              link.bind("mouseenter", $(this), function( event ) {
-                 settings.template.onMenuOver( event.data );
-              });
+          if( settings.template.onMenuSelect ) {
+            settings.template.onMenuSelect( link, contents, true );
+          }
+          
+          this.prevItem = {
+            id:itemId,
+            link:link,
+            contents:contents
+          };
+        }
+      };
+         
+      this.setEmbedCode = function( embed ) {
+        this.setInputItem( settings.ids.embed, embed );
+      };
+         
+         
+      this.setMediaLink = function( mediaLink ) {
+        this.setInputItem( settings.ids.elink , mediaLink );
+      };
+         
+      this.setInputItem = function( id, value ) {
+        var input = this.contents[id].find("input");
+        input.unbind();
+        input.bind("click", function() {
+          $(this).select().focus();
+        });
+        input.attr("value", value );
+      };
+         
+      var linkIndex = 0;
+      this.links = this.display.find("a");
+      this.links.each( function() {
+        var link = $(this);
+        if( link.length > 0 ) {
+          var linkId = link.attr("href");
+          var contents = _this.display.find(linkId);
+          contents.hide();
+          _this.contents[linkId] = contents;
+          link.bind("click", {
+            id:linkId,
+            obj:link.parent()
+          }, function( event ) {
+            event.preventDefault();
+            _this.setMenuItem( event.data.obj, event.data.id );
+          });
 
-              link.bind("mouseleave", $(this), function( event ) {
-                 settings.template.onMenuOut( event.data );
-              });
-
-              link.bind("click", {
-                 id:linkId,
-                 obj:$(this)
-                 }, function( event ) {
-                 event.preventDefault();
-                 _this.setMenuItem( event.data.obj, event.data.id );
-              });
-
-              if( linkIndex === 0 ) {
-                 _this.setMenuItem( $(this), linkId );
-              }
-              linkIndex++;
-            }
-         });
+          if( linkIndex === 0 ) {
+            _this.setMenuItem( link.parent(), linkId );
+          }
+          linkIndex++;
+        }
+      });
         
          
-      })( server, this, settings );
-   };
+    })( server, this, settings );
+  };
 })(jQuery);

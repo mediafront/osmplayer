@@ -24,70 +24,70 @@
  *  THE SOFTWARE.
  */
 (function($) {
-   jQuery.media = jQuery.media ? jQuery.media : {};     
+  jQuery.media = jQuery.media ? jQuery.media : {};
    
-   // Set up our defaults for this component.
-   jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
-      links:[],
-      linksvertical:false                
-   }); 
+  // Set up our defaults for this component.
+  jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
+    links:[],
+    linksvertical:false
+  });
 
-   jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
-      linkScroll:"#medialinkscroll"               
-   });    
+  jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
+    linkScroll:"#medialinkscroll"
+  });
    
-   jQuery.fn.medialinks = function( settings ) {  
-      return new (function( links, settings ) {
+  jQuery.fn.medialinks = function( settings ) {
+    return new (function( links, settings ) {
 
-         // Get our settings.
-         settings = jQuery.media.utils.getSettings(settings);
+      // Get our settings.
+      settings = jQuery.media.utils.getSettings(settings);
          
-         // Save the jQuery display.
-         this.display = links;
-         var _this = this;
+      // Save the jQuery display.
+      this.display = links;
+      var _this = this;
          
-         // Keep track of the previous link.
-         this.previousLink = null;
+      // Keep track of the previous link.
+      this.previousLink = null;
 
-         // Setup the scroll region
-         this.scrollRegion = links.find( settings.ids.linkScroll ).mediascroll({
-            vertical:settings.linksvertical
-         });
-         this.scrollRegion.clear();         
+      // Setup the scroll region
+      this.scrollRegion = links.find( settings.ids.linkScroll ).mediascroll({
+        vertical:settings.linksvertical
+      });
+      this.scrollRegion.clear();
 
-         // Load the links.
-         this.loadLinks = function() {
-            if( links.length > 0 ) {
-               this.scrollRegion.clear();
-               var onLinkClick = function( event, data ) {
-                  _this.setLink( data );
-               };               
+      // Load the links.
+      this.loadLinks = function() {
+        if( links.length > 0 ) {
+          this.scrollRegion.clear();
+          var onLinkClick = function( event, data ) {
+            _this.setLink( data );
+          };
                
-               var i = settings.links.length;
-               while(i--) {
-                  // Add this link to the scroll region.
-                  var link = this.scrollRegion.newItem().playlistlink( settings, settings.links[i] );
-                  link.bind("linkclick", onLinkClick);                  
-               }   
-               // Activate the scroll region.
-               this.scrollRegion.activate(); 
-            }
-         };       
+          var i = settings.links.length;
+          while(i--) {
+            // Add this link to the scroll region.
+            var link = this.scrollRegion.newItem().playlistlink( settings, settings.links[i] );
+            link.bind("linkclick", onLinkClick);
+          }
+          // Activate the scroll region.
+          this.scrollRegion.activate();
+        }
+      };
 
-         // Set the active link.
-         this.setLink = function( link ) {
+      // Set the active link.
+      this.setLink = function( link ) {
 
-            // If there is a previous link, then unactivate it.
-            if( this.previousLink ) {
-               this.previousLink.setActive(false);
-            }
+        // If there is a previous link, then unactivate it.
+        if( this.previousLink ) {
+          this.previousLink.setActive(false);
+        }
 
-            // Add the active class to the clicked target.
-            link.setActive(true);
+        // Add the active class to the clicked target.
+        link.setActive(true);
 
-            // Store this target for later.
-            this.previousLink = link;
-         };
-      })( this, settings );
-   };
+        // Store this target for later.
+        this.previousLink = link;
+      };
+    })( this, settings );
+  };
 })(jQuery);

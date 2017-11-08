@@ -24,192 +24,192 @@
  *  THE SOFTWARE.
  */
 (function($) {
-   window.onFlashPlayerReady = function( id ) {
-      jQuery.media.players[id].node.player.media.player.onReady();   
-   };
+  window.onFlashPlayerReady = function( id ) {
+    jQuery.media.players[id].node.player.media.player.onReady();
+  };
 
-   window.onFlashPlayerUpdate = function( id, eventType ) {
-      jQuery.media.players[id].node.player.media.player.onMediaUpdate( eventType );   
-   };
+  window.onFlashPlayerUpdate = function( id, eventType ) {
+    jQuery.media.players[id].node.player.media.player.onMediaUpdate( eventType );
+  };
    
-   window.onFlashPlayerDebug = function( debug ) {
-      console.log( debug );
-   };
+  window.onFlashPlayerDebug = function( debug ) {
+    console.log( debug );
+  };
 
-   // Set up our defaults for this component.
-   jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
-      flashPlayer:"./flash/mediafront.swf",
-      skin:"default",
-      config:"nocontrols"
-   });    
+  // Set up our defaults for this component.
+  jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
+    flashPlayer:"./flash/mediafront.swf",
+    skin:"default",
+    config:"nocontrols"
+  });
    
-   jQuery.fn.mediaflash = function( settings, onUpdate ) {  
-      return new (function( video, settings, onUpdate ) {
-         settings = jQuery.media.utils.getSettings( settings );
-         this.display = video;
-         var _this = this;
-         this.player = null;
-         this.videoFile = null;
-         this.preview = '';
-         this.ready = false;
+  jQuery.fn.mediaflash = function( settings, onUpdate ) {
+    return new (function( video, settings, onUpdate ) {
+      settings = jQuery.media.utils.getSettings( settings );
+      this.display = video;
+      var _this = this;
+      this.player = null;
+      this.videoFile = null;
+      this.preview = '';
+      this.ready = false;
          
-         // Translate the messages.
-         this.translate = {
-            "mediaConnected":"connected",
-            "mediaBuffering":"buffering",
-            "mediaPaused":"paused",
-            "mediaPlaying":"playing",
-            "mediaStopped":"stopped",
-            "mediaComplete":"complete",
-            "mediaMeta":"meta"        
-         };
+      // Translate the messages.
+      this.translate = {
+        "mediaConnected":"connected",
+        "mediaBuffering":"buffering",
+        "mediaPaused":"paused",
+        "mediaPlaying":"playing",
+        "mediaStopped":"stopped",
+        "mediaComplete":"complete",
+        "mediaMeta":"meta"
+      };
          
-         this.createMedia = function( videoFile, preview ) {
-            this.videoFile = videoFile;
-            this.preview = preview;
-            this.ready = false;
-            var playerId = (settings.id + "_media");            
-            var rand = Math.floor(Math.random() * 1000000); 
-            var flashPlayer = settings.flashPlayer + "?rand=" + rand;
-            var flashvars = {
-               config:settings.config,
-               id:settings.id,
-               file:videoFile.path,
-               skin:settings.skin,
-               autostart:(settings.autostart || !settings.autoLoad)
-            };
-            if( videoFile.stream ) {
-               flashvars.stream = videoFile.stream;
-            }
-            if( settings.debug ) {
-               flashvars.debug = "1";
-            }
-            jQuery.media.utils.insertFlash( 
-               this.display, 
-               flashPlayer,
-               playerId, 
-               this.display.width(), 
-               this.display.height(),
-               flashvars,
-               settings.wmode,               
-               function( obj ) {
-                  _this.player = obj; 
-                  _this.loadPlayer();  
-               }
-               );
-         };
+      this.createMedia = function( videoFile, preview ) {
+        this.videoFile = videoFile;
+        this.preview = preview;
+        this.ready = false;
+        var playerId = (settings.id + "_media");
+        var rand = Math.floor(Math.random() * 1000000);
+        var flashPlayer = settings.flashPlayer + "?rand=" + rand;
+        var flashvars = {
+          config:settings.config,
+          id:settings.id,
+          file:videoFile.path,
+          skin:settings.skin,
+          autostart:(settings.autostart || !settings.autoLoad)
+        };
+        if( videoFile.stream ) {
+          flashvars.stream = videoFile.stream;
+        }
+        if( settings.debug ) {
+          flashvars.debug = "1";
+        }
+        jQuery.media.utils.insertFlash(
+          this.display,
+          flashPlayer,
+          playerId,
+          "100%",
+          "100%",
+          flashvars,
+          settings.wmode,
+          function( obj ) {
+            _this.player = obj;
+            _this.loadPlayer();
+          }
+          );
+      };
          
-         this.loadMedia = function( videoFile ) {
-            if( this.player ) {
-               this.videoFile = videoFile;             
+      this.loadMedia = function( videoFile ) {
+        if( this.player ) {
+          this.videoFile = videoFile;
                
-               // Load the new media file into the Flash player.
-               this.player.loadMedia( videoFile.path, videoFile.stream ); 
+          // Load the new media file into the Flash player.
+          this.player.loadMedia( videoFile.path, videoFile.stream );
                
-               // Let them know the player is ready.          
-               onUpdate( {
-                  type:"playerready"
-               } );
-            } 
-         };      
+          // Let them know the player is ready.
+          onUpdate( {
+            type:"playerready"
+          } );
+        }
+      };
 
-         this.onReady = function() { 
-            this.ready = true;   
-            this.loadPlayer();
-         };           
+      this.onReady = function() {
+        this.ready = true;
+        this.loadPlayer();
+      };
          
-         this.loadPlayer = function() {
-            if( this.ready && this.player ) {
-               onUpdate( {
-                  type:"playerready"
-               } );
-            }         
-         };
+      this.loadPlayer = function() {
+        if( this.ready && this.player ) {
+          onUpdate( {
+            type:"playerready"
+          } );
+        }
+      };
          
-         this.onMediaUpdate = function( eventType ) {
-            onUpdate( {
-               type:this.translate[eventType]
-               } );
-         };         
+      this.onMediaUpdate = function( eventType ) {
+        onUpdate( {
+          type:this.translate[eventType]
+        } );
+      };
          
-         this.playMedia = function() {
-            this.player.playMedia();  
-         };
+      this.playMedia = function() {
+        this.player.playMedia();
+      };
          
-         this.pauseMedia = function() {
-            this.player.pauseMedia();             
-         };
+      this.pauseMedia = function() {
+        this.player.pauseMedia();
+      };
          
-         this.stopMedia = function() {
-            this.player.stopMedia();           
-         };
+      this.stopMedia = function() {
+        this.player.stopMedia();
+      };
          
-         this.seekMedia = function( pos ) {
-            this.player.seekMedia( pos );           
-         };
+      this.seekMedia = function( pos ) {
+        this.player.seekMedia( pos );
+      };
          
-         this.setVolume = function( vol ) {
-            this.player.setVolume( vol ); 
-         };
+      this.setVolume = function( vol ) {
+        this.player.setVolume( vol );
+      };
          
-         this.getVolume = function() {
-            return this.player.getVolume();       
-         };
+      this.getVolume = function() {
+        return this.player.getVolume();
+      };
          
-         this.getDuration = function() {
-            return this.player.getDuration();           
-         };
+      this.getDuration = function() {
+        return this.player.getDuration();
+      };
          
-         this.getCurrentTime = function() {
-            return this.player.getCurrentTime();
-         };
+      this.getCurrentTime = function() {
+        return this.player.getCurrentTime();
+      };
 
-         this.getBytesLoaded = function() {
-            return this.player.getMediaBytesLoaded();
-         };
+      this.getBytesLoaded = function() {
+        return this.player.getMediaBytesLoaded();
+      };
          
-         this.getBytesTotal = function() {
-            return this.player.getMediaBytesTotal();
-         };  
+      this.getBytesTotal = function() {
+        return this.player.getMediaBytesTotal();
+      };
 
-         this.hasControls = function() {
-            return true;
-         };
+      this.hasControls = function() {
+        return true;
+      };
          
-         this.showControls = function(show) {
-            this.player.showPlugin("controlBar", show);
-            this.player.showPlugin("playLoader", show);
-         };         
+      this.showControls = function(show) {
+        this.player.showPlugin("controlBar", show);
+        this.player.showPlugin("playLoader", show);
+      };
          
-         this.getEmbedCode = function() { 
-            var flashVars = {
-               config:"config",
-               id:"mediafront_player",
-               file:this.videoFile.path,
-               image:this.preview,
-               skin:settings.skin
-            };
-            if( this.videoFile.stream ) {
-               flashVars.stream = this.videoFile.stream;
-            }                    
-            return jQuery.media.utils.getFlash( 
-               settings.flashPlayer,
-               "mediafront_player", 
-               settings.embedWidth, 
-               settings.embedHeight,
-               flashVars,
-               settings.wmode );
-         };         
+      this.getEmbedCode = function() {
+        var flashVars = {
+          config:"config",
+          id:"mediafront_player",
+          file:this.videoFile.path,
+          image:this.preview,
+          skin:settings.skin
+        };
+        if( this.videoFile.stream ) {
+          flashVars.stream = this.videoFile.stream;
+        }
+        return jQuery.media.utils.getFlash(
+          settings.flashPlayer,
+          "mediafront_player",
+          settings.embedWidth,
+          settings.embedHeight,
+          flashVars,
+          settings.wmode );
+      };
          
-         // Not implemented yet...
-         this.setQuality = function( quality ) {};         
-         this.getQuality = function() {
-            return "";
-         };
-         this.setSize = function( newWidth, newHeight ) {};           
-         this.getMediaLink = function() {
-            return "This video currently does not have a link.";
-         };
-      })( this, settings, onUpdate );
-   };
+      // Not implemented yet...
+      this.setQuality = function( quality ) {};
+      this.getQuality = function() {
+        return "";
+      };
+      //this.setSize = function( newWidth, newHeight ) {};
+      this.getMediaLink = function() {
+        return "This video currently does not have a link.";
+      };
+    })( this, settings, onUpdate );
+  };
 })(jQuery);         

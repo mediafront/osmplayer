@@ -83,7 +83,7 @@ class OSMPlayer {
     require_once( "OSMTemplate.php" );
     require_once( "templates/" . $this->settings['template'] . "/template.php" );
     $this->template = new $templateClass( $this->settings );
-    
+
     // Make sure we set the Prefix.
     $this->setPrefix( isset($_params['prefix']) ? $_params['prefix'] : ($this->settings['id'] . '_') );
   }
@@ -293,11 +293,18 @@ class OSMPlayer {
    * Set the prefix for the CSS of this media player.
    */
   public function setPrefix( $newPrefix ) {
-    // Set the prefix.
-    $this->settings['prefix'] = $newPrefix;
+    // We only need to set the prefix if we generate the CSS.
+    if( $this->template->settings['generateCSS'] ) {
+      // Set the prefix.
+      $this->settings['prefix'] = $newPrefix;
 
-    // Set the template prefix.
-    $this->template->setPrefix( $newPrefix );
+      // Set the template prefix.
+      $this->template->setPrefix( $newPrefix );
+    }
+    else {
+      $this->settings['prefix'] = '';
+      $this->template->setPrefix( '' );
+    }
   }
 
   /**
