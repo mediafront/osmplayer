@@ -1,4 +1,7 @@
-<div id="<?php print $params['prefix']; ?>mediacontrol" class="<?php print $params['prefix']; ?>ui-widget-header <?php print $params['prefix']; ?>ui-corner-bottom">
+<?php
+  $corner = $params['controllerOnly'] ? 'ui-corner-all' : 'ui-corner-bottom';
+?>
+<div id="<?php print $params['prefix']; ?>mediacontrol" class="<?php print $params['prefix']; ?>ui-widget-header <?php print $params['prefix']; ?><?php print $corner; ?>">
   <div id="<?php print $params['prefix']; ?>mediacontrolleft">
     <div id="<?php print $params['prefix']; ?>mediaplaypause" class="<?php print $params['prefix']; ?>ui-state-default <?php print $params['prefix']; ?>ui-corner-all">
       <div class="on">
