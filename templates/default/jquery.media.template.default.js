@@ -116,8 +116,8 @@
               jQuery.media.utils.stopHideOnOver( this.titleLinks, "links" );
             }
             
-            mediaplayer.dialog.addClass("mediafullscreen");
-            mediaplayer.dialog.find("#mediamaxbutton").hide();
+            mediaplayer.dialog.addClass(settings.prefix + "mediafullscreen");
+            mediaplayer.dialog.find("#" + settings.prefix + "mediamaxbutton").hide();
             mediaplayer.showNativeControls(true);
 
             if( this.player && this.player.media ) {
@@ -166,8 +166,8 @@
               this.titleLinks.show();
             }
             
-            mediaplayer.dialog.find("#mediamaxbutton").show();
-            mediaplayer.dialog.removeClass("mediafullscreen");
+            mediaplayer.dialog.find("#" + settings.prefix + "mediamaxbutton").show();
+            mediaplayer.dialog.removeClass(settings.prefix + "mediafullscreen");
             mediaplayer.showNativeControls(false);
 
             if( this.player && this.player.media ) {
