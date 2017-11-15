@@ -133,55 +133,17 @@ class DefaultTemplate extends OSMTemplate {
    * A theme preprocess function for the main player.
    */
   public function theme_preprocess( &$variables ) {
-    $variables['titlebar'] = $this->theme( $variables,  '_titlebar' );
-    $variables['menu'] = $this->theme( $variables,  '_menu' );
-    $variables['node'] = $this->theme( $variables,  '_node' );
-    $variables['playlist'] = $this->theme( $variables,  '_playlist' );
-  }
-
-  /**
-   * A theme preprocess function for the node.
-   */
-  public function theme_preprocess_node( &$variables ) {
-    $variables['controlBar'] = $this->theme( $variables,  '_controlbar' );
-  }
-
-  /**
-   * A theme preprocess function for the menu.
-   */
-  public function theme_preprocess_menu( &$variables ) {
-    $variables['version'] = $this->getVersion();
-  }
-
-  /**
-   * A theme preprocess function for the control bar.
-   */
-  public function theme_preprocess_controlbar( &$variables ) {
-    $variables['voter'] = $this->theme( $variables,  '_nodevoter' );
-  }
-
-  /**
-   * A theme preprocess function for the teaser.
-   */
-  public function theme_preprocess_teaser( &$variables ) {
-    $variables['teaservoter'] = $this->theme( $variables,  '_teaservoter' );
-  }
-
-  /**
-   * A theme preprocess function for the playlist.
-   */
-  public function theme_preprocess_playlist( &$variables ) {
-    $variables['teaser'] = $this->theme( $variables,  '_teaser' );
-
-    if( $variables['params']['vertical'] ) {
-      $variables['scrollBar'] = $this->theme( $variables,  '_scrollbar' );
-    }
-    else {
-      $variables['scrollBar'] = $this->theme( $variables,  '_hscrollbar' );
-    }
-
-    $variables['links'] = $variables['params']['links'] ? theme( $variables,  '_links' ) : '';
-    $variables['pager'] = $this->theme( $variables,  '_pager' );
+    $variables['templates']['teaservoter'] = $this->theme( $variables,  '_teaservoter' );
+    $variables['templates']['voter'] = $this->theme( $variables,  '_nodevoter' );
+    $variables['templates']['controlBar'] = $this->theme( $variables,  '_controlbar' );
+    $variables['templates']['titlebar'] = $this->theme( $variables,  '_titlebar' );
+    $variables['templates']['menu'] = $this->theme( $variables,  '_menu' );
+    $variables['templates']['node'] = $this->theme( $variables,  '_node' );
+    $variables['templates']['teaser'] = $this->theme( $variables,  '_teaser' );
+    $variables['templates']['scrollBar'] = $this->theme( $variables,  '_scrollbar' );
+    $variables['templates']['links'] = $variables['params']['links'] ? theme( $variables,  '_links' ) : '';
+    $variables['templates']['pager'] = $this->theme( $variables,  '_pager' );
+    $variables['templates']['playlist'] = $this->theme( $variables,  '_playlist' );
   }
 }
 ?>
