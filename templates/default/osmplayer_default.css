@@ -18,10 +18,10 @@
 /*--------------------- Main Dialog -------------------*/
 .mediaplayerdialog {
   position:relative;
-  font-family:"Trebuchet MS", Helvetica, sans-serif;
-  font-style:normal;
-  font-size:11px;
-  line-height:110%;
+  font-family:"Trebuchet MS", Helvetica, sans-serif !important;
+  font-style:normal !important;
+  font-size:11px !important;
+  line-height:110% !important;
   margin:0;
   padding:0;
   border:0;
