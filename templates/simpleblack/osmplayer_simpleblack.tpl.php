@@ -1,6 +1,6 @@
-<div id="<?php print $params['id']; ?>">
-  <div id="mediaplayer" style="width:<?php print $params['width']; ?>px;height:<?php print $params['height']; ?>px;">
-    <div id="mediaplayer_node" style="height:<?php print $params['height']; ?>px;">
+<div id="<?php print $params['id']; ?>" style="<?php print $width; ?><?php print $height; ?>">
+  <div id="mediaplayer" style="<?php print $height; ?>">
+    <div id="mediaplayer_node">
       <div id="mediaplayer_menu">
         <div id="mediaplayer_menuHeader">
           <div class="active"><a href="#mediaplayer_embed">embed</a></div>

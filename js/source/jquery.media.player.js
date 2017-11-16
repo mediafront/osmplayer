@@ -38,7 +38,9 @@
     showPlaylist:true,
     autoNext:true,
     prefix:"",
-    zIndex:400
+    zIndex:400,
+    fluidWidth:false,
+    fluidHeight:false
   });
 
   jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
@@ -56,7 +58,7 @@
   jQuery.media.loadCallbacks = {};
   jQuery.media.playlists = {};
   jQuery.media.controllers = {};
-   
+
   // Use this function to trigger when the player has finished registering and loaded.
   jQuery.media.onLoaded = function( playerId, callback ) {
     var player = jQuery.media.players[playerId];
@@ -166,6 +168,13 @@
             break;
         }
       });
+
+      // Add a resize handler to the window if either our width or height is fluid.
+      if( settings.fluidWidth || settings.fluidHeight ) {
+        $(window).resize( function() {
+          _this.onResize();
+        });
+      }
          
       // First get the communication protocol.
       if( jQuery.media[settings.protocol] ) {
