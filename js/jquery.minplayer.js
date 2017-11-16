@@ -37,7 +37,7 @@
     link:"http://www.mediafront.org",
     file:"",
     image:"",
-    timeout:2000,
+    timeout:4,
     autoLoad:true
   });
 
@@ -80,7 +80,10 @@
       this.playHeight = this.playImg.height();
          
       // Store the preview image.
-      this.preview = player.find( settings.ids.preview ).mediaimage();;
+      this.preview = player.find( settings.ids.preview ).mediaimage();
+      this.preview.display.bind("imageLoaded", function() {
+        _this.onPreviewLoaded();
+      });
          
       // The internal player controls.
       this.usePlayerControls = false;
@@ -88,8 +91,8 @@
       this.busyVisible = false;
       this.playVisible = false;
       this.previewVisible = false;
-      this.hasMedia = false;
       this.playing = false;
+      this.hasMedia = false;
          
       // Cache the width and height.
       this.width = this.display.width();
@@ -108,11 +111,14 @@
       };
          
       this.showPlay = function( show, tween ) {
+        show &= this.hasMedia;
         this.playVisible = show;
         this.showElement( this.play, show, tween );
       };
 
       this.showBusy = function( id, show, tween ) {
+        show &= this.hasMedia;
+        
         if( show ) {
           this.busyFlags |= (1 << id);
         }
@@ -213,20 +219,11 @@
             this.showPreview((this.media.mediaFile.type == "audio"));
             break;
         }
-            
-        // Let the template do something...
-        if( settings.template && settings.template.onMediaUpdate ) {
-          settings.template.onMediaUpdate( data );
-        }
       };
 
       // Set the media player.
       this.media = this.display.find( settings.ids.media ).mediadisplay( settings );
       if( this.media ) {
-        this.media.display.bind( "mediaupdate", function( event, data ) {
-          _this.onMediaUpdate( data );
-        });
-
         // If they click on the media region, then pause the media.
         this.media.display.click( function() {
           if( _this.media.player && !_this.media.hasControls() ) {
@@ -261,15 +258,9 @@
       this.reset = function() {
         this.hasMedia = false;
         this.playing = false;
-        if( this.controller ) {
-          this.controller.reset();
-        }
-        if( this.activeController ) {
-          this.activeController.reset();
-        }
-
-        this.showBusy(1, this.autoLoad);
-            
+        this.showBusy(1, false);
+        this.showPlay(true);
+        this.showPreview(true);
         if( this.media ) {
           this.media.reset();
         }
@@ -301,11 +292,6 @@
       // Loads an image...
       this.loadImage = function( image ) {
         if( this.preview ) {
-          // Bind to the image loaded event.
-          this.preview.display.bind("imageLoaded", function() {
-            _this.onPreviewLoaded();
-          });
-
           // Load the image.
           this.preview.loadImage( image );
 
@@ -332,9 +318,21 @@
       // Expose the public load functions from the media display.
       this.loadFiles = function( files ) {
         this.reset();
-        if( this.media && this.media.loadFiles( files ) && this.autoLoad ) {
+        this.hasMedia = this.media && this.media.loadFiles(files);
+        if( this.hasMedia && this.autoLoad ) {
           this.media.playNext();
         }
+        else if( !this.hasMedia ) {
+          // Hide the overlays for non-media types.
+          this.showBusy(1, false);
+          this.showPlay(false);
+
+          // Add a timeout
+          setTimeout( function() {
+            _this.media.display.trigger( "mediaupdate", {type:"complete"} );
+          }, (settings.timeout * 1000) );
+        }
+        return this.hasMedia;
       };
          
       // Play the next file.
@@ -585,6 +583,13 @@
       // Handle the media events...
       this.onMediaUpdate = function( data ) {
         switch( data.type ) {
+          case "nomedia":
+            this.display.hide();
+            break;
+          case "reset":
+            this.display.show();
+            this.reset();
+            break;
           case "paused":
             this.playState = true;
             this.setToggle( this.playPauseButton.display, this.playState );
@@ -615,10 +620,13 @@
          
       // Call to reset all controls...
       this.reset = function() {
-        this.totalTime.text( this.formatTime( 0 ).time );
+        this.totalTime.text( this.formatTime(0).time );
+        this.currentTime.text( this.formatTime(0).time );
         if( this.seekBar ) {
           this.seekBar.updateValue(0);
         }
+        this.seekUpdate.css( "width", "0px" );
+        this.seekProgress.css( "width", "0px" );
       };
          
       this.timeUpdate = function( cTime, tTime ) {
@@ -707,6 +715,7 @@
 
       this.reset = function() {
         this.loaded = false;
+        this.stopMedia();
         clearInterval( this.progressInterval );
         clearInterval( this.updateInterval );
         this.playQueue.length = 0;
@@ -714,11 +723,7 @@
         this.playIndex = 0;
         this.playerReady = false;
         this.mediaFile = null;
-      };
-         
-      this.resetContent = function() {
-        this.display.empty();
-        this.display.append( this.template );
+        this.display.empty().trigger( "mediaupdate", {type:"reset"} );
       };
          
       // Returns the media that has the lowest weight value, which means
@@ -764,7 +769,11 @@
           this.addToQueue( files.media );
           this.addToQueue( files.postreel );
         }
-        return (this.playQueue.length > 0);
+        var hasMedia = (this.playQueue.length > 0);
+        if( !hasMedia ) {
+          this.display.trigger( "mediaupdate", {type:"nomedia"} );
+        }
+        return hasMedia;
       };
          
       this.playNext = function() {

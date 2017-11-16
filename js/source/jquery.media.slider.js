@@ -42,11 +42,7 @@
       // Only if there is a handle.
       if( this.handle.length > 0 ) {
         this.handleSize = vertical ? this.handle.height() : this.handle.width();
-        this.handleOffset = vertical ? this.handle.position().top : this.handle.position().left;
         this.handleMid = (this.handleSize/2);
-      }
-      else {
-        this.handleSize = this.handleOffset = this.handleMid = 0;
       }
          
       this.onResize = function() {
@@ -56,7 +52,7 @@
 
       this.setTrackSize = function() {
         this.trackSize = vertical ? this.display.height() : this.display.width();
-        this.trackSize -= (this.handleOffset + this.handleSize);
+        this.trackSize -= this.handleSize;
         this.trackSize = (this.trackSize > 0) ? this.trackSize : 1;
       };
          
@@ -74,15 +70,9 @@
         _value = (_value < 0) ? 0 : _value;
         _value = (_value > 1) ? 1 : _value;
         this.value = _value;
-
         this.handlePos = inverted ? (1-this.value) : this.value;
         this.handlePos *= this.trackSize;
-        if( vertical ) {
-          this.handle.css( "marginTop", this.handlePos );
-        }
-        else {
-          this.handle.css( "marginLeft", this.handlePos );
-        }
+        this.handle.css( (vertical ? "marginTop" : "marginLeft"), this.handlePos );
       };
          
       this.display.bind("mousedown", function( event ) {

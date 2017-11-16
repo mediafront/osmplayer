@@ -297,11 +297,14 @@
          
       // Called when the media updates.
       this.onMediaUpdate = function( data ) {
+        // Call the player onMediaUpdate.
+        this.node.player.onMediaUpdate( data );
+        
         // When the media completes, have the active playlist load the next item.
         if( settings.autoNext && this.activePlaylist && (data.type == "complete") ) {
           this.activePlaylist.loadNext();
         }
-
+        
         // Update our controller.
         if( this.controller ) {
           this.controller.onMediaUpdate( data );
@@ -316,6 +319,11 @@
         if( this.menu && this.node && (data.type == "meta") ) {
           this.menu.setEmbedCode( this.node.player.media.player.getEmbedCode() );
           this.menu.setMediaLink( this.node.player.media.player.getMediaLink() );
+        }
+
+        // Let the template do something...
+        if( settings.template && settings.template.onMediaUpdate ) {
+          settings.template.onMediaUpdate( data );
         }
       };
 

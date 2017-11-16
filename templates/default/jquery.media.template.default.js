@@ -47,6 +47,8 @@
         this.nodeHeight = 0;
         this.dialogWidth = 0;
         this.dialogHeight = 0;
+        this.controlHeight = 0;
+        this.showController = true;
         this.isFireFox = (typeof document.body.style.MozBoxShadow === 'string');
         
         this.initialize = function( settings ) {
@@ -54,6 +56,7 @@
           this.nodeHeight = mediaplayer.display.height();
           this.dialogWidth = mediaplayer.dialog.width();
           this.dialogHeight = mediaplayer.dialog.height();
+          this.controlHeight = mediaplayer.controller ? mediaplayer.controller.display.height() : 0;
           this.player = mediaplayer.node ? mediaplayer.node.player : null;
           this.titleLinks = mediaplayer.titleBar ? mediaplayer.titleBar.titleLinks : null;
         };
@@ -101,13 +104,13 @@
             if( this.player ) {
               // Make sure
               $(window).bind("mousemove", function() {
-                if( !_this.player.hasControls() ) {
+                if( !_this.player.hasControls() && this.showController ) {
                   jQuery.media.utils.showThenHide( mediaplayer.controller.display, "display", "fast", "slow" );
                 }
                 jQuery.media.utils.showThenHide( _this.titleLinks, "links", "fast", "slow" );
               });
 
-              if( !this.player.hasControls() ) {
+              if( !this.player.hasControls() && this.showController ) {
                 jQuery.media.utils.showThenHide( mediaplayer.controller.display, "display", "fast", "slow" );
                 jQuery.media.utils.stopHideOnOver( mediaplayer.controller.display, "display" );
               }
@@ -161,7 +164,9 @@
             $(window).unbind("mousemove");
             jQuery.media.utils.stopHide( mediaplayer.controller.display, "display" );
             jQuery.media.utils.stopHide( this.titleLinks,"links" );
-            mediaplayer.controller.display.show();
+            if( this.showController ) {
+              mediaplayer.controller.display.show();
+            }
             if( this.titleLinks ) {
               this.titleLinks.show();
             }
@@ -248,6 +253,19 @@
           }
           else {
             $(teaser.node.display).removeClass(settings.prefix + "ui-state-active");
+          }
+        };
+
+        this.onMediaUpdate = function( data ) {
+          if( mediaplayer.controller && mediaplayer.node ) {
+            if( data.type == "reset" ) {
+              this.showController = true;
+              mediaplayer.node.display.css("bottom", this.controlHeight + "px");
+            }
+            else if( data.type == "nomedia" ) {
+              this.showController = false;
+              mediaplayer.node.display.css("bottom", "0px");
+            }
           }
         };
 

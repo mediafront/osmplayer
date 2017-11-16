@@ -292,13 +292,14 @@
 #mediavolumebar {
   float:left;
   width:50px;
-  padding-top:9px;
-  margin:0 5px 0 4px;
+  height:4px;
+  margin:7px 5px 0 4px;
 }
 
 #mediaseekhandle, #mediavolumehandle {
   position:absolute;
-  margin-top:-11px;
+  z-index:18;
+  margin-top:-6px;
   width:0px;
 }
 
@@ -307,17 +308,22 @@
 }
 
 #mediaseekbar {
-  padding-top:9px;
+  margin-top:7px;
+  height:4px;
+}
+
+#mediaseekupdate, #mediavolumeupdate, #mediaseekprogress {
+  position:absolute;
+  height:4px;
+  border-bottom:none;
 }
 
 #mediaseekupdate, #mediavolumeupdate {
-  position:absolute;
-  height:4px;;
+  z-index:17;
 }
 
 #mediaseekprogress {
-  position:absolute;
-  height:4px;
+  z-index:16;
 }
 
 /*--------------------- Menu -------------------*/
