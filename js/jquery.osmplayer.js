@@ -4417,7 +4417,7 @@
 
       timer:{},
       stopElementHide:{},
-      showThenHide : function( element, id, showSpeed, hideSpeed ) {
+      showThenHide : function( element, id, showSpeed, hideSpeed, finished ) {
         if( element ) {
           element.show(showSpeed);
           if( jQuery.media.utils.timer.hasOwnProperty(id) ) {
@@ -4428,6 +4428,10 @@
               element.hide(hideSpeed, function() {
                 if( jQuery.media.utils.stopElementHide[id] ) {
                   element.show();
+                }
+
+                if( finished ) {
+                  finished();
                 }
               });
             }
