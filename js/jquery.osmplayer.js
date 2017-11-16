@@ -1083,6 +1083,7 @@
         this.showBusy(1, false);
         this.showPlay(true);
         this.showPreview(true);
+        clearTimeout( this.timeoutId );
         if( this.media ) {
           this.media.reset();
         }
@@ -1148,9 +1149,6 @@
           // Hide the overlays for non-media types.
           this.showBusy(1, false);
           this.showPlay(false);
-
-          // Add a timeout
-          clearTimeout( this.timeoutId );
           this.timeoutId = setTimeout( function() {
             _this.media.display.trigger( "mediaupdate", {type:"complete"} );
           }, (settings.timeout * 1000) );
