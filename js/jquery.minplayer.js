@@ -81,9 +81,11 @@
          
       // Store the preview image.
       this.preview = player.find( settings.ids.preview ).mediaimage();
-      this.preview.display.bind("imageLoaded", function() {
-        _this.onPreviewLoaded();
-      });
+      if( this.preview ) {
+        this.preview.display.bind("imageLoaded", function() {
+          _this.onPreviewLoaded();
+        });
+      }
          
       // The internal player controls.
       this.usePlayerControls = false;
@@ -232,14 +234,16 @@
           }
         });
       }
-         
+
       // Add the logo.
-      this.display.prepend('<div class="medialogo"></div>');
-      this.logo = this.display.find(".medialogo").mediaimage( settings.link );
-      this.logo.display.css("zIndex", (settings.zIndex + 90));
-      this.logo.width = settings.logoWidth;
-      this.logo.height = settings.logoHeight;
-      this.logo.loadImage( settings.logo );
+      if( !settings.controllerOnly ) {
+        this.display.prepend('<div class="medialogo"></div>');
+        this.logo = this.display.find(".medialogo").mediaimage( settings.link );
+        this.logo.display.css("zIndex", (settings.zIndex + 90));
+        this.logo.width = settings.logoWidth;
+        this.logo.height = settings.logoHeight;
+        this.logo.loadImage( settings.logo );
+      }
 
       // Sets the logo position.
       this.setLogoPos = function() {
