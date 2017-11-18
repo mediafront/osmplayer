@@ -307,6 +307,7 @@
         }
       };
 
+      // Reset the teaser bindings.
       this.resetTeasers = function() {
         // Remove all handlers.
         var i = this.teasers.length;
@@ -314,14 +315,6 @@
           this.teasers[i].reset();
         }
         this.teasers = [];
-      };
-
-      this.refresh = function() {
-        this.scrollRegion.refresh();
-        var i = this.teasers.length;
-        while(i--) {
-          this.teasers[i].refresh();
-        }
       };
 
       // Set the arguments for this playlist.
