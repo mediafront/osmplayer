@@ -567,7 +567,7 @@
 
 .mediaplayerdialog.mediafullscreen .medialogo {
   position:fixed;
-  z-index:1500;
+  z-index:2500;
   left:5px;
   bottom:5px;
 }

@@ -275,6 +275,10 @@
         };
 
         this.onMediaUpdate = function( data ) {
+          if( mediaplayer.fullScreen && data.type == "playerready" ) {
+            mediaplayer.showNativeControls(true);
+          }
+
           if( mediaplayer.controller && mediaplayer.node ) {
             if( data.type == "reset" ) {
               this.showController = true;

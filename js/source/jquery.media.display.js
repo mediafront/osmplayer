@@ -58,8 +58,6 @@
       this.loaded = false;
       this.mediaFile = null;
       this.hasPlaylist = false;
-      this.width = 0;
-      this.height = 0;
 
       // If they provide the forceOverflow variable, then that means they
       // wish to force the media player to override all parents overflow settings.
@@ -202,7 +200,6 @@
             this.playerReady = true;
             this.player.setVolume(0);
             this.player.setQuality(this.settings.quality);
-            this.display.css('marginLeft', -10000);
             this.startProgress();
             break;
           case "buffering":
@@ -248,7 +245,6 @@
               _this.player.setVolume( (_this.settings.volume / 100) );
               _this.player.pauseMedia();
               _this.settings.autostart = true;
-              _this.display.css('marginLeft', 0);
               _this.loaded = true;
             }, 100 );
           }
@@ -256,7 +252,6 @@
             this.loaded = true;
             this.player.setVolume( (this.settings.volume / 100) );
             this.display.trigger( "mediaupdate", data );
-            this.display.css('marginLeft', 0);
           }
         }
         else {
@@ -339,8 +334,6 @@
         }
         return this.mediaFile.quality;
       };
-         
-    //this.setSize( this.display.width(), this.display.height() );
     })( this, options );
   };
 })(jQuery);
