@@ -33,7 +33,9 @@
   };
    
   window.onFlashPlayerDebug = function( debug ) {
-    console.log( debug );
+    if( console ) {
+      console.log( debug );
+    }
   };
 
   // Set up our defaults for this component.

@@ -93,7 +93,6 @@
         this.onMaximize = function( on ) {
           var position = mediaplayer.display.position();
           position = settings.vertical ? position.left : position.top;
-          console.log(position);
           var newCSS = settings.vertical ? 
             on ? {width:(this.dialogWidth - position) +"px"} : {width:this.nodeWidth+"px"} :
             on ? {height:(this.dialogHeight - position) +"px"} : {height:this.nodeHeight+"px"} ;

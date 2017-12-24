@@ -145,7 +145,7 @@
                 if( onFailed ) {
                   onFailed( textStatus );
                 }
-                else {
+                else if( console ) {
                   console.log( "Error: " + textStatus );
                 }
               },

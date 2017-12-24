@@ -53,6 +53,7 @@
             
         html += '</' + this.mediaType + '>';
         this.display.append( html );
+        this.bytesTotal = mediaFile.bytesTotal;
         return this.display.find('#' + playerId).eq(0)[0];;
       };
          
@@ -102,13 +103,13 @@
             type:"error"
           } );
         }, true);
-            
+
         // Now add the event for getting the progress indication.
         this.player.addEventListener( "progress", function( event ) {
           _this.bytesLoaded = event.loaded;
-          _this.bytesTotal = event.total;
+          _this.bytesTotal = event.total ? event.total : _this.bytesTotal;
         }, true);
-            
+
         this.player.autoplay = true;
         this.player.autobuffer = true;
             
@@ -175,13 +176,17 @@
         return this.player.currentTime;
       };
 
-      this.getBytesLoaded = function() {
-        return this.bytesLoaded;
-      };
-         
-      this.getBytesTotal = function() {
-        return this.bytesTotal;
-      };
+      this.getPercentLoaded = function() {
+        if( this.player && this.player.buffered && this.player.duration ) {
+          return (this.player.buffered.end() / this.player.duration);
+        }
+        else if( this.bytesTotal ) {
+          return (this.bytesLoaded / this.bytesTotal);
+        }
+        else {
+          return 0;
+        }
+      }
          
       // Not implemented yet...
       this.setQuality = function( quality ) {};

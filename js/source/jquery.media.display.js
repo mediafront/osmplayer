@@ -303,9 +303,14 @@
       };
          
       this.getPercentLoaded = function() {
-        var bytesLoaded = this.player.getBytesLoaded();
-        var bytesTotal = this.mediaFile.bytesTotal ? this.mediaFile.bytesTotal : this.player.getBytesTotal();
-        return bytesTotal ? (bytesLoaded / bytesTotal) : 0;
+        if( this.player.getPercentLoaded ) {
+          return this.player.getPercentLoaded();
+        }
+        else {
+          var bytesLoaded = this.player.getBytesLoaded();
+          var bytesTotal = this.mediaFile.bytesTotal ? this.mediaFile.bytesTotal : this.player.getBytesTotal();
+          return bytesTotal ? (bytesLoaded / bytesTotal) : 0;
+        }
       };
          
       this.showControls = function(show) {
