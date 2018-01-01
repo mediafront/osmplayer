@@ -521,8 +521,19 @@ class OSMPlayer {
     $output = $this->getJS();
     $output .= "\n";
 
+    // Determine the width and height of the player.
+    $width = ($this->settings['playlistOnly'] && $this->settings['vertical']) ? '' : ('width:' . $this->settings['width'] . 'px;');
+    $width = $this->settings['fluidWidth'] ? 'width:100%;' : $width;
+    $height = (($this->settings['playlistOnly'] && !$this->settings['vertical']) || $this->settings['controllerOnly']) ? '' : ('height:' . $this->settings['height'] . 'px;');
+    $height = $this->settings['fluidHeight'] ? 'height:100%;' : $height;
+
     // Get the output from the template.
-    $output .= $this->template->theme( array('params' => $this->settings) );
+    $output .= $this->template->theme( array(
+        'params' => $this->settings,
+        'width' => $width,
+        'height' => $height
+      )
+    );
     
     return $output;
   }
