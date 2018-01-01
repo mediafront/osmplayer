@@ -33,7 +33,7 @@
   };
    
   window.onFlashPlayerDebug = function( debug ) {
-    if( console ) {
+    if( window.console && console.log ) {
       console.log( debug );
     }
   };
