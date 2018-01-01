@@ -300,7 +300,8 @@
   position:absolute;
   z-index:18;
   margin-top:-6px;
-  width:0px;
+  width:18px;
+  height:18px;
 }
 
 #mediaseekhandle span, #mediavolumehandle span {
