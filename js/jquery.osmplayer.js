@@ -180,7 +180,7 @@
                   if( onFailed ) {
                     onFailed( xml.error );
                   }
-                  else if( window.console && console.log ) {
+                  else if( window.console && console.dir ) {
                     console.dir( xml.error );
                   }
                 }
