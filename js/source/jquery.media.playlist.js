@@ -111,7 +111,7 @@
       this.addPager = function( newPager, active ) {
         if( newPager ) {
           // Handler for the loadindex event.
-          newPager.display.bind( "loadindex", function( event, data ) {
+          newPager.display.unbind("loadindex").bind( "loadindex", function( event, data ) {
             if( data.active ) {
               _this.activateTeaser( _this.teasers[data.index] );
             }
@@ -121,7 +121,7 @@
           });
       
           // Handler for the loadpage event.
-          newPager.display.bind( "loadpage", function( event, data ) {
+          newPager.display.unbind("loadpage").bind( "loadpage", function( event, data ) {
             _this.setActive = data.active;
             _this.loadPlaylist( {
               pageIndex:data.index
@@ -139,7 +139,7 @@
       this.pager = this.addPager( playlist.find( settings.ids.pager ).mediapager( settings ), false );
 
       // Handler for when a link is clicked.
-      this.links.display.bind( "linkclick", function( event, link ) {
+      this.links.display.unbind("linkclick").bind( "linkclick", function( event, link ) {
         _this.onLinkClick( link );
       });
 
@@ -290,7 +290,7 @@
         var teaser = this.scrollRegion.newItem().mediateaser( server, nodeInfo, index, settings );
         if( teaser ) {
           // If they click on the teaser, then activate it.
-          teaser.display.bind( "click", teaser, function( event ) {
+          teaser.display.unbind("click").bind( "click", teaser, function( event ) {
             _this.activateTeaser( event.data );
           });
    

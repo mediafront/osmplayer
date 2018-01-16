@@ -46,10 +46,10 @@
       this.display.find("div").each( function() {
         if( userVote ) {
           $(this).css("cursor", "pointer");
-          $(this).bind( "click", function( event ) {
+          $(this).unbind("click").bind( "click", function( event ) {
             _this.setVote( parseInt($(this).attr("vote"), 10) );
           });
-          $(this).bind( "mouseenter", function( event ) {
+          $(this).unbind("mouseenter").bind( "mouseenter", function( event ) {
             _this.updateVote( {
               value: parseInt($(this).attr("vote"), 10)
             }, true );
@@ -68,7 +68,7 @@
          
       // If this is a uservoter, then add the mouse leave event.
       if( userVote ) {
-        this.display.bind( "mouseleave", function( event ) {
+        this.display.unbind("mouseleave").bind( "mouseleave", function( event ) {
           _this.updateVote( {
             value:0
           }, true );

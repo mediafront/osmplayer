@@ -53,7 +53,7 @@
       };
          
       this.close = this.display.find( settings.ids.close );
-      this.close.bind( "click", function() {
+      this.close.unbind("click").bind( "click", function() {
         _this.display.trigger( "menuclose" );
       });
          
@@ -88,8 +88,7 @@
          
       this.setInputItem = function( id, value ) {
         var input = this.contents[id].find("input");
-        input.unbind();
-        input.bind("click", function() {
+        input.unbind("click").bind("click", function() {
           $(this).select().focus();
         });
         input.attr("value", value );
@@ -104,7 +103,7 @@
           var contents = _this.display.find(linkId);
           contents.hide();
           _this.contents[linkId] = contents;
-          link.bind("click", {
+          link.unbind("click").bind("click", {
             id:linkId,
             obj:link.parent()
           }, function( event ) {

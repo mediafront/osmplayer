@@ -65,6 +65,17 @@
         "mediaComplete":"complete",
         "mediaMeta":"meta"
       };
+
+      // When to show the busy cursor.
+      this.busy = {
+        "mediaConnected":false,
+        "mediaBuffering":"show",
+        "mediaPaused":"hide",
+        "mediaPlaying":"hide",
+        "mediaStopped":false,
+        "mediaComplete":false,
+        "mediaMeta":false
+      };
          
       this.createMedia = function( mediaFile, preview ) {
         this.mediaFile = mediaFile;
@@ -130,8 +141,9 @@
          
       this.onMediaUpdate = function( eventType ) {
         onUpdate( {
-          type:this.translate[eventType]
-        } );
+          type:this.translate[eventType],
+          busy:this.busy[eventType]
+        });
       };
          
       this.playMedia = function() {

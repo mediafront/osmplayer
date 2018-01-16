@@ -123,7 +123,7 @@
           // Let them know the player is ready.
           onUpdate( {
             type:"playerready"
-          } );
+          });
                
           // Load our video.
           this.player.loadVideoById( this.getId( this.videoFile.path ), 0 );
@@ -134,7 +134,8 @@
       this.onStateChange = function( newState ) {
         var playerState = this.getPlayerState( newState );
         onUpdate( {
-          type:playerState
+          type:playerState.state,
+          busy:playerState.busy
         } );
             
         if( !this.loaded && playerState == "playing" ) {
@@ -171,19 +172,19 @@
       this.getPlayerState = function( playerState ) {
         switch (playerState) {
           case 5:
-            return 'ready';
+            return {state:'ready', busy:false};
           case 3:
-            return 'buffering';
+            return {state:'buffering', busy:"show"};
           case 2:
-            return 'paused';
+            return {state:'paused', busy:"hide"};
           case 1:
-            return 'playing';
+            return {state:'playing', busy:"hide"};
           case 0:
-            return 'complete';
+            return {state:'complete', busy:false};
           case -1:
-            return 'stopped';
+            return {state:'stopped', busy:false};
           default:
-            return 'unknown';
+            return {state:'unknown', busy:false};
         }
         return 'unknown';
       };
@@ -194,7 +195,8 @@
       */
       this.playMedia = function() {
         onUpdate({
-          type:"buffering"
+          type:"buffering",
+          busy:"show"
         });
         this.player.playVideo();
       };
@@ -209,7 +211,8 @@
          
       this.seekMedia = function( pos ) {
         onUpdate({
-          type:"buffering"
+          type:"buffering",
+          busy:"show"
         });
         this.player.seekTo( pos, true );
       };

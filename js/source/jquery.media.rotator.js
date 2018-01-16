@@ -87,7 +87,7 @@
         jQuery.each( _images, function( index ) {
           var image = _this.addImage();
           if( index === 0 ) {
-            image.display.bind("imageLoaded", function() {
+            image.display.unbind("imageLoaded").bind("imageLoaded", function() {
               _this.onImageLoaded();
             }).show();
           }
@@ -96,9 +96,9 @@
         });
             
         if( settings.rotatorHover ) {
-          this.display.bind( "mouseenter", function() {
+          this.display.unbind("mouseenter").bind( "mouseenter", function() {
             _this.startRotator();
-          }).bind( "mouseleave", function() {
+          }).unbind("mouseleave").bind( "mouseleave", function() {
             clearInterval( _this.imageInterval );
           });
         }

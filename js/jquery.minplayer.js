@@ -72,7 +72,7 @@
       // Store the play overlay.
       this.play = player.find( settings.ids.play );
       // Toggle the play/pause state if they click on the play button.
-      this.play.bind("click", function() {
+      this.play.unbind("click").bind("click", function() {
         _this.togglePlayPause();
       });
       this.playImg = this.play.find("img");
@@ -82,7 +82,7 @@
       // Store the preview image.
       this.preview = player.find( settings.ids.preview ).mediaimage();
       if( this.preview ) {
-        this.preview.display.bind("imageLoaded", function() {
+        this.preview.display.unbind("imageLoaded").bind("imageLoaded", function() {
           _this.onPreviewLoaded();
         });
       }
@@ -198,7 +198,7 @@
           case "paused":
             this.playing = false;
             this.showPlay(true);
-            this.showBusy(1, false);
+            //this.showBusy(1, false);
             if( !this.media.loaded ) {
               this.showPreview(true);
             }
@@ -207,7 +207,6 @@
           case "playing":
             this.playing = true;
             this.showPlay(false);
-            this.showBusy(1, false);
             this.showPreview((this.media.mediaFile.type == "audio"));
             break;
           case "initialize":
@@ -218,9 +217,15 @@
             break;
           case "buffering":
             this.showPlay(true);
-            this.showBusy(1, true);
             this.showPreview((this.media.mediaFile.type == "audio"));
             break;
+          default:
+            break;
+        }
+
+        // If they provide a busy cursor.
+        if( data.busy ) {
+          this.showBusy(1, (data.busy == "show"));
         }
       };
 
@@ -523,19 +528,22 @@
          
       this.onPlaying = function() {
         onUpdate({
-          type:"playing"
+          type:"playing",
+          busy:"hide"
         });
       };
 
       this.onPaused = function() {
         onUpdate({
-          type:"paused"
+          type:"paused",
+          busy:"hide"
         });
       };
          
       this.playMedia = function() {
         onUpdate({
-          type:"playing"
+          type:"playing",
+          busy:"hide"
         });
         this.player.api_play();
       };
@@ -548,7 +556,8 @@
          
       this.pauseMedia = function() {
         onUpdate({
-          type:"paused"
+          type:"paused",
+          busy:"hide"
         });
         this.player.api_pause();
       };
@@ -732,23 +741,25 @@
         // Alright... Dailymotion's status updates are just crazy...
         // write some hacks to just make it work.
             
-        if( !(!this.meta && playerState =="stopped") ) {
+        if( !(!this.meta && playerState.state =="stopped") ) {
           onUpdate( {
-            type:playerState
+            type:playerState.state,
+            busy:playerState.busy
           } );
         }
             
-        if( !this.loaded && playerState == "buffering" ) {
+        if( !this.loaded && playerState.state == "buffering" ) {
           this.loaded = true;
           onUpdate( {
-            type:"paused"
+            type:"paused",
+            busy:"hide"
           } );
           if( options.autostart ) {
             this.playMedia();
           }
         }
             
-        if( !this.meta && playerState == "playing" ) {
+        if( !this.meta && playerState.state == "playing" ) {
           // Set this player to meta.
           this.meta = true;
                
@@ -779,19 +790,19 @@
       this.getPlayerState = function( playerState ) {
         switch (playerState) {
           case 5:
-            return 'ready';
+            return {state:'ready', busy:false};
           case 3:
-            return 'buffering';
+            return {state:'buffering', busy:"show"};
           case 2:
-            return 'paused';
+            return {state:'paused', busy:"hide"};
           case 1:
-            return 'playing';
+            return {state:'playing', busy:"hide"};
           case 0:
-            return 'complete';
+            return {state:'complete', busy:false};
           case -1:
-            return 'stopped';
+            return {state:'stopped', busy:false};
           default:
-            return 'unknown';
+            return {state:'unknown', busy:false};
         }
         return 'unknown';
       };
@@ -803,7 +814,8 @@
          */
       this.playMedia = function() {
         onUpdate({
-          type:"buffering"
+          type:"buffering",
+          busy:"show"
         });
         this.player.playVideo();
       };
@@ -818,7 +830,8 @@
          
       this.seekMedia = function( pos ) {
         onUpdate({
-          type:"buffering"
+          type:"buffering",
+          busy:"show"
         });
         this.player.seekTo( pos, true );
       };
@@ -934,57 +947,101 @@
         this.mediaType = this.getMediaType( mediaFile );
         this.player = this.getPlayer( mediaFile, preview );
         this.loaded = false;
+        var timeupdated = false;
+        if( this.player ) {
+          this.player.addEventListener( "abort", function() {
+            onUpdate( {
+              type:"stopped"
+            } );
+          }, true);
+          this.player.addEventListener( "loadstart", function() {
+            onUpdate( {
+              type:"ready",
+              busy:"show"
+            });
 
-        this.player.addEventListener( "abort", function() {
-          onUpdate( {
-            type:"stopped"
-          } );
-        }, true);
-        this.player.addEventListener( "loadstart", function() {
-          onUpdate( {
-            type:"ready"
+            _this.onReady();
+          }, true);
+          this.player.addEventListener( "loadeddata", function() {
+            onUpdate( {
+              type:"loaded",
+              busy:"hide"
+            });
+          }, true);
+          this.player.addEventListener( "loadedmetadata", function() {
+            onUpdate( {
+              type:"meta"
+            } );
+          }, true);
+          this.player.addEventListener( "canplaythrough", function() {
+            onUpdate( {
+              type:"canplay",
+              busy:"hide"
+            });
+          }, true);
+          this.player.addEventListener( "ended", function() {
+            onUpdate( {
+              type:"complete"
+            } );
+          }, true);
+          this.player.addEventListener( "pause", function() {
+            onUpdate( {
+              type:"paused"
+            } );
+          }, true);
+          this.player.addEventListener( "play", function() {
+            onUpdate( {
+              type:"playing"
+            } );
+          }, true);
+          this.player.addEventListener( "playing", function() {
+            onUpdate( {
+              type:"playing",
+              busy:"hide"
+            });
+          }, true);
+          this.player.addEventListener( "error", function() {
+            onUpdate( {
+              type:"error"
+            } );
+          }, true);
+          this.player.addEventListener( "waiting", function() {
+            onUpdate( {
+              type:"waiting",
+              busy:"show"
+            });
+          }, true);
+          this.player.addEventListener( "timeupdate", function() {
+            if( timeupdated ) {
+              onUpdate( {
+                type:"timeupdate",
+                busy:"hide"
+              });
+            }
+            else {
+              timeupdated = true;
+            }
+          }, true);
+
+          // Now add the event for getting the progress indication.
+          this.player.addEventListener( "progress", function( event ) {
+            _this.bytesLoaded = event.loaded;
+            _this.bytesTotal = event.total;
+          }, true);
+
+          this.player.autoplay = true;
+
+          if (typeof this.player.hasAttribute == "function" && this.player.hasAttribute("preload") && this.player.preload != "none") {
+            this.player.autobuffer = true;
+          } else {
+            this.player.autobuffer = false;
+            this.player.preload = "none";
+          }
+
+          onUpdate({
+            type:"playerready"
           });
-
-          _this.onReady();
-        }, true);
-        this.player.addEventListener( "loadedmetadata", function() {
-          onUpdate( {
-            type:"meta"
-          } );
-        }, true);
-        this.player.addEventListener( "ended", function() {
-          onUpdate( {
-            type:"complete"
-          } );
-        }, true);
-        this.player.addEventListener( "pause", function() {
-          onUpdate( {
-            type:"paused"
-          } );
-        }, true);
-        this.player.addEventListener( "play", function() {
-          onUpdate( {
-            type:"playing"
-          } );
-        }, true);
-        this.player.addEventListener( "error", function() {
-          onUpdate( {
-            type:"error"
-          } );
-        }, true);
-
-        // Now add the event for getting the progress indication.
-        this.player.addEventListener( "progress", function( event ) {
-          _this.bytesLoaded = event.loaded;
-          _this.bytesTotal = event.total ? event.total : _this.bytesTotal;
-        }, true);
-
-        this.player.autoplay = true;
-        this.player.autobuffer = true;
-            
-        onUpdate({
-          type:"playerready"
-        });
+        }
       };
 
       // Called when the media has started loading.
@@ -1014,36 +1071,46 @@
       };
          
       this.playMedia = function() {
-        this.player.play();
+        if( this.player ) {
+          this.player.play();
+        }
       };
          
       this.pauseMedia = function() {
-        this.player.pause();
+        if( this.player ) {
+          this.player.pause();
+        }
       };
          
       this.stopMedia = function() {
         this.pauseMedia();
-        this.player.src = "";
+        if( this.player ) {
+          this.player.src = "";
+        }
       };
          
       this.seekMedia = function( pos ) {
-        this.player.currentTime = pos;
+        if( this.player ) {
+          this.player.currentTime = pos;
+        }
       };
          
       this.setVolume = function( vol ) {
-        this.player.volume = vol;
+        if( this.player ) {
+          this.player.volume = vol;
+        }
       };
          
       this.getVolume = function() {
-        return this.player.volume;
+        return this.player ? this.player.volume : 0;
       };
          
       this.getDuration = function() {
-        return this.player.duration;
+        return this.player ? this.player.duration : 0;
       };
          
       this.getCurrentTime = function() {
-        return this.player.currentTime;
+        return this.player ? this.player.currentTime : 0;
       };
 
       this.getPercentLoaded = function() {
@@ -1092,7 +1159,8 @@
       };
     })( this, options, onUpdate );
   };
-         /**
+         
+/**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
  *  Developed by Travis Tidwell | travist at alethia-inc.com 
@@ -1318,7 +1386,6 @@
               clearInterval( this.progressInterval );
             }
             break;
-          case "update":
           case "meta":
             jQuery.extend( data, {
               currentTime:this.player.getCurrentTime(),
@@ -1329,6 +1396,8 @@
             break;
           case "complete":
             this.playNext();
+            break;
+          default:
             break;
         }
             
@@ -1370,7 +1439,11 @@
           this.updateInterval = setInterval( function() {
             if( _this.playerReady ) {
               _this.onMediaUpdate({
-                type:"update"
+                type:"update",
+                currentTime:_this.player.getCurrentTime(),
+                totalTime:_this.getDuration(),
+                volume:_this.player.getVolume(),
+                quality:_this.getQuality()
               });
             }
           }, 1000 );
@@ -1421,10 +1494,15 @@
       };
          
       this.getDuration = function() {
-        if( !this.mediaFile.duration ) {
-          this.mediaFile.duration = this.player.getDuration();
+        if( this.mediaFile ) {
+          if(!this.mediaFile.duration ) {
+            this.mediaFile.duration = this.player.getDuration();
+          }
+          return this.mediaFile.duration;
         }
-        return this.mediaFile.duration;
+        else {
+          return 0;
+        }
       };
          
       this.getQuality = function() {
@@ -1502,6 +1580,17 @@
         "mediaComplete":"complete",
         "mediaMeta":"meta"
       };
+
+      // When to show the busy cursor.
+      this.busy = {
+        "mediaConnected":false,
+        "mediaBuffering":"show",
+        "mediaPaused":"hide",
+        "mediaPlaying":"hide",
+        "mediaStopped":false,
+        "mediaComplete":false,
+        "mediaMeta":false
+      };
          
       this.createMedia = function( mediaFile, preview ) {
         this.mediaFile = mediaFile;
@@ -1567,8 +1656,9 @@
          
       this.onMediaUpdate = function( eventType ) {
         onUpdate( {
-          type:this.translate[eventType]
-        } );
+          type:this.translate[eventType],
+          busy:this.busy[eventType]
+        });
       };
          
       this.playMedia = function() {
@@ -1783,14 +1873,14 @@
       this.seekProgress = controlBar.find( settings.ids.seekProgress ).css("width", 0);
       this.seekBar = controlBar.find( settings.ids.seekBar ).mediaslider( settings.ids.seekHandle, false );
       if( this.seekBar ) {
-        this.seekBar.display.bind( "setvalue", function( event, data ) {
+        this.seekBar.display.unbind("setvalue").bind( "setvalue", function( event, data ) {
           _this.seekUpdate.css( "width", (data * _this.seekBar.trackSize) + "px" );
           _this.display.trigger( "controlupdate", {
             type:"seek",
             value:(data * _this.duration)
           });
         });
-        this.seekBar.display.bind( "updatevalue", function( event, data ) {
+        this.seekBar.display.unbind("updatevalue").bind( "updatevalue", function( event, data ) {
           _this.seekUpdate.css( "width", (data * _this.seekBar.trackSize) + "px" );
         });
       }
@@ -1813,14 +1903,14 @@
       this.volumeUpdate = controlBar.find( settings.ids.volumeUpdate );
       this.volumeBar = controlBar.find( settings.ids.volumeBar ).mediaslider( settings.ids.volumeHandle, settings.volumeVertical, settings.volumeVertical );
       if( this.volumeBar ) {
-        this.volumeBar.display.bind("setvalue", function( event, data ) {
+        this.volumeBar.display.unbind("setvalue").bind("setvalue", function( event, data ) {
           _this.setVolume( data );
           _this.display.trigger( "controlupdate", {
             type:"volume",
             value:data
           });
         });
-        this.volumeBar.display.bind("updatevalue", function( event, data ) {
+        this.volumeBar.display.unbind("updatevalue").bind("updatevalue", function( event, data ) {
           _this.setVolume( data );
           _this.volume = data;
         });
@@ -2042,7 +2132,7 @@
           // Let them know the player is ready.
           onUpdate( {
             type:"playerready"
-          } );
+          });
                
           // Load our video.
           this.player.loadVideoById( this.getId( this.videoFile.path ), 0 );
@@ -2053,7 +2143,8 @@
       this.onStateChange = function( newState ) {
         var playerState = this.getPlayerState( newState );
         onUpdate( {
-          type:playerState
+          type:playerState.state,
+          busy:playerState.busy
         } );
             
         if( !this.loaded && playerState == "playing" ) {
@@ -2090,19 +2181,19 @@
       this.getPlayerState = function( playerState ) {
         switch (playerState) {
           case 5:
-            return 'ready';
+            return {state:'ready', busy:false};
           case 3:
-            return 'buffering';
+            return {state:'buffering', busy:"show"};
           case 2:
-            return 'paused';
+            return {state:'paused', busy:"hide"};
           case 1:
-            return 'playing';
+            return {state:'playing', busy:"hide"};
           case 0:
-            return 'complete';
+            return {state:'complete', busy:false};
           case -1:
-            return 'stopped';
+            return {state:'stopped', busy:false};
           default:
-            return 'unknown';
+            return {state:'unknown', busy:false};
         }
         return 'unknown';
       };
@@ -2113,7 +2204,8 @@
       */
       this.playMedia = function() {
         onUpdate({
-          type:"buffering"
+          type:"buffering",
+          busy:"show"
         });
         this.player.playVideo();
       };
@@ -2128,7 +2220,8 @@
          
       this.seekMedia = function( pos ) {
         onUpdate({
-          type:"buffering"
+          type:"buffering",
+          busy:"show"
         });
         this.player.seekTo( pos, true );
       };
