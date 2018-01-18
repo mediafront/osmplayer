@@ -61,6 +61,10 @@
 
 .mediaplayerdialog.playlisthorizontal #mediaplayer {
   right:0px;
+  bottom:0px;
+}
+
+.mediaplayerdialog.playlisthorizontal.mediashowplaylist #mediaplayer {
   bottom:136px;
 }
 
