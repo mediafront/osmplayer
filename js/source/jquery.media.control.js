@@ -205,11 +205,7 @@
       // Handle the media events...
       this.onMediaUpdate = function( data ) {
         switch( data.type ) {
-          case "nomedia":
-            this.display.hide();
-            break;
           case "reset":
-            this.display.show();
             this.reset();
             break;
           case "paused":

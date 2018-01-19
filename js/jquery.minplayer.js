@@ -1159,8 +1159,7 @@
       };
     })( this, options, onUpdate );
   };
-         
-/**
+         /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
  *  Developed by Travis Tidwell | travist at alethia-inc.com 
@@ -1948,11 +1947,7 @@
       // Handle the media events...
       this.onMediaUpdate = function( data ) {
         switch( data.type ) {
-          case "nomedia":
-            this.display.hide();
-            break;
           case "reset":
-            this.display.show();
             this.reset();
             break;
           case "paused":

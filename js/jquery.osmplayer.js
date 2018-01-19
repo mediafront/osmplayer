@@ -2143,7 +2143,7 @@
       // Called when the mouse moves within the scroll region.
       this.onMouseMove = function( event ) {
         this.mousePos = event[ this.pagePos ] - this.getOffset();
-            
+
         // If the scroll type is span, then just move the list
         // up and down according to the listSize/regionSize ratio.
         if( this.shouldScroll && this.spanMode ) {
@@ -2229,7 +2229,7 @@
             
         // Now set the list position.
         this.listPos = _listPos;
-
+        
         // Set the position of the scroll bar.
         if( this.scrollBar ) {
           var newPos = this.bottomPos ? (this.listPos / this.bottomPos) : 0;
@@ -3311,8 +3311,7 @@
       };
     })( this, options, onUpdate );
   };
-         
-/**
+         /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
  *  Developed by Travis Tidwell | travist at alethia-inc.com 
@@ -4660,11 +4659,7 @@
       // Handle the media events...
       this.onMediaUpdate = function( data ) {
         switch( data.type ) {
-          case "nomedia":
-            this.display.hide();
-            break;
           case "reset":
-            this.display.show();
             this.reset();
             break;
           case "paused":
