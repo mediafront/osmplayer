@@ -37,7 +37,7 @@
     link:"http://www.mediafront.org",
     file:"",
     image:"",
-    timeout:4,
+    timeout:8,
     autoLoad:true
   });
 
