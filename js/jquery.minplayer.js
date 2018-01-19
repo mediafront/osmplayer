@@ -185,6 +185,9 @@
         if( settings.template.onFullScreen ) {
           settings.template.onFullScreen( full );
         }
+
+        // Refresh the preview image.
+        this.preview.refresh();
       };
          
       // Handle when the preview image loads.
