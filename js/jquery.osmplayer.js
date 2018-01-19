@@ -6151,8 +6151,8 @@
           _this.onNodeLoad( data );
         });
             
-        if( this.node.player ) {
-          this.node.player.display.unbind("mediaupdate").bind( "mediaupdate", function( event, data ) {
+        if( this.node.player && this.node.player.media ) {
+          this.node.player.media.display.unbind("mediaupdate").bind( "mediaupdate", function( event, data ) {
             _this.onMediaUpdate( data );
           });
         }
