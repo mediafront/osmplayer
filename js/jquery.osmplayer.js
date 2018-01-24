@@ -284,6 +284,10 @@
       // Store the preview image.
       this.preview = player.find( settings.ids.preview ).mediaimage();
       if( this.preview ) {
+        this.preview.display.unbind("click").bind("click", function() {
+          _this.onMediaClick();
+        });
+
         this.preview.display.unbind("imageLoaded").bind("imageLoaded", function() {
           _this.onPreviewLoaded();
         });
@@ -434,14 +438,24 @@
         }
       };
 
+      // Called when the media is clicked.
+      this.onMediaClick = function() {
+        if( this.media.player && !this.media.hasControls() ) {
+          if( this.playing ) {
+            this.media.player.pauseMedia();
+          }
+          else {
+            this.media.player.playMedia();
+          }
+        }
+      }
+
       // Set the media player.
       this.media = this.display.find( settings.ids.media ).mediadisplay( settings );
       if( this.media ) {
         // If they click on the media region, then pause the media.
-        this.media.display.click( function() {
-          if( _this.media.player && !_this.media.hasControls() ) {
-            _this.media.player.pauseMedia();
-          }
+        this.media.display.unbind("click").bind("click", function() {
+          _this.onMediaClick();
         });
       }
 
