@@ -256,23 +256,32 @@
       this.showControls = function(show) {};
       //this.setSize = function( newWidth, newHeight ) {};
       this.getEmbedCode = function() {
-        var flashVars = {
-          config:"config",
-          id:"mediafront_player",
-          file:this.mediaFile.path,
-          image:this.preview,
-          skin:options.skin
-        };
-        if( this.mediaFile.stream ) {
-          flashVars.stream = this.mediaFile.stream;
+
+        // Only return the Flash embed if this is a Flash playable media field.
+        if( (this.mediaFile.extension == 'mp4') ||
+            (this.mediaFile.extension == 'm4v') ||
+            (this.mediaFile.extension == 'webm') ) {
+          var flashVars = {
+            config:"config",
+            id:"mediafront_player",
+            file:this.mediaFile.path,
+            image:this.preview,
+            skin:options.skin
+          };
+          if( this.mediaFile.stream ) {
+            flashVars.stream = this.mediaFile.stream;
+          }
+          return jQuery.media.utils.getFlash(
+            options.flashPlayer,
+            "mediafront_player",
+            options.embedWidth,
+            options.embedHeight,
+            flashVars,
+            options.wmode );
         }
-        return jQuery.media.utils.getFlash(
-          options.flashPlayer,
-          "mediafront_player",
-          options.embedWidth,
-          options.embedHeight,
-          flashVars,
-          options.wmode );
+        else {
+          return "This media does not support embedding.";
+        }
       };
       this.getMediaLink = function() {
         return "This media currently does not have a link.";
