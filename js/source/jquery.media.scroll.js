@@ -32,7 +32,7 @@
     updateTimeout:40,
     hysteresis:40,
     showScrollbar:true,
-    scrollMode:"auto"  /* "auto", "span", "none" */
+    scrollMode:"auto"  /* "auto", "span", "mouse", "none" */
   });
 
   jQuery.media.ids = jQuery.extend( jQuery.media.ids, {
@@ -58,9 +58,8 @@
          
       // Get the list region.
       this.listMask = scrollRegion.find( settings.ids.listMask );
-         
-      // Internet Exploder has some serious issues with the auto scroll.  We will just force those
-      // users to use the scroll bar.
+
+      // Setup the mouse events for the auto scroll mode.
       if( this.spanMode || (settings.scrollMode == "auto") ) {
         // Add our event callbacks.
         this.listMask.unbind("mouseenter").bind( 'mouseenter', function( event ) {
@@ -73,6 +72,15 @@
           _this.onMouseMove( event );
         });
       }
+      // Setup the mouse events for the mouse scroll mode.
+      else if(settings.scrollMode == "mouse") {
+        // Add our event callbacks.
+        this.display.bind('mousewheel', function(event, delta, deltaX, deltaY) {
+          event.preventDefault();
+          _this.onMouseScroll(deltaX, deltaY);
+        });
+      }
+      
       this.listMask.css("overflow", "hidden");
                
       this.list = scrollRegion.find( settings.ids.list );
@@ -130,8 +138,14 @@
         this.scrollBar.display.unbind("setvalue").bind("setvalue", function( event, data ) {
           _this.setScrollPos( data * _this.bottomPos, true );
         });
+
+        // Add our event callbacks.
+        this.scrollBar.display.bind('mousewheel', function(event, delta, deltaX, deltaY) {
+          event.preventDefault();
+          _this.onMouseScroll(deltaX, deltaY);
+        });
       }
-         
+
       this.setScrollSize = function( newSize ) {
         if( newSize ) {
           this.scrollSize = newSize;
@@ -216,6 +230,12 @@
             this.setScrollPos( _listPos, true );
           }
         }
+      };
+
+      // Called when the mouse scrolls.
+      this.onMouseScroll = function( deltaX, deltaY ) {
+        var d = settings.vertical ? -deltaY : deltaX;
+        this.setScrollPos(this.listPos + (settings.scrollSpeed*d));
       };
 
       // Called when the mouse moves within the scroll region.
