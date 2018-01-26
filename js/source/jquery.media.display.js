@@ -232,6 +232,9 @@
               quality: this.getQuality()
             });
             break;
+          case "durationupdate":
+            this.mediaFile.duration = data.duration;
+            break;
           case "complete":
             this.playNext();
             break;
