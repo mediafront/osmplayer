@@ -1252,10 +1252,12 @@
             }
           }, true);
           this.player.addEventListener( "durationchange", function() {
-            onUpdate( {
-              type:"durationupdate",
-              duration:this.duration
-            });
+            if( this.duration && (this.duration !== Infinity) ) {
+              onUpdate( {
+                type:"durationupdate",
+                duration:this.duration
+              });
+            }
           }, true);
 
           // Now add the event for getting the progress indication.
