@@ -3905,10 +3905,7 @@
       this.onEscKey = function() {
         // If they are in full screen mode, then escape when they press the ESC key.
         if( this.fullScreen ) {
-          this.fullScreen = false;
-          if( this.node && this.node.player ) {
-            this.node.player.fullScreen( this.fullScreen );
-          }
+          this.onFullScreen( false );
         }
       };
          
@@ -3931,11 +3928,17 @@
         });
 
         element.display.unbind("fullscreen").bind("fullscreen", function( event ) {
-          _this.fullScreen = !_this.fullScreen;
-          if( _this.node && _this.node.player ) {
-            _this.node.player.fullScreen( _this.fullScreen );
-          }
+          _this.onFullScreen( !_this.fullScreen );
         });
+      };
+
+      // Function to put the player in fullscreen mode.
+      this.onFullScreen = function( full ) {
+        this.fullScreen = full;
+        if( this.node && this.node.player ) {
+          this.node.player.fullScreen( this.fullScreen );
+          this.onResize();
+        }
       };
 
       // Setup the title bar.
