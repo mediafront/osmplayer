@@ -19,7 +19,7 @@
   position:absolute;
 }
 
-#mediaplayer_minplayer.fullscreen #mediaplayer_display {
+#mediaplayer_minplayer.fullscreen #mediaplayer_display, #mediaplayer_minplayer.fullscreen #mediaplayer_preview {
   position: fixed;
   left: 0;
   top: 0;
@@ -30,6 +30,21 @@
   width: 100%;
   height: 100%;
 }
+
+#mediaplayer_minplayer.fullscreen #mediaplayer_preview {
+  z-index:1001;
+}
+
+#mediaplayer_minplayer.nomedia #mediaplayer_display {
+  display:none;
+}
+
+/*--------------------------- Media Fields ---------------------------*/
+.mediafield {
+  margin:5px;
+  color:#ddd;
+}
+
 
 /*--------------------------- Big play button and preview ---------------------------*/
 #mediaplayer_preview {
@@ -98,6 +113,10 @@
   background:url(../images/mediafront_controlerbarBg.png) center repeat-x;
   height:36px;
   width:100%;
+}
+
+#mediaplayer_minplayer.nomedia #mediaplayer_control {
+  display:none;
 }
 
 #mediaplayer_minplayer.fullscreen #mediaplayer_control {
@@ -207,12 +226,38 @@
 
 /*--------------------------- fullscreen button ---------------------------*/
 #mediafront_resizeScreen {
-  float:left;
-  position:relative;
+  position:absolute;
+  z-index:404;
+  position:absolute;
+  bottom:16px;
+  right:0px;
   width:33px;
   height:24px;
-  margin-top:5px;
 }
+
+#mediaplayer_minplayer.nomedia #mediafront_resizeScreen {
+  bottom:23px;
+  right:30px;
+}
+
+#mediaplayer_minplayer.fullscreen #mediafront_resizeScreen {
+  position: fixed;
+  right:0px;
+  bottom:16px;
+  z-index:1012;
+}
+
+#mediaplayer_minplayer.fullscreen.nomedia #mediafront_resizeScreen {
+  position: fixed;
+  right:0px;
+  bottom:5px;
+  z-index:1012;
+}
+
+#mediafront_resizeScreen span {
+  display:none;
+}
+
 #mediafront_resize_to_fullScreen, #mediafront_resize_to_normalScreen {
   position:absolute;
   z-index:404;
@@ -256,15 +301,23 @@
   z-index:404;
   height:72px;
   width:39px;
-  margin-top:-78px;
+  margin-top:-76px;
   margin-left:-10px;
+}
+#mediaplayer_audioBarInner {
+  width:27px;
+  height:60px;
+  left:6px;
+  bottom:0px;
+  position:absolute;
+  z-index:404;
 }
 #mediavolumeupdate {
   background: url(../images/mediafront_black40.png);
   position:absolute;
   font-size:0px;
   z-index:405;
-  left:6px;
+  bottom:0px;
   width:26px;
 }
 #mediafront_audioControler {
@@ -273,7 +326,6 @@
   height:8px;
   position:absolute;
   z-index:406;
-  left:6px;
 }
 
 /*--------------------------- menu ---------------------------*/

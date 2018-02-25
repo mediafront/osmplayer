@@ -40,7 +40,6 @@
         this.player = null;
         this.logo = null;
         this.fullScreenButton = null;
-        this.showController = true;
 
         /**
          * Called just before the mediaplayer is ready to show this template to the user.
@@ -56,40 +55,48 @@
           // Get the player elements.
           this.mediaDisplay = mediaplayer.node.player.media;
           this.player = mediaplayer.node.player;
+          this.volumeBar = $('#mediaplayer_audioBar');
           this.logo = this.player.logo;
-          this.fullScreenButton = mediaplayer.controller.display.find("#mediafront_resizeScreen");
+          this.fullScreenButton = mediaplayer.display.find("#mediafront_resizeScreen").click( function( event ) {
+            event.preventDefault();
+            mediaplayer.onFullScreen(!mediaplayer.fullScreen);
+          });
 
           // Hide the volume bar by default.
-          mediaplayer.controller.volumeBar.display.hide();
+          this.volumeBar.hide();
           this.fullScreenButton.find(".off").hide();
 
           // Show the control bar, and then hide it after 5 seconds of inactivity.
-          if( this.showController ) {
-            jQuery.media.utils.showThenHide( mediaplayer.controller.display, "display", null, "slow" );
-          }
-          jQuery.media.utils.showThenHide( this.logo.display, "logo", null, "slow" );
+          jQuery.media.utils.showThenHide( mediaplayer.controller.display, "display", null, "slow", function() {
+            mediaplayer.node.player.play.css("bottom", "5px");
+          });
+
+          jQuery.media.utils.showThenHide( this.fullScreenButton, "fullscreen" );
 
           // Make sure that we show the volume bar when they hover over the mute button.
           // Add a timer to the mouse move of the display to show the control bar and logo on mouse move.
           mediaplayer.display.bind("mousemove", function() {
-            if( _this.showController ) {
-              jQuery.media.utils.showThenHide( mediaplayer.controller.display, "display", "fast", "slow" );
+            jQuery.media.utils.showThenHide( _this.fullScreenButton, "fullscreen" );
+            mediaplayer.node.player.play.css("bottom", "45px");
+            if( jQuery.media.hasMedia ) {
+              jQuery.media.utils.showThenHide( mediaplayer.controller.display, "display", "fast", "slow", function() {
+                mediaplayer.node.player.play.css("bottom", "5px");
+              });
             }
             jQuery.media.utils.showThenHide( _this.logo.display, "logo", "fast", "slow" );
           });
 
           // Show the volume bar when they hover over the mute button.
           mediaplayer.controller.mute.display.bind("mousemove", function() {
-            if( _this.showController ) {
-              jQuery.media.utils.showThenHide( mediaplayer.controller.volumeBar.display, "volumeBar", "fast", "fast" );
+            if( jQuery.media.hasMedia ) {
+              jQuery.media.utils.showThenHide( _this.volumeBar, "volumeBar", "fast", "fast" );
             }
           });
-
+          
           // Stop the hide on both the control bar and the volumeBar.
-          if( this.showController ) {
-            jQuery.media.utils.stopHideOnOver( mediaplayer.controller.display, "display" );
-            jQuery.media.utils.stopHideOnOver( mediaplayer.controller.volumeBar.display, "volumeBar" );
-          }
+          jQuery.media.utils.stopHideOnOver( mediaplayer.controller.display, "display" );
+          jQuery.media.utils.stopHideOnOver( this.fullScreenButton, "fullscreen" );
+          jQuery.media.utils.stopHideOnOver( this.volumeBar, "volumeBar" );
         };
 
         /**
@@ -167,15 +174,21 @@
           }
         };
 
+        this.onNodeLoad = function( data ) {
+          mediaplayer.node.player.play.show();
+        };
+
         this.onMediaUpdate = function( data ) {
           if( mediaplayer.controller && mediaplayer.node ) {
             if( data.type == "reset" ) {
-              this.showController = true;
+              jQuery.media.hasMedia = true;
               mediaplayer.controller.display.show();
+              this.player.display.removeClass("nomedia");
             }
             else if( data.type == "nomedia" ) {
-              this.showController = false;
+              jQuery.media.hasMedia = false;
               mediaplayer.controller.display.hide();
+              this.player.display.addClass("nomedia");
             }
           }
         };

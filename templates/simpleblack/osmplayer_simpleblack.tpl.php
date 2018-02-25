@@ -36,6 +36,10 @@
         </div>
         <div id="mediaplayer_preview"></div>
         <div id="mediaplayer_display"></div>
+        <a id="mediafront_resizeScreen" class="mediaplayerlink mediaplayer_controlspace" href="#fullscreen">
+          <div id="mediafront_resize_to_fullScreen" class="on"><span>make full screen</span></div>
+          <div id="mediafront_resize_to_normalScreen" class="off"><span>make normal screen</span></div>
+        </a>
         <div id="mediaplayer_control">
           <div id="mediaplayer_controlLeft">
             <div id="mediaplayer_playPause" class="mediaplayer_controlspace">
@@ -49,16 +53,14 @@
             <div id="mediafront_audio" class="mediaplayer_controlspace">
                <div id="mediaplayer_audioButton"></div>
                <div id="mediaplayer_audioBar">
-                  <div id="mediafront_audioControler"></div>
-                  <div id="mediavolumeupdate"></div>
+                 <div id="mediaplayer_audioBarInner">
+                   <div id="mediafront_audioControler"></div>
+                   <div id="mediavolumeupdate"></div>
+                 </div>
                </div>
             </div>
             <a id="mediafront_information" class="mediaplayerlink mediaplayer_controlspace" href="#menu">
               <div id="mediafront_menuButton"><span>information</span></div>
-            </a>
-            <a id="mediafront_resizeScreen" class="mediaplayerlink mediaplayer_controlspace" href="#fullscreen">
-              <div id="mediafront_resize_to_fullScreen" class="on"><span>make full screen</span></div>
-              <div id="mediafront_resize_to_normalScreen" class="off"><span>make normal screen</span></div>
             </a>
           </div>
           <div id="mediaplayer_seekBar">
