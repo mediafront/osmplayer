@@ -2634,10 +2634,33 @@
           this.logo.display.css({
             width:settings.logoWidth,
             height:settings.logoHeight
+            });
+          this.logo.display.bind("imageLoaded", function() {
+            _this.setLogoPos();
           });
           this.logo.loadImage( settings.logo );
         }
       }
+      
+      // Sets the logo position.
+      this.setLogoPos = function() {
+        if( this.logo ) {
+          var logocss = {};
+          if( settings.logopos=='se' || settings.logopos=='sw' ) {
+            logocss['bottom'] = settings.logoy;
+          }
+          if( settings.logopos=='ne' || settings.logopos=='nw' ) {
+            logocss['top'] = settings.logoy;
+          }
+          if( settings.logopos=='nw' || settings.logopos=='sw' ) {
+            logocss['left'] = settings.logox;
+          }
+          if( settings.logopos=='ne' || settings.logopos=='se' ) {
+            logocss['right'] = settings.logox;
+          }
+          this.logo.display.css(logocss);
+        }
+      };      
 
       // Reset to previous state...
       this.reset = function() {
