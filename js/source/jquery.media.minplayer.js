@@ -346,6 +346,10 @@
         if( this.preview ) {
           this.preview.refresh();
         }
+        
+        if( this.media ) {
+          this.media.onResize();
+        }
       };
 
       // Clears the loaded image.

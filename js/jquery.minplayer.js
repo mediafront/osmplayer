@@ -834,6 +834,12 @@
           this.player.setVolume( this.volume );
         }
       };
+      
+      this.onResize = function() {
+        if( this.player && this.player.onResize ) {
+          this.player.onResize();
+        }
+      };
          
       this.getPercentLoaded = function() {
         if( this.player.getPercentLoaded ) {
@@ -1143,6 +1149,7 @@
       this.mediaType = "";
       this.loaded = false;
       this.mediaFile = null;
+      this.playerElement = null;
          
       this.getPlayer = function( mediaFile, preview ) {
         this.mediaFile = mediaFile;
@@ -1163,17 +1170,12 @@
             
         html += '</' + this.mediaType + '>';
         this.display.append( html );
-        this.bytesTotal = mediaFile.bytesTotal;
-        
-        var playerElement = this.display.find('#' + playerId);
-        
-        // If this is a video, set the width and height of the video element.
-        if( this.mediaType == "video" ) {
-          playerElement.css({width:this.display.width(), height:this.display.height()});
-        }
+        this.bytesTotal = mediaFile.bytesTotal;        
+        this.playerElement = this.display.find('#' + playerId);
+        this.onResize();
         
         // return the player object.
-        return playerElement.eq(0)[0];;
+        return this.playerElement.eq(0)[0];;
       };
          
       // Create a new HTML5 player.
@@ -1370,6 +1372,14 @@
           return 0;
         }
       }
+      
+      // Called when the player resizes.
+      this.onResize = function() {
+        // If this is a video, set the width and height of the video element.
+        if( this.mediaType == "video" ) {
+          this.playerElement.css({width:this.display.width(), height:this.display.height()});
+        }
+      };   
          
       // Not implemented yet...
       this.setQuality = function( quality ) {};
@@ -1761,6 +1771,10 @@
       this.onResize = function() {
         if( this.preview ) {
           this.preview.refresh();
+        }
+        
+        if( this.media ) {
+          this.media.onResize();
         }
       };
 

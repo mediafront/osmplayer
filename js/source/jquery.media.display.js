@@ -309,6 +309,12 @@
           this.player.setVolume( this.volume );
         }
       };
+      
+      this.onResize = function() {
+        if( this.player && this.player.onResize ) {
+          this.player.onResize();
+        }
+      };
          
       this.getPercentLoaded = function() {
         if( this.player.getPercentLoaded ) {
