@@ -152,10 +152,13 @@
         }
       };
          
-      this.loadMedia = function( file ) {
+      this.loadMedia = function( file, mediaplayer ) {
         if( file ) {
           // Get the media file object.
           file = new jQuery.media.file( this.getMediaFile( file ), this.settings );
+          
+          // Set the media player if they force it.
+          file.player = mediaplayer ? mediaplayer : file.player;
                
           // Stop the current player.
           this.stopMedia();
@@ -209,6 +212,16 @@
             clearInterval( this.progressInterval );
             clearInterval( this.updateInterval );
             break;
+          case "error":
+            if( data.code == 4 ) {
+              // It is saying not supported... Try and fall back to flash...
+              this.loadMedia(this.mediaFile, "flash");
+            }
+            else {
+              clearInterval( this.progressInterval );
+              clearInterval( this.updateInterval );
+            }
+            break;            
           case "paused":
             clearInterval( this.updateInterval );
             break;

@@ -42,9 +42,9 @@
       
     // Check for video types...
     var elem = document.createElement("video");
-    types.ogg  = jQuery.media.checkPlayType( elem, "video/ogg");
-    types.h264  = jQuery.media.checkPlayType( elem, "video/mp4");
-    types.webm = jQuery.media.checkPlayType( elem, "video/x-webm");
+    types.ogg  = jQuery.media.checkPlayType( elem, 'video/ogg; codecs="theora, vorbis"');
+    types.h264  = jQuery.media.checkPlayType( elem, 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"');
+    types.webm = jQuery.media.checkPlayType( elem, 'video/webm; codecs="vp8, vorbis"');
          
     // Now check for audio types...
     elem = document.createElement("audio");
