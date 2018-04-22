@@ -1,0 +1,39 @@
+<config>
+   <settings>
+   </settings>
+   <plugins>
+      <plugin>
+         <definition>com.mediafront.display.media.MediaPlayer</definition>
+         <!--
+           If you wish to dyanmically load a SWF file for your plugin instead of including
+           the definition, you can do so by just providing the path to the plugin like so, and
+           then delete the "definition" parameter above.
+         -->
+         <!--<path>http://mysite.com/plugins/plugin.swf</path>-->
+         <skin>skins/%skin/mediaPlayer.swf</skin>
+         <type>mediaPlayer</type>
+         <name>mediaPlayer</name>
+         <visible>true</visible>
+      </plugin>
+      <plugin>
+         <definition>com.mediafront.display.media.controls.PlayLoader</definition>
+         <skin>skins/%skin/playLoader.swf</skin>
+         <type>playLoader</type>
+         <name>playLoader</name>
+         <visible>false</visible>
+         <dependencies>
+            <dependency>mediaPlayer</dependency>
+         </dependencies>
+      </plugin>
+      <plugin>
+         <definition>com.mediafront.display.media.controls.ControlBar</definition>
+         <skin>skins/%skin/controlBar.swf</skin>
+         <type>controlBar</type>
+         <name>controlBar</name>
+         <visible>false</visible>
+         <dependencies>
+            <dependency>mediaPlayer</dependency>
+         </dependencies>
+      </plugin>
+   </plugins>
+</config>

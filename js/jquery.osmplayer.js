@@ -574,7 +574,7 @@
   /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *  Developed by Travis Tidwell | travist at alethia-inc.com
  *
  *  License:  GPL version 3.
  *
@@ -584,7 +584,7 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in
  *  all copies or substantial portions of the Software.
 
@@ -598,7 +598,7 @@
  */
 
   
-   
+
   // Set up our defaults for this component.
   jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
     volume:80,
@@ -652,7 +652,7 @@
         this.mediaFile = null;
         this.display.empty().trigger( "mediaupdate", {type:"reset"} );
       };
-         
+
       // Returns the media that has the lowest weight value, which means
       // this player prefers that media over the others.
       this.getPlayableMedia = function( files ) {
@@ -666,7 +666,7 @@
         }
         return mFile;
       };
-         
+
       // Returns a valid media file for this browser.
       this.getMediaFile = function( file ) {
         if( file ) {
@@ -677,14 +677,14 @@
         }
         return file;
       };
-         
+
       // Adds a media file to the play queue.
       this.addToQueue = function( file ) {
         if( file ) {
           this.playQueue.push( this.getMediaFile( file ) );
         }
       };
-                 
+
       this.loadFiles = function( files ) {
         if( files ) {
           this.playQueue.length = 0;
@@ -702,7 +702,7 @@
         }
         return hasMedia;
       };
-         
+
       this.playNext = function() {
         if( this.playQueue.length > this.playIndex ) {
           this.loadMedia( this.playQueue[this.playIndex] );
@@ -724,23 +724,23 @@
           this.playNext();
         }
       };
-         
+
       this.loadMedia = function( file, mediaplayer ) {
         if( file ) {
           // Get the media file object.
           file = new jQuery.media.file( this.getMediaFile( file ), this.settings );
-          
+
           // Set the media player if they force it.
           file.player = mediaplayer ? mediaplayer : file.player;
-               
+
           // Stop the current player.
           this.stopMedia();
-               
+
           if( !this.mediaFile || (this.mediaFile.player != file.player) ) {
             // Reset our player variables.
             this.player = null;
             this.playerReady = false;
-                  
+
             // Create a new media player.
             if( file.player ) {
               // Set the new media player.
@@ -748,7 +748,7 @@
                 _this.onMediaUpdate( data );
               });
             }
-                  
+
             if( this.player ) {
               // Create our media player.
               this.player.createMedia( file, this.preview );
@@ -758,10 +758,10 @@
             // Load our file into the current player.
             this.player.loadMedia( file );
           }
-               
+
           // Save this file.
           this.mediaFile = file;
-               
+
           // Send out an update about the initialize.
           this.onMediaUpdate({
             type:"initialize"
@@ -794,7 +794,7 @@
               clearInterval( this.progressInterval );
               clearInterval( this.updateInterval );
             }
-            break;            
+            break;
           case "paused":
             clearInterval( this.updateInterval );
             break;
@@ -827,7 +827,7 @@
           default:
             break;
         }
-            
+
         // If this is the playing state, we want to pause the video.
         if( data.type=="playing" && !this.loaded ) {
           if( this.settings.autoLoad && !this.settings.autostart ) {
@@ -848,7 +848,7 @@
           this.display.trigger( "mediaupdate", data );
         }
       };
-         
+
       this.startProgress = function() {
         if( this.playerReady ) {
           clearInterval( this.progressInterval );
@@ -885,17 +885,17 @@
           this.player.stopMedia();
         }
       };
-         
+
       this.mute = function( on ) {
         this.player.setVolume( on ? 0 : this.volume );
       };
-      
+
       this.onResize = function() {
         if( this.player && this.player.onResize ) {
           this.player.onResize();
         }
       };
-         
+
       this.getPercentLoaded = function() {
         if( this.player.getPercentLoaded ) {
           return this.player.getPercentLoaded();
@@ -906,20 +906,20 @@
           return bytesTotal ? (bytesLoaded / bytesTotal) : 0;
         }
       };
-         
+
       this.showControls = function(show) {
         if( this.playerReady ) {
           this.player.showControls(show);
         }
       };
-         
+
       this.hasControls = function() {
         if( this.player ) {
           return this.player.hasControls();
         }
         return false;
       };
-         
+
       this.getDuration = function() {
         if( this.mediaFile ) {
           if(!this.mediaFile.duration ) {
@@ -931,21 +931,21 @@
           return 0;
         }
       };
-      
+
       this.setVolume = function( vol ) {
         this.volume = vol ? vol : ((this.volume == -1) ? (this.settings.volume / 100) : this.volume);
         if( this.player ) {
           this.player.setVolume(this.volume);
         }
       }
-      
+
       this.getVolume = function() {
         if( !this.volume ) {
           this.volume = this.player.getVolume();
         }
         return this.volume;
       };
-         
+
       this.getQuality = function() {
         if( !this.mediaFile.quality ) {
           this.mediaFile.quality = this.player.getQuality();
@@ -1319,7 +1319,7 @@
 /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *  Developed by Travis Tidwell | travist at alethia-inc.com
  *
  *  License:  GPL version 3.
  *
@@ -1329,7 +1329,7 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in
  *  all copies or substantial portions of the Software.
 
@@ -1349,7 +1349,7 @@
   window.onFlashPlayerUpdate = function( id, eventType ) {
     jQuery.media.players[id].node.player.media.player.onMediaUpdate( eventType );
   };
-   
+
   window.onFlashPlayerDebug = function( debug ) {
     if( window.console && console.log ) {
       console.log( debug );
@@ -1362,7 +1362,7 @@
     skin:"default",
     config:"nocontrols"
   });
-   
+
   jQuery.fn.mediaflash = function( settings, onUpdate ) {
     return new (function( video, settings, onUpdate ) {
       settings = jQuery.media.utils.getSettings( settings );
@@ -1372,7 +1372,7 @@
       this.mediaFile = null;
       this.preview = '';
       this.ready = false;
-         
+
       // Translate the messages.
       this.translate = {
         "mediaConnected":"connected",
@@ -1394,7 +1394,7 @@
         "mediaComplete":false,
         "mediaMeta":false
       };
-         
+
       this.createMedia = function( mediaFile, preview ) {
         this.mediaFile = mediaFile;
         this.preview = preview;
@@ -1429,14 +1429,14 @@
           }
           );
       };
-         
+
       this.loadMedia = function( mediaFile ) {
         if( this.player ) {
           this.mediaFile = mediaFile;
-               
+
           // Load the new media file into the Flash player.
           this.player.loadMedia( mediaFile.path, mediaFile.stream );
-               
+
           // Let them know the player is ready.
           onUpdate( {
             type:"playerready"
@@ -1448,7 +1448,7 @@
         this.ready = true;
         this.loadPlayer();
       };
-         
+
       this.loadPlayer = function() {
         if( this.ready && this.player ) {
           onUpdate( {
@@ -1456,42 +1456,42 @@
           } );
         }
       };
-         
+
       this.onMediaUpdate = function( eventType ) {
         onUpdate( {
           type:this.translate[eventType],
           busy:this.busy[eventType]
         });
       };
-         
+
       this.playMedia = function() {
         this.player.playMedia();
       };
-         
+
       this.pauseMedia = function() {
         this.player.pauseMedia();
       };
-         
+
       this.stopMedia = function() {
         this.player.stopMedia();
       };
-         
+
       this.seekMedia = function( pos ) {
         this.player.seekMedia( pos );
       };
-         
+
       this.setVolume = function( vol ) {
         this.player.setVolume( vol );
       };
-         
+
       this.getVolume = function() {
         return this.player.getVolume();
       };
-         
+
       this.getDuration = function() {
         return this.player.getDuration();
       };
-         
+
       this.getCurrentTime = function() {
         return this.player.getCurrentTime();
       };
@@ -1499,7 +1499,7 @@
       this.getBytesLoaded = function() {
         return this.player.getMediaBytesLoaded();
       };
-         
+
       this.getBytesTotal = function() {
         return this.player.getMediaBytesTotal();
       };
@@ -1507,12 +1507,12 @@
       this.hasControls = function() {
         return true;
       };
-         
+
       this.showControls = function(show) {
         this.player.showPlugin("controlBar", show);
         this.player.showPlugin("playLoader", show);
       };
-         
+
       this.getEmbedCode = function() {
         var flashVars = {
           config:"config",
@@ -1532,7 +1532,7 @@
           flashVars,
           settings.wmode );
       };
-         
+
       // Not implemented yet...
       this.setQuality = function( quality ) {};
       this.getQuality = function() {
@@ -1544,7 +1544,7 @@
       };
     })( this, settings, onUpdate );
   };
-         /**
+/**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
  *  Developed by Travis Tidwell | travist at alethia-inc.com 
@@ -2429,7 +2429,7 @@
 /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *  Developed by Travis Tidwell | travist at alethia-inc.com
  *
  *  License:  GPL version 3.
  *
@@ -2439,7 +2439,7 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in
  *  all copies or substantial portions of the Software.
 
@@ -2453,7 +2453,7 @@
  */
 
   
-   
+
   // Set up our defaults for this component.
   jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
     logo:"logo.png",
@@ -2475,7 +2475,7 @@
     play:"#mediaplay",
     media:"#mediadisplay"
   });
-   
+
   jQuery.fn.minplayer = function( settings ) {
     if( this.length === 0 ) {
       return null;
@@ -2483,7 +2483,7 @@
     return new (function( player, settings ) {
       // Get the settings.
       settings = jQuery.media.utils.getSettings(settings);
-         
+
       // Save the jQuery display.
       this.display = player;
       var _this = this;
@@ -2496,7 +2496,7 @@
       this.busyImg = this.busy.find("img");
       this.busyWidth = this.busyImg.width();
       this.busyHeight = this.busyImg.height();
-         
+
       // Store the play overlay.
       this.play = player.find( settings.ids.play );
       // Toggle the play/pause state if they click on the play button.
@@ -2506,7 +2506,7 @@
       this.playImg = this.play.find("img");
       this.playWidth = this.playImg.width();
       this.playHeight = this.playImg.height();
-         
+
       // Store the preview image.
       this.preview = player.find( settings.ids.preview ).mediaimage();
       if( this.preview ) {
@@ -2518,7 +2518,7 @@
           _this.onPreviewLoaded();
         });
       }
-         
+
       // The internal player controls.
       this.usePlayerControls = false;
       this.busyFlags = 0;
@@ -2528,11 +2528,11 @@
       this.playing = false;
       this.hasMedia = false;
       this.timeoutId = 0;
-         
+
       // Cache the width and height.
       this.width = this.display.width();
       this.height = this.display.height();
-      
+
       // Hide or show an element.
       this.showElement = function( element, show, tween ) {
         if( element && !this.usePlayerControls ) {
@@ -2544,7 +2544,7 @@
           }
         }
       };
-         
+
       this.showPlay = function( show, tween ) {
         show &= this.hasMedia;
         this.playVisible = show;
@@ -2553,7 +2553,7 @@
 
       this.showBusy = function( id, show, tween ) {
         show &= this.hasMedia;
-        
+
         if( show ) {
           this.busyFlags |= (1 << id);
         }
@@ -2565,7 +2565,7 @@
         this.busyVisible = (this.busyFlags > 0);
         this.showElement( this.busy, this.busyVisible, tween );
       };
-         
+
       this.showPreview = function( show, tween ) {
         this.previewVisible = show;
         if( this.preview ) {
@@ -2600,7 +2600,7 @@
           else if( (this.media.playQueue.length > 0) && !this.media.mediaFile ) {
             // They interacted with the player.  Always autoload at this point on.
             this.autoLoad = true;
-                  
+
             // Then play the next file in the queue.
             this.playNext();
           }
@@ -2611,7 +2611,7 @@
           }
         }
       };
-         
+
       // Handle the full screen event requests.
       this.fullScreen = function( full ) {
         if( settings.template.onFullScreen ) {
@@ -2621,12 +2621,12 @@
         // Refresh the preview image.
         this.preview.refresh();
       };
-         
+
       // Handle when the preview image loads.
       this.onPreviewLoaded = function() {
         this.previewVisible = true;
       };
-         
+
       // Handle the media events.
       this.onMediaUpdate = function( data ) {
         switch( data.type ) {
@@ -2700,7 +2700,7 @@
           this.logo.loadImage( settings.logo );
         }
       }
-      
+
       // Sets the logo position.
       this.setLogoPos = function() {
         if( this.logo ) {
@@ -2719,7 +2719,7 @@
           }
           this.logo.display.css(logocss);
         }
-      };      
+      };
 
       // Reset to previous state...
       this.reset = function() {
@@ -2733,7 +2733,7 @@
           this.media.reset();
         }
       };
-         
+
       // Toggle the play/pause state.
       this.togglePlayPause = function() {
         if( this.media ) {
@@ -2756,7 +2756,7 @@
           }
         }
       };
-         
+
       // Loads an image...
       this.loadImage = function( image ) {
         if( this.preview ) {
@@ -2774,7 +2774,7 @@
         if( this.preview ) {
           this.preview.refresh();
         }
-        
+
         if( this.media ) {
           this.media.onResize();
         }
@@ -2786,7 +2786,7 @@
           this.preview.clear();
         }
       };
-         
+
       // Expose the public load functions from the media display.
       this.loadFiles = function( files ) {
         this.reset();
@@ -2804,7 +2804,7 @@
         }
         return this.hasMedia;
       };
-         
+
       // Play the next file.
       this.playNext = function() {
         if( this.media ) {
@@ -2826,7 +2826,7 @@
           this.media.showControls( show );
         }
       };
-         
+
       // Loads a single media file.
       this.loadMedia = function( file ) {
         this.reset();
@@ -2834,12 +2834,12 @@
           this.media.loadMedia( file );
         }
       };
-         
+
       // If they provide a file, then load it.
       if( settings.file ) {
         this.loadMedia( settings.file );
       }
-         
+
       // If they provide the image, then load it.
       if( settings.image ) {
         this.loadImage( settings.image );
@@ -3769,7 +3769,7 @@
 /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *  Developed by Travis Tidwell | travist at alethia-inc.com
  *
  *  License:  GPL version 3.
  *
@@ -3779,7 +3779,7 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in
  *  all copies or substantial portions of the Software.
 
@@ -3793,7 +3793,7 @@
  */
 
   
-   
+
   // Set up our defaults for this component.
   jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
     protocol:"auto",
@@ -3821,7 +3821,7 @@
     playlist:"#mediaplaylist",
     control:"#mediacontrol"
   });
-   
+
   // Initialize our players, playlists, and controllers.
   jQuery.media.players = {};
   jQuery.media.loadCallbacks = {};
@@ -3871,12 +3871,12 @@
   jQuery.media.addController = function( playerId, fromPlayer ) {
     jQuery.media.addElement( playerId, fromPlayer, "controller" );
   };
-   
+
   // To add a new playlist to any existing or future-included players.
   jQuery.media.addPlaylist = function( playerId, fromPlayer ) {
     jQuery.media.addElement( playerId, fromPlayer, "playlist" );
   };
-  
+
   // The main entry point into the player.
   jQuery.fn.mediaplayer = function( settings ) {
     if( this.length === 0 ) {
@@ -3886,15 +3886,15 @@
     return new (function( player, settings ) {
       // Get the settings.
       settings = jQuery.media.utils.getSettings( settings );
-         
+
       // Get the id if it has not been set.
       if( !settings.id ) {
         settings.id = jQuery.media.utils.getId( player );
       }
-         
+
       // Save the dialog.
       this.dialog = player;
-        
+
       // Save the jQuery display.
       this.display = this.dialog.find( settings.ids.player );
       var _this = this;
@@ -3916,15 +3916,15 @@
 
       // Store the index variable.
       var i = 0;
-         
+
       // Set the template object.
       settings.template = jQuery.media.templates[settings.template]( this, settings );
-         
+
       // Get all of the setting overrides used in this template.
       if( settings.template.getSettings ) {
         settings = jQuery.extend( settings, settings.template.getSettings() );
       }
-         
+
       // Add some keyboard event handlers.
       $(window).keyup( function( event ) {
         switch( event.keyCode ) {
@@ -3944,12 +3944,12 @@
           _this.onResize();
         });
       }
-         
+
       // First get the communication protocol.
       if( jQuery.media[settings.protocol] ) {
         this.protocol = jQuery.media[settings.protocol]( settings );
       }
-         
+
       // Load the server.
       if( jQuery.media[settings.server] ) {
         this.server = jQuery.media[settings.server]( this.protocol, settings );
@@ -3962,15 +3962,15 @@
           _this.showMenu( false );
         });
       }
-         
+
       // Setup our booleans.
       this.menuOn = false;
       this.maxOn = !settings.showPlaylist;
       this.fullScreen = false;
-         
+
       // The attached playlist.
       this.playlist = null;
-         
+
       // The active playlist.
       this.activePlaylist = null;
 
@@ -3979,7 +3979,7 @@
 
       // The active controller.
       this.activeController = null;
-         
+
       // Hide or Show the menu.
       this.showMenu = function( show ) {
         if( settings.template.onMenu ) {
@@ -3987,7 +3987,7 @@
           settings.template.onMenu( this.menuOn );
         }
       };
-         
+
       // Called when the user presses the ESC key.
       this.onEscKey = function() {
         // If they are in full screen mode, then escape when they press the ESC key.
@@ -3995,7 +3995,7 @@
           this.onFullScreen( false );
         }
       };
-         
+
       // When they press the space bar, we will toggle the player play/pause state.
       this.onSpaceBar = function() {
         if( this.fullScreen && this.node && this.node.player ) {
@@ -4033,7 +4033,7 @@
       if( this.titleBar ) {
         // Add the player events to the titlebar.
         this.addPlayerEvents( this.titleBar );
-         
+
         // If they have jQuery UI, make this draggable.
         if( settings.draggable && this.dialog.draggable ) {
           this.dialog.draggable({
@@ -4041,7 +4041,7 @@
             containment: 'document'
           });
         }
-   
+
         // If they have jQuery UI, make this resizable.
         if( settings.resizable && this.dialog.resizable ) {
           this.dialog.resizable({
@@ -4060,13 +4060,13 @@
         this.node.display.unbind("nodeload").bind( "nodeload", function( event, data ) {
           _this.onNodeLoad( data );
         });
-            
+
         if( this.node.player && this.node.player.media ) {
           this.node.player.media.display.unbind("mediaupdate").bind( "mediaupdate", function( event, data ) {
             _this.onMediaUpdate( data );
           });
         }
-            
+
         if( this.node.uservoter ) {
           this.node.uservoter.display.unbind("voteSet").bind( "voteSet", function( event, vote ) {
             if( _this.activePlaylist ) {
@@ -4075,17 +4075,17 @@
           });
         }
       }
-         
+
       // Called when the media updates.
       this.onMediaUpdate = function( data ) {
         // Call the player onMediaUpdate.
         this.node.player.onMediaUpdate( data );
-        
+
         // When the media completes, have the active playlist load the next item.
         if( settings.autoNext && this.activePlaylist && (data.type == "complete") ) {
           this.activePlaylist.loadNext();
         }
-        
+
         // Update our controller.
         if( this.controller ) {
           this.controller.onMediaUpdate( data );
@@ -4095,7 +4095,7 @@
         if( this.activeController ) {
           this.activeController.onMediaUpdate( data );
         }
-            
+
         // Set the media information in the menu.
         if( this.menu && this.node && (data.type == "meta") ) {
           this.menu.setEmbedCode( this.node.player.media.player.getEmbedCode() );
@@ -4118,13 +4118,13 @@
 
           this.node.loadNode( data );
         }
-            
+
         // Allow the template to do something when the playlist is loaded.
         if( settings.template.onPlaylistLoad ) {
           settings.template.onPlaylistLoad( data );
         }
       };
-         
+
       // Called when the main node is loaded.
       this.onNodeLoad = function( data ) {
         // Allow the template to do something when the node is loaded.
@@ -4132,7 +4132,7 @@
           settings.template.onNodeLoad( data );
         }
       };
-      
+
       // Maximize the player.
       this.maximize = function( on ) {
         // Don't want to maximize in fullscreen mode.
@@ -4152,7 +4152,7 @@
             _this.activePlaylist = event.data;
             _this.onPlaylistLoad( data );
           });
-               
+
           // Check to see if this playlist has already loaded... If so, then we need to
           // go ahead and load the active teaser into this player.
           if( !this.activePlaylist && newPlaylist.activeTeaser ) {
@@ -4165,7 +4165,7 @@
 
       // Add the default playlist.
       this.playlist = this.addPlaylist( this.dialog.find( settings.ids.playlist ).mediaplaylist( this.server, settings ) );
-         
+
       // Now add any queued playlists...
       if( jQuery.media.playlists[settings.id] ) {
         var playlists = jQuery.media.playlists[settings.id];
@@ -4188,7 +4188,7 @@
           if( active && !this.activeController ) {
             this.activeController = newController;
           }
-          
+
           this.addPlayerEvents( newController );
         }
         return newController;
@@ -4287,7 +4287,7 @@
       this.load = function() {
         // Initialize our template.
         this.initializeTemplate();
-            
+
         // The player looks good now.  Move the dialog back.
         this.dialog.css("position","relative");
         this.dialog.css("marginLeft",0);
@@ -4316,7 +4316,7 @@
           _this.loadContent();
         });
       };
-        
+
       this.load();
     })( this, settings );
   };

@@ -1,7 +1,7 @@
 /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *  Developed by Travis Tidwell | travist at alethia-inc.com
  *
  *  License:  GPL version 3.
  *
@@ -11,7 +11,7 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in
  *  all copies or substantial portions of the Software.
 
@@ -25,7 +25,7 @@
  */
 (function($) {
   jQuery.media = jQuery.media ? jQuery.media : {};
-   
+
   // Set up our defaults for this component.
   jQuery.media.defaults = jQuery.extend( jQuery.media.defaults, {
     volume:80,
@@ -79,7 +79,7 @@
         this.mediaFile = null;
         this.display.empty().trigger( "mediaupdate", {type:"reset"} );
       };
-         
+
       // Returns the media that has the lowest weight value, which means
       // this player prefers that media over the others.
       this.getPlayableMedia = function( files ) {
@@ -93,7 +93,7 @@
         }
         return mFile;
       };
-         
+
       // Returns a valid media file for this browser.
       this.getMediaFile = function( file ) {
         if( file ) {
@@ -104,14 +104,14 @@
         }
         return file;
       };
-         
+
       // Adds a media file to the play queue.
       this.addToQueue = function( file ) {
         if( file ) {
           this.playQueue.push( this.getMediaFile( file ) );
         }
       };
-                 
+
       this.loadFiles = function( files ) {
         if( files ) {
           this.playQueue.length = 0;
@@ -129,7 +129,7 @@
         }
         return hasMedia;
       };
-         
+
       this.playNext = function() {
         if( this.playQueue.length > this.playIndex ) {
           this.loadMedia( this.playQueue[this.playIndex] );
@@ -151,23 +151,23 @@
           this.playNext();
         }
       };
-         
+
       this.loadMedia = function( file, mediaplayer ) {
         if( file ) {
           // Get the media file object.
           file = new jQuery.media.file( this.getMediaFile( file ), this.settings );
-          
+
           // Set the media player if they force it.
           file.player = mediaplayer ? mediaplayer : file.player;
-               
+
           // Stop the current player.
           this.stopMedia();
-               
+
           if( !this.mediaFile || (this.mediaFile.player != file.player) ) {
             // Reset our player variables.
             this.player = null;
             this.playerReady = false;
-                  
+
             // Create a new media player.
             if( file.player ) {
               // Set the new media player.
@@ -175,7 +175,7 @@
                 _this.onMediaUpdate( data );
               });
             }
-                  
+
             if( this.player ) {
               // Create our media player.
               this.player.createMedia( file, this.preview );
@@ -185,10 +185,10 @@
             // Load our file into the current player.
             this.player.loadMedia( file );
           }
-               
+
           // Save this file.
           this.mediaFile = file;
-               
+
           // Send out an update about the initialize.
           this.onMediaUpdate({
             type:"initialize"
@@ -221,7 +221,7 @@
               clearInterval( this.progressInterval );
               clearInterval( this.updateInterval );
             }
-            break;            
+            break;
           case "paused":
             clearInterval( this.updateInterval );
             break;
@@ -254,7 +254,7 @@
           default:
             break;
         }
-            
+
         // If this is the playing state, we want to pause the video.
         if( data.type=="playing" && !this.loaded ) {
           if( this.settings.autoLoad && !this.settings.autostart ) {
@@ -275,7 +275,7 @@
           this.display.trigger( "mediaupdate", data );
         }
       };
-         
+
       this.startProgress = function() {
         if( this.playerReady ) {
           clearInterval( this.progressInterval );
@@ -312,17 +312,17 @@
           this.player.stopMedia();
         }
       };
-         
+
       this.mute = function( on ) {
         this.player.setVolume( on ? 0 : this.volume );
       };
-      
+
       this.onResize = function() {
         if( this.player && this.player.onResize ) {
           this.player.onResize();
         }
       };
-         
+
       this.getPercentLoaded = function() {
         if( this.player.getPercentLoaded ) {
           return this.player.getPercentLoaded();
@@ -333,20 +333,20 @@
           return bytesTotal ? (bytesLoaded / bytesTotal) : 0;
         }
       };
-         
+
       this.showControls = function(show) {
         if( this.playerReady ) {
           this.player.showControls(show);
         }
       };
-         
+
       this.hasControls = function() {
         if( this.player ) {
           return this.player.hasControls();
         }
         return false;
       };
-         
+
       this.getDuration = function() {
         if( this.mediaFile ) {
           if(!this.mediaFile.duration ) {
@@ -358,21 +358,21 @@
           return 0;
         }
       };
-      
+
       this.setVolume = function( vol ) {
         this.volume = vol ? vol : ((this.volume == -1) ? (this.settings.volume / 100) : this.volume);
         if( this.player ) {
           this.player.setVolume(this.volume);
         }
       }
-      
+
       this.getVolume = function() {
         if( !this.volume ) {
           this.volume = this.player.getVolume();
         }
         return this.volume;
       };
-         
+
       this.getQuality = function() {
         if( !this.mediaFile.quality ) {
           this.mediaFile.quality = this.player.getQuality();

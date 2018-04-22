@@ -1,7 +1,7 @@
 /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *  Developed by Travis Tidwell | travist at alethia-inc.com
  *
  *  License:  GPL version 3.
  *
@@ -11,7 +11,7 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in
  *  all copies or substantial portions of the Software.
 
@@ -31,7 +31,7 @@
   window.onFlashPlayerUpdate = function( id, eventType ) {
     jQuery.media.players[id].node.player.media.player.onMediaUpdate( eventType );
   };
-   
+
   window.onFlashPlayerDebug = function( debug ) {
     if( window.console && console.log ) {
       console.log( debug );
@@ -44,7 +44,7 @@
     skin:"default",
     config:"nocontrols"
   });
-   
+
   jQuery.fn.mediaflash = function( settings, onUpdate ) {
     return new (function( video, settings, onUpdate ) {
       settings = jQuery.media.utils.getSettings( settings );
@@ -54,7 +54,7 @@
       this.mediaFile = null;
       this.preview = '';
       this.ready = false;
-         
+
       // Translate the messages.
       this.translate = {
         "mediaConnected":"connected",
@@ -76,7 +76,7 @@
         "mediaComplete":false,
         "mediaMeta":false
       };
-         
+
       this.createMedia = function( mediaFile, preview ) {
         this.mediaFile = mediaFile;
         this.preview = preview;
@@ -111,14 +111,14 @@
           }
           );
       };
-         
+
       this.loadMedia = function( mediaFile ) {
         if( this.player ) {
           this.mediaFile = mediaFile;
-               
+
           // Load the new media file into the Flash player.
           this.player.loadMedia( mediaFile.path, mediaFile.stream );
-               
+
           // Let them know the player is ready.
           onUpdate( {
             type:"playerready"
@@ -130,7 +130,7 @@
         this.ready = true;
         this.loadPlayer();
       };
-         
+
       this.loadPlayer = function() {
         if( this.ready && this.player ) {
           onUpdate( {
@@ -138,42 +138,42 @@
           } );
         }
       };
-         
+
       this.onMediaUpdate = function( eventType ) {
         onUpdate( {
           type:this.translate[eventType],
           busy:this.busy[eventType]
         });
       };
-         
+
       this.playMedia = function() {
         this.player.playMedia();
       };
-         
+
       this.pauseMedia = function() {
         this.player.pauseMedia();
       };
-         
+
       this.stopMedia = function() {
         this.player.stopMedia();
       };
-         
+
       this.seekMedia = function( pos ) {
         this.player.seekMedia( pos );
       };
-         
+
       this.setVolume = function( vol ) {
         this.player.setVolume( vol );
       };
-         
+
       this.getVolume = function() {
         return this.player.getVolume();
       };
-         
+
       this.getDuration = function() {
         return this.player.getDuration();
       };
-         
+
       this.getCurrentTime = function() {
         return this.player.getCurrentTime();
       };
@@ -181,7 +181,7 @@
       this.getBytesLoaded = function() {
         return this.player.getMediaBytesLoaded();
       };
-         
+
       this.getBytesTotal = function() {
         return this.player.getMediaBytesTotal();
       };
@@ -189,12 +189,12 @@
       this.hasControls = function() {
         return true;
       };
-         
+
       this.showControls = function(show) {
         this.player.showPlugin("controlBar", show);
         this.player.showPlugin("playLoader", show);
       };
-         
+
       this.getEmbedCode = function() {
         var flashVars = {
           config:"config",
@@ -214,7 +214,7 @@
           flashVars,
           settings.wmode );
       };
-         
+
       // Not implemented yet...
       this.setQuality = function( quality ) {};
       this.getQuality = function() {
@@ -226,4 +226,4 @@
       };
     })( this, settings, onUpdate );
   };
-})(jQuery);         
+})(jQuery);
