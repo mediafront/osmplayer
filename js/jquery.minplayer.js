@@ -1989,24 +1989,24 @@
           }
           );
       };
-         
+
       this.getId = function( path ) {
-        var regex = /^http[s]?\:\/\/(www\.)?vimeo\.com\/([0-9]+)/i;
-        return (path.search(regex) == 0) ? path.replace(regex, "$2") : path;
+        var regex = /^http[s]?\:\/\/(www\.)?vimeo\.com\/(\?v\=)?([0-9]+)/i;
+        return (path.search(regex) == 0) ? path.replace(regex, "$3") : path;
       };
-         
+
       this.loadMedia = function( videoFile ) {
         this.bytesLoaded = 0;
         this.bytesTotal = 0;
         this.createMedia( videoFile );
       };
-         
+
       // Called when the player has finished loading.
       this.onReady = function() {
         this.ready = true;
         this.loadPlayer();
       };
-         
+
       // Load the player.
       this.loadPlayer = function() {
         if( this.ready && this.player ) {
