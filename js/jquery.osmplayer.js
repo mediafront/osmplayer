@@ -4165,8 +4165,13 @@
 
       // Search these elements for the id.
       this.searchForElement = function(elementList) {
+        
+        // Iterate through the elements.
         for(var id in elementList) {
-          if (settings.id.search(id) === 0) {
+          
+          // We need to tolerate instances.
+          var reg = new RegExp( '^' + id + '(\\_[0-9]+)?$', 'i');
+          if (settings.id.search(reg) === 0) {
             return elementList[id];
           }
         }
