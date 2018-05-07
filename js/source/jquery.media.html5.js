@@ -45,7 +45,8 @@
         if( typeof mediaFile === 'array' ) {
           html += '>';
           var i = mediaFile.length;
-          while( i-- ) {
+          while(i) {
+            i--;
             html += '<source src="' + mediaFile[i].path + '" type="' + mediaFile[i].mimetype + '">';
           }
         }
@@ -60,7 +61,7 @@
         this.onResize();
         
         // return the player object.
-        return this.playerElement.eq(0)[0];;
+        return this.playerElement.eq(0)[0];
       };
          
       // Create a new HTML5 player.
@@ -193,6 +194,8 @@
           case 4:
             console.log("Error: MEDIA_ERR_SRC_NOT_SUPPORTED");
             break;
+          default:
+            break;
         }
       };
 
@@ -218,6 +221,9 @@
                   
           case "oga": case "mp3":
             return "audio";
+            
+          default:
+            break;
         }
         return "video";
       };
@@ -276,7 +282,7 @@
         else {
           return 0;
         }
-      }
+      };
       
       // Called when the player resizes.
       this.onResize = function() {

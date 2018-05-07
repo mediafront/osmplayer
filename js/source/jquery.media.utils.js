@@ -136,7 +136,8 @@
       resetVisibility : function( invisibleParents ) {
         // Now iterate through all of the invisible objects and rehide them.
         var i = invisibleParents.length;
-        while(i--){
+        while(i){
+          i--;
           invisibleParents[i].obj.addClass(invisibleParents[i].attr);
         }
       },

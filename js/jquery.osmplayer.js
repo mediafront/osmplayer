@@ -937,7 +937,7 @@
         if( this.player ) {
           this.player.setVolume(this.volume);
         }
-      }
+      };
 
       this.getVolume = function() {
         if( !this.volume ) {
@@ -1150,7 +1150,7 @@
   // Checks the file type for browser compatibilty.
   jQuery.media.checkPlayType = function( elem, playType ) {
     if( (typeof elem.canPlayType) == 'function' ) {
-      return ("no" != elem.canPlayType(playType)) && ("" != elem.canPlayType(playType));
+      return ("no" !== elem.canPlayType(playType)) && ("" !== elem.canPlayType(playType));
     }
     else {
       return false;
@@ -1242,6 +1242,7 @@
             }
           }
         }
+        break;
     }
     return "flash";
   };
@@ -1256,7 +1257,10 @@
       case "oga":case "mp3":case "f4a":case "m4a":
       case "aac":case "wav":case "aif":case "wma":
         return "audio";
+      default:
+        break;
     }
+    return '';
   };
 
   // Get the preference "weight" of this media type.
@@ -1280,8 +1284,10 @@
         return 10;
       case 'wma':
         return 11;
-            
+      default:
+        break;     
     }
+    return 0;
   };
 
   // Return the best guess mime type for the given file.
@@ -1314,7 +1320,10 @@
         return 'audio/vnd.wave';
       case 'wma':
         return 'audio/x-ms-wma';
+      default:
+        break;
     }
+    return '';
   };
 /**
  *  Copyright (c) 2010 Alethia Inc,
@@ -1591,7 +1600,8 @@
         if( typeof mediaFile === 'array' ) {
           html += '>';
           var i = mediaFile.length;
-          while( i-- ) {
+          while(i) {
+            i--;
             html += '<source src="' + mediaFile[i].path + '" type="' + mediaFile[i].mimetype + '">';
           }
         }
@@ -1606,7 +1616,7 @@
         this.onResize();
         
         // return the player object.
-        return this.playerElement.eq(0)[0];;
+        return this.playerElement.eq(0)[0];
       };
          
       // Create a new HTML5 player.
@@ -1739,6 +1749,8 @@
           case 4:
             console.log("Error: MEDIA_ERR_SRC_NOT_SUPPORTED");
             break;
+          default:
+            break;
         }
       };
 
@@ -1764,6 +1776,9 @@
                   
           case "oga": case "mp3":
             return "audio";
+            
+          default:
+            break;
         }
         return "video";
       };
@@ -1822,7 +1837,7 @@
         else {
           return 0;
         }
-      }
+      };
       
       // Called when the player resizes.
       this.onResize = function() {
@@ -2276,7 +2291,8 @@
           };
                
           var i = settings.links.length;
-          while(i--) {
+          while(i) {
+            i--;
             // Add this link to the scroll region.
             var link = this.scrollRegion.newItem().playlistlink( settings, settings.links[i] );
             link.unbind("linkclick").bind("linkclick", onLinkClick);
@@ -2594,6 +2610,8 @@
               case "mute":
                 this.media.mute( data.value );
                 break;
+              default:
+                break;
             }
           }
           // If there are files in the queue but no current media file.
@@ -2674,7 +2692,7 @@
             this.media.player.playMedia();
           }
         }
-      }
+      };
 
       // Set the media player.
       this.media = this.display.find( settings.ids.media ).mediadisplay( settings );
@@ -2866,7 +2884,8 @@
     setup: function() {
       if ( this.addEventListener ) {
         for ( var i=types.length; i; ) {
-          this.addEventListener( types[--i], handler, false );
+          i--;
+          this.addEventListener( types[i], handler, false );
         }
       } else {
         this.onmousewheel = handler;
@@ -2876,7 +2895,8 @@
     teardown: function() {
       if ( this.removeEventListener ) {
         for ( var i=types.length; i; ) {
-          this.removeEventListener( types[--i], handler, false );
+          i--;
+          this.removeEventListener( types[i], handler, false );
         }
       } else {
         this.onmousewheel = null;
@@ -3144,6 +3164,8 @@
             case 'cck_text':
               this.setCCKTextField( fieldObj, _nodeInfo, fieldName );
               break;
+            default:
+              break;
           }
         }
       };
@@ -3373,6 +3395,9 @@
 
           case "rand" :
             newIndex = Math.floor(Math.random() * this.numItems);
+            break;
+            
+          default:
             break;
         }
 
@@ -3854,6 +3879,8 @@
           case "controller":
             toPlayer.addController( fromPlayer.controller );
             break;
+          default:
+            break;
         }
       }
       else {
@@ -3865,7 +3892,7 @@
         jQuery.media[pName][playerId].push( fromPlayer[name] );
       }
     }
-  }
+  };
 
   // To add a new controller to any existing or future-included players.
   jQuery.media.addController = function( playerId, fromPlayer ) {
@@ -3934,6 +3961,8 @@
           case 113: /* Q key */
           case 27:  /* ESC Key */
             _this.onEscKey();
+            break;
+          default:
             break;
         }
       });
@@ -4175,7 +4204,8 @@
             return elementList[id];
           }
         }
-      }
+        return null;
+      };
 
       // Add the default playlist.
       this.playlist = this.addPlaylist( this.dialog.find( settings.ids.playlist ).mediaplaylist( this.server, settings ) );
@@ -4184,7 +4214,8 @@
       var playlists = this.searchForElement(jQuery.media.playlists);
       if (playlists) {
         i = playlists.length;
-        while(i--) {
+        while(i) {
+          i--;
           this.addPlaylist( playlists[i] );
         }
       }
@@ -4219,7 +4250,8 @@
       var controllers = this.searchForElement(jQuery.media.controllers);
       if (controllers) {
         i = controllers.length;
-        while(i--) {
+        while(i) {
+          i--;
           this.addController( controllers[i], true );
         }
       }
@@ -4320,7 +4352,8 @@
         if( jQuery.media.loadCallbacks[settings.id] ) {
           var callbacks = jQuery.media.loadCallbacks[settings.id];
           var i = callbacks.length;
-          while(i--) {
+          while(i) {
+            i--;
             callbacks[i]( this );
           }
         }
@@ -4662,7 +4695,8 @@
 
           // Loop through and add the new arguments.
           var i = _args.length;
-          while(i--) {
+          while(i) {
+            i--;
             var arg = _args[i];
             if( arg && (arg != settings.wildcard) ) {
               this.args[i] = arg;
@@ -5051,7 +5085,10 @@
                      
             case 'object':
               return this.parseObject( data );
+            default:
+              break;
           }
+          return '';
         };
             
         this.parseXMLValue = function( node ) {
@@ -5088,8 +5125,11 @@
                 return retObj;
               case "dateTime.iso8601":
                 return NULL;
+              default:
+                break;
             }
           }
+          return null;
         };
             
         this.parseXML = function( data ) {
@@ -5978,7 +6018,8 @@
       resetVisibility : function( invisibleParents ) {
         // Now iterate through all of the invisible objects and rehide them.
         var i = invisibleParents.length;
-        while(i--){
+        while(i){
+          i--;
           invisibleParents[i].obj.addClass(invisibleParents[i].attr);
         }
       },
@@ -6174,7 +6215,7 @@
   window.onVimeoProgress = function( time, playerId ) {
     playerId = playerId.replace("_media", "");
     jQuery.media.players[playerId].node.player.media.player.onProgress(time);
-  }
+  };
 
   // Tell the media player how to determine if a file path is a YouTube media type.
   jQuery.media.playerTypes = jQuery.extend( jQuery.media.playerTypes, {
@@ -6225,7 +6266,7 @@
 
       this.getId = function( path ) {
         var regex = /^http[s]?\:\/\/(www\.)?vimeo\.com\/(\?v\=)?([0-9]+)/i;
-        return (path.search(regex) == 0) ? path.replace(regex, "$3") : path;
+        return (path.search(regex) === 0) ? path.replace(regex, "$3") : path;
       };
 
       this.loadMedia = function( videoFile ) {
@@ -6564,7 +6605,7 @@
          
       this.getId = function( path ) {
         var regex = /^http[s]?\:\/\/(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9]+)/i;
-        return (path.search(regex) == 0) ? path.replace(regex, "$2") : path;
+        return (path.search(regex) === 0) ? path.replace(regex, "$2") : path;
       };
          
       this.loadMedia = function( videoFile ) {

@@ -54,7 +54,7 @@
   window.onVimeoProgress = function( time, playerId ) {
     playerId = playerId.replace("_media", "");
     jQuery.media.players[playerId].node.player.media.player.onProgress(time);
-  }
+  };
 
   // Tell the media player how to determine if a file path is a YouTube media type.
   jQuery.media.playerTypes = jQuery.extend( jQuery.media.playerTypes, {
@@ -105,7 +105,7 @@
 
       this.getId = function( path ) {
         var regex = /^http[s]?\:\/\/(www\.)?vimeo\.com\/(\?v\=)?([0-9]+)/i;
-        return (path.search(regex) == 0) ? path.replace(regex, "$3") : path;
+        return (path.search(regex) === 0) ? path.replace(regex, "$3") : path;
       };
 
       this.loadMedia = function( videoFile ) {

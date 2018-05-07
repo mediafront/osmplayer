@@ -29,7 +29,7 @@
   // Checks the file type for browser compatibilty.
   jQuery.media.checkPlayType = function( elem, playType ) {
     if( (typeof elem.canPlayType) == 'function' ) {
-      return ("no" != elem.canPlayType(playType)) && ("" != elem.canPlayType(playType));
+      return ("no" !== elem.canPlayType(playType)) && ("" !== elem.canPlayType(playType));
     }
     else {
       return false;
@@ -121,6 +121,7 @@
             }
           }
         }
+        break;
     }
     return "flash";
   };
@@ -135,7 +136,10 @@
       case "oga":case "mp3":case "f4a":case "m4a":
       case "aac":case "wav":case "aif":case "wma":
         return "audio";
+      default:
+        break;
     }
+    return '';
   };
 
   // Get the preference "weight" of this media type.
@@ -159,8 +163,10 @@
         return 10;
       case 'wma':
         return 11;
-            
+      default:
+        break;     
     }
+    return 0;
   };
 
   // Return the best guess mime type for the given file.
@@ -193,6 +199,9 @@
         return 'audio/vnd.wave';
       case 'wma':
         return 'audio/x-ms-wma';
+      default:
+        break;
     }
+    return '';
   };
 })(jQuery);

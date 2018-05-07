@@ -166,6 +166,8 @@
               case "mute":
                 this.media.mute( data.value );
                 break;
+              default:
+                break;
             }
           }
           // If there are files in the queue but no current media file.
@@ -246,7 +248,7 @@
             this.media.player.playMedia();
           }
         }
-      }
+      };
 
       // Set the media player.
       this.media = this.display.find( settings.ids.media ).mediadisplay( settings );

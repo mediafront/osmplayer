@@ -114,7 +114,7 @@
             width:$(window).width(),
             height:$(window).height()
           });
-        }
+        };
 
         this.onFullScreen = function( on ) {
           if( on ) {

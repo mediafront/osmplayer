@@ -86,6 +86,8 @@
           case "controller":
             toPlayer.addController( fromPlayer.controller );
             break;
+          default:
+            break;
         }
       }
       else {
@@ -97,7 +99,7 @@
         jQuery.media[pName][playerId].push( fromPlayer[name] );
       }
     }
-  }
+  };
 
   // To add a new controller to any existing or future-included players.
   jQuery.media.addController = function( playerId, fromPlayer ) {
@@ -166,6 +168,8 @@
           case 113: /* Q key */
           case 27:  /* ESC Key */
             _this.onEscKey();
+            break;
+          default:
             break;
         }
       });
@@ -407,7 +411,8 @@
             return elementList[id];
           }
         }
-      }
+        return null;
+      };
 
       // Add the default playlist.
       this.playlist = this.addPlaylist( this.dialog.find( settings.ids.playlist ).mediaplaylist( this.server, settings ) );
@@ -416,7 +421,8 @@
       var playlists = this.searchForElement(jQuery.media.playlists);
       if (playlists) {
         i = playlists.length;
-        while(i--) {
+        while(i) {
+          i--;
           this.addPlaylist( playlists[i] );
         }
       }
@@ -451,7 +457,8 @@
       var controllers = this.searchForElement(jQuery.media.controllers);
       if (controllers) {
         i = controllers.length;
-        while(i--) {
+        while(i) {
+          i--;
           this.addController( controllers[i], true );
         }
       }
@@ -552,7 +559,8 @@
         if( jQuery.media.loadCallbacks[settings.id] ) {
           var callbacks = jQuery.media.loadCallbacks[settings.id];
           var i = callbacks.length;
-          while(i--) {
+          while(i) {
+            i--;
             callbacks[i]( this );
           }
         }
