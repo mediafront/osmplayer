@@ -1724,22 +1724,6 @@
         });
       }
 
-      // Add the logo.
-      if( !settings.controllerOnly ) {
-        this.display.prepend('<div class="' + settings.prefix + 'medialogo"></div>');
-        this.logo = this.display.find("." + settings.prefix + "medialogo").mediaimage( settings.link );
-        if( this.logo ) {
-          this.logo.display.css({
-            width:settings.logoWidth,
-            height:settings.logoHeight
-            });
-          this.logo.display.bind("imageLoaded", function() {
-            _this.setLogoPos();
-          });
-          this.logo.loadImage( settings.logo );
-        }
-      }
-
       // Sets the logo position.
       this.setLogoPos = function() {
         if( this.logo ) {
@@ -1759,6 +1743,22 @@
           this.logo.display.css(logocss);
         }
       };
+
+      // Add the logo.
+      if( !settings.controllerOnly ) {
+        this.display.prepend('<div class="' + settings.prefix + 'medialogo"></div>');
+        this.logo = this.display.find("." + settings.prefix + "medialogo").mediaimage( settings.link );
+        if( this.logo ) {
+          this.logo.display.css({
+            width:settings.logoWidth,
+            height:settings.logoHeight
+            });
+          this.logo.display.bind("imageLoaded", function() {
+            _this.setLogoPos();
+          });
+          this.logo.loadImage( settings.logo );
+        }
+      }
 
       // Reset to previous state...
       this.reset = function() {
