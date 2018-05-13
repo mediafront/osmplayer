@@ -28,7 +28,7 @@
 
   // Called when the YouTube player is ready.
   window.onYouTubePlayerReady = function( playerId ) {
-    playerId = playerId.replace("_media", "");
+    playerId = playerId.replace(/\_media$/, "");
     jQuery.media.players[playerId].node.player.media.player.onReady();
   };
 
