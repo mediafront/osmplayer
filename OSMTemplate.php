@@ -172,7 +172,7 @@ class OSMTemplate
    * Get the CSS header for this player.
    */
   public function getCSSHeader() {
-    $playerPath = $this->playerSettings['playerPath'] ? $this->playerSettings['playerPath'] . '/' : '';
+    $playerPath = $this->playerSettings['playerPath'];
 
     // Add the CSS files.
     $css_files = $this->getCSSFiles();
@@ -228,7 +228,8 @@ class OSMTemplate
     $contents = file_get_contents( dirname(__FILE__) . '/' . $css);
 
     // Change all of the images to the correct path...
-    $contents = str_replace( 'images/', $this->playerSettings['playerURL'] . '/' . str_replace( basename($css), '', $css ) . 'images/', $contents );
+    $playerPath = $this->playerSettings['playerPath'] ? $this->playerSettings['playerPath'] : '../';
+    $contents = str_replace( 'images/', $playerPath . str_replace( basename($css), '', $css ) . 'images/', $contents );
 
     // Locate all of the z-index elements.
     $contents = preg_replace_callback('/z-index\s*:\s*([0-9]+)/', create_function(

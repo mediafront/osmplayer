@@ -29,10 +29,10 @@
       </div>
       <div id="mediaplayer_minplayer">
         <div id="mediaplayer_busy">
-          <img src="<?php print $params['playerURL']; ?>/templates/simpleblack/images/busy.gif" />
+          <img src="<?php print $params['playerPath']; ?>templates/simpleblack/images/busy.gif" />
         </div>
         <div id="mediaplayer_bigPlay">
-          <img src="<?php print $params['playerURL']; ?>/templates/simpleblack/images/mediafront_bigplay.png" />
+          <img src="<?php print $params['playerPath']; ?>templates/simpleblack/images/mediafront_bigplay.png" />
         </div>
         <div id="mediaplayer_preview"></div>
         <div id="mediaplayer_display"></div>

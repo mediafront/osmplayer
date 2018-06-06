@@ -95,25 +95,17 @@ class OSMPlayer {
    * Returns the paths to this player library.
    */
   public static function getPaths() {
-    static $playerPath, $playerURL;
+    static $playerPath;
 
     // Get the player path.
     if( !$playerPath ) {
       $playerPath = trim( str_replace( realpath('.'), '', dirname(__FILE__) ), '/' );
       $playerPath = trim( str_replace('\\', '/', $playerPath), '/' );
-    }
+      $playerPath = $playerPath ? '/' . $playerPath . '/' : $playerPath;
+    } 
     
-    // Get the player URL.
-    if( !$playerURL ) {
-      $base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
-      $base_url = $base_root .= '://'. $_SERVER['HTTP_HOST'];
-      if ($dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/')) {
-        $base_url .= "/$dir";
-      }
-      $playerURL = $base_url . '/' . $playerPath;
-    }   
-    
-    return array('playerPath' => $playerPath, 'playerURL' => $playerURL);
+    // Return the player path.
+    return array('playerPath' => $playerPath);
   }
 
   /**
@@ -133,8 +125,7 @@ class OSMPlayer {
       'showTeaserVoter' => false,
       'showTitleBar' => true,
       'showWhenEmpty' => true,
-      'playerPath' => $paths['playerPath'],
-      'playerURL' => $paths['playerURL']
+      'playerPath' => $paths['playerPath']
     );
   }
 
@@ -319,12 +310,11 @@ class OSMPlayer {
    */
   public function getJSHeader() {
     $header = '';
-    $playerPath = $this->settings['playerPath'] ? $this->settings['playerPath'] . '/' : '';
-
+    
     // Add all of the javascript files.
     $jsfiles = $this->getJSFiles();
     foreach( $jsfiles as $file ) {
-      $header .= '<script type="text/javascript" src="' . $playerPath . $file .'"></script>';
+      $header .= '<script type="text/javascript" src="' . $this->settings['playerPath'] . $file .'"></script>';
       $header .= "\n";
     }
 

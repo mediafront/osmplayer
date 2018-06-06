@@ -29,7 +29,7 @@
       </div>
       <div id="mediaplayer_minplayer">
         <div id="mediaplayer_busy">
-          <img src="<?php print $params['playerURL']; ?>/templates/shockplayer/images/busy.gif" />
+          <img src="<?php print $params['playerPath']; ?>templates/shockplayer/images/busy.gif" />
         </div>
         <a id="mediaplayer_next" href="#"><div id="mediaplayer_next_icon"></div></a>
         <a id="mediaplayer_prev" href="#"><div id="mediaplayer_right_icon"></div></a>
