@@ -94,7 +94,7 @@ class OSMPlayer {
   /**
    * Returns the paths to this player library.
    */
-  public static function getPaths() {
+  public static function getPlayerPath() {
     static $playerPath;
 
     // Get the player path.
@@ -105,14 +105,13 @@ class OSMPlayer {
     } 
     
     // Return the player path.
-    return array('playerPath' => $playerPath);
+    return $playerPath;
   }
 
   /**
    * Returns the player settings.
    */
-  public static function getPlayerSettings( $paths = null ) {
-    $paths = $paths ? $paths : self::getPaths();
+  public static function getPlayerSettings() {
     return array(
       'width' => OSMPLAYER_DEFAULT_WIDTH,
       'height' => OSMPLAYER_DEFAULT_HEIGHT,
@@ -125,14 +124,14 @@ class OSMPlayer {
       'showTeaserVoter' => false,
       'showTitleBar' => true,
       'showWhenEmpty' => true,
-      'playerPath' => $paths['playerPath']
+      'playerPath' => self::getPlayerPath()
     );
   }
 
   /**
    * Returns the player parameters.
    */
-  public static function getPlayerParams( $paths = null ) {
+  public static function getPlayerParams() {
     return array(
       'id' => 'player',
       'showPlaylist' => true,
