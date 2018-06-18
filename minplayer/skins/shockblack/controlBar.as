@@ -83,12 +83,12 @@ function setTitle( newTitle:String )
 
 function onPrev(event:MouseEvent)
 {
-  ExternalInterface.call( "onFlashPlayerPrev", controlBar.getSettings().id );
+  ExternalInterface.call("jQuery.media.loadPrev");
 }
 
 function onNext(event:MouseEvent)
 {
-  ExternalInterface.call( "onFlashPlayerNext", controlBar.getSettings().id );
+  ExternalInterface.call("jQuery.media.loadNext");
 }
 
 function onVolumeOver( event:MouseEvent ) { mouseOverVolume = true; }
