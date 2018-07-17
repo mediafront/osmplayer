@@ -125,6 +125,12 @@
         }
         var hasMedia = (this.playQueue.length > 0);
         if( !hasMedia ) {
+          if (this.player) {
+            // Destroy the current player.
+            this.player.destroy();
+            this.player = null;
+          }
+
           this.display.trigger( "mediaupdate", {type:"nomedia"} );
         }
         return hasMedia;

@@ -1,7 +1,7 @@
 /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *  Developed by Travis Tidwell | travist at alethia-inc.com
  *
  *  License:  GPL version 3.
  *
@@ -11,7 +11,7 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in
  *  all copies or substantial portions of the Software.
 
@@ -35,13 +35,13 @@
       this.loaded = false;
       this.mediaFile = null;
       this.playerElement = null;
-         
+
       this.getPlayer = function( mediaFile, preview ) {
         this.mediaFile = mediaFile;
         var playerId = options.id + '_' + this.mediaType;
         var html = '<' + this.mediaType + ' style="position:absolute" id="' + playerId + '"';
         html += preview ? ' poster="' + preview + '"' : '';
-            
+
         if( typeof mediaFile === 'array' ) {
           html += '>';
           var i = mediaFile.length;
@@ -53,17 +53,17 @@
         else {
           html += ' src="' + mediaFile.path + '">Unable to display media.';
         }
-            
+
         html += '</' + this.mediaType + '>';
         this.display.append( html );
-        this.bytesTotal = mediaFile.bytesTotal;        
+        this.bytesTotal = mediaFile.bytesTotal;
         this.playerElement = this.display.find('#' + playerId);
         this.onResize();
-        
+
         // return the player object.
         return this.playerElement.eq(0)[0];
       };
-         
+
       // Create a new HTML5 player.
       this.createMedia = function( mediaFile, preview ) {
         // Remove any previous Flash players.
@@ -178,7 +178,7 @@
           });
         }
       };
-      
+
       // A function to be called when an error occurs.
       this.onError = function( error ) {
         switch(error.code) {
@@ -212,62 +212,67 @@
         this.mediaFile = mediaFile;
         this.createMedia( mediaFile );
       };
-         
+
       this.getMediaType = function( mediaFile ) {
         var extension = (typeof mediaFile === 'array') ? mediaFile[0].extension : mediaFile.extension;
         switch( extension ) {
           case "ogg": case "ogv": case "mp4": case "m4v":
             return "video";
-                  
+
           case "oga": case "mp3":
             return "audio";
-            
+
           default:
             break;
         }
         return "video";
       };
-         
+
       this.playMedia = function() {
         if( this.player && this.player.play ) {
           this.player.play();
         }
       };
-         
+
       this.pauseMedia = function() {
         if( this.player && this.player.pause ) {
           this.player.pause();
         }
       };
-         
+
       this.stopMedia = function() {
         this.pauseMedia();
         if( this.player ) {
           this.player.src = "";
         }
       };
-         
+
+      this.destroy = function() {
+        this.stopMedia();
+        this.display.children().remove();
+      };
+
       this.seekMedia = function( pos ) {
         if( this.player ) {
           this.player.currentTime = pos;
         }
       };
-         
+
       this.setVolume = function( vol ) {
         if( this.player ) {
           this.player.volume = vol;
         }
       };
-         
+
       this.getVolume = function() {
         return this.player ? this.player.volume : 0;
       };
-         
+
       this.getDuration = function() {
         var dur = this.player ? this.player.duration : 0;
         return (dur === Infinity) ? 0 : dur;
       };
-         
+
       this.getCurrentTime = function() {
         return this.player ? this.player.currentTime : 0;
       };
@@ -283,15 +288,15 @@
           return 0;
         }
       };
-      
+
       // Called when the player resizes.
       this.onResize = function() {
         // If this is a video, set the width and height of the video element.
         if( this.mediaType == "video" ) {
           this.playerElement.css({width:this.display.width(), height:this.display.height()});
         }
-      };   
-         
+      };
+
       // Not implemented yet...
       this.setQuality = function( quality ) {};
       this.getQuality = function() {
@@ -335,4 +340,4 @@
       };
     })( this, options, onUpdate );
   };
-})(jQuery);         
+})(jQuery);

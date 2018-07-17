@@ -1,7 +1,7 @@
 /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *  Developed by Travis Tidwell | travist at alethia-inc.com
  *
  *  License:  GPL version 3.
  *
@@ -11,7 +11,7 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in
  *  all copies or substantial portions of the Software.
 
@@ -69,33 +69,33 @@
           }
           );
       };
-         
+
       this.getId = function( path ) {
         var regex = /^http[s]?\:\/\/(www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9]+)/i;
         return (path.search(regex) === 0) ? path.replace(regex, "$2") : path;
       };
-         
+
       this.loadMedia = function( videoFile ) {
         if( this.player ) {
           this.loaded = false;
           this.videoFile = videoFile;
-               
+
           // Let them know the player is ready.
           onUpdate( {
             type:"playerready"
           } );
-               
+
           // Load our video.
           this.player.loadVideoById( this.getId( this.videoFile.path ), 0, options.quality );
         }
       };
-         
+
       // Called when the player has finished loading.
       this.onReady = function() {
         this.ready = true;
         this.loadPlayer();
       };
-         
+
       // Try to load the player.
       this.loadPlayer = function() {
         if( this.ready && this.player ) {
@@ -103,15 +103,15 @@
           window[options.id + 'StateChange'] = function( newState ) {
             _this.onStateChange( newState );
           };
-   
+
           window[options.id + 'PlayerError'] = function( errorCode ) {
             _this.onError( errorCode );
           };
-               
+
           window[options.id + 'QualityChange'] = function( newQuality ) {
             _this.quality = newQuality;
           };
-               
+
           // Add our event listeners.
           this.player.addEventListener('onStateChange', options.id + 'StateChange');
           this.player.addEventListener('onError', options.id + 'PlayerError');
@@ -124,12 +124,12 @@
           onUpdate( {
             type:"playerready"
           });
-               
+
           // Load our video.
           this.player.loadVideoById( this.getId( this.videoFile.path ), 0 );
         }
       };
-         
+
       // Called when the YouTube player state changes.
       this.onStateChange = function( newState ) {
         var playerState = this.getPlayerState( newState );
@@ -137,18 +137,18 @@
           type:playerState.state,
           busy:playerState.busy
         } );
-            
+
         if( !this.loaded && playerState == "playing" ) {
           // Set this player to loaded.
           this.loaded = true;
-               
+
           // Update our meta data.
           onUpdate( {
             type:"meta"
           } );
         }
       };
-         
+
       // Called when the YouTube player has an error.
       this.onError = function( errorCode ) {
         var errorText = "An unknown error has occured: " + errorCode;
@@ -167,7 +167,7 @@
           data:errorText
         } );
       };
-         
+
       // Translates the player state for the YouTube API player.
       this.getPlayerState = function( playerState ) {
         switch (playerState) {
@@ -200,15 +200,21 @@
         });
         this.player.playVideo();
       };
-         
+
       this.pauseMedia = function() {
         this.player.pauseVideo();
       };
-         
+
       this.stopMedia = function() {
         this.player.stopVideo();
       };
-         
+
+      this.destroy = function() {
+        this.stopMedia();
+        jQuery.media.utils.removeFlash( this.display, (options.id + "_media") );
+        this.display.children().remove();
+      };
+
       this.seekMedia = function( pos ) {
         onUpdate({
           type:"buffering",
@@ -216,27 +222,27 @@
         });
         this.player.seekTo( pos, true );
       };
-         
+
       this.setVolume = function( vol ) {
         this.player.setVolume( vol * 100 );
       };
-         
+
       this.setQuality = function( quality ) {
         this.player.setPlaybackQuality( quality );
       };
-         
+
       this.getVolume = function() {
         return (this.player.getVolume() / 100);
       };
-         
+
       this.getDuration = function() {
         return this.player.getDuration();
       };
-         
+
       this.getCurrentTime = function() {
         return this.player.getCurrentTime();
       };
-         
+
       this.getQuality = function() {
         return this.player.getPlaybackQuality();
       };
@@ -244,7 +250,7 @@
       this.getEmbedCode = function() {
         return this.player.getVideoEmbedCode();
       };
-         
+
       this.getMediaLink = function() {
         return this.player.getVideoUrl();
       };
@@ -252,15 +258,15 @@
       this.getBytesLoaded = function() {
         return this.player.getVideoBytesLoaded();
       };
-         
+
       this.getBytesTotal = function() {
         return this.player.getVideoBytesTotal();
       };
-         
+
       this.hasControls = function() {
         return false;
       };
       this.showControls = function(show) {};
     })( this, options, onUpdate );
   };
-})(jQuery);         
+})(jQuery);

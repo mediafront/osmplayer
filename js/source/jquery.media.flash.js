@@ -165,6 +165,12 @@
         }
       };
 
+      this.destroy = function() {
+        this.stopMedia();
+        jQuery.media.utils.removeFlash( this.display, (options.id + "_media") );
+        this.display.children().remove();
+      };
+
       this.seekMedia = function( pos ) {
         if( this.player && this.ready ) {
           this.player.seekMedia( pos );
