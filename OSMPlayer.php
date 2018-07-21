@@ -99,11 +99,19 @@ class OSMPlayer {
 
     // Get the player path.
     if( !$playerPath ) {
+      // Set the base path and url of this class.
+      $base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+      $base_url = $base_root .= '://'. $_SERVER['HTTP_HOST'];
+      if ($dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/')) {
+         $base_url .= "/$dir";
+      }
+
+      $path = parse_url($base_url);
       $playerPath = trim( str_replace( realpath('.'), '', dirname(__FILE__) ), '/' );
       $playerPath = trim( str_replace('\\', '/', $playerPath), '/' );
-      $playerPath = $playerPath ? '/' . $playerPath . '/' : $playerPath;
-    } 
-    
+      $playerPath = $playerPath ? $path['path'] . '/' . $playerPath . '/' : $playerPath;
+    }
+
     // Return the player path.
     return $playerPath;
   }
@@ -309,7 +317,7 @@ class OSMPlayer {
    */
   public function getJSHeader() {
     $header = '';
-    
+
     // Add all of the javascript files.
     $jsfiles = $this->getJSFiles();
     foreach( $jsfiles as $file ) {
@@ -532,7 +540,7 @@ class OSMPlayer {
         'height' => $height
       )
     );
-    
+
     return $output;
   }
 }
