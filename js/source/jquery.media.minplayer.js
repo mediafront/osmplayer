@@ -124,8 +124,6 @@
       };
 
       this.showBusy = function( id, show, tween ) {
-        show &= this.hasMedia;
-
         if( show ) {
           this.busyFlags |= (1 << id);
         }
@@ -306,7 +304,6 @@
         this.hasMedia = false;
         this.playing = false;
         jQuery.media.players[settings.id].showNativeControls(false);
-        this.showBusy(1, false);
         this.showPlay(true);
         this.showPreview(true);
         clearTimeout( this.timeoutId );

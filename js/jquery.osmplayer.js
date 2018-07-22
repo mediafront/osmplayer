@@ -2609,8 +2609,6 @@
       };
 
       this.showBusy = function( id, show, tween ) {
-        show &= this.hasMedia;
-
         if( show ) {
           this.busyFlags |= (1 << id);
         }
@@ -2791,7 +2789,6 @@
         this.hasMedia = false;
         this.playing = false;
         jQuery.media.players[settings.id].showNativeControls(false);
-        this.showBusy(1, false);
         this.showPlay(true);
         this.showPreview(true);
         clearTimeout( this.timeoutId );
@@ -6700,7 +6697,9 @@
           } );
 
           // Load our video.
-          this.player.loadVideoById( this.getId( this.videoFile.path ), 0, options.quality );
+          if (this.player.loadVideoById) {
+            this.player.loadVideoById( this.getId( this.videoFile.path ), 0, options.quality );
+          }
         }
       };
 
@@ -6727,12 +6726,16 @@
           };
 
           // Add our event listeners.
-          this.player.addEventListener('onStateChange', options.id + 'StateChange');
-          this.player.addEventListener('onError', options.id + 'PlayerError');
-          this.player.addEventListener('onPlaybackQualityChange', options.id + 'QualityChange');
+          if (this.player.addEventListener) {
+            this.player.addEventListener('onStateChange', options.id + 'StateChange');
+            this.player.addEventListener('onError', options.id + 'PlayerError');
+            this.player.addEventListener('onPlaybackQualityChange', options.id + 'QualityChange');
+          }
 
           // Get all of the quality levels.
-          this.qualities = this.player.getAvailableQualityLevels();
+          if (this.player.getAvailableQualityLevels) {
+            this.qualities = this.player.getAvailableQualityLevels();
+          }
 
           // Let them know the player is ready.
           onUpdate( {
@@ -6740,7 +6743,9 @@
           });
 
           // Load our video.
-          this.player.loadVideoById( this.getId( this.videoFile.path ), 0 );
+          if (this.player.loadVideoById) {
+            this.player.loadVideoById( this.getId( this.videoFile.path ), 0 );
+          }
         }
       };
 
@@ -6812,15 +6817,21 @@
           type:"buffering",
           busy:"show"
         });
-        this.player.playVideo();
+        if (this.player.playVideo) {
+          this.player.playVideo();
+        }
       };
 
       this.pauseMedia = function() {
-        this.player.pauseVideo();
+        if (this.player.pauseVideo) {
+          this.player.pauseVideo();
+        }
       };
 
       this.stopMedia = function() {
-        this.player.stopVideo();
+        if (this.player.stopVideo) {
+          this.player.stopVideo();
+        }
       };
 
       this.destroy = function() {
@@ -6834,47 +6845,53 @@
           type:"buffering",
           busy:"show"
         });
-        this.player.seekTo( pos, true );
+        if (this.player.seekTo) {
+          this.player.seekTo( pos, true );
+        }
       };
 
       this.setVolume = function( vol ) {
-        this.player.setVolume( vol * 100 );
+        if (this.player.setVolume) {
+          this.player.setVolume( vol * 100 );
+        }
       };
 
       this.setQuality = function( quality ) {
-        this.player.setPlaybackQuality( quality );
+        if (this.player.setPlaybackQuality) {
+          this.player.setPlaybackQuality( quality );
+        }
       };
 
       this.getVolume = function() {
-        return (this.player.getVolume() / 100);
+        return this.player.getVolume ? (this.player.getVolume() / 100) : 0;
       };
 
       this.getDuration = function() {
-        return this.player.getDuration();
+        return this.player.getDuration ? this.player.getDuration() : 0;
       };
 
       this.getCurrentTime = function() {
-        return this.player.getCurrentTime();
+        return this.player.getCurrentTime ? this.player.getCurrentTime() : 0;
       };
 
       this.getQuality = function() {
-        return this.player.getPlaybackQuality();
+        return this.player.getPlaybackQuality ? this.player.getPlaybackQuality() : 0;
       };
 
       this.getEmbedCode = function() {
-        return this.player.getVideoEmbedCode();
+        return this.player.getVideoEmbedCode ? this.player.getVideoEmbedCode() : 0;
       };
 
       this.getMediaLink = function() {
-        return this.player.getVideoUrl();
+        return this.player.getVideoUrl ? this.player.getVideoUrl() : 0;
       };
 
       this.getBytesLoaded = function() {
-        return this.player.getVideoBytesLoaded();
+        return this.player.getVideoBytesLoaded ? this.player.getVideoBytesLoaded() : 0;
       };
 
       this.getBytesTotal = function() {
-        return this.player.getVideoBytesTotal();
+        return this.player.getVideoBytesTotal ? this.player.getVideoBytesTotal() : 0;
       };
 
       this.hasControls = function() {
