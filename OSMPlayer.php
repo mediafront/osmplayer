@@ -107,9 +107,10 @@ class OSMPlayer {
       }
 
       $path = parse_url($base_url);
+      $path = isset($path['path']) ? $path['path'] : '';
       $playerPath = trim( str_replace( realpath('.'), '', dirname(__FILE__) ), '/' );
       $playerPath = trim( str_replace('\\', '/', $playerPath), '/' );
-      $playerPath = $playerPath ? $path['path'] . '/' . $playerPath . '/' : $playerPath;
+      $playerPath = $playerPath ? $path . '/' . $playerPath . '/' : $playerPath;
     }
 
     // Return the player path.
