@@ -2874,7 +2874,6 @@
         }
         else if( !this.hasMedia ) {
           // Hide the overlays for non-media types.
-          this.showBusy(1, false);
           this.showPlay(false);
           this.showPreview(true);
           this.timeoutId = setTimeout( function() {
