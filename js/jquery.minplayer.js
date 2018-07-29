@@ -1087,7 +1087,7 @@
 
       this.destroy = function() {
         this.stopMedia();
-        jQuery.media.utils.removeFlash( this.display, (options.id + "_media") );
+        jQuery.media.utils.removeFlash( this.display, (settings.id + "_media") );
         this.display.children().remove();
       };
 
