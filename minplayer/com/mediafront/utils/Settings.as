@@ -1,8 +1,4 @@
 ﻿/**
- *  Copyright (c) 2010 Alethia Inc,
- *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com
- *
  *  License:  GPL version 3.
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -113,7 +109,7 @@ package com.mediafront.utils {
     }
 
     private function parseBoolean( value:* ):Boolean {
-      return (!value || value=="false" || value=="none") ? false : true;
+      return (!value || value=="false" || value=="none" || value=="0") ? false : true;
     }
 
     // All global settings go into the base.

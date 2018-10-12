@@ -91,11 +91,11 @@
           // Add a timer to the mouse move of the display to show the control bar and logo on mouse move.
           mediaplayer.display.bind("mousemove", function() {
             mediaplayer.node.player.play.css("bottom", "45px");
-            
+
             if(!mediaplayer.node.player.usePlayerControls) {
               jQuery.media.utils.showThenHide( _this.prev, "prev", "fast", "fast" );
               jQuery.media.utils.showThenHide( _this.next, "next", "fast", "fast" );
-              jQuery.media.utils.showThenHide( _this.info, "info", "fast", "fast" );              
+              jQuery.media.utils.showThenHide( _this.info, "info", "fast", "fast" );
               jQuery.media.utils.showThenHide( _this.fullScreenButton, "fullscreen" );
               if( jQuery.media.hasMedia ) {
                 jQuery.media.utils.showThenHide( mediaplayer.controller.display, "display", "fast", "slow", function() {
@@ -133,7 +133,8 @@
          */
         this.getSettings = function() {
           return {
-            volumeVertical:true
+            volumeVertical:true,
+            showInfo:true
           };
         };
 
@@ -201,7 +202,7 @@
 
         this.onNodeLoad = function( data ) {
           this.nodeInfo = data;
-          mediaplayer.node.player.play.show();       
+          mediaplayer.node.player.play.show();
         };
 
 
@@ -225,7 +226,7 @@
             this.next.hide();
             this.info.hide();
           }
-          
+
           if( mediaplayer.controller && mediaplayer.node ) {
             if( data.type == "reset" ) {
               jQuery.media.hasMedia = true;
