@@ -1,7 +1,7 @@
 /**
  *  Copyright (c) 2010 Alethia Inc,
  *  http://www.alethia-inc.com
- *  Developed by Travis Tidwell | travist at alethia-inc.com 
+ *  Developed by Travis Tidwell | travist at alethia-inc.com
  *
  *  License:  GPL version 3.
  *
@@ -11,7 +11,7 @@
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is
  *  furnished to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in
  *  all copies or substantial portions of the Software.
 
@@ -30,7 +30,7 @@
       return new (function( settings ) {
         var _this = this;
         this.onLoaded = null;
-                     
+
         // Parse the contents from a file.
         this.parseFile = function( file, onLoaded ) {
           this.onLoaded = onLoaded;
@@ -48,7 +48,7 @@
             }
           });
         };
-            
+
         // Parse an xml string.
         this.parseXML = function( xml ) {
           // Try to parse a playlist in any format...
@@ -64,7 +64,7 @@
           }
           return playlist;
         };
-            
+
         // Parse XSPF contents.
         this.parseXSPF = function( xml ) {
           var playlist = {
@@ -80,7 +80,7 @@
                 title: $(this).find("title").text(),
                 description: $(this).find("annotation").text(),
                 mediafiles: {
-                  images:{
+                  image:{
                     "image":{
                       path:$(this).find("image").text()
                     }
@@ -111,7 +111,7 @@
                 nid:playlist.total_rows,
                 title: $(this).find("title").text(),
                 mediafiles: {
-                  images:{
+                  image:{
                     "image":{
                       path:$(this).find("image").text()
                     }
@@ -137,7 +137,7 @@
           var channel = jQuery("rss channel", xml);
           if( channel.length > 0 ) {
             var youTube = (channel.find("generator").text() == "YouTube data API");
-                  
+
             // Iterate through all the items.
             channel.find("item").each( function(index) {
               playlist.total_rows++;
@@ -149,13 +149,13 @@
           }
           return playlist;
         };
-            
+
         // Parse a default RSS Item.
         this.parseRSSItem = function( item ) {
           return {
             title: item.find("title").text(),
             mediafiles: {
-              images:{
+              image:{
                 "image":{
                   path:item.find("image").text()
                 }
@@ -168,7 +168,7 @@
             }
           };
         };
-            
+
         // Parse a YouTube item.
         this.parseYouTubeItem = function( item ) {
           var description = item.find("description").text();
@@ -176,7 +176,7 @@
           return {
             title: item.find("title").text(),
             mediafiles: {
-              images:{
+              image:{
                 "image":{
                   path:jQuery("img", description).eq(0).attr("src")
                 }
