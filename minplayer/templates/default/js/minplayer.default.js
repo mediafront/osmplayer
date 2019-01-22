@@ -17,33 +17,31 @@ minplayer["default"].prototype.constructor = minplayer["default"];
 /**
  * Return the display for this plugin.
  */
-minplayer["default"].prototype.getDisplay = function(context, options) {
-
-  // Convert the context to jQuery object.
-  context = jQuery(context);
+minplayer["default"].prototype.getDisplay = function() {
 
   // If the tag is video or audio, then build out the player.
-  var tag = context.get(0).tagName.toLowerCase();
+  var tag = this.context.get(0).tagName.toLowerCase();
   if (tag == 'video' || tag == 'audio') {
 
     // Build out the player provided the base tag.
-    context = context.attr({
-      'id': options.id + '-player',
+    this.context = this.context.attr({
+      'id': this.options.id + '-player',
       'class': 'media-player-media'
     })
     .wrap(jQuery(document.createElement('div')).attr({
       'class': 'media-player-display'
     })).parent('.media-player-display')
     .wrap(jQuery(document.createElement('div')).attr({
-      'id': options.id,
+      'id': this.options.id,
       'class': 'media-player'
     })).parent('.media-player');
 
     // Mark a flag that says this display needs to be built.
-    options.build = true;
+    this.options.build = true;
   }
 
-  return context;
+  // Return the display.
+  return this.context;
 }
 
 // Get the elements for this player.

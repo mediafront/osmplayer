@@ -276,7 +276,7 @@ minplayer.plugin = function(name, context, options, queue) {
   if (context) {
 
     /** Keep track of the context. */
-    this.context = context;
+    this.context = jQuery(context);
 
     // Construct this plugin.
     this.construct();
@@ -358,6 +358,15 @@ minplayer.plugin.prototype.ready = function() {
     // Check the queue.
     this.checkQueue();
   }
+};
+
+/**
+ * Returns if this component is valid.
+ *
+ * @return {boolean} TRUE if the plugin display is valid.
+ */
+minplayer.plugin.prototype.isValid = function() {
+  return true;
 };
 
 /**
@@ -800,12 +809,6 @@ minplayer.display = function(name, context, options, queue) {
   // See if we allow resize on this display.
   this.allowResize = false;
 
-  if (context) {
-
-    // Set the display.
-    this.display = this.getDisplay(context, options);
-  }
-
   // Derive from plugin
   minplayer.plugin.call(this, name, context, options, queue);
 };
@@ -819,18 +822,19 @@ minplayer.display.prototype.constructor = minplayer.display;
 /**
  * Returns the display for this component.
  *
- * @param {object} context The original context.
- * @param {object} options The options for this component.
  * @return {object} The jQuery context for this display.
  */
-minplayer.display.prototype.getDisplay = function(context, options) {
-  return jQuery(context);
+minplayer.display.prototype.getDisplay = function() {
+  return this.context;
 };
 
 /**
  * @see minplayer.plugin.construct
  */
 minplayer.display.prototype.construct = function() {
+
+  // Set the display.
+  this.display = this.getDisplay(this.context, this.options);
 
   // Call the plugin constructor.
   minplayer.plugin.prototype.construct.call(this);

@@ -55,9 +55,10 @@ osmplayer.playlist['default'].prototype.construct = function() {
 /**
  * Return the display for this plugin.
  */
-osmplayer.playlist['default'].prototype.getDisplay = function(context, options) {
-  if (options.build) {
-    context.append('\
+osmplayer.playlist['default'].prototype.getDisplay = function() {
+  if (this.options.build) {
+    var vertical = this.options.vertical ? ' playlist-vertical' : '';
+    this.context.append('\
       <div class="osmplayer-playlist">\
         <div class="osmplayer-hide-show-playlist ui-corner-left">\
           <span class="ui-icon ui-icon ui-icon-triangle-1-e"></span>\
@@ -65,7 +66,7 @@ osmplayer.playlist['default'].prototype.getDisplay = function(context, options) 
       </div>\
     ');
   }
-  return jQuery('.osmplayer-playlist', context);
+  return jQuery('.osmplayer-playlist', this.context);
 };
 
 // Return the elements

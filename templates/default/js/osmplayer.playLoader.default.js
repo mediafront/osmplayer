@@ -18,13 +18,13 @@ osmplayer.playLoader['default'].prototype.constructor = osmplayer.playLoader['de
 /**
  * Return the display for this plugin.
  */
-osmplayer.playLoader['default'].prototype.getDisplay = function(context, options) {
+osmplayer.playLoader['default'].prototype.getDisplay = function() {
 
   // See if we need to build out the controller.
-  if (options.build) {
+  if (this.options.build) {
 
     // Prepend the playloader template.
-    jQuery('.media-player', context).prepend('\
+    jQuery('.media-player', this.context).prepend('\
     <div class="media-player-play-loader">\
       <div class="media-player-big-play"><span></span></div>\
       <div class="media-player-loader">&nbsp;</div>\
@@ -32,7 +32,7 @@ osmplayer.playLoader['default'].prototype.getDisplay = function(context, options
     </div>');
   }
 
-  return jQuery('.media-player-play-loader', context);
+  return jQuery('.media-player-play-loader', this.context);
 }
 
 // Return the elements

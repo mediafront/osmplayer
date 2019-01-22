@@ -43,7 +43,7 @@ minplayer.plugin = function(name, context, options, queue) {
   if (context) {
 
     /** Keep track of the context. */
-    this.context = context;
+    this.context = jQuery(context);
 
     // Construct this plugin.
     this.construct();
@@ -125,6 +125,15 @@ minplayer.plugin.prototype.ready = function() {
     // Check the queue.
     this.checkQueue();
   }
+};
+
+/**
+ * Returns if this component is valid.
+ *
+ * @return {boolean} TRUE if the plugin display is valid.
+ */
+minplayer.plugin.prototype.isValid = function() {
+  return true;
 };
 
 /**

@@ -17,18 +17,15 @@ osmplayer['default'].prototype.constructor = osmplayer['default'];
 /**
  * Return the display for this plugin.
  */
-osmplayer['default'].prototype.getDisplay = function(context, options) {
-
-  // Convert the context to jQuery object.
-  context = jQuery(context);
+osmplayer['default'].prototype.getDisplay = function() {
 
   // If the tag is video or audio, then build out the player.
-  var tag = context.get(0).tagName.toLowerCase();
+  var tag = this.context.get(0).tagName.toLowerCase();
   if (tag == 'video' || tag == 'audio') {
 
     // Build out the player provided the base tag.
-    context = context.attr({
-      'id': options.id + '-player',
+    this.context = this.context.attr({
+      'id': this.options.id + '-player',
       'class': 'media-player-media'
     })
     .wrap(jQuery(document.createElement('div')).attr({
@@ -38,15 +35,15 @@ osmplayer['default'].prototype.getDisplay = function(context, options) {
       'class': 'media-player'
     })).parent('.media-player')
     .wrap(jQuery(document.createElement('div')).attr({
-      'id': options.id,
+      'id': this.options.id,
       'class': 'osmplayer'
     })).parent('.osmplayer');
 
     // Mark a flag that says this display needs to be built.
-    options.build = true;
+    this.options.build = true;
   }
 
-  return context;
+  return this.context;
 }
 
 // Get the elements for this player.

@@ -21,11 +21,11 @@ osmplayer.scroll['default'].prototype.constructor = osmplayer.scroll['default'];
 /**
  * Return the display for this plugin.
  */
-osmplayer.scroll['default'].prototype.getDisplay = function(context, options) {
+osmplayer.scroll['default'].prototype.getDisplay = function() {
 
   // See if we need to build the scroll bar.
-  if (options.build) {
-    context.append('\
+  if (this.options.build) {
+    this.context.append('\
     <div class="osmplayer-playlist-scroll">\
       <div class="osmplayer-playlist-scrollbar"></div>\
       <div class="osmplayer-playlist-loader-wrapper">\
@@ -35,7 +35,7 @@ osmplayer.scroll['default'].prototype.getDisplay = function(context, options) {
     </div>');
   }
 
-  return jQuery(".osmplayer-playlist-scroll", this.display);
+  return jQuery(".osmplayer-playlist-scroll", this.context);
 }
 
 // Return the elements
