@@ -533,7 +533,9 @@ osmplayer.playlist.prototype.construct = function() {
     vertical: true,
     playlist: '',
     pageLimit: 10,
-    shuffle: false
+    autoNext: true,
+    shuffle: false,
+    loop: false
   }, this.options);
 
   // Call the minplayer plugin constructor.
@@ -549,7 +551,7 @@ osmplayer.playlist.prototype.construct = function() {
   this.totalItems = 0;
 
   // The current loaded item index.
-  this.currentItem = 0;
+  this.currentItem = -1;
 
   // The play queue.
   this.queue = [];
@@ -577,16 +579,19 @@ osmplayer.playlist.prototype.construct = function() {
   })(this));
 
   // Get the media.
-  this.get('media', function(media) {
-    media.bind('ended', (function(playlist) {
-      return function(event) {
-        playlist.next();
-      };
-    })(this));
-  });
+  if (this.options.autoNext) {
+    this.get('media', function(media) {
+      media.bind('ended', (function(playlist) {
+        return function(event) {
+          media.options.autoplay = true;
+          playlist.next();
+        };
+      })(this));
+    });
+  }
 
-  // Load the playlist.
-  this.load(0, 0);
+  // Load the "next" item.
+  this.next();
 };
 
 /**
@@ -791,9 +796,17 @@ osmplayer.playlist.prototype.load = function(page, loadIndex) {
     this.scroll.elements.playlist_busy.show();
   }
 
+  // Determine if we need to loop.
+  var maxPages = Math.floor(this.totalItems / this.options.pageLimit);
+  if (this.options.loop && (page >= maxPages)) {
+    page = 0;
+    loadIndex = 0;
+  }
+
   // Normalize the page.
   page = page || 0;
   page = (page < 0) ? 0 : page;
+  page = (page >= maxPages) ? maxPages : page;
 
   // Set the queue.
   this.setQueue();
