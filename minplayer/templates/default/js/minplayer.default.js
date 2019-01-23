@@ -34,7 +34,11 @@ minplayer["default"].prototype.getDisplay = function() {
     .wrap(jQuery(document.createElement('div')).attr({
       'id': this.options.id,
       'class': 'media-player'
-    })).parent('.media-player');
+    })).parent('.media-player')
+    .append('\
+      <div class="media-player-logo with-controller"></div>\
+      <div class="media-player-error"></div>'
+    );
 
     // Mark a flag that says this display needs to be built.
     this.options.build = true;
@@ -53,6 +57,7 @@ minplayer["default"].prototype.getElements = function() {
     player:this.display,
     display:jQuery(".media-player-display", this.display),
     media:jQuery("#" + this.options.id + "-player", this.display),
-    error:jQuery('.media-player-error', this.display)
+    error:jQuery('.media-player-error', this.display),
+    logo:jQuery('.media-player-logo', this.display)
   });
 };

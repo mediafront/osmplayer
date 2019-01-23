@@ -85,18 +85,18 @@ minplayer.display.prototype.fullScreenElement = function() {
  *
  * @param {object} element The element you would like to hide or show.
  * @param {number} timeout The timeout to hide and show.
+ * @param {function} callback Called when something happens.
  */
-minplayer.showThenHide = function(element, timeout) {
+minplayer.showThenHide = function(element, timeout, callback) {
 
   // Ensure we have a timeout.
   timeout = timeout || 5000;
 
   // If this has not yet been configured.
   if (!element.showTimer) {
-
-    // Bind when they move the mouse.
+    element.shown = true;
     jQuery(document).bind('mousemove', function() {
-      minplayer.showThenHide(element, timeout);
+      minplayer.showThenHide(element, timeout, callback);
     });
   }
 
@@ -104,11 +104,22 @@ minplayer.showThenHide = function(element, timeout) {
   clearTimeout(element.showTimer);
 
   // Show the display.
-  element.show();
+  if (!element.shown) {
+    element.shown = true;
+    element.show();
+    if (callback) {
+      callback(true);
+    }
+  }
 
   // Set a timer to hide it after the timeout.
   element.showTimer = setTimeout(function() {
-    element.hide('slow');
+    element.hide('slow', function() {
+      element.shown = false;
+      if (callback) {
+        callback(false);
+      }
+    });
   }, timeout);
 };
 

@@ -457,6 +457,17 @@
   transition: all 0.1s ease-in-out;
 }
 
+.media-player-logo {
+  z-index: 1000;
+  position: absolute;
+  bottom: 3px;
+  left: 3px;
+}
+
+.media-player-logo.with-controller {
+  bottom: 34px;
+}
+
 /** OSM Player Styles **/
 .osmplayer {
   position:relative;

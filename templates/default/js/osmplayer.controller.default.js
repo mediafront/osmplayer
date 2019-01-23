@@ -22,7 +22,16 @@ osmplayer.controller['default'].prototype.constructor = osmplayer.controller['de
  */
 osmplayer.controller['default'].prototype.construct = function() {
   minplayer.controller.prototype.construct.call(this);
-  minplayer.showThenHide(this.display);
+  this.get('player', function(player) {
+    minplayer.showThenHide(this.display, 5000, function(shown) {
+      if (shown) {
+        player.logo.addClass('with-controller');
+      }
+      else {
+        player.logo.removeClass('with-controller');
+      }
+    });
+  });
 }
 
 /**
@@ -35,7 +44,6 @@ osmplayer.controller['default'].prototype.getDisplay = function() {
 
     // Prepend the control template.
     jQuery('.media-player', this.context).prepend('\
-    <div class="media-player-error"></div>\
     <div class="media-player-controls ui-state-default">\
       <div class="media-player-controls-left">\
         <a class="media-player-play" title="Play"></a>\
