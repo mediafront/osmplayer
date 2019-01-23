@@ -74,7 +74,7 @@
   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#55000000, endColorstr=#55000000)";
 }
 
-.media-player .media-player-play-loader .media-player-loader {
+.media-player .media-player-loader {
   width:42px;
   height:10px;
   position: absolute;
@@ -281,9 +281,10 @@
 /* timer */
 .media-player .media-player-timer {
   position:relative;
+  height: 22px;
   float:left;
   color: #999;
-  margin-top:3px;
+  padding-top:6px;
   padding-right:6px;
   font-size: 16px;
   font-weight: bold;

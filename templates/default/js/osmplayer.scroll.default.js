@@ -27,11 +27,11 @@ osmplayer.scroll['default'].prototype.getDisplay = function() {
   if (this.options.build) {
     this.context.append('\
     <div class="osmplayer-playlist-scroll">\
-      <div class="osmplayer-playlist-scrollbar"></div>\
       <div class="osmplayer-playlist-loader-wrapper">\
         <div class="osmplayer-playlist-loader"></div>\
       </div>\
       <div class="osmplayer-playlist-list"></div>\
+      <div class="osmplayer-playlist-scrollbar"></div>\
     </div>');
   }
 

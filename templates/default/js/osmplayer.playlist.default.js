@@ -27,28 +27,40 @@ osmplayer.playlist['default'].prototype.construct = function() {
   // Make the main minplayer have the same width as the playlist.
   this.get('player', function(player) {
 
+    // Set the size.
+    var size = this.options.vertical ? 'width' : 'height';
+    var position = this.options.vertical ? 'right' : 'bottom';
+    var margin = this.options.vertical ? 'marginRight' : 'marginBottom';
+
     // Perform the show hide functionality of the playlist.
-    this.elements.hideShow.bind('click', (function(playlist, width) {
+    this.elements.hideShow.bind('click', (function(playlist, displaySize) {
       return function(event) {
         event.preventDefault();
         var button = $('span', playlist.elements.hideShow);
-        var visible = button.hasClass('ui-icon-triangle-1-e');
-        var from = visible ? 'ui-icon-triangle-1-e' : 'ui-icon-triangle-1-w';
-        var to = visible ? 'ui-icon-triangle-1-w' : 'ui-icon-triangle-1-e';
+        var e = playlist.options.vertical ? 'e' : 's';
+        var w = playlist.options.vertical ? 'w' : 'n';
+        var visible = button.hasClass('ui-icon-triangle-1-' + e);
+        var from = visible ? 'ui-icon-triangle-1-' + e : 'ui-icon-triangle-1-' + w;
+        var to = visible ? 'ui-icon-triangle-1-' + w : 'ui-icon-triangle-1-' + e;
         $('span', playlist.elements.hideShow).removeClass(from).addClass(to);
-        player.elements.minplayer.animate({
-          marginRight: visible ? 0 : width
-        }, 200);
-        playlist.display.animate({
-          right: visible ? -width : 0
-        }, 200, function() {
+
+        var playerPos = {}, displayPos = {};
+        playerPos[position] = visible ? 0 : displaySize;
+        player.elements.minplayer.animate(playerPos, 200);
+        displayPos[margin] = visible ? -displaySize : 0;
+        playlist.display.animate(displayPos, 200, function() {
           player.resize();
         });
       };
-    })(this, this.display.width()));
+    })(this, this.display[size]()));
 
     // Set the player to have the correct margin if the playlist is present.
-    player.elements.minplayer.css('marginRight', this.display.width() + 'px');
+    if (this.options.vertical) {
+      player.elements.minplayer.css('right', this.display.width() + 'px');
+    }
+    else {
+      player.elements.minplayer.css('bottom', this.display.height() + 'px');
+    }
   });
 };
 
@@ -57,11 +69,13 @@ osmplayer.playlist['default'].prototype.construct = function() {
  */
 osmplayer.playlist['default'].prototype.getDisplay = function() {
   if (this.options.build) {
-    var vertical = this.options.vertical ? ' playlist-vertical' : '';
+    var cName = this.options.vertical ? 'playlist-vertical' : 'playlist-horizontal';
+    var icon = this.options.vertical ? 'e' : 's';
+    var corner = this.options.vertical ? 'ui-corner-left' : 'ui-corner-top';
     this.context.append('\
-      <div class="osmplayer-playlist">\
-        <div class="osmplayer-hide-show-playlist ui-corner-left">\
-          <span class="ui-icon ui-icon ui-icon-triangle-1-e"></span>\
+      <div class="osmplayer-playlist ' + cName + '">\
+        <div class="osmplayer-hide-show-playlist ' + corner + '">\
+          <span class="ui-icon ui-icon ui-icon-triangle-1-' + icon + '"></span>\
         </div>\
       </div>\
     ');

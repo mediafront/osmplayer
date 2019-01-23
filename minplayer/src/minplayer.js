@@ -347,6 +347,8 @@ minplayer.prototype.resize = function() {
 
   // Call onRezie for each plugin.
   this.get(function(plugin) {
-    plugin.onResize();
+    if (plugin.onResize) {
+      plugin.onResize();
+    }
   });
 };

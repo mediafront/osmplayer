@@ -36,9 +36,6 @@ minplayer.image.prototype.constructor = minplayer.image;
  */
 minplayer.image.prototype.construct = function() {
 
-  // Say we need to resize.
-  this.allowResize = true;
-
   // Call the media display constructor.
   minplayer.display.prototype.construct.call(this);
 

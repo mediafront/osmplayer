@@ -460,6 +460,8 @@
 /** OSM Player Styles **/
 .osmplayer {
   position:relative;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   background:#000;
   border:1px solid #333;
@@ -469,6 +471,14 @@
   -webkit-box-shadow:0px 5px 10px #333;/*no-important chrome*/
 }
 
+.osmplayer .media-player {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+}
+
 .osmplayer-playlist {
   position: absolute;
   width: 160px;
@@ -476,6 +486,15 @@
   bottom: 0px;
   right: 0px;
   border: 1px solid #333;
+}
+
+.playlist-horizontal {
+  width: 100%;
+  height: 172px;
+  top: inherit;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
 }
 
 .osmplayer-hide-show-playlist {
@@ -495,10 +514,26 @@
   border: 1px solid #2E2E2E;
 }
 
+.playlist-horizontal .osmplayer-hide-show-playlist {
+  top: inherit;
+  left: 50%;
+  bottom: 202px; /* Playlist height + control bar. */
+  width: 40px;
+  height: 16px;
+  margin: 0 0 0 -20px;
+}
+
 .osmplayer-hide-show-playlist span {
   position: absolute;
   top: 50%;
   margin-top: -8px;
+}
+
+.playlist-horizontal .osmplayer-hide-show-playlist span {
+  top: inherit;
+  left: 50%;
+  margin-top: 0px;
+  margin-left: -8px;
 }
 
 .osmplayer-playlist-scroll {
@@ -507,14 +542,16 @@
   top: 0px;
   right: 0px;
   left: 0px;
-  bottom: 30px;
+}
+
+.playlist-vertical .osmplayer-playlist-scroll {
+  bottom: 32px;
 }
 
 .osmplayer-playlist-scrollbar {
   position: absolute;
   width: 10px;
   height: 100%;
-  top: 0px;
   bottom: 0px;
   right: 0px;
   z-index: 20;
@@ -526,6 +563,16 @@
   background-image: -moz-linear-gradient(top, #535353, #333333);
   background-image: -webkit-gradient(linear,left,right,color-stop(0, #535353),color-stop(1, #333333));
   box-shadow: inset 0 -3px 3px #333333;
+}
+
+.playlist-vertical .osmplayer-playlist-scrollbar {
+  top: 0px;
+}
+
+.playlist-horizontal .osmplayer-playlist-scrollbar {
+  width: 100%;
+  height: 10px;
+  bottom: 0px;
 }
 
 .osmplayer-playlist-scrollbar .ui-slider-handle {
@@ -543,6 +590,15 @@
   background-image: -moz-linear-gradient(top, #e6e6e6, #d5d5d5);
   background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #e6e6e6),color-stop(1, #d5d5d5));
   box-shadow: inset 0 -3px 3px #d5d5d5;
+}
+
+.playlist-horizontal .osmplayer-playlist-scrollbar .ui-slider-handle {
+  width: 15px;
+  height: 8px;
+  top: 0px;
+  bottom: 0px;
+  right: inherit;
+  left: inherit;
 }
 
 .osmplayer-playlist-scrollbar .ui-slider-handle.ui-state-hover {
@@ -564,10 +620,21 @@
   margin: 2px 14px 2px 2px;
 }
 
+.playlist-horizontal .osmplayer-playlist-list {
+  margin: 2px 2px 14px 2px;
+  height: 124px;
+}
+
 .osmplayer-teaser {
   margin:1px 0 1px 0;
   cursor:pointer;
   padding: 0;
+}
+
+.playlist-horizontal .osmplayer-teaser {
+  width: 160px;
+  height: 124px;
+  float: left;
 }
 
 .osmplayer-teaser-image {
@@ -581,6 +648,10 @@
   font-size: 12px;
   margin-top: 2px;
   padding: 4px;
+}
+
+.playlist-horizontal .osmplayer-teaser-info {
+  height: 30px;
 }
 
 .osmplayer-playlist-pager {
