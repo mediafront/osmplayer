@@ -37,7 +37,7 @@ osmplayer.parser.xsfp = {
       nodes: []
     };
     jQuery('playlist trackList track', data).each(function(index) {
-      osmplayer.parser.rss.addRSSItem(playlist, $(this));
+      osmplayer.parser.rss.addRSSItem(playlist, jQuery(this));
     });
     return playlist;
   }

@@ -90,7 +90,7 @@ minplayer.image.prototype.clear = function(callback) {
       return function() {
         image.img.attr('src', '');
         image.loader.src = '';
-        $(this).remove();
+        jQuery(this).remove();
         callback.call(image);
       };
     })(this));

@@ -32,7 +32,7 @@ osmplayer.playLoader['default'].prototype.getDisplay = function() {
     </div>');
   }
 
-  return jQuery('.minplayer-default-loader-wrapper', this.context);
+  return jQuery('.minplayer-default .minplayer-default-loader-wrapper', this.context);
 }
 
 // Return the elements

@@ -37,7 +37,7 @@ osmplayer.parser.rss = {
       nodes: []
     };
     jQuery('rss channel', data).find('item').each(function(index) {
-      osmplayer.parser.rss.addRSSItem(playlist, $(this));
+      osmplayer.parser.rss.addRSSItem(playlist, jQuery(this));
     });
     return playlist;
   },
