@@ -142,6 +142,9 @@ minplayer.players.youtube.prototype.setPlayerState = function(playerState) {
  */
 minplayer.players.youtube.prototype.onReady = function(event) {
   minplayer.players.base.prototype.onReady.call(this);
+  if (!this.options.autoplay) {
+    this.pause();
+  }
   this.onLoaded();
 };
 
@@ -219,9 +222,7 @@ minplayer.players.youtube.prototype.create = function() {
     'wmode': 'opaque',
     'controls': 0,
     'enablejsapi': 1,
-    'origin': origin,
-    'autoplay': this.options.autoplay,
-    'loop': this.options.loop
+    'origin': origin
   });
 
   // Set the source of the iframe.
@@ -295,52 +296,40 @@ minplayer.players.youtube.prototype.setVolume = function(vol) {
  * @see minplayer.players.base#getVolume
  */
 minplayer.players.youtube.prototype.getVolume = function(callback) {
-  if (this.isReady()) {
-    callback(this.player.getVolume());
-  }
+  this.getValue('getVolume', callback);
 };
 
 /**
  * @see minplayer.players.base#getDuration.
  */
 minplayer.players.youtube.prototype.getDuration = function(callback) {
-  if (this.isReady()) {
-    callback(this.player.getDuration());
-  }
+  this.getValue('getDuration', callback);
 };
 
 /**
  * @see minplayer.players.base#getCurrentTime
  */
 minplayer.players.youtube.prototype.getCurrentTime = function(callback) {
-  if (this.isReady()) {
-    callback(this.player.getCurrentTime());
-  }
+  this.getValue('getCurrentTime', callback);
 };
 
 /**
  * @see minplayer.players.base#getBytesStart.
  */
 minplayer.players.youtube.prototype.getBytesStart = function(callback) {
-  if (this.isReady()) {
-    callback(this.player.getVideoStartBytes());
-  }
+  this.getValue('getVideoStartBytes', callback);
 };
 
 /**
  * @see minplayer.players.base#getBytesLoaded.
  */
 minplayer.players.youtube.prototype.getBytesLoaded = function(callback) {
-  if (this.isReady()) {
-    callback(this.player.getVideoBytesLoaded());
-  }
+  this.getValue('getVideoBytesLoaded', callback);
 };
 
 /**
  * @see minplayer.players.base#getBytesTotal.
  */
 minplayer.players.youtube.prototype.getBytesTotal = function(callback) {
-  if (this.isReady()) {
-    callback(this.player.getVideoBytesTotal());
-  }
+  this.getValue('getVideoBytesTotal', callback);
 };

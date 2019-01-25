@@ -85,6 +85,9 @@ minplayer.plugin.prototype.create = function(name, base, context) {
 
   // Make sure we have a base object.
   base = base || 'minplayer';
+  if (!window[base][name]) {
+    base = 'minplayer';
+  }
 
   // Make sure there is a context.
   context = context || this.display;

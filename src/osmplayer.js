@@ -134,7 +134,10 @@ osmplayer.prototype.loadNode = function(node) {
 
     // Load the preview image.
     this.options.preview = osmplayer.getImage(node.mediafiles.image, 'preview');
-    this.playLoader.loadPreview();
+
+    if (this.playLoader) {
+      this.playLoader.loadPreview();
+    }
 
     // Play the next media
     this.playNext();

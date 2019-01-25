@@ -510,6 +510,21 @@ minplayer.players.base.prototype.seek = function(pos) {
 };
 
 /**
+ * Gets a value from the player.
+ *
+ * @param {string} getter The getter method on the player.
+ * @param {function} callback The callback function.
+ */
+minplayer.players.base.prototype.getValue = function(getter, callback) {
+  if (this.isReady()) {
+    var value = this.player[getter]();
+    if ((value !== undefined) && (value !== null)) {
+      callback(value);
+    }
+  }
+};
+
+/**
  * Set the volume of the loaded minplayer.
  *
  * @param {number} vol -1 to 1 - The relative amount to increase or decrease.

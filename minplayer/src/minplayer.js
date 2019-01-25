@@ -87,12 +87,14 @@ minplayer.prototype.construct = function() {
     height: '350px',
     debug: false,
     volume: 80,
-    files: [],
+    files: null,
     file: '',
     preview: '',
     attributes: {},
     logo: '',
-    link: ''
+    link: '',
+    width: '100%',
+    height: '100%'
   }, this.options);
 
   // Call the minplayer display constructor.
@@ -207,6 +209,16 @@ minplayer.prototype.addKeyEvents = function() {
  * @return {array} All the media files for this player.
  */
 minplayer.prototype.getFiles = function() {
+
+  // If they provide the files in the options, use those first.
+  if (this.options.files) {
+    return this.options.files;
+  }
+
+  if (this.options.file) {
+    return this.options.file;
+  }
+
   var files = [];
   var mediaSrc = null;
 

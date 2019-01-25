@@ -26,22 +26,22 @@ osmplayer['default'].prototype.getDisplay = function() {
     // Build out the player provided the base tag.
     this.context = this.context.attr({
       'id': this.options.id + '-player',
-      'class': 'media-player-media'
+      'class': 'minplayer-default-media'
     })
     .wrap(jQuery(document.createElement('div')).attr({
-      'class': 'media-player-display'
-    })).parent('.media-player-display')
+      'class': 'minplayer-default-display'
+    })).parent('.minplayer-default-display')
     .wrap(jQuery(document.createElement('div')).attr({
-      'class': 'media-player'
-    })).parent('.media-player')
+      'class': 'minplayer-default'
+    })).parent('.minplayer-default')
     .prepend('\
-      <div class="media-player-logo with-controller"></div>\
-      <div class="media-player-error"></div>'
+      <div class="minplayer-default-logo"></div>\
+      <div class="minplayer-default-error"></div>'
     )
     .wrap(jQuery(document.createElement('div')).attr({
       'id': this.options.id,
-      'class': 'osmplayer'
-    })).parent('.osmplayer');
+      'class': 'osmplayer-default'
+    })).parent('.osmplayer-default');
 
     // Mark a flag that says this display needs to be built.
     this.options.build = true;
@@ -54,14 +54,17 @@ osmplayer['default'].prototype.getDisplay = function() {
 osmplayer['default'].prototype.getElements = function() {
   var elements = osmplayer.prototype.getElements.call(this);
 
-  // Return the jQuery elements.
+  // Set the width and height of this element.
+  this.display.width(this.options.width);
+  this.display.height(this.options.height);
+
   return jQuery.extend(elements, {
     player:this.display,
-    minplayer:jQuery(".media-player", this.display),
-    display:jQuery(".media-player-display", this.display),
-    media:jQuery("#" + this.options.id + "-player", this.display),
-    error:jQuery('.media-player-error', this.display),
-    logo:jQuery('.media-player-logo', this.display),
-    playlist:jQuery('.osmplayer-playlist', this.display)
+    minplayer:jQuery(".minplayer-default", this.display),
+    display:jQuery(".minplayer-default-display", this.display),
+    media:jQuery(".minplayer-default-media", this.display),
+    error:jQuery('.minplayer-default-error', this.display),
+    logo:jQuery('.minplayer-default-logo', this.display),
+    playlist:jQuery('.osmplayer-default-playlist', this.display)
   });
 };

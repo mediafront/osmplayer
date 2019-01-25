@@ -24,24 +24,24 @@ osmplayer.pager['default'].prototype.getDisplay = function() {
 
     // append the pager.
     this.context.append('\
-    <div class="osmplayer-playlist-pager ui-state-default">\
-      <div class="osmplayer-playlist-pager-left">\
-        <a href="#" class="osmplayer-playlist-pager-link osmplayer-playlist-pager-prevpage">&nbsp;</a>\
+    <div class="osmplayer-default-playlist-pager ui-state-default">\
+      <div class="osmplayer-default-playlist-pager-left">\
+        <a href="#" class="osmplayer-default-playlist-pager-link osmplayer-default-playlist-pager-prevpage minplayer-default-button">&nbsp;</a>\
       </div>\
-      <div class="osmplayer-playlist-pager-right">\
-        <a href="#" class="osmplayer-playlist-pager-link osmplayer-playlist-pager-nextpage">&nbsp;</a>\
+      <div class="osmplayer-default-playlist-pager-right">\
+        <a href="#" class="osmplayer-default-playlist-pager-link osmplayer-default-playlist-pager-nextpage minplayer-default-button">&nbsp;</a>\
       </div>\
     </div>');
   }
 
-  return jQuery('.osmplayer-playlist-pager', this.context);
+  return jQuery('.osmplayer-default-playlist-pager', this.context);
 }
 
 // Return the elements
 osmplayer.pager['default'].prototype.getElements = function() {
   var elements = osmplayer.pager.prototype.getElements.call(this);
   return jQuery.extend(elements, {
-    prevPage:jQuery(".osmplayer-playlist-pager-prevpage", this.display),
-    nextPage:jQuery(".osmplayer-playlist-pager-nextpage", this.display)
+    prevPage:jQuery(".osmplayer-default-playlist-pager-prevpage", this.display),
+    nextPage:jQuery(".osmplayer-default-playlist-pager-nextpage", this.display)
   });
 };

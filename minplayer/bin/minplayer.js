@@ -318,6 +318,9 @@ minplayer.plugin.prototype.create = function(name, base, context) {
 
   // Make sure we have a base object.
   base = base || 'minplayer';
+  if (!window[base][name]) {
+    base = 'minplayer';
+  }
 
   // Make sure there is a context.
   context = context || this.display;
@@ -1176,12 +1179,14 @@ minplayer.prototype.construct = function() {
     height: '350px',
     debug: false,
     volume: 80,
-    files: [],
+    files: null,
     file: '',
     preview: '',
     attributes: {},
     logo: '',
-    link: ''
+    link: '',
+    width: '100%',
+    height: '100%'
   }, this.options);
 
   // Call the minplayer display constructor.
@@ -1296,6 +1301,16 @@ minplayer.prototype.addKeyEvents = function() {
  * @return {array} All the media files for this player.
  */
 minplayer.prototype.getFiles = function() {
+
+  // If they provide the files in the options, use those first.
+  if (this.options.files) {
+    return this.options.files;
+  }
+
+  if (this.options.file) {
+    return this.options.file;
+  }
+
   var files = [];
   var mediaSrc = null;
 
@@ -2466,6 +2481,21 @@ minplayer.players.base.prototype.seek = function(pos) {
 };
 
 /**
+ * Gets a value from the player.
+ *
+ * @param {string} getter The getter method on the player.
+ * @param {function} callback The callback function.
+ */
+minplayer.players.base.prototype.getValue = function(getter, callback) {
+  if (this.isReady()) {
+    var value = this.player[getter]();
+    if ((value !== undefined) && (value !== null)) {
+      callback(value);
+    }
+  }
+};
+
+/**
  * Set the volume of the loaded minplayer.
  *
  * @param {number} vol -1 to 1 - The relative amount to increase or decrease.
@@ -3126,7 +3156,7 @@ minplayer.players.minplayer.prototype.create = function() {
   return minplayer.players.flash.getFlash({
     swf: this.options.swfplayer,
     id: this.options.id + '_player',
-    width: this.options.width,
+    width: '100%',
     height: '100%',
     flashvars: flashVars,
     wmode: this.options.wmode
@@ -3421,6 +3451,9 @@ minplayer.players.youtube.prototype.setPlayerState = function(playerState) {
  */
 minplayer.players.youtube.prototype.onReady = function(event) {
   minplayer.players.base.prototype.onReady.call(this);
+  if (!this.options.autoplay) {
+    this.pause();
+  }
   this.onLoaded();
 };
 
@@ -3498,9 +3531,7 @@ minplayer.players.youtube.prototype.create = function() {
     'wmode': 'opaque',
     'controls': 0,
     'enablejsapi': 1,
-    'origin': origin,
-    'autoplay': this.options.autoplay,
-    'loop': this.options.loop
+    'origin': origin
   });
 
   // Set the source of the iframe.
@@ -3574,54 +3605,42 @@ minplayer.players.youtube.prototype.setVolume = function(vol) {
  * @see minplayer.players.base#getVolume
  */
 minplayer.players.youtube.prototype.getVolume = function(callback) {
-  if (this.isReady()) {
-    callback(this.player.getVolume());
-  }
+  this.getValue('getVolume', callback);
 };
 
 /**
  * @see minplayer.players.base#getDuration.
  */
 minplayer.players.youtube.prototype.getDuration = function(callback) {
-  if (this.isReady()) {
-    callback(this.player.getDuration());
-  }
+  this.getValue('getDuration', callback);
 };
 
 /**
  * @see minplayer.players.base#getCurrentTime
  */
 minplayer.players.youtube.prototype.getCurrentTime = function(callback) {
-  if (this.isReady()) {
-    callback(this.player.getCurrentTime());
-  }
+  this.getValue('getCurrentTime', callback);
 };
 
 /**
  * @see minplayer.players.base#getBytesStart.
  */
 minplayer.players.youtube.prototype.getBytesStart = function(callback) {
-  if (this.isReady()) {
-    callback(this.player.getVideoStartBytes());
-  }
+  this.getValue('getVideoStartBytes', callback);
 };
 
 /**
  * @see minplayer.players.base#getBytesLoaded.
  */
 minplayer.players.youtube.prototype.getBytesLoaded = function(callback) {
-  if (this.isReady()) {
-    callback(this.player.getVideoBytesLoaded());
-  }
+  this.getValue('getVideoBytesLoaded', callback);
 };
 
 /**
  * @see minplayer.players.base#getBytesTotal.
  */
 minplayer.players.youtube.prototype.getBytesTotal = function(callback) {
-  if (this.isReady()) {
-    callback(this.player.getVideoBytesTotal());
-  }
+  this.getValue('getVideoBytesTotal', callback);
 };
 /** The minplayer namespace. */
 var minplayer = minplayer || {};
@@ -3965,6 +3984,9 @@ minplayer.controller.prototype.construct = function() {
   // Keep track of if we are dragging...
   this.dragging = false;
 
+  // Keep track of the current volume.
+  this.vol = 0;
+
   // If they have a seek bar.
   if (this.elements.seek) {
 
@@ -4123,6 +4145,25 @@ minplayer.controller.prototype.construct = function() {
           };
         })(this)
       });
+    }
+
+    // Setup the mute button.
+    if (this.elements.mute) {
+      this.elements.mute.click((function(controller) {
+        return function(event) {
+          event.preventDefault();
+          var value = controller.volumeBar.slider('option', 'value');
+          if (value > 0) {
+            controller.vol = value;
+            controller.volumeBar.slider('option', 'value', 0);
+            media.setVolume(0);
+          }
+          else {
+            controller.volumeBar.slider('option', 'value', controller.vol);
+            media.setVolume(controller.vol / 100);
+          }
+        };
+      })(this));
     }
 
     // Setup the volume bar.
