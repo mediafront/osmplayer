@@ -26,12 +26,12 @@ osmplayer.scroll['default'].prototype.getDisplay = function() {
   // See if we need to build the scroll bar.
   if (this.options.build) {
     this.context.append('\
-    <div class="osmplayer-default-playlist-scroll">\
+    <div class="osmplayer-default-playlist-scroll ui-widget-content">\
+      <div class="osmplayer-default-playlist-scrollbar"></div>\
       <div class="minplayer-default-loader-wrapper">\
         <div class="minplayer-default-loader"></div>\
       </div>\
       <div class="osmplayer-default-playlist-list"></div>\
-      <div class="osmplayer-default-playlist-scrollbar"></div>\
     </div>');
   }
 

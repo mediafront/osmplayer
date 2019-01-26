@@ -29,7 +29,7 @@ osmplayer['default'].prototype.getDisplay = function() {
       'class': 'minplayer-default-media'
     })
     .wrap(jQuery(document.createElement('div')).attr({
-      'class': 'minplayer-default-display'
+      'class': 'minplayer-default-display ui-widget-content'
     })).parent('.minplayer-default-display')
     .wrap(jQuery(document.createElement('div')).attr({
       'class': 'minplayer-default'
