@@ -24,7 +24,7 @@ osmplayer.pager['default'].prototype.getDisplay = function() {
 
     // append the pager.
     this.context.append('\
-    <div class="osmplayer-default-playlist-pager ui-state-default">\
+    <div class="osmplayer-default-playlist-pager ui-widget-header">\
       <div class="osmplayer-default-playlist-pager-left">\
         <a href="#" class="osmplayer-default-playlist-pager-link osmplayer-default-playlist-pager-prevpage minplayer-default-button">&nbsp;</a>\
       </div>\

@@ -26,9 +26,9 @@ minplayer.playLoader["default"].prototype.getDisplay = function() {
     // Prepend the playloader template.
     this.context.prepend('\
     <div class="minplayer-default-loader-wrapper">\
-      <div class="minplayer-default-big-play"><span></span></div>\
+      <div class="minplayer-default-big-play ui-state-default"><span></span></div>\
       <div class="minplayer-default-loader">&nbsp;</div>\
-      <div class="minplayer-default-preview"></div>\
+      <div class="minplayer-default-preview ui-widget-content"></div>\
     </div>');
   }
 

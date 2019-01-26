@@ -22,12 +22,14 @@ osmplayer.controller['default'].prototype.constructor = osmplayer.controller['de
  */
 osmplayer.controller['default'].prototype.construct = function() {
   minplayer.controller.prototype.construct.call(this);
+  /*
   this.get('player', function(player) {
     minplayer.showThenHide(this.display, 5000, function(shown) {
       var op = shown ? 'addClass' : 'removeClass';
       player.display[op]('with-controller');
     });
   });
+  */
 }
 
 /**
@@ -40,7 +42,7 @@ osmplayer.controller['default'].prototype.getDisplay = function() {
 
     // Prepend the control template.
     jQuery('.minplayer-default', this.context).prepend('\
-    <div class="minplayer-default-controls ui-state-default">\
+    <div class="minplayer-default-controls ui-widget-header">\
       <div class="minplayer-default-controls-left">\
         <a class="minplayer-default-play minplayer-default-button" title="Play"></a>\
         <a class="minplayer-default-pause minplayer-default-button" title="Pause"></a>\

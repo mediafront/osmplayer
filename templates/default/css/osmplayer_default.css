@@ -4,10 +4,7 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background:#000;
-  border:1px solid #333;
   font-family:"Trebuchet MS", Helvetica, sans-serif;
-  color: #999;
   -moz-box-shadow:0px 5px 10px #333;/*no-important moz*/
   -webkit-box-shadow:0px 5px 10px #333;/*no-important chrome*/
 }
@@ -26,7 +23,6 @@
   top: 0px;
   bottom: 0px;
   right: 0px;
-  border: 1px solid #333;
 }
 
 .playlist-horizontal {
@@ -42,17 +38,13 @@
   position: absolute;
   z-index: 3;
   top: 50%;
-  right: 160px;
+  left: -16px;
   width: 16px;
   height: 40px;
   margin: -20px 0 0 0;
   text-align: center;
   vertical-align: center;
   opacity: 0.5;
-  background: rgba(0, 0, 0, 0.5);
-  background-image: -moz-linear-gradient(top, #313131, #000000); /* FF3.6 */
-  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #313131),color-stop(1, #000000)); /* Saf4+, Chrome */
-  border: 1px solid #2E2E2E;
 }
 
 .playlist-horizontal .osmplayer-default-hide-show-playlist {
@@ -96,14 +88,9 @@
   bottom: 0px;
   right: 0px;
   z-index: 20;
-  border: 1px solid #494949;
   -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
   border-radius: 0px;
-  background: #535353;
-  background-image: -moz-linear-gradient(top, #535353, #333333);
-  background-image: -webkit-gradient(linear,left,right,color-stop(0, #535353),color-stop(1, #333333));
-  box-shadow: inset 0 -3px 3px #333333;
 }
 
 .playlist-vertical .osmplayer-default-playlist-scrollbar {
@@ -146,19 +133,8 @@
   background: #fff;
 }
 
-.osmplayer-default-playlist-scrollbar .ui-slider-range {
-  -moz-border-radius:15px;
-  -webkit-border-radius:15px;
-  z-index:10px;
-  border-radius:15px;
-  background: #4cbae8;
-  background-image: -moz-linear-gradient(top, #4cbae8, #39a2ce);
-  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #4cbae8),color-stop(1, #39a2ce));
-  box-shadow: inset 0 -3px 3px #39a2ce;
-}
-
 .osmplayer-default-playlist-list {
-  margin: 2px 14px 2px 2px;
+  margin: 2px 13px 2px 2px;
 }
 
 .playlist-horizontal .osmplayer-default-playlist-list {
@@ -207,27 +183,14 @@
 
 .osmplayer-default-playlist-pager-link {
   float:left;
-  margin:5px 2px 0 0px;
 }
 
 .osmplayer-default-playlist-pager-left {
   float:left;
-  margin-left:3px;
+  margin: 3px;
 }
 
 .osmplayer-default-playlist-pager-right {
   float:right;
-  margin-right:3px;
-}
-
-.osmplayer-default-playlist-pager-link {
-  width: 20px;
-  height: 20px;
-}
-
-.osmplayer-default-playlist-pager-prevpage {
-  background: url(images/prev.png) no-repeat 0 0;
-}
-.osmplayer-default-playlist-pager-nextpage {
-  background: url(images/play-icon.png) no-repeat 0 0;
+  margin: 3px;
 }

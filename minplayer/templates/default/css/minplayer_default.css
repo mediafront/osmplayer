@@ -1,8 +1,6 @@
 /* base styles */
 .minplayer-default {
   position: relative;
-  background:#000;
-  border:1px solid #333;
   font-family:"Trebuchet MS", Helvetica, sans-serif;
   -moz-box-shadow:0px 5px 10px #333;/*no-important moz*/
   -webkit-box-shadow:0px 5px 10px #333;/*no-important chrome*/
@@ -21,7 +19,6 @@
   vertical-align: center;
   border: none;
   z-index:1000;
-  color: #fff;
   opacity: 0.9;
   border-radius: 10px;
   -webkit-border-radius: 10px;
@@ -33,7 +30,6 @@
 }
 
 .minplayer-default-display {
-  background-color:#000;
   width:100%;
   height:100%;
 }
@@ -48,10 +44,6 @@
   height:100%;
   position:absolute;
   z-index:1;
-}
-
-.minplayer-default-preview.has-preview {
-  background-color: rgb(0, 0, 0);
 }
 
 .minplayer-default-loader-wrapper {
@@ -144,15 +136,13 @@
   left:0px;
   right:0px;
   height:30px;
-  background-color:rgba(0,0,0,0.5);
 }
 
 .minplayer-default-controls-left {
   float:left;
-  width:30px;
-  height:26px;
-  margin: 2px 0;
-  border-right:1px solid #eee;
+  width:29px;
+  margin: 3px;
+  border-right:1px solid #888;
 }
 
 .minplayer-default.fullscreen .minplayer-default-controls-left {
@@ -164,6 +154,7 @@
   float:right;
   width:120px;
   height:30px;
+  margin: 3px;
 }
 
 .minplayer-default.fullscreen .minplayer-default-controls-right {
@@ -172,20 +163,21 @@
 
 .minplayer-default-controls-mid {
   position:absolute;
-  left:45px;
+  left:40px;
   right:130px;
   height:30px;
+  margin: 3px;
 }
 
 .minplayer-default.fullscreen .minplayer-default-controls-mid {
   left:50px;
 }
 
-.minplayer-default-play, .minplayer-default-volume, .minplayer-default-timer {
+.minplayer-default-play, .minplayer-default-volume, .minplayer-default-timer, .minplayer-default-mute, .minplayer-default-unmute {
   float: left;
 }
 
-.minplayer-default-play, .minplayer-default-volume-button, minplayer-default-fullscreen {
+.minplayer-default-play, .minplayer-default-fullscreen, .minplayer-default-mute, .minplayer-default-unmute {
   cursor: pointer;
 }
 
@@ -196,9 +188,8 @@
 /* play, pause */
 .minplayer-default-button {
   display: block;
-  width: 22px;
-  height: 22px;
-  margin:2px 0 0 4px;
+  width: 24px;
+  height: 24px;
   opacity: 0.7;
   -moz-transition: all 0.2s ease-in-out; /* Firefox */
   -webkit-transition: all 0.2s ease-in-out; /* Safari and Chrome */
@@ -210,12 +201,11 @@
   opacity: 1;
 }
 
-.minplayer-default-play {
-  background: url(images/play-icon.png) no-repeat;
+.minplayer-default-button span {
+  margin: 4px 0 0 4px;
 }
 
 .minplayer-default-pause {
-  background: url(images/pause-icon.png) no-repeat;
   display:none;
 }
 
@@ -223,8 +213,7 @@
 .minplayer-default-seek {
   position:relative;
   height: 10px;
-  margin-top:9px;
-  border: 1px solid #494949;
+  margin-top: 7px;
   -moz-border-radius:4px;
   -webkit-border-radius:4px;
   border-radius:4px;
@@ -260,10 +249,6 @@
   -webkit-border-radius:15px;
   z-index:10px;
   border-radius:15px;
-  background: #4cbae8;
-  background-image: -moz-linear-gradient(top, #4cbae8, #39a2ce);
-  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #4cbae8),color-stop(1, #39a2ce));
-  box-shadow: inset 0 -3px 3px #39a2ce;
 }
 
 .minplayer-default-progress {
@@ -274,10 +259,7 @@
   -webkit-border-radius:15px;
   z-index:8px;
   border-radius:15px;
-  background: #266580;
-  background-image: -moz-linear-gradient(top, #266580, #153A4A);
-  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #266580),color-stop(1, #153A4A));
-  box-shadow: inset 0 -3px 3px #153A4A;
+  border: 0 !important;
 }
 
 /* timer */
@@ -285,30 +267,25 @@
   position:relative;
   height: 22px;
   float:left;
-  color: #999;
-  padding-top:6px;
+  padding-top:3px;
   padding-right:6px;
   font-size: 16px;
   font-weight: bold;
-  border-right:1px solid #eee;
+  border-right:1px solid #888;
 }
 
 .minplayer-default.fullscreen .minplayer-default-timer {
   border:none;
-  margin-top:4px;
 }
 
 /* volume */
 .minplayer-default-volume {
   position: absolute;
-  right:33px;
-  bottom:4px;
-  float:right;
+  right:38px;
+  bottom:1px;
   overflow: hidden;
-  width: 20px;
-  height: 30px;
-  color: #fff;
-  padding: 0px 10px;
+  width: 26px;
+  height: 26px;
   -moz-transition: all 0.1s ease-in-out; /* Firefox */
   -webkit-transition: all 0.1s ease-in-out; /* Safari and Chrome */
   -o-transition: all 0.2s ease-in-out;  /* Opera */
@@ -316,13 +293,12 @@
 }
 
 .minplayer-default.fullscreen .minplayer-default-volume {
-  right:40px;
-  bottom:13px;
+  right:44px;
+  bottom:12px;
 }
 
 .minplayer-default-volume:hover {
   height: 135px;
-  padding-top: 5px;
 }
 
 
@@ -336,17 +312,13 @@
   position: relative;
   height: 100px;
   width: 7px;
-  left: 4px;
+  left: 8px;
   visiblity: hidden;
   opacity: 0;
   border: 1px solid #444;
   -moz-border-radius:15px;
   -webkit-border-radius:15px;
   border-radius:15px;
-  background: #535353;
-  background-image: -moz-linear-gradient(top, #535353, #333333);
-  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #535353),color-stop(1, #333333));
-  box-shadow: inset 0 3px 3px #333333;
   -moz-transition: all 0.1s ease-in-out; /* Firefox */
   -webkit-transition: all 0.1s ease-in-out; /* Safari and Chrome */
   -o-transition: all 0.1s ease-in-out;  /* Opera */
@@ -384,31 +356,16 @@
   -moz-border-radius:15px;
   -webkit-border-radius:15px;
   border-radius:15px;
-  background: #e6e6e6;
-  background-image: -moz-linear-gradient(top, #e6e6e6, #d5d5d5);
-  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #e6e6e6),color-stop(1, #d5d5d5));
-  box-shadow: inset 0 3px 3px #d5d5d5;
 }
 
 /* volume button */
-
-.minplayer-default-volume-button {
+.minplayer-default-volume-mute, .minplayer-default-volume-unmute {
   position: absolute;
   bottom: 0px;
-  display: block;
-  width: 22px;
-  height: 22px;
-  background: url(images/volume-full-icon.png) no-repeat;
-  text-indent: -9999px;
-  opacity: 0.8;
 }
 
-.minplayer-default-volume-button:hover {
-  opacity: 1;
-}
-
-.minplayer-default-volume-mute {
-  background: url(images/volume-mute-icon.png) no-repeat;
+.minplayer-default-volume-unmute {
+  display: none;
 }
 
 /* Fullscreen button */
@@ -418,7 +375,6 @@
   bottom:7px;
   width: 22px;
   height: 14px;
-  border:1px solid #aaa;
 }
 
 .minplayer-default.fullscreen .minplayer-default-fullscreen {
@@ -431,7 +387,6 @@
   bottom:0;
   width:16px;
   height:8px;
-  background-color:#aaa;
   -moz-transition: all 0.1s ease-in-out; /* Firefox */
   -webkit-transition: all 0.1s ease-in-out; /* Safari and Chrome */
   -o-transition: all 0.1s ease-in-out;  /* Opera */
@@ -455,10 +410,6 @@
   -moz-border-radius: 5px; /* FF1+ */
   -webkit-border-radius: 5px; /* Saf3+, Chrome */
   border-radius: 5px; /* Opera 10.5, IE 9 */
-  background: #000000;
-  background-image: -moz-linear-gradient(top, #313131, #000000); /* FF3.6 */
-  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #313131),color-stop(1, #000000)); /* Saf4+, Chrome */
-  box-shadow: inset 0 15px 35px #535353;
   -moz-transition: all 0.1s ease-in-out; /* Firefox */
   -webkit-transition: all 0.1s ease-in-out; /* Safari and Chrome */
   -o-transition: all 0.1s ease-in-out;  /* Opera */

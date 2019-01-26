@@ -86,7 +86,10 @@ minplayer.controller.prototype.construct = function() {
 
     // Create the seek bar slider control.
     this.seekBar = this.elements.seek.slider({
-      range: 'min'
+      range: 'min',
+      create: function(event, ui) {
+        jQuery('.ui-slider-range', event.target).addClass('ui-state-active');
+      }
     });
   }
 
