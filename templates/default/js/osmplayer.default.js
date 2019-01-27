@@ -58,13 +58,27 @@ osmplayer['default'].prototype.getElements = function() {
   this.display.width(this.options.width);
   this.display.height(this.options.height);
 
+  // Get the minplayer component.
+  var minplayer = jQuery(".minplayer-default", this.display);
+  if (this.options.playlistOnly) {
+    minplayer.remove();
+    minplayer = null;
+  }
+
+  // Get the playlist component.
+  var playlist = jQuery('.osmplayer-default-playlist', this.display);
+  if (this.options.disablePlaylist) {
+    playlist.remove();
+    playlist = null;
+  }
+
   return jQuery.extend(elements, {
     player:this.display,
-    minplayer:jQuery(".minplayer-default", this.display),
+    minplayer: minplayer,
     display:jQuery(".minplayer-default-display", this.display),
     media:jQuery(".minplayer-default-media", this.display),
     error:jQuery('.minplayer-default-error', this.display),
     logo:jQuery('.minplayer-default-logo', this.display),
-    playlist:jQuery('.osmplayer-default-playlist', this.display)
+    playlist: playlist
   });
 };
