@@ -159,6 +159,11 @@ osmplayer.playlist.prototype.set = function(playlist, loadIndex) {
     // Trigger that the playlist has loaded.
     this.trigger('playlistLoad', playlist);
   }
+
+  // Show that we are no longer busy.
+  if (this.scroll.elements.playlist_busy) {
+    this.scroll.elements.playlist_busy.hide();
+  }
 };
 
 /**
@@ -282,13 +287,6 @@ osmplayer.playlist.prototype.load = function(page, loadIndex) {
   // Set the new playlist.
   this.playlist = this.options.playlist;
 
-  // If the playlist is an object, then go ahead and set it.
-  if (typeof this.playlist == 'object') {
-    this.set(this.playlist);
-    this.playlist = this.playlist.endpoint;
-    return;
-  }
-
   // Determine if we need to loop.
   var maxPages = Math.floor(this.totalItems / this.options.pageLimit);
   if (page > maxPages) {
@@ -324,6 +322,15 @@ osmplayer.playlist.prototype.load = function(page, loadIndex) {
     this.pager.prevPage.show();
   }
 
+  // If the playlist is an object, then go ahead and set it.
+  if (typeof this.playlist == 'object') {
+    this.set(this.playlist, loadIndex);
+    if (this.playlist.endpoint) {
+      this.playlist = this.options.playlist = this.playlist.endpoint;
+    }
+    return;
+  }
+
   // Get the highest priority parser.
   var parser = osmplayer.parser['default'];
    for (var name in osmplayer.parser) {
@@ -350,9 +357,6 @@ osmplayer.playlist.prototype.load = function(page, loadIndex) {
     url: feed,
     success: (function(playlist) {
       return function(data) {
-        if (playlist.scroll.elements.playlist_busy) {
-          playlist.scroll.elements.playlist_busy.hide();
-        }
         playlist.set(parser.parse(data), loadIndex);
       };
     })(this),

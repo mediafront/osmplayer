@@ -883,6 +883,11 @@ minplayer.display.prototype.fullScreenElement = function() {
  */
 minplayer.showThenHide = function(element, timeout, callback) {
 
+  // If no element exists, then just return.
+  if (!element) {
+    return;
+  }
+
   // Ensure we have a timeout.
   timeout = timeout || 5000;
 
