@@ -77,6 +77,7 @@ osmplayer.prototype.construct = function() {
   // Make sure we provide default options...
   this.options = jQuery.extend({
     playlist: '',
+    node: {},
     swfplayer: 'minplayer/flash/minplayer.swf',
     logo: 'logo.png',
     link: 'http://www.mediafront.org'
@@ -100,6 +101,11 @@ osmplayer.prototype.construct = function() {
       player.loadNode(data);
     };
   })(this));
+
+  // Load the node if one is provided.
+  if (this.options.node) {
+    this.loadNode(this.options.node);
+  }
 };
 
 /**
@@ -117,7 +123,7 @@ osmplayer.prototype.fullScreenElement = function() {
  * @param {object} node A media node object.
  */
 osmplayer.prototype.loadNode = function(node) {
-  if (node.mediafiles) {
+  if (node && node.mediafiles) {
 
     // Load the media files.
     var media = node.mediafiles.media;
