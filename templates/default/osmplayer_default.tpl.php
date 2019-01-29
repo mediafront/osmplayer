@@ -1,4 +1,4 @@
-<div id="<?php print $params['id']; ?>" class="osmplayer-default">
+<div id="<?php print $params['id']; ?>" class="osmplayer-default player-ui">
   <?php print $minplayer; ?>
   <div class="osmplayer-default-playlist">
     <div class="osmplayer-default-hide-show-playlist ui-state-default">

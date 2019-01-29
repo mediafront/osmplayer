@@ -33,7 +33,7 @@ minplayer["default"].prototype.getDisplay = function() {
     })).parent('.minplayer-default-display')
     .wrap(jQuery(document.createElement('div')).attr({
       'id': this.options.id,
-      'class': 'minplayer-default'
+      'class': 'minplayer-default player-ui'
     })).parent('.minplayer-default')
     .append('\
       <div class="minplayer-default-logo"></div>\

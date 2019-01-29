@@ -1,4 +1,4 @@
-<div id="<?php print $params['id']; ?>" class="minplayer-default">
+<div id="<?php print $params['id']; ?>" class="minplayer-default player-ui">
   <div class="minplayer-default-loader-wrapper">
     <div class="minplayer-default-big-play ui-state-default"><span></span></div>
     <div class="minplayer-default-loader">&nbsp;</div>

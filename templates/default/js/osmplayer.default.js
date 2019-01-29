@@ -40,7 +40,7 @@ osmplayer['default'].prototype.getDisplay = function() {
     )
     .wrap(jQuery(document.createElement('div')).attr({
       'id': this.options.id,
-      'class': 'osmplayer-default'
+      'class': 'osmplayer-default player-ui'
     })).parent('.osmplayer-default');
 
     // Mark a flag that says this display needs to be built.
