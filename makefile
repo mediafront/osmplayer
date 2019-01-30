@@ -11,7 +11,23 @@
 #      directory within the tools directory.
 
 # Create the list of files
-files =   src/osmplayer.js\
+files =   minplayer/src/minplayer.compatibility.js\
+          minplayer/src/minplayer.async.js\
+          minplayer/src/minplayer.flags.js\
+          minplayer/src/minplayer.plugin.js\
+          minplayer/src/minplayer.display.js\
+          minplayer/src/minplayer.js\
+          minplayer/src/minplayer.image.js\
+          minplayer/src/minplayer.file.js\
+          minplayer/src/minplayer.playLoader.js\
+          minplayer/src/minplayer.players.base.js\
+          minplayer/src/minplayer.players.html5.js\
+          minplayer/src/minplayer.players.flash.js\
+          minplayer/src/minplayer.players.minplayer.js\
+          minplayer/src/minplayer.players.youtube.js\
+          minplayer/src/minplayer.players.vimeo.js\
+          minplayer/src/minplayer.controller.js\
+          src/osmplayer.js\
           src/osmplayer.parser.default.js\
           src/osmplayer.parser.youtube.js\
           src/osmplayer.parser.rss.js\

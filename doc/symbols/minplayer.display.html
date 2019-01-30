@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - osmplayer.playlist</title>
+		<title>JsDoc Reference - minplayer.display</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -240,26 +240,28 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Class osmplayer.playlist
+				Class minplayer.display
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
 			<p class="description">
 				
 				<br />Extends
-					<a href="../symbols/minplayer.display.html">minplayer.display</a>.<br />
+					<a href="../symbols/minplayer.plugin.html">minplayer.plugin</a>.<br />
 				
 			
-				This class creates the playlist functionality for the minplayer.
+				Base class used to provide the display and options for any component
+deriving from this class.  Components who derive are expected to provide
+the elements that they define by implementing the getElements method.
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/src_osmplayer.playlist.js.html">osmplayer.playlist.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/minplayer_src_minplayer.display.js.html">minplayer.display.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class osmplayer.playlist.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class minplayer.display.">
 				<caption>Class Summary</caption>
 				<thead>
 					<tr>
@@ -272,7 +274,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/osmplayer.playlist.html#constructor">osmplayer.playlist</a></b>(context, options)
+								<b><a href="../symbols/minplayer.display.html#constructor">minplayer.display</a></b>(name, context, options, queue)
 							</div>
 							<div class="description"></div>
 						</td>
@@ -285,7 +287,7 @@ ul.inheritsList
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class osmplayer.playlist.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class minplayer.display.">
 					<caption>Field Summary</caption>
 					<thead>
 						<tr>
@@ -299,7 +301,7 @@ ul.inheritsList
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont">
-								<b><a href="../symbols/osmplayer.playlist.html#constructor">constructor</a></b>
+								<b><a href="../symbols/minplayer.display.html#constructor">constructor</a></b>
 								</div>
 								<div class="description">Reset the constructor.</div>
 							</td>
@@ -309,9 +311,9 @@ ul.inheritsList
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont">
-								<b><a href="../symbols/osmplayer.playlist.html#nodes">nodes</a></b>
+								<b><a href="../symbols/minplayer.display.html#onResize">onResize</a></b>
 								</div>
-								<div class="description">The nodes within this playlist.</div>
+								<div class="description">Called when the window resizes.</div>
 							</td>
 						</tr>
 					
@@ -321,7 +323,7 @@ ul.inheritsList
 				
 				
 				<dl class="inheritsList">
-				<dt>Fields borrowed from class <a href="../symbols/minplayer.display.html">minplayer.display</a>: </dt><dd><a href="../symbols/minplayer.display.html#onResize">onResize</a></dd><dt>Fields borrowed from class <a href="../symbols/minplayer.plugin.html">minplayer.plugin</a>: </dt><dd><a href="../symbols/minplayer.plugin.html#context">context</a>, <a href="../symbols/minplayer.plugin.html#lock">lock</a>, <a href="../symbols/minplayer.plugin.html#name">name</a>, <a href="../symbols/minplayer.plugin.html#options">options</a>, <a href="../symbols/minplayer.plugin.html#pluginReady">pluginReady</a>, <a href="../symbols/minplayer.plugin.html#queue">queue</a>, <a href="../symbols/minplayer.plugin.html#triggered">triggered</a></dd>
+				<dt>Fields borrowed from class <a href="../symbols/minplayer.plugin.html">minplayer.plugin</a>: </dt><dd><a href="../symbols/minplayer.plugin.html#context">context</a>, <a href="../symbols/minplayer.plugin.html#lock">lock</a>, <a href="../symbols/minplayer.plugin.html#name">name</a>, <a href="../symbols/minplayer.plugin.html#options">options</a>, <a href="../symbols/minplayer.plugin.html#pluginReady">pluginReady</a>, <a href="../symbols/minplayer.plugin.html#queue">queue</a>, <a href="../symbols/minplayer.plugin.html#triggered">triggered</a></dd>
 				</dl>
 				
 			
@@ -330,7 +332,7 @@ ul.inheritsList
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class osmplayer.playlist.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class minplayer.display.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -343,7 +345,7 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.playlist.html#construct">construct</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/minplayer.display.html#construct">construct</a></b>()
 								</div>
 								<div class="description"></div>
 							</td>
@@ -352,72 +354,72 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.playlist.html#load">load</a></b>(page, loadIndex)
+								<div class="fixedFont"><b><a href="../symbols/minplayer.display.html#fullscreen">fullscreen</a></b>(full)
 								</div>
-								<div class="description">Loads a playlist.</div>
+								<div class="description">Make this display element go fullscreen.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.playlist.html#loadItem">loadItem</a></b>(index)
+								<div class="fixedFont"><b><a href="../symbols/minplayer.display.html#fullScreenElement">fullScreenElement</a></b>()
 								</div>
-								<div class="description">Loads a playlist node.</div>
+								<div class="description">Gets the full screen element.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.playlist.html#next">next</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/minplayer.display.html#getDisplay">getDisplay</a></b>()
 								</div>
-								<div class="description">Loads the next item.</div>
+								<div class="description">Returns the display for this component.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.playlist.html#nextPage">nextPage</a></b>(loadIndex)
+								<div class="fixedFont"><b><a href="../symbols/minplayer.display.html#getElements">getElements</a></b>()
 								</div>
-								<div class="description">Loads the next page.</div>
+								<div class="description">Returns all the jQuery elements that this component uses.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.playlist.html#prev">prev</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/minplayer.display.html#getScaledRect">getScaledRect</a></b>(ratio, rect)
 								</div>
-								<div class="description">Loads the previous item.</div>
+								<div class="description">Returns a scaled rectangle provided a ratio and the container rect.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.playlist.html#prevPage">prevPage</a></b>(loadIndex)
+								<div class="fixedFont"><b><a href="../symbols/minplayer.display.html#isFullScreen">isFullScreen</a></b>()
 								</div>
-								<div class="description">Loads the previous page.</div>
+								<div class="description">Checks to see if we are in fullscreen mode.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.playlist.html#set">set</a></b>(playlist, loadIndex)
+								<div class="fixedFont"><b><a href="../symbols/minplayer.display.html#isValid">isValid</a></b>()
 								</div>
-								<div class="description">Sets the playlist.</div>
+								<div class="description">Returns if this component is valid and exists within the DOM.</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.playlist.html#setQueue">setQueue</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/minplayer.display.html#toggleFullScreen">toggleFullScreen</a></b>()
 								</div>
-								<div class="description">Stores the current playlist state in the queue.</div>
+								<div class="description">Toggle fullscreen.</div>
 							</td>
 						</tr>
 					
@@ -427,7 +429,7 @@ ul.inheritsList
 				
 				
 				<dl class="inheritsList">
-				<dt>Methods borrowed from class <a href="../symbols/minplayer.display.html">minplayer.display</a>: </dt><dd><a href="../symbols/minplayer.display.html#fullscreen">fullscreen</a>, <a href="../symbols/minplayer.display.html#fullScreenElement">fullScreenElement</a>, <a href="../symbols/minplayer.display.html#getDisplay">getDisplay</a>, <a href="../symbols/minplayer.display.html#getElements">getElements</a>, <a href="../symbols/minplayer.display.html#getScaledRect">getScaledRect</a>, <a href="../symbols/minplayer.display.html#isFullScreen">isFullScreen</a>, <a href="../symbols/minplayer.display.html#isValid">isValid</a>, <a href="../symbols/minplayer.display.html#toggleFullScreen">toggleFullScreen</a></dd><dt>Methods borrowed from class <a href="../symbols/minplayer.plugin.html">minplayer.plugin</a>: </dt><dd><a href="../symbols/minplayer.plugin.html#addPlugin">addPlugin</a>, <a href="../symbols/minplayer.plugin.html#bind">bind</a>, <a href="../symbols/minplayer.plugin.html#checkQueue">checkQueue</a>, <a href="../symbols/minplayer.plugin.html#create">create</a>, <a href="../symbols/minplayer.plugin.html#destroy">destroy</a>, <a href="../symbols/minplayer.plugin.html#get">get</a>, <a href="../symbols/minplayer.plugin.html#poll">poll</a>, <a href="../symbols/minplayer.plugin.html#ready">ready</a>, <a href="../symbols/minplayer.plugin.html#trigger">trigger</a>, <a href="../symbols/minplayer.plugin.html#unbind">unbind</a></dd>
+				<dt>Methods borrowed from class <a href="../symbols/minplayer.plugin.html">minplayer.plugin</a>: </dt><dd><a href="../symbols/minplayer.plugin.html#addPlugin">addPlugin</a>, <a href="../symbols/minplayer.plugin.html#bind">bind</a>, <a href="../symbols/minplayer.plugin.html#checkQueue">checkQueue</a>, <a href="../symbols/minplayer.plugin.html#create">create</a>, <a href="../symbols/minplayer.plugin.html#destroy">destroy</a>, <a href="../symbols/minplayer.plugin.html#get">get</a>, <a href="../symbols/minplayer.plugin.html#poll">poll</a>, <a href="../symbols/minplayer.plugin.html#ready">ready</a>, <a href="../symbols/minplayer.plugin.html#trigger">trigger</a>, <a href="../symbols/minplayer.plugin.html#unbind">unbind</a></dd>
 				</dl>
 				
 			
@@ -442,7 +444,7 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>osmplayer.playlist</b>(context, options)
+						<b>minplayer.display</b>(name, context, options, queue)
 				</div>
 				
 				<div class="description">
@@ -458,16 +460,28 @@ ul.inheritsList
 						<dt class="heading">Parameters:</dt>
 						
 							<dt>
+								<span class="light fixedFont">{string}</span>  <b>name</b>
+								
+							</dt>
+								<dd>The name of this plugin.</dd>
+						
+							<dt>
 								<span class="light fixedFont">{object}</span>  <b>context</b>
 								
 							</dt>
-								<dd>The jQuery context.</dd>
+								<dd>The jQuery context this component resides.</dd>
 						
 							<dt>
 								<span class="light fixedFont">{object}</span>  <b>options</b>
 								
 							</dt>
-								<dd>This components options.</dd>
+								<dd>The options for this component.</dd>
+						
+							<dt>
+								<span class="light fixedFont">{object}</span>  <b>queue</b>
+								
+							</dt>
+								<dd>The event queue to pass events around.</dd>
 						
 						</dl>
 					
@@ -509,15 +523,15 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="nodes"> </a>
+					<a name="onResize"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>nodes</b>
+					<b>onResize</b>
 					
 					</div>
 					<div class="description">
-						The nodes within this playlist.
+						Called when the window resizes.
 						
 						
 					</div>
@@ -564,22 +578,22 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">See:</dt>
 							
-								<dd><a href="../symbols/minplayer.plugin.html#construct">minplayer.plugin#construct</a></dd>
+								<dd>minplayer.plugin.construct</dd>
 							
 							</dl>
 						
 
 					<hr />
 				
-					<a name="load"> </a>
+					<a name="fullscreen"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>load</b>(page, loadIndex)
+					<b>fullscreen</b>(full)
 					
 					</div>
 					<div class="description">
-						Loads a playlist.
+						Make this display element go fullscreen.
 						
 						
 					</div>
@@ -591,16 +605,10 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{integer}</span> <b>page</b>
+									<span class="light fixedFont">{boolean}</span> <b>full</b>
 									
 								</dt>
-								<dd>The page to load.</dd>
-							
-								<dt>
-									<span class="light fixedFont">{integer}</span> <b>loadIndex</b>
-									
-								</dt>
-								<dd>The index of the item to load.</dd>
+								<dd>Tell the player to go into fullscreen or not.</dd>
 							
 							</dl>
 						
@@ -613,15 +621,112 @@ ul.inheritsList
 
 					<hr />
 				
-					<a name="loadItem"> </a>
+					<a name="fullScreenElement"> </a>
 					<div class="fixedFont">
 					
-					
-					<b>loadItem</b>(index)
+					<span class="light">{object}</span>
+					<b>fullScreenElement</b>()
 					
 					</div>
 					<div class="description">
-						Loads a playlist node.
+						Gets the full screen element.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{object}</span> The display to be used for full screen support.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getDisplay"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{object}</span>
+					<b>getDisplay</b>()
+					
+					</div>
+					<div class="description">
+						Returns the display for this component.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{object}</span> The jQuery context for this display.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getElements"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{object}</span>
+					<b>getElements</b>()
+					
+					</div>
+					<div class="description">
+						Returns all the jQuery elements that this component uses.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{object}</span> An object which defines all the jQuery elements that
+this component uses.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="getScaledRect"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{object}</span>
+					<b>getScaledRect</b>(ratio, rect)
+					
+					</div>
+					<div class="description">
+						Returns a scaled rectangle provided a ratio and the container rect.
 						
 						
 					</div>
@@ -633,92 +738,44 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<span class="light fixedFont">{number}</span> <b>index</b>
+									<span class="light fixedFont">{number}</span> <b>ratio</b>
 									
 								</dt>
-								<dd>The index of the item you would like to load.</dd>
+								<dd>The width/height ratio of what is being scaled.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{object}</span> <b>rect</b>
+									
+								</dt>
+								<dd>The bounding rectangle for scaling.</dd>
 							
 							</dl>
 						
 						
 						
 						
-						
-						
-						
-
-					<hr />
-				
-					<a name="next"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>next</b>()
-					
-					</div>
-					<div class="description">
-						Loads the next item.
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name="nextPage"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>nextPage</b>(loadIndex)
-					
-					</div>
-					<div class="description">
-						Loads the next page.
-						
-						
-					</div>
-					
-					
-					
 						
 							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
+							<dt class="heading">Returns:</dt>
 							
-								<dt>
-									<span class="light fixedFont">{integer}</span> <b>loadIndex</b>
-									
-								</dt>
-								<dd>The index of the item to load.</dd>
+								<dd><span class="light fixedFont">{object}</span> The Rectangle object of the scaled rectangle.</dd>
 							
 							</dl>
 						
 						
 						
-						
-						
-						
-						
 
 					<hr />
 				
-					<a name="prev"> </a>
+					<a name="isFullScreen"> </a>
 					<div class="fixedFont">
 					
-					
-					<b>prev</b>()
+					<span class="light">{boolean}</span>
+					<b>isFullScreen</b>()
 					
 					</div>
 					<div class="description">
-						Loads the previous item.
+						Checks to see if we are in fullscreen mode.
 						
 						
 					</div>
@@ -729,99 +786,60 @@ ul.inheritsList
 						
 						
 						
-						
-						
-						
-
-					<hr />
-				
-					<a name="prevPage"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>prevPage</b>(loadIndex)
-					
-					</div>
-					<div class="description">
-						Loads the previous page.
-						
-						
-					</div>
-					
-					
-					
 						
 							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
+							<dt class="heading">Returns:</dt>
 							
-								<dt>
-									<span class="light fixedFont">{integer}</span> <b>loadIndex</b>
-									
-								</dt>
-								<dd>The index of the item to load.</dd>
+								<dd><span class="light fixedFont">{boolean}</span> TRUE - fullscreen, FALSE - otherwise.</dd>
 							
 							</dl>
-						
-						
-						
-						
 						
 						
 						
 
 					<hr />
 				
-					<a name="set"> </a>
+					<a name="isValid"> </a>
 					<div class="fixedFont">
 					
-					
-					<b>set</b>(playlist, loadIndex)
+					<span class="light">{boolean}</span>
+					<b>isValid</b>()
 					
 					</div>
 					<div class="description">
-						Sets the playlist.
+						Returns if this component is valid and exists within the DOM.
 						
 						
 					</div>
 					
 					
 					
+						
+						
+						
+						
 						
 							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
+							<dt class="heading">Returns:</dt>
 							
-								<dt>
-									<span class="light fixedFont">{object}</span> <b>playlist</b>
-									
-								</dt>
-								<dd>The playlist object.</dd>
-							
-								<dt>
-									<span class="light fixedFont">{integer}</span> <b>loadIndex</b>
-									
-								</dt>
-								<dd>The index of the item to load.</dd>
+								<dd><span class="light fixedFont">{boolean}</span> TRUE if the plugin display is valid.</dd>
 							
 							</dl>
-						
-						
-						
-						
 						
 						
 						
 
 					<hr />
 				
-					<a name="setQueue"> </a>
+					<a name="toggleFullScreen"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>setQueue</b>()
+					<b>toggleFullScreen</b>()
 					
 					</div>
 					<div class="description">
-						Stores the current playlist state in the queue.
+						Toggle fullscreen.
 						
 						
 					</div>
@@ -850,7 +868,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Mar 29 2012 18:12:01 GMT-0700 (PDT)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Mar 29 2012 18:12:00 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>

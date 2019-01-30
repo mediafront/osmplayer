@@ -115,7 +115,8 @@ minplayer.players.minplayer.prototype.create = function() {
     'debug': this.options.debug,
     'config': 'nocontrols',
     'file': this.mediaFile.path,
-    'autostart': this.options.autoplay
+    'autostart': this.options.autoplay,
+    'autoload': this.options.autoload
   };
 
   // Return a flash media player object.

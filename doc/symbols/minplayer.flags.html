@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - osmplayer.pager</title>
+		<title>JsDoc Reference - minplayer.flags</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -240,26 +240,54 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Class osmplayer.pager
+				Class minplayer.flags
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
 			<p class="description">
 				
-				<br />Extends
-					<a href="../symbols/minplayer.display.html">minplayer.display</a>.<br />
 				
 			
-				This class provides pager functionality.
+				This is a class used to keep track of flag states
+which is used to control the busy cursor, big play button, among other
+items in which multiple components can have an interest in hiding or
+showing a single element on the screen.
+
+<p>
+<strong>Usage:</strong>
+<pre><code>
+  // Declare a flags variable.
+  var flags = new minplayer.flags();
+
+  // Set the flag based on two components interested in the flag.
+  flags.setFlag("component1", true);
+  flags.setFlag("component2", true);
+
+  // Print out the value of the flags. ( Prints 3 )
+  console.log(flags.flags);
+
+  // Now unset a single components flag.
+  flags.setFlag("component1", false);
+
+  // Print out the value of the flags.
+  console.log(flags.flags);
+
+  // Unset the other components flag.
+  flags.setFlag("component2", false);
+
+  // Print out the value of the flags.
+  console.log(flags.flags);
+</code></pre>
+</p>
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/src_osmplayer.pager.js.html">osmplayer.pager.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/minplayer_src_minplayer.flags.js.html">minplayer.flags.js</a>.
 				
 			</p>
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class osmplayer.pager.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class minplayer.flags.">
 				<caption>Class Summary</caption>
 				<thead>
 					<tr>
@@ -272,7 +300,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/osmplayer.pager.html#constructor">osmplayer.pager</a></b>(context, options)
+								<b><a href="../symbols/minplayer.flags.html#constructor">minplayer.flags</a></b>()
 							</div>
 							<div class="description"></div>
 						</td>
@@ -285,7 +313,7 @@ ul.inheritsList
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class osmplayer.pager.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the fields documented in the class minplayer.flags.">
 					<caption>Field Summary</caption>
 					<thead>
 						<tr>
@@ -299,9 +327,29 @@ ul.inheritsList
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont">
-								<b><a href="../symbols/osmplayer.pager.html#constructor">constructor</a></b>
+								<b><a href="../symbols/minplayer.flags.html#flag">flag</a></b>
 								</div>
-								<div class="description">Reset the constructor.</div>
+								<div class="description">The flag.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/minplayer.flags.html#ids">ids</a></b>
+								</div>
+								<div class="description">Id map to reference id with the flag index.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">
+								<b><a href="../symbols/minplayer.flags.html#numFlags">numFlags</a></b>
+								</div>
+								<div class="description">The number of flags.</div>
 							</td>
 						</tr>
 					
@@ -310,17 +358,13 @@ ul.inheritsList
 				
 				
 				
-				<dl class="inheritsList">
-				<dt>Fields borrowed from class <a href="../symbols/minplayer.display.html">minplayer.display</a>: </dt><dd><a href="../symbols/minplayer.display.html#onResize">onResize</a></dd><dt>Fields borrowed from class <a href="../symbols/minplayer.plugin.html">minplayer.plugin</a>: </dt><dd><a href="../symbols/minplayer.plugin.html#context">context</a>, <a href="../symbols/minplayer.plugin.html#lock">lock</a>, <a href="../symbols/minplayer.plugin.html#name">name</a>, <a href="../symbols/minplayer.plugin.html#options">options</a>, <a href="../symbols/minplayer.plugin.html#pluginReady">pluginReady</a>, <a href="../symbols/minplayer.plugin.html#queue">queue</a>, <a href="../symbols/minplayer.plugin.html#triggered">triggered</a></dd>
-				</dl>
-				
 			
 
 <!-- ============================== methods summary ======================== -->
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class osmplayer.pager.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class minplayer.flags.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -333,9 +377,9 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/osmplayer.pager.html#construct">construct</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/minplayer.flags.html#setFlag">setFlag</a></b>(id, value)
 								</div>
-								<div class="description"></div>
+								<div class="description">Sets a flag based on boolean logic operators.</div>
 							</td>
 						</tr>
 					
@@ -343,10 +387,6 @@ ul.inheritsList
 				</table>
 				
 				
-				
-				<dl class="inheritsList">
-				<dt>Methods borrowed from class <a href="../symbols/minplayer.display.html">minplayer.display</a>: </dt><dd><a href="../symbols/minplayer.display.html#fullscreen">fullscreen</a>, <a href="../symbols/minplayer.display.html#fullScreenElement">fullScreenElement</a>, <a href="../symbols/minplayer.display.html#getDisplay">getDisplay</a>, <a href="../symbols/minplayer.display.html#getElements">getElements</a>, <a href="../symbols/minplayer.display.html#getScaledRect">getScaledRect</a>, <a href="../symbols/minplayer.display.html#isFullScreen">isFullScreen</a>, <a href="../symbols/minplayer.display.html#isValid">isValid</a>, <a href="../symbols/minplayer.display.html#toggleFullScreen">toggleFullScreen</a></dd><dt>Methods borrowed from class <a href="../symbols/minplayer.plugin.html">minplayer.plugin</a>: </dt><dd><a href="../symbols/minplayer.plugin.html#addPlugin">addPlugin</a>, <a href="../symbols/minplayer.plugin.html#bind">bind</a>, <a href="../symbols/minplayer.plugin.html#checkQueue">checkQueue</a>, <a href="../symbols/minplayer.plugin.html#create">create</a>, <a href="../symbols/minplayer.plugin.html#destroy">destroy</a>, <a href="../symbols/minplayer.plugin.html#get">get</a>, <a href="../symbols/minplayer.plugin.html#poll">poll</a>, <a href="../symbols/minplayer.plugin.html#ready">ready</a>, <a href="../symbols/minplayer.plugin.html#trigger">trigger</a>, <a href="../symbols/minplayer.plugin.html#unbind">unbind</a></dd>
-				</dl>
 				
 			
 <!-- ============================== events summary ======================== -->
@@ -360,7 +400,7 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>osmplayer.pager</b>(context, options)
+						<b>minplayer.flags</b>()
 				</div>
 				
 				<div class="description">
@@ -371,23 +411,6 @@ ul.inheritsList
 				
 				
 				
-					
-						<dl class="detailList">
-						<dt class="heading">Parameters:</dt>
-						
-							<dt>
-								<span class="light fixedFont">{object}</span>  <b>context</b>
-								
-							</dt>
-								<dd>The jQuery context.</dd>
-						
-							<dt>
-								<span class="light fixedFont">{object}</span>  <b>options</b>
-								
-							</dt>
-								<dd>This components options.</dd>
-						
-						</dl>
 					
 					
 					
@@ -405,15 +428,59 @@ ul.inheritsList
 					Field Detail
 				</div>
 				
-					<a name="constructor"> </a>
+					<a name="flag"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>constructor</b>
+					<b>flag</b>
 					
 					</div>
 					<div class="description">
-						Reset the constructor.
+						The flag.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="ids"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>ids</b>
+					
+					</div>
+					<div class="description">
+						Id map to reference id with the flag index.
+						
+						
+					</div>
+					
+					
+
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="numFlags"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>numFlags</b>
+					
+					</div>
+					<div class="description">
+						The number of flags.
 						
 						
 					</div>
@@ -435,15 +502,15 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name="construct"> </a>
+					<a name="setFlag"> </a>
 					<div class="fixedFont">
 					
 					
-					<b>construct</b>()
+					<b>setFlag</b>(id, value)
 					
 					</div>
 					<div class="description">
-						
+						Sets a flag based on boolean logic operators.
 						
 						
 					</div>
@@ -451,18 +518,28 @@ ul.inheritsList
 					
 					
 						
-						
-						
-						
-						
-						
-						
 							<dl class="detailList">
-							<dt class="heading">See:</dt>
+							<dt class="heading">Parameters:</dt>
 							
-								<dd><a href="../symbols/minplayer.plugin.html#construct">minplayer.plugin#construct</a></dd>
+								<dt>
+									<span class="light fixedFont">{string}</span> <b>id</b>
+									
+								</dt>
+								<dd>The id of the controller interested in this flag.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{boolean}</span> <b>value</b>
+									
+								</dt>
+								<dd>The value of this flag ( true or false ).</dd>
 							
 							</dl>
+						
+						
+						
+						
+						
+						
 						
 
 					
@@ -479,7 +556,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Mar 29 2012 18:12:01 GMT-0700 (PDT)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Mar 29 2012 18:12:00 GMT-0700 (PDT)
 		</div>
 	</body>
 </html>
