@@ -42,13 +42,9 @@
     <!-- Include the OSM Player template files. -->
     <link rel="stylesheet" href="minplayer/templates/default/css/minplayer_default.css">
     <link rel="stylesheet" href="templates/default/css/osmplayer_default.css">
-    <script type="text/javascript" src="templates/default/js/osmplayer.playLoader.default.js"></script>
-    <script type="text/javascript" src="templates/default/js/osmplayer.controller.default.js"></script>
-    <script type="text/javascript" src="templates/default/js/osmplayer.playlist.default.js"></script>
-    <script type="text/javascript" src="templates/default/js/osmplayer.teaser.default.js"></script>
-    <script type="text/javascript" src="templates/default/js/osmplayer.scroll.default.js"></script>
-    <script type="text/javascript" src="templates/default/js/osmplayer.pager.default.js"></script>
-    <script type="text/javascript" src="templates/default/js/osmplayer.default.js"></script>
+    <script type="text/javascript" src="templates/default/osmplayer.default.js"></script>
+
+    <!-- Here is how you make it come alive... -->
     <script type="text/javascript">
       $(function() {
         $("#osmplayer").osmplayer();
@@ -56,6 +52,9 @@
     </script>
   </head>
   <body>
-    <video id="osmplayer" playlist="http://gdata.youtube.com/feeds/api/videos"></video>
+    <video id="osmplayer" playlist="playlist.xml"></video>
+
+    <!-- Or you can get a feed directly from youtube like so... -->
+    <!--<video id="osmplayer" playlist="http://gdata.youtube.com/feeds/api/videos"></video>-->
   </body>
 </html>
