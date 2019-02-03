@@ -219,7 +219,8 @@ minplayer.display.prototype.getElements = function() {
  * @return {boolean} TRUE if the plugin display is valid.
  */
 minplayer.display.prototype.isValid = function() {
-  return (this.display.length > 0);
+  var valid = minplayer.plugin.prototype.isValid.call(this);
+  return valid && (this.display.length > 0);
 };
 
 /**
