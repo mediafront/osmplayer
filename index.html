@@ -10,8 +10,7 @@
 
     <!-- The compressed osmplayer script. -->
     <script type="text/javascript" src="bin/osmplayer.compressed.js"></script>
-    <!-- For debugging....
-    <script type="text/javascript" src="minplayer/src/minplayer.compatibility.js"></script>
+    <!-- <script type="text/javascript" src="minplayer/src/minplayer.compatibility.js"></script>
     <script type="text/javascript" src="minplayer/src/minplayer.flags.js"></script>
     <script type="text/javascript" src="minplayer/src/minplayer.async.js"></script>
     <script type="text/javascript" src="minplayer/src/minplayer.plugin.js"></script>
@@ -36,8 +35,7 @@
     <script type="text/javascript" src="src/osmplayer.playlist.js"></script>
     <script type="text/javascript" src="src/osmplayer.scroll.js"></script>
     <script type="text/javascript" src="src/osmplayer.pager.js"></script>
-    <script type="text/javascript" src="src/osmplayer.teaser.js"></script>
-    -->
+    <script type="text/javascript" src="src/osmplayer.teaser.js"></script>-->
 
     <!-- Include the OSM Player template files. -->
     <link rel="stylesheet" href="minplayer/templates/default/css/minplayer_default.css">
@@ -47,12 +45,14 @@
     <!-- Here is how you make it come alive... -->
     <script type="text/javascript">
       $(function() {
-        $("#osmplayer").osmplayer();
+        $("#osmplayer").osmplayer({
+          playlist: 'playlist.xml'
+        });
       });
     </script>
   </head>
   <body>
-    <video id="osmplayer" playlist="playlist.xml"></video>
+    <div id="osmplayer"></div>
 
     <!-- Or you can get a feed directly from youtube like so... -->
     <!--<video id="osmplayer" playlist="http://gdata.youtube.com/feeds/api/videos"></video>-->

@@ -2845,23 +2845,33 @@ minplayer.players.html5.prototype.load = function(file) {
   // See if a load is even necessary.
   if (minplayer.players.base.prototype.load.call(this, file)) {
 
-    // Add a new player.
-    this.addPlayer();
+    // Get the current source.
+    var src = this.elements.media.attr('src');
+    if (!src) {
+      src = jQuery('source', this.elements.media).eq(0).attr('src');
+    }
 
-    // Set the new player.
-    this.player = this.getPlayer();
+    // Only swap out if the new file is different from the source.
+    if (src != file.path) {
 
-    // Add the events again.
-    this.addEvents();
+      // Add a new player.
+      this.addPlayer();
 
-    // Set the autoload.
-    var option = this.options.autoload ? 'auto' : 'metadata';
-    this.elements.media.attr('preload', option);
+      // Set the new player.
+      this.player = this.getPlayer();
 
-    // Change the source...
-    var code = '<source src="' + file.path + '">';
-    this.elements.media.removeAttr('src').empty().html(code);
-    return true;
+      // Add the events again.
+      this.addEvents();
+
+      // Set the autoload.
+      var option = this.options.autoload ? 'auto' : 'metadata';
+      this.elements.media.attr('preload', option);
+
+      // Change the source...
+      var code = '<source src="' + file.path + '">';
+      this.elements.media.removeAttr('src').empty().html(code);
+      return true;
+    }
   }
 
   return false;
