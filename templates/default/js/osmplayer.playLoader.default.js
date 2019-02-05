@@ -1,46 +1,50 @@
-/** The osmplayer namespace. */
-var osmplayer = osmplayer || {};
+(function(template, osmplayer) {
 
-// Define the busy object.
-osmplayer.playLoader = osmplayer.playLoader || {};
+  /** The osmplayer namespace. */
+  var osmplayer = osmplayer || {};
 
-// constructor.
-osmplayer.playLoader['default'] = function(context, options) {
+  // Define the busy object.
+  osmplayer.playLoader = osmplayer.playLoader || {};
 
-  // Derive from playLoader
-  minplayer.playLoader.call(this, context, options);
-};
+  // constructor.
+  osmplayer.playLoader[template] = function(context, options) {
 
-// Define the prototype for all controllers.
-osmplayer.playLoader['default'].prototype = new minplayer.playLoader();
-osmplayer.playLoader['default'].prototype.constructor = osmplayer.playLoader['default'];
+    // Derive from playLoader
+    minplayer.playLoader.call(this, context, options);
+  };
 
-/**
- * Return the display for this plugin.
- */
-osmplayer.playLoader['default'].prototype.getDisplay = function() {
+  // Define the prototype for all controllers.
+  osmplayer.playLoader[template].prototype = new minplayer.playLoader();
+  osmplayer.playLoader[template].prototype.constructor = osmplayer.playLoader[template];
 
-  // See if we need to build out the controller.
-  if (this.options.build) {
+  /**
+   * Return the display for this plugin.
+   */
+  osmplayer.playLoader[template].prototype.getDisplay = function() {
 
-    // Prepend the playloader template.
-    jQuery('.minplayer-default', this.context).prepend('\
-    <div class="minplayer-default-loader-wrapper">\
-      <div class="minplayer-default-big-play ui-state-default"><span></span></div>\
-      <div class="minplayer-default-loader">&nbsp;</div>\
-      <div class="minplayer-default-preview ui-widget-content"></div>\
-    </div>');
+    // See if we need to build out the controller.
+    if (this.options.build) {
+
+      // Prepend the playloader template.
+      jQuery('.minplayer-' + template + '', this.context).prepend('\
+      <div class="minplayer-' + template + '-loader-wrapper">\
+        <div class="minplayer-' + template + '-big-play ui-state-default"><span></span></div>\
+        <div class="minplayer-' + template + '-loader">&nbsp;</div>\
+        <div class="minplayer-' + template + '-preview ui-widget-content"></div>\
+      </div>');
+    }
+
+    return jQuery('.minplayer-' + template + ' .minplayer-' + template + '-loader-wrapper', this.context);
   }
 
-  return jQuery('.minplayer-default .minplayer-default-loader-wrapper', this.context);
-}
+  // Return the elements
+  osmplayer.playLoader[template].prototype.getElements = function() {
+    var elements = minplayer.playLoader.prototype.getElements.call(this);
+    return jQuery.extend(elements, {
+      busy:jQuery('.minplayer-' + template + '-loader', this.display),
+      bigPlay:jQuery('.minplayer-' + template + '-big-play', this.display),
+      preview:jQuery('.minplayer-' + template + '-preview', this.display)
+    });
+  };
+})('default', osmplayer);
 
-// Return the elements
-osmplayer.playLoader['default'].prototype.getElements = function() {
-  var elements = minplayer.playLoader.prototype.getElements.call(this);
-  return jQuery.extend(elements, {
-    busy:jQuery(".minplayer-default-loader", this.display),
-    bigPlay:jQuery(".minplayer-default-big-play", this.display),
-    preview:jQuery(".minplayer-default-preview", this.display)
-  });
-};
