@@ -1245,9 +1245,6 @@ minplayer.prototype.construct = function() {
   // Now load these files.
   this.load(this.getFiles());
 
-  // Add the player events.
-  this.addEvents();
-
   // The player is ready.
   this.ready();
 };
@@ -1481,6 +1478,9 @@ minplayer.prototype.load = function(files) {
 
   // Now load the player.
   this.loadPlayer();
+
+  // Add the player events.
+  this.addEvents();
 };
 
 /**
@@ -3903,9 +3903,15 @@ minplayer.players.vimeo.prototype.create = function() {
     return function() {
       if (window.Froogaloop) {
         player.player = window.Froogaloop(iframe);
+        var playerTimeout = 0;
         player.player.addEvent('ready', function() {
+          clearTimeout(playerTimeout);
           player.onReady();
         });
+        playerTimeout = setTimeout(function() {
+          player.onReady();
+          player.onError('Unable to play video.');
+        }, 2000);
       }
       return !window.Froogaloop;
     };

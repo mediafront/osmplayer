@@ -8,6 +8,7 @@
 
 .player-ui .minplayer-default-error {
   display:none;
+  color: #eee;
   position: absolute;
   top: 80%;
   left: 50%;

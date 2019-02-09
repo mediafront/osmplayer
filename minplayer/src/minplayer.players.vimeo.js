@@ -118,9 +118,15 @@ minplayer.players.vimeo.prototype.create = function() {
     return function() {
       if (window.Froogaloop) {
         player.player = window.Froogaloop(iframe);
+        var playerTimeout = 0;
         player.player.addEvent('ready', function() {
+          clearTimeout(playerTimeout);
           player.onReady();
         });
+        playerTimeout = setTimeout(function() {
+          player.onReady();
+          player.onError('Unable to play video.');
+        }, 2000);
       }
       return !window.Froogaloop;
     };
