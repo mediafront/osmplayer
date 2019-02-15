@@ -109,6 +109,12 @@
         <div class="osmplayer-' + template + '-hide-show-playlist ui-state-default">\
           <span class="ui-icon"></span>\
         </div>\
+        <div class="minplayer-' + template + '-loader-wrapper">\
+          <div class="minplayer-' + template + '-loader"></div>\
+        </div>\
+        <div class="osmplayer-' + template + '-playlist-scroll ui-widget-content">\
+          <div class="osmplayer-' + template + '-playlist-list"></div>\
+      </div>\
       </div>');
     }
     return jQuery('.osmplayer-' + template + '-playlist', this.context);
@@ -135,6 +141,9 @@
     jQuery('span', hideShow).addClass('ui-icon-triangle-1-' + icon);
 
     return jQuery.extend(elements, {
+      playlist_busy:jQuery('.minplayer-' + template + '-loader-wrapper', this.display),
+      list:jQuery('.osmplayer-' + template + '-playlist-list', this.display),
+      scroll:jQuery('.osmplayer-' + template + '-playlist-scroll', this.display),
       hideShow: hideShow
     });
   };

@@ -418,11 +418,15 @@
 }
 
 .player-ui .minplayer-default-logo {
-  z-index: 1000;
+  z-index: 200;
   line-height: 0px;
   position: absolute;
   bottom: 3px;
   left: 3px;
+}
+
+.player-ui .minplayer-default.fullscreen .minplayer-default-logo {
+  z-index: 1002;
 }
 
 .with-controller .minplayer-default-logo {

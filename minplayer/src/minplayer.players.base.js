@@ -91,18 +91,6 @@ minplayer.players.base.prototype.construct = function() {
   // Get the player object...
   this.player = this.getPlayer();
 
-  // Set the focus of the element based on if they click in or outside of it.
-  jQuery(document).bind('click', (function(player) {
-    return function(event) {
-      if (jQuery(event.target).closest('#' + player.options.id).length == 0) {
-        player.hasFocus = false;
-      }
-      else {
-        player.hasFocus = true;
-      }
-    };
-  })(this));
-
   // Bind to key events...
   jQuery(document).bind('keydown', (function(player) {
     return function(event) {
@@ -408,6 +396,15 @@ minplayer.players.base.prototype.isReady = function() {
  * @return {bool} If this player implements its own playLoader.
  */
 minplayer.players.base.prototype.hasPlayLoader = function() {
+  return false;
+};
+
+/**
+ * Determines if the player should show the controller.
+ *
+ * @return {bool} If this player implements its own controller.
+ */
+minplayer.players.base.prototype.hasController = function() {
   return false;
 };
 

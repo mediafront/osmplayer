@@ -161,6 +161,24 @@ minplayer.players.html5.prototype.addEvents = function() {
 };
 
 /**
+ * @see minplayer.players.base#onReady
+ */
+minplayer.players.html5.prototype.onReady = function() {
+  minplayer.players.base.prototype.onReady.call(this);
+
+  // iOS devices are strange in that they don't autoload.
+  if (minplayer.isIDevice) {
+    this.play();
+    setTimeout((function(player) {
+      return function() {
+        player.pause();
+        player.onLoaded();
+      };
+    })(this), 1);
+  }
+};
+
+/**
  * @see minplayer.players.base#playerFound
  * @return {boolean} TRUE - if the player is in the DOM, FALSE otherwise.
  */
@@ -211,6 +229,8 @@ minplayer.players.html5.prototype.load = function(file) {
       src = jQuery('source', this.elements.media).eq(0).attr('src');
     }
 
+    console.log(file);
+
     // Only swap out if the new file is different from the source.
     if (src != file.path) {
 
@@ -225,10 +245,11 @@ minplayer.players.html5.prototype.load = function(file) {
 
       // Set the autoload.
       var option = this.options.autoload ? 'auto' : 'metadata';
+      option = minplayer.isIDevice ? 'metadata' : option;
       this.elements.media.attr('preload', option);
 
       // Change the source...
-      var code = '<source src="' + file.path + '">';
+      var code = '<source src="' + file.path + '"></source>';
       this.elements.media.removeAttr('src').empty().html(code);
       return true;
     }

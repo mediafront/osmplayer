@@ -72,12 +72,56 @@ minplayer.display.prototype.construct = function() {
 minplayer.display.prototype.onResize = false;
 
 /**
+ * Wrapper around hide that will always not show.
+ *
+ * @param {object} element The element you wish to hide.
+ */
+minplayer.display.prototype.hide = function(element) {
+  element = element || this.display;
+  if (element) {
+    element.forceHide = true;
+    element.unbind().hide();
+  }
+};
+
+/**
  * Gets the full screen element.
  *
  * @return {object} The display to be used for full screen support.
  */
 minplayer.display.prototype.fullScreenElement = function() {
   return this.display;
+};
+
+/**
+ * Fix for the click function in jQuery to be cross platform.
+ *
+ * @param {object} element The element that will be clicked.
+ * @param {function} fn Called when the element is clicked.
+ * @return {object} The element that is to be clicked.
+ */
+minplayer.click = function(element, fn) {
+  var flag = false;
+  element = jQuery(element);
+  element.bind('touchstart click', function(event) {
+    if (!flag) {
+      flag = true;
+      setTimeout(function() {
+        flag = false;
+      }, 100);
+      fn.call(this, event);
+    }
+  });
+  return element;
+};
+
+/**
+ * Determines if the player is in focus or not.
+ *
+ * @param {boolean} focus If the player is in focus.
+ */
+minplayer.display.prototype.onFocus = function(focus) {
+  this.hasFocus = this.focus = focus;
 };
 
 /**
@@ -100,6 +144,9 @@ minplayer.showThenHide = function(element, timeout, callback) {
   // If this has not yet been configured.
   if (!element.showTimer) {
     element.shown = true;
+    minplayer.click(document, function() {
+      minplayer.showThenHide(element, timeout, callback);
+    });
     jQuery(document).bind('mousemove', function() {
       minplayer.showThenHide(element, timeout, callback);
     });
@@ -109,7 +156,7 @@ minplayer.showThenHide = function(element, timeout, callback) {
   clearTimeout(element.showTimer);
 
   // Show the display.
-  if (!element.shown) {
+  if (!element.shown && !element.forceHide) {
     element.shown = true;
     element.show();
     if (callback) {
