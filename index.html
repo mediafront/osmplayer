@@ -2,9 +2,9 @@
 <html>
   <head>
     <title>Open Standard Media (OSM) Player: PHP Demo</title>
+    <script type='text/javascript' src="http://192.168.1.5:8080/target/target-script-min.js#anonymous"></script>
     <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.js"></script>
-    <script type="text/javascript" src="https://getfirebug.com/firebug-lite-debug.js#enableTrace"></script>
 
     <!-- Many more themes to chose from... go to http://jqueryui.com/themeroller! -->
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/dark-hive/jquery-ui.css">
@@ -53,7 +53,7 @@
         $("#osmplayer").osmplayer({
           width: '600px',
           height: '400px',
-          playlist: 'http://gdata.youtube.com/feeds/api/videos'
+          playlist: 'playlist.xml'
         });
       });
     </script>
