@@ -192,7 +192,7 @@
 <span class='line'>185</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>186</span> 
 <span class='line'>187</span> </span><span class="COMM">/**
-<span class='line'>188</span>  * Determines if the player should show the playloader.
+<span class='line'>188</span>  * Determines if the player should show the controller.
 <span class='line'>189</span>  *
 <span class='line'>190</span>  * @return {bool} If this player implements its own playLoader.
 <span class='line'>191</span>  */</span><span class="WHIT">
@@ -243,7 +243,7 @@
 <span class='line'>236</span> </span><span class="WHIT">    </span><span class="COMM">// Add the parameters to the src.</span><span class="WHIT">
 <span class='line'>237</span> </span><span class="WHIT">    </span><span class="NAME">src</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="PUNC">=</span><span class="WHIT"> </span><span class="STRN">'?'</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">jQuery.param</span><span class="PUNC">(</span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>238</span> </span><span class="WHIT">      </span><span class="STRN">'wmode'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="STRN">'opaque'</span><span class="PUNC">,</span><span class="WHIT">
-<span class='line'>239</span> </span><span class="WHIT">      </span><span class="STRN">'controls'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>239</span> </span><span class="WHIT">      </span><span class="STRN">'controls'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">minplayer.isAndroid</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'>240</span> </span><span class="WHIT">      </span><span class="STRN">'enablejsapi'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">minplayer.isIDevice</span><span class="WHIT"> </span><span class="PUNC">?</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="WHIT"> </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">1</span><span class="PUNC">,</span><span class="WHIT">
 <span class='line'>241</span> </span><span class="WHIT">      </span><span class="STRN">'origin'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">origin</span><span class="WHIT">
 <span class='line'>242</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
