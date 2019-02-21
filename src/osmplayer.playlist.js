@@ -456,10 +456,12 @@ osmplayer.playlist.prototype.load = function(page, loadIndex) {
 
   // Get the highest priority parser.
   var parser = osmplayer.parser['default'];
-   for (var name in osmplayer.parser) {
-    if (osmplayer.parser[name].valid(this.playlist)) {
-      if (osmplayer.parser[name].priority > parser.priority) {
-        parser = osmplayer.parser[name];
+  for (var name in osmplayer.parser) {
+    if (osmplayer.parser.hasOwnProperty(name)) {
+      if (osmplayer.parser[name].valid(this.playlist)) {
+        if (osmplayer.parser[name].priority > parser.priority) {
+          parser = osmplayer.parser[name];
+        }
       }
     }
   }
