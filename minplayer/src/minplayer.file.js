@@ -139,24 +139,15 @@ minplayer.file.prototype.getMimeType = function() {
  * is.
  */
 minplayer.file.prototype.getType = function() {
-  switch (this.mimetype) {
-    case 'video/mp4':
-    case 'video/webm':
-    case 'application/octet-stream':
-    case 'video/x-webm':
-    case 'video/ogg':
-    case 'video/3gpp2':
-    case 'video/3gpp':
-    case 'video/quicktime':
-      return 'video';
-    case 'audio/mp3':
-    case 'audio/mp4':
-    case 'audio/ogg':
-    case 'audio/mpeg':
-      return 'audio';
-    default:
-      return '';
+  var type = this.mimetype.match(/([^\/]+)(\/)/);
+  type = (type && (type.length > 1)) ? type[1] : '';
+  if (type == 'video' || this.mimetype == 'application/octet-stream') {
+    return 'video';
   }
+  if (type == 'audio') {
+    return 'audio';
+  }
+  return '';
 };
 
 /**
