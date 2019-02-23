@@ -5838,10 +5838,15 @@ osmplayer.getImage = function(images, type) {
 
   if (images) {
 
-    // If the image type exists, then just use that one.
+    // If the image type exists, then just use that one...
     if (images[type]) {
       image = images[type];
     }
+    // Or try the original image...
+    else if (images['image']) {
+      image = images['image'];
+    }
+    // Otherwise, just try ANY image...
     else {
 
       // Or, just pick the first one available.
