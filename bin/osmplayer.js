@@ -3226,6 +3226,15 @@ minplayer.players.base.prototype.construct = function() {
   // Get the player object...
   this.player = this.getPlayer();
 
+  // Toggle playing if they click.
+  minplayer.click(this.display, (function(player) {
+    return function() {
+      if (player.playing) {
+        player.pause();
+      }
+    };
+  })(this));
+
   // Bind to key events...
   jQuery(document).bind('keydown', (function(player) {
     return function(event) {
