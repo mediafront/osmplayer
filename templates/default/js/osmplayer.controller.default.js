@@ -24,7 +24,6 @@
    */
   osmplayer.controller[template].prototype.construct = function() {
     minplayer.controller.prototype.construct.call(this);
-    /*
     this.get('player', function(player) {
       this.get('media', function(media) {
         if (!media.hasController()) {
@@ -38,7 +37,6 @@
         }
       });
     });
-    */
   }
 
   /**
