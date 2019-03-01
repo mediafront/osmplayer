@@ -104,8 +104,15 @@ minplayer.plugin.prototype.create = function(name, base, context) {
       plugin = plugin[this.options.template];
     }
 
-    // Create the new plugin.
-    return new plugin(context, this.options);
+    // Make sure the plugin is a function.
+    if (typeof plugin !== 'function') {
+      plugin = window['minplayer'][name];
+    }
+
+    // Make sure it is a function.
+    if (typeof plugin === 'function') {
+      return new plugin(context, this.options);
+    }
   }
 
   return null;
