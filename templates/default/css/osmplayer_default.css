@@ -30,9 +30,17 @@
   -moz-box-shadow: 2px 2px 4px #000;
 }
 
+.player-ui.controller-only .minplayer-default-error {
+  display:none !important;
+}
+
 .player-ui .minplayer-default-display {
   width:100%;
   height:100%;
+}
+
+.player-ui.controller-only .minplayer-default-display {
+  display:none !important;
 }
 
 .player-ui .minplayer-default-display video {
@@ -56,6 +64,10 @@
   background: rgba(0, 0, 0, 0.3);
   filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#55000000, endColorstr=#55000000);
   -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#55000000, endColorstr=#55000000)";
+}
+
+.player-ui.controller-only .minplayer-default-loader-wrapper {
+  display:none !important;
 }
 
 .player-ui .minplayer-default-loader {
@@ -129,6 +141,10 @@
   z-index:1001;
 }
 
+.player-ui.controller-only .minplayer-default-play-loader {
+  display:none !important;
+}
+
 .player-ui .minplayer-default-controls {
   position: absolute;
   display: block;
@@ -137,6 +153,10 @@
   left:0px;
   right:0px;
   height:30px;
+}
+
+.player-ui.controller-only {
+  height: 32px !important;
 }
 
 .player-ui .minplayer-default-controls-left {
@@ -423,6 +443,10 @@
   position: absolute;
   bottom: 3px;
   left: 3px;
+}
+
+.player-ui.controller-only .minplayer-default-logo {
+  display: none !important;
 }
 
 .player-ui .minplayer-default.fullscreen .minplayer-default-logo {
