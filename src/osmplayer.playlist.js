@@ -65,7 +65,7 @@ osmplayer.playlist.prototype.construct = function() {
 
   // Create the scroll bar.
   this.scroll = null;
-  if (this.elements.scroll.length > 0) {
+  if (this.elements.scroll && (this.elements.scroll.length > 0)) {
 
     // Make this component orientation agnostic.
     var orient = {};

@@ -30,18 +30,22 @@ osmplayer.pager.prototype.construct = function() {
   minplayer.display.prototype.construct.call(this);
 
   // Setup the prev button.
-  this.prevPage = this.elements.prevPage.click((function(pager) {
-    return function(event) {
-      event.preventDefault();
-      pager.trigger('prevPage');
-    };
-  })(this));
+  if (this.elements.prevPage) {
+    this.prevPage = this.elements.prevPage.click((function(pager) {
+      return function(event) {
+        event.preventDefault();
+        pager.trigger('prevPage');
+      };
+    })(this));
+  }
 
   // Setup the next button.
-  this.nextPage = this.elements.nextPage.click((function(pager) {
-    return function(event) {
-      event.preventDefault();
-      pager.trigger('nextPage');
-    };
-  })(this));
+  if (this.elements.nextPage) {
+    this.nextPage = this.elements.nextPage.click((function(pager) {
+      return function(event) {
+        event.preventDefault();
+        pager.trigger('nextPage');
+      };
+    })(this));
+  }
 };

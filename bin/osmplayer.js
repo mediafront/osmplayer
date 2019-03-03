@@ -1428,8 +1428,15 @@ minplayer.plugin.prototype.create = function(name, base, context) {
       plugin = plugin[this.options.template];
     }
 
-    // Create the new plugin.
-    return new plugin(context, this.options);
+    // Make sure the plugin is a function.
+    if (typeof plugin !== 'function') {
+      plugin = window['minplayer'][name];
+    }
+
+    // Make sure it is a function.
+    if (typeof plugin === 'function') {
+      return new plugin(context, this.options);
+    }
   }
 
   return null;
@@ -6158,7 +6165,7 @@ osmplayer.playlist.prototype.construct = function() {
 
   // Create the scroll bar.
   this.scroll = null;
-  if (this.elements.scroll.length > 0) {
+  if (this.elements.scroll && (this.elements.scroll.length > 0)) {
 
     // Make this component orientation agnostic.
     var orient = {};
@@ -6629,20 +6636,24 @@ osmplayer.pager.prototype.construct = function() {
   minplayer.display.prototype.construct.call(this);
 
   // Setup the prev button.
-  this.prevPage = this.elements.prevPage.click((function(pager) {
-    return function(event) {
-      event.preventDefault();
-      pager.trigger('prevPage');
-    };
-  })(this));
+  if (this.elements.prevPage) {
+    this.prevPage = this.elements.prevPage.click((function(pager) {
+      return function(event) {
+        event.preventDefault();
+        pager.trigger('prevPage');
+      };
+    })(this));
+  }
 
   // Setup the next button.
-  this.nextPage = this.elements.nextPage.click((function(pager) {
-    return function(event) {
-      event.preventDefault();
-      pager.trigger('nextPage');
-    };
-  })(this));
+  if (this.elements.nextPage) {
+    this.nextPage = this.elements.nextPage.click((function(pager) {
+      return function(event) {
+        event.preventDefault();
+        pager.trigger('nextPage');
+      };
+    })(this));
+  }
 };
 /** The osmplayer namespace. */
 var osmplayer = osmplayer || {};
