@@ -1962,7 +1962,7 @@ minplayer.display.prototype.getDisplay = function() {
 };
 
 /**
- * Returns if this component is valid.
+ * @see minplayer.plugin.isValid
  *
  * @return {boolean} TRUE if the plugin display is valid.
  */
