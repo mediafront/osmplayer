@@ -35,6 +35,15 @@ minplayer.display.prototype.getDisplay = function() {
 };
 
 /**
+ * Returns if this component is valid.
+ *
+ * @return {boolean} TRUE if the plugin display is valid.
+ */
+minplayer.display.prototype.isValid = function() {
+  return minplayer.plugin.prototype.isValid.call(this) && !!this.display.length;
+};
+
+/**
  * @see minplayer.plugin.construct
  */
 minplayer.display.prototype.construct = function() {
