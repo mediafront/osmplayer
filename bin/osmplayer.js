@@ -4795,7 +4795,9 @@ minplayer.players.youtube.prototype.create = function() {
   this.poll((function(player) {
     return function() {
       var ready = jQuery('#' + player.playerId).length > 0;
-      if (ready && YT && typeof YT.Player == 'function') {
+      ready = ready && window.hasOwnProperty('YT');
+      ready = ready && (typeof YT.Player == 'function');
+      if (ready) {
         // Determine the origin of this script.
         var origin = location.protocol;
         origin += '//' + location.hostname;
