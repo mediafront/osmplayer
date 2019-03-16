@@ -22,6 +22,9 @@ minplayer.playLoader = function(context, options) {
   /** The preview image. */
   this.preview = null;
 
+  /** If the playLoader is enabled. */
+  this.enabled = true;
+
   // Derive from display
   minplayer.display.call(this, 'playLoader', context, options);
 };
@@ -45,6 +48,9 @@ minplayer.playLoader.prototype.construct = function() {
 
     // Only bind if this player does not have its own play loader.
     if (!media.hasPlayLoader()) {
+
+      // Enable the playLoader.
+      this.enabled = true;
 
       // Get the poster image.
       if (!this.options.preview) {
@@ -109,6 +115,7 @@ minplayer.playLoader.prototype.construct = function() {
     else {
 
       // Hide the display.
+      this.enabled = false;
       this.hide(this.elements.busy);
       this.hide(this.elements.bigPlay);
       this.hide();
@@ -123,6 +130,11 @@ minplayer.playLoader.prototype.construct = function() {
  * Loads the preview image.
  */
 minplayer.playLoader.prototype.loadPreview = function() {
+
+  // Ignore if disabled.
+  if (!this.enabled) {
+    return;
+  }
 
   // If the preview element exists.
   if (this.elements.preview) {
@@ -152,6 +164,11 @@ minplayer.playLoader.prototype.loadPreview = function() {
  * button.
  */
 minplayer.playLoader.prototype.checkVisibility = function() {
+
+  // Ignore if disabled.
+  if (!this.enabled) {
+    return;
+  }
 
   // Hide or show the busy cursor based on the flags.
   if (this.busy.flag) {
