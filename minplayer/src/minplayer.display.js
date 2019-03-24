@@ -124,6 +124,36 @@ minplayer.display.prototype.onFocus = function(focus) {
   this.hasFocus = this.focus = focus;
 };
 
+/** Keep track of all the show hide elements. */
+minplayer.showHideElements = [];
+
+/**
+ * Show all the show hide elements.
+ */
+minplayer.showAll = function() {
+  var i = minplayer.showHideElements.length;
+  var obj = null;
+  while (i--) {
+    obj = minplayer.showHideElements[i];
+    minplayer.showThenHide(obj.element, obj.timeout, obj.callback);
+  }
+};
+
+/**
+ * Stops the whole show then hide from happening.
+ *
+ * @param {object} element The element you want the showThenHide to stop.
+ */
+minplayer.stopShowThenHide = function(element) {
+  element = jQuery(element);
+  if (element.showTimer) {
+    clearTimeout(element.showTimer);
+  }
+  element.stopShowThenHide = true;
+  element.shown = true;
+  element.show();
+};
+
 /**
  * Called if you would like for your display item to show then hide.
  *
@@ -144,11 +174,27 @@ minplayer.showThenHide = function(element, timeout, callback) {
   // If this has not yet been configured.
   if (!element.showTimer) {
     element.shown = true;
-    minplayer.click(document, function() {
-      minplayer.showThenHide(element, timeout, callback);
+    element.stopShowThenHide = false;
+
+    // Add this to our showHideElements.
+    minplayer.showHideElements.push({
+      element: element,
+      timeout: timeout,
+      callback: callback
     });
+
+    // Bind to a click event.
+    minplayer.click(document, function() {
+      if (!element.stopShowThenHide) {
+        minplayer.showThenHide(element, timeout, callback);
+      }
+    });
+
+    // Bind to the mousemove event.
     jQuery(document).bind('mousemove', function() {
-      minplayer.showThenHide(element, timeout, callback);
+      if (!element.stopShowThenHide) {
+        minplayer.showThenHide(element, timeout, callback);
+      }
     });
   }
 

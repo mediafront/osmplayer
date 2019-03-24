@@ -94,8 +94,12 @@ minplayer.players.base.prototype.construct = function() {
   // Toggle playing if they click.
   minplayer.click(this.display, (function(player) {
     return function() {
+      minplayer.showAll();
       if (player.playing) {
         player.pause();
+      }
+      else {
+        player.play();
       }
     };
   })(this));
