@@ -103,7 +103,7 @@ minplayer.players.minplayer.prototype.create = function() {
   };
 
   // Return a flash media player object.
-  return minplayer.players.flash.getFlash({
+  return this.getFlash({
     swf: this.options.swfplayer,
     id: this.options.id + '_player',
     width: '100%',
