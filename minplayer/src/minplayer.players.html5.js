@@ -70,90 +70,91 @@ minplayer.players.html5.prototype.construct = function() {
   minplayer.players.base.prototype.construct.call(this);
 
   // Add the player events.
-  this.addEvents();
+  this.addPlayerEvents();
+};
+
+/**
+ * Adds a new player event.
+ *
+ * @param {string} type The type of event being fired.
+ * @param {function} callback Called when the event is fired.
+ */
+minplayer.players.html5.prototype.addPlayerEvent = function(type, callback) {
+  if (this.player) {
+
+    // Add an event listener for this event type.
+    this.player.addEventListener(type, (function(player) {
+
+      // Get the function name.
+      var func = type + 'Event';
+
+      // If the callback already exists, then remove it from the player.
+      if (player[func]) {
+        player.player.removeEventListener(type, player[func], false);
+      }
+
+      // Create a new callback.
+      player[func] = function(event) {
+        callback.call(player, event);
+      };
+
+      // Return the callback.
+      return player[func];
+
+    })(this), false);
+  }
 };
 
 /**
  * Add events.
  * @return {boolean} If this action was performed.
  */
-minplayer.players.html5.prototype.addEvents = function() {
+minplayer.players.html5.prototype.addPlayerEvents = function() {
 
   // Check if the player exists.
   if (this.player) {
 
-    // Unbind all current events on this player.
-    jQuery(this.player).unbind();
-
-    // Add the events to this player.
-    this.player.addEventListener('abort', (function(player) {
-      return function() {
-        player.trigger('abort');
-      };
-    })(this), false);
-    this.player.addEventListener('loadstart', (function(player) {
-      return function() {
-        player.onReady();
-      };
-    })(this), false);
-    this.player.addEventListener('loadeddata', (function(player) {
-      return function() {
-        player.onLoaded();
-      };
-    })(this), false);
-    this.player.addEventListener('loadedmetadata', (function(player) {
-      return function() {
-        player.onLoaded();
-      };
-    })(this), false);
-    this.player.addEventListener('canplaythrough', (function(player) {
-      return function() {
-        player.onLoaded();
-      };
-    })(this), false);
-    this.player.addEventListener('ended', (function(player) {
-      return function() {
-        player.onComplete();
-      };
-    })(this), false);
-    this.player.addEventListener('pause', (function(player) {
-      return function() {
-        player.onPaused();
-      };
-    })(this), false);
-    this.player.addEventListener('play', (function(player) {
-      return function() {
-        player.onPlaying();
-      };
-    })(this), false);
-    this.player.addEventListener('playing', (function(player) {
-      return function() {
-        player.onPlaying();
-      };
-    })(this), false);
-    this.player.addEventListener('error', (function(player) {
-      return function() {
-        player.trigger('error', 'An error occured - ' + this.error.code);
-      };
-    })(this), false);
-    this.player.addEventListener('waiting', (function(player) {
-      return function() {
-        player.onWaiting();
-      };
-    })(this), false);
-    this.player.addEventListener('durationchange', (function(player) {
-      return function() {
-        player.duration.set(this.duration);
-        player.trigger('durationchange', {duration: this.duration});
-      };
-    })(this), false);
-    this.player.addEventListener('progress', (function(player) {
-      return function(event) {
-        player.bytesTotal.set(event.total);
-        player.bytesLoaded.set(event.loaded);
-      };
-    })(this), false);
-
+    this.addPlayerEvent('abort', function() {
+      this.trigger('abort');
+    });
+    this.addPlayerEvent('loadstart', function() {
+      this.onReady();
+    });
+    this.addPlayerEvent('loadeddata', function() {
+      this.onLoaded();
+    });
+    this.addPlayerEvent('loadedmetadata', function() {
+      this.onLoaded();
+    });
+    this.addPlayerEvent('canplaythrough', function() {
+      this.onLoaded();
+    });
+    this.addPlayerEvent('ended', function() {
+      this.onComplete();
+    });
+    this.addPlayerEvent('pause', function() {
+      this.onPaused();
+    });
+    this.addPlayerEvent('play', function() {
+      this.onPlaying();
+    });
+    this.addPlayerEvent('playing', function() {
+      this.onPlaying();
+    });
+    this.addPlayerEvent('error', function() {
+      this.trigger('error', 'An error occured - ' + this.player.error.code);
+    });
+    this.addPlayerEvent('waiting', function() {
+      this.onWaiting();
+    });
+    this.addPlayerEvent('durationchange', function() {
+      this.duration.set(this.player.duration);
+      this.trigger('durationchange', {duration: this.player.duration});
+    });
+    this.addPlayerEvent('progress', function(event) {
+      this.bytesTotal.set(event.total);
+      this.bytesLoaded.set(event.loaded);
+    });
     return true;
   }
 
@@ -248,7 +249,7 @@ minplayer.players.html5.prototype.load = function(file) {
       this.player = this.getPlayer();
 
       // Add the events again.
-      this.addEvents();
+      this.addPlayerEvents();
 
       // Change the source...
       var code = '<source src="' + file.path + '"></source>';

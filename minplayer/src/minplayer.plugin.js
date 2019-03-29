@@ -383,7 +383,7 @@ minplayer.plugin.prototype.unbind = function(type, fn) {
     for (i in queuetype) {
       if (queuetype.hasOwnProperty(i)) {
         if (queuetype[i].callback === fn) {
-          queue = this.queue[type].splice(1, 1);
+          queue = this.queue[type].splice(i, 1);
           delete queue;
         }
       }

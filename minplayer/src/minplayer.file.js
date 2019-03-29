@@ -28,13 +28,16 @@ minplayer.file = function(file) {
   }
 
   // Get the player.
-  this.player = file.player || this.getBestPlayer();
+  this.player = minplayer.player || file.player || this.getBestPlayer();
   this.priority = file.priority || this.getPriority();
   this.id = file.id || this.getId();
   if (!this.path) {
     this.path = this.id;
   }
 };
+
+/** Used to force the player for all media. */
+minplayer.player = '';
 
 /**
  * Returns the best player for the job.

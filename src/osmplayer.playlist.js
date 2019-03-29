@@ -132,7 +132,17 @@ osmplayer.playlist.prototype.scrollTo = function(pos, relative) {
 /**
  * Refresh the scrollbar.
  */
-osmplayer.playlist.prototype.refresh = function() {
+osmplayer.playlist.prototype.refreshScroll = function() {
+
+  // Make sure that our window has the addEventListener to keep IE happy.
+  if (!window.addEventListener) {
+    setTimeout((function(playlist) {
+      return function() {
+        playlist.refreshScroll.call(playlist);
+      }
+    })(this), 200);
+    return;
+  }
 
   // Check the size of the playlist.
   var list = this.elements.list;
@@ -291,7 +301,7 @@ osmplayer.playlist.prototype.set = function(playlist, loadIndex) {
     }
 
     // Refresh the sizes.
-    this.refresh();
+    this.refreshScroll();
 
     // Trigger that the playlist has loaded.
     this.trigger('playlistLoad', playlist);
