@@ -1512,42 +1512,30 @@ minplayer.prototype.getFiles = function() {
 
 /**
  * Returns the full media player object.
+ *
  * @param {array} files An array of files to chose from.
  * @return {object} The best media file to play in the current browser.
  */
-minplayer.prototype.getMediaFile = function(files) {
+minplayer.getMediaFile = function(files) {
 
   // If there are no files then return null.
   if (!files) {
     return null;
   }
 
-  // If the file is a single string, then return the file object.
-  if (typeof files === 'string') {
-    return new minplayer.file({'path': files});
-  }
-
   // If the file is already a file object then just return.
-  if (files.path || files.id) {
+  if ((typeof files === 'string') || files.path || files.id) {
     return new minplayer.file(files);
   }
 
   // Add the files and get the best player to play.
-  var i = files.length, bestPriority = 0, mFile = null, file = null;
-  while (i--) {
-    file = files[i];
-
-    // Get the minplayer file object.
-    if (typeof file === 'string') {
-      file = new minplayer.file({'path': file});
-    }
-    else {
-      file = new minplayer.file(file);
-    }
-
-    // Determine the best file for this browser.
-    if (file.priority > bestPriority) {
-      mFile = file;
+  var bestPriority = 0, mFile = null, file = null;
+  for (var i in files) {
+    if (files.hasOwnProperty(i)) {
+      file = new minplayer.file(files[i]);
+      if (file.priority > bestPriority) {
+        mFile = file;
+      }
     }
   }
 
@@ -1631,7 +1619,7 @@ minplayer.prototype.load = function(files) {
 
   // If no file was provided, then get it.
   this.options.files = files || this.options.files;
-  this.options.file = this.getMediaFile(this.options.files);
+  this.options.file = minplayer.getMediaFile(this.options.files);
 
   // Now load the player.
   this.loadPlayer();
@@ -1805,6 +1793,7 @@ var minplayer = minplayer || {};
  * @param {object} file A media file object with minimal required information.
  */
 minplayer.file = function(file) {
+  file = (typeof file === 'string') ? {path: file} : file;
   this.duration = file.duration || 0;
   this.bytesTotal = file.bytesTotal || 0;
   this.quality = file.quality || 0;
@@ -3683,6 +3672,18 @@ minplayer.players.youtube.getMediaId = function(file) {
   else {
     return file.path;
   }
+};
+
+/**
+ * Returns a preview image for this media player.
+ *
+ * @param {object} file A {@link minplayer.file} object.
+ * @param {string} type The type of image.
+ * @return {string} The full path to the preview image.
+ */
+minplayer.players.youtube.getImage = function(file, type) {
+  type = (type == 'thumbnail') ? '1' : '0';
+  return 'http://img.youtube.com/vi/' + file.id + '/' + type + '.jpg';
 };
 
 /**
