@@ -2679,6 +2679,7 @@ minplayer.prototype.loadPlayer = function() {
   else if (this.media) {
 
     // Now load the different media file.
+    this.media.options = this.options;
     this.media.load(this.options.file);
   }
 };
@@ -5789,6 +5790,16 @@ osmplayer.prototype.construct = function() {
     })(this));
   });
 
+  // Play each media sequentially...
+  this.get('media', (function(player) {
+    return function(media) {
+      media.bind('ended', function() {
+        player.options.autoplay = true;
+        player.playNext();
+      });
+    };
+  })(this));
+
   // Load the node if one is provided.
   if (this.options.node) {
     this.loadNode(this.options.node);
@@ -5856,10 +5867,9 @@ osmplayer.prototype.addToQueue = function(file) {
  */
 osmplayer.prototype.getFile = function(file) {
   if (file) {
-    var type = typeof file;
-    if (((type === 'object') || (type === 'array')) && file[0]) {
-      file = this.getBestMedia(file);
-    }
+    var type = Object.prototype.toString.call(file);
+    file = (type === '[object Array]') ? file : [file];
+    file = this.getBestMedia(file);
   }
   return file;
 };
@@ -5898,7 +5908,7 @@ osmplayer.prototype.playNext = function() {
   else {
     // If there is no playlist, and no repeat, we will
     // just seek to the beginning and pause.
-    this.options.autostart = false;
+    this.options.autoplay = false;
     this.playIndex = 0;
     this.playNext();
   }
