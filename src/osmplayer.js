@@ -141,11 +141,25 @@ osmplayer.prototype.loadNode = function(node) {
       this.playQueue.length = 0;
       this.playQueue = [];
       this.playIndex = 0;
-      this.addToQueue(media.intro);
-      this.addToQueue(media.commercial);
-      this.addToQueue(media.prereel);
-      this.addToQueue(media.media);
-      this.addToQueue(media.postreel);
+      var file = null;
+      var types = [];
+
+      // For mobile devices, we should only show the main media.
+      if (minplayer.isAndroid || minplayer.isIDevice) {
+        types = ['media'];
+      }
+      else {
+        types = ['intro', 'commercial', 'prereel', 'media', 'postreel'];
+      }
+
+      // Iterate through the types.
+      jQuery.each(types, (function(player) {
+        return function(key, type) {
+          if (file = player.addToQueue(media[type])) {
+            file.queueType = type;
+          }
+        };
+      })(this));
     }
 
     // Load the preview image.
@@ -164,11 +178,13 @@ osmplayer.prototype.loadNode = function(node) {
  * Adds a file to the play queue.
  *
  * @param {object} file The file to add to the queue.
+ * @return {object} The file that was added to the queue.
  */
 osmplayer.prototype.addToQueue = function(file) {
   if (file) {
     this.playQueue.push(this.getFile(file));
   }
+  return file;
 };
 
 /**
