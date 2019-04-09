@@ -181,44 +181,10 @@ osmplayer.prototype.loadNode = function(node) {
  * @return {object} The file that was added to the queue.
  */
 osmplayer.prototype.addToQueue = function(file) {
-  if (file) {
-    this.playQueue.push(this.getFile(file));
+  if (file = minplayer.getMediaFile(file)) {
+    this.playQueue.push(file);
   }
   return file;
-};
-
-/**
- * Returns a valid media file for this browser.
- *
- * @param {object} file The file object.
- * @return {object} The best media file.
- */
-osmplayer.prototype.getFile = function(file) {
-  if (file) {
-    var type = Object.prototype.toString.call(file);
-    file = (type === '[object Array]') ? file : [file];
-    file = this.getBestMedia(file);
-  }
-  return file;
-};
-
-/**
- * Returns the media file with the lowest weight value provided an array of
- * media files.
- *
- * @param {object} files The media files to play.
- * @return {object} The best media file.
- */
-osmplayer.prototype.getBestMedia = function(files) {
-  var mFile = null;
-  var i = files.length;
-  while (i--) {
-    var tempFile = new minplayer.file(files[i]);
-    if (!mFile || (tempFile.priority > mFile.priority)) {
-      mFile = tempFile;
-    }
-  }
-  return mFile;
 };
 
 /**

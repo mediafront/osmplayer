@@ -76,7 +76,11 @@ minplayer.players.minplayer.getPriority = function() {
  * @return {boolean} If this player can play this media type.
  */
 minplayer.players.minplayer.canPlay = function(file) {
-  return (file.type == 'video' || file.type == 'audio');
+  var isWEBM = jQuery.inArray(file.mimetype, ['video/x-webm',
+    'video/webm',
+    'application/octet-stream'
+  ]) >= 0;
+  return !isWEBM && (file.type == 'video' || file.type == 'audio');
 };
 
 /**
