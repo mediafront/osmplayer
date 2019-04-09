@@ -2870,7 +2870,15 @@ var minplayer = minplayer || {};
  * @param {object} file A media file object with minimal required information.
  */
 minplayer.file = function(file) {
+
   file = (typeof file === 'string') ? {path: file} : file;
+
+  // If we already are a minplayer file, then just return this file.
+  if (file.hasOwnProperty('isMinPlayerFile')) {
+    return file;
+  }
+
+  this.isMinPlayerFile = true;
   this.duration = file.duration || 0;
   this.bytesTotal = file.bytesTotal || 0;
   this.quality = file.quality || 0;
@@ -4347,7 +4355,7 @@ minplayer.players.flash.prototype.getFlash = function(params) {
   // Create the swfobject.
   setTimeout((function(player) {
     return function tryAgain() {
-      if (swfobject) {
+      if (typeof swfobject !== 'undefined') {
         swfobject.embedSWF(
           params.swf,
           params.id,
@@ -4380,11 +4388,8 @@ minplayer.players.flash.prototype.getFlash = function(params) {
     };
   })(this), 200);
 
-  // Return the ultimate fallback...
-  var output = '<div id="' + params.id + '">';
-  output += 'You must download Flash to view this media';
-  output += '</div>';
-  return output;
+  // Return the div tag...
+  return '<div id="' + params.id + '"></div>';
 };
 
 /**
@@ -5829,11 +5834,25 @@ osmplayer.prototype.loadNode = function(node) {
       this.playQueue.length = 0;
       this.playQueue = [];
       this.playIndex = 0;
-      this.addToQueue(media.intro);
-      this.addToQueue(media.commercial);
-      this.addToQueue(media.prereel);
-      this.addToQueue(media.media);
-      this.addToQueue(media.postreel);
+      var file = null;
+      var types = [];
+
+      // For mobile devices, we should only show the main media.
+      if (minplayer.isAndroid || minplayer.isIDevice) {
+        types = ['media'];
+      }
+      else {
+        types = ['intro', 'commercial', 'prereel', 'media', 'postreel'];
+      }
+
+      // Iterate through the types.
+      jQuery.each(types, (function(player) {
+        return function(key, type) {
+          if (file = player.addToQueue(media[type])) {
+            file.queueType = type;
+          }
+        };
+      })(this));
     }
 
     // Load the preview image.
@@ -5852,11 +5871,13 @@ osmplayer.prototype.loadNode = function(node) {
  * Adds a file to the play queue.
  *
  * @param {object} file The file to add to the queue.
+ * @return {object} The file that was added to the queue.
  */
 osmplayer.prototype.addToQueue = function(file) {
   if (file) {
     this.playQueue.push(this.getFile(file));
   }
+  return file;
 };
 
 /**

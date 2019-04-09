@@ -65,7 +65,7 @@ minplayer.players.flash.prototype.getFlash = function(params) {
   // Create the swfobject.
   setTimeout((function(player) {
     return function tryAgain() {
-      if (swfobject) {
+      if (typeof swfobject !== 'undefined') {
         swfobject.embedSWF(
           params.swf,
           params.id,
@@ -98,11 +98,8 @@ minplayer.players.flash.prototype.getFlash = function(params) {
     };
   })(this), 200);
 
-  // Return the ultimate fallback...
-  var output = '<div id="' + params.id + '">';
-  output += 'You must download Flash to view this media';
-  output += '</div>';
-  return output;
+  // Return the div tag...
+  return '<div id="' + params.id + '"></div>';
 };
 
 /**
