@@ -1795,6 +1795,11 @@ var minplayer = minplayer || {};
  */
 minplayer.file = function(file) {
 
+  // If there isn't a file provided, then just return null.
+  if (!file) {
+    return null;
+  }
+
   file = (typeof file === 'string') ? {path: file} : file;
 
   // If we already are a minplayer file, then just return this file.
