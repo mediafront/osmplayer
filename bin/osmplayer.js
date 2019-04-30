@@ -3058,6 +3058,9 @@ minplayer.playLoader = function(context, options) {
   // Define the flags that control the big play button.
   this.bigPlay = new minplayer.flags();
 
+  // Define the flags the control the preview.
+  this.previewFlag = new minplayer.flags();
+
   /** The preview image. */
   this.preview = null;
 
@@ -3117,9 +3120,7 @@ minplayer.playLoader.prototype.construct = function() {
         return function(event) {
           playLoader.busy.setFlag('media', true);
           playLoader.bigPlay.setFlag('media', true);
-          if (playLoader.preview) {
-            playLoader.elements.preview.show();
-          }
+          playLoader.previewFlag.setFlag('media', true);
           playLoader.checkVisibility();
         };
       })(this));
@@ -3139,8 +3140,8 @@ minplayer.playLoader.prototype.construct = function() {
         return function(event) {
           playLoader.busy.setFlag('media', false);
           playLoader.bigPlay.setFlag('media', false);
-          if (playLoader.preview) {
-            playLoader.elements.preview.hide();
+          if (media.mediaFile.type !== 'audio') {
+            playLoader.previewFlag.setFlag('media', false);
           }
           playLoader.checkVisibility();
         };
@@ -3158,6 +3159,7 @@ minplayer.playLoader.prototype.construct = function() {
       this.enabled = false;
       this.hide(this.elements.busy);
       this.hide(this.elements.bigPlay);
+      this.hide(this.elements.preview);
       this.hide();
     }
   });
@@ -3226,13 +3228,20 @@ minplayer.playLoader.prototype.checkVisibility = function() {
     this.elements.bigPlay.hide();
   }
 
+  if (this.previewFlag.flag) {
+    this.elements.preview.show();
+  }
+  else {
+    this.elements.preview.hide();
+  }
+
   // Show the control either flag is set.
-  if (this.bigPlay.flag || this.busy.flag) {
+  if (this.bigPlay.flag || this.busy.flag || this.previewFlag.flag) {
     this.display.show();
   }
 
   // Hide the whole control if both flags are 0.
-  if (!this.bigPlay.flag && !this.busy.flag) {
+  if (!this.bigPlay.flag && !this.busy.flag && !this.previewFlag.flag) {
     this.display.hide();
   }
 };
