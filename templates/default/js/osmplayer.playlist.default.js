@@ -49,11 +49,13 @@
         var to = show ? 'ui-icon-triangle-1-' + e : 'ui-icon-triangle-1-' + w;
         jQuery('span', this.elements.hideShow).removeClass(from).addClass(to);
         playerPos[position] = show ? displaySize : 0;
-        if (animate) {
-          player.elements.minplayer.animate(playerPos, 'fast');
-        }
-        else {
-          player.elements.minplayer.css(playerPos);
+        if (player.elements.minplayer) {
+          if (animate) {
+            player.elements.minplayer.animate(playerPos, 'fast');
+          }
+          else {
+            player.elements.minplayer.css(playerPos);
+          }
         }
         displayPos[margin] = show ? 0 : -displaySize;
         if (animate) {
