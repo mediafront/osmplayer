@@ -499,12 +499,8 @@ minplayer.bind = function(event, id, plugin, callback) {
     })(this));
   }
 
-  // See if there were any plugins selected.
-  if (selected.length == 0) {
-
-    // If not, then add it to the queue to bind later.
-    minplayer.addQueue(this, event, id, plugin, callback);
-  }
+  // Add it to the queue for post bindings...
+  minplayer.addQueue(this, event, id, plugin, callback);
 
   // Return that this wasn't handled.
   return (selected.length > 0);
