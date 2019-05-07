@@ -103,13 +103,6 @@
 }
 
 .player-ui .minplayer-default-big-play span {
-  margin: 22px 0 0 48px;
-  border-left: 36px solid white;
-  border-top: 18px solid transparent;
-  border-bottom: 18px solid transparent;
-}
-
-.player-ui .minplayer-default-big-play span {
   display: block;
   font-size: 0;
   line-height: 0;
