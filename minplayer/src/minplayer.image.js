@@ -39,6 +39,9 @@ minplayer.image.prototype.construct = function() {
   // Call the media display constructor.
   minplayer.display.prototype.construct.call(this);
 
+  // Set the plugin name within the options.
+  this.options.pluginName = 'image';
+
   // Set the container to not show any overflow...
   this.display.css('overflow', 'hidden');
 

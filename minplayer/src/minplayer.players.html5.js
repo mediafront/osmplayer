@@ -69,6 +69,9 @@ minplayer.players.html5.prototype.construct = function() {
   // Call base constructor.
   minplayer.players.base.prototype.construct.call(this);
 
+  // Set the plugin name within the options.
+  this.options.pluginName = 'html5';
+
   // Add the player events.
   this.addPlayerEvents();
 };

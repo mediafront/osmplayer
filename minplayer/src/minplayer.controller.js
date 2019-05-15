@@ -75,6 +75,9 @@ minplayer.controller.prototype.construct = function() {
   // Call the minplayer plugin constructor.
   minplayer.display.prototype.construct.call(this);
 
+  // Set the plugin name within the options.
+  this.options.pluginName = 'controller';
+
   // Keep track of if we are dragging...
   this.dragging = false;
 
