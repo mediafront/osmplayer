@@ -1626,6 +1626,7 @@ minplayer.prototype.loadPlayer = function() {
 
         // Load the media.
         media.load(player.options.file);
+        player.display.addClass('minplayer-player-' + media.mediaFile.player);
       };
     })(this));
 
@@ -1637,7 +1638,9 @@ minplayer.prototype.loadPlayer = function() {
 
     // Now load the different media file.
     this.media.options = this.options;
+    this.display.removeClass('minplayer-player-' + this.media.mediaFile.player);
     this.media.load(this.options.file);
+    this.display.addClass('minplayer-player-' + this.media.mediaFile.player);
     return false;
   }
 };
