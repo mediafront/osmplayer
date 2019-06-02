@@ -20,13 +20,13 @@
           <div class="minplayer-<?php print $params['template']; ?>-fullscreen-inner ui-state-default"></div>
         </div>
         <div class="minplayer-<?php print $params['template']; ?>-volume">
-          <div class="minplayer-<?php print $params['template']; ?>-volume-slider"></div>
           <a class="minplayer-<?php print $params['template']; ?>-volume-mute minplayer-<?php print $params['template']; ?>-button ui-state-default ui-corner-all" title="Mute">
             <span class="ui-icon ui-icon-volume-on"></span>
           </a>
           <a class="minplayer-<?php print $params['template']; ?>-volume-unmute minplayer-<?php print $params['template']; ?>-button ui-state-default ui-corner-all" title="Unmute">
             <span class="ui-icon ui-icon-volume-off"></span>
           </a>
+          <div class="minplayer-<?php print $params['template']; ?>-volume-slider"></div>
         </div>
       </div>
       <div class="minplayer-<?php print $params['template']; ?>-controls-mid">
