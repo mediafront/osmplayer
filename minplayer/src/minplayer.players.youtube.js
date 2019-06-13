@@ -136,7 +136,8 @@ minplayer.players.youtube.prototype.onReady = function(event) {
  * @return {bool} TRUE - Player is found, FALSE - otherwise.
  */
 minplayer.players.youtube.prototype.playerFound = function() {
-  var iframe = this.display.find('iframe#' + this.options.id + '-player');
+  var id = 'iframe#' + this.options.id + '-player.youtube-player';
+  var iframe = this.display.find(id);
   return (iframe.length > 0);
 };
 
@@ -200,6 +201,7 @@ minplayer.players.youtube.prototype.create = function() {
       ready = ready && (typeof YT.Player == 'function');
       if (ready) {
         // Determine the origin of this script.
+        jQuery('#' + player.playerId).addClass('youtube-player');
         var origin = location.protocol;
         origin += '//' + location.hostname;
         origin += (location.port && ':' + location.port);
