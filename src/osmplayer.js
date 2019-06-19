@@ -163,11 +163,14 @@ osmplayer.prototype.loadNode = function(node) {
     }
 
     // Load the preview image.
-    this.options.preview = osmplayer.getImage(node.mediafiles, 'preview');
-
-    if (this.playLoader) {
-      this.playLoader.loadPreview();
-    }
+    osmplayer.getImage(node.mediafiles, 'preview', (function(player) {
+      return function(image) {
+        player.options.preview = image.path;
+        if (player.playLoader) {
+          player.playLoader.initialize();
+        }
+      };
+    })(this));
 
     // Play the next media
     this.playNext();
@@ -217,9 +220,9 @@ osmplayer.prototype.playNext = function() {
  *
  * @param {object} mediafiles The mediafiles to search within.
  * @param {string} type The type of image to look for.
- * @return {object} The best image match.
+ * @param {function} callback Called when the image is retrieved.
  */
-osmplayer.getImage = function(mediafiles, type) {
+osmplayer.getImage = function(mediafiles, type, callback) {
 
   var image = '';
   var images = mediafiles.image;
@@ -246,20 +249,20 @@ osmplayer.getImage = function(mediafiles, type) {
     }
   }
 
-  // Convert to a minplayer file.
-  image = new minplayer.file(image);
-  if (!image.path) {
-
+  // If the image exists, then callback with that image.
+  if (image) {
+    callback(new minplayer.file(image));
+  }
+  else {
     // Get the image from the media player...
-    var mediaFile = minplayer.getMediaFile(mediafiles.media);
+    var mediaFile = minplayer.getMediaFile(mediafiles.media.media);
     if (mediaFile) {
       var player = minplayer.players[mediaFile.player];
       if (player && (typeof player.getImage === 'function')) {
-        image = new minplayer.file(player.getImage(mediaFile, type));
+        player.getImage(mediaFile, type, function(src) {
+          callback(new minplayer.file(src));
+        });
       }
     }
   }
-
-  // Return the image path.
-  return image.path;
 };
