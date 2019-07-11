@@ -246,19 +246,7 @@ minplayer.players.minplayer.prototype.setVolume = function(vol) {
  */
 minplayer.players.minplayer.prototype.getVolume = function(callback) {
   if (this.isReady()) {
-    var vol = 0;
-    var tries = 5;
-    setTimeout((function(player) {
-      return function tryAgain() {
-        vol = player.player.getVolume();
-        if (!vol && (tries-- > 0)) {
-          setTimeout(tryAgain, 200);
-        }
-        else {
-          callback(vol);
-        }
-      };
-    })(this), 200);
+    callback(this.player.getVolume());
   }
 };
 
