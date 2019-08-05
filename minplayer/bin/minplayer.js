@@ -2158,6 +2158,8 @@ minplayer.playLoader.prototype.initialize = function() {
 
 /**
  * Loads the preview image.
+ *
+ * @return {boolean} Returns true if an image was loaded, false otherwise.
  */
 minplayer.playLoader.prototype.loadPreview = function() {
 
@@ -2180,6 +2182,7 @@ minplayer.playLoader.prototype.loadPreview = function() {
 
       // Create the image.
       this.preview.load(this.options.preview);
+      return true;
     }
     else {
 
@@ -2187,6 +2190,8 @@ minplayer.playLoader.prototype.loadPreview = function() {
       this.elements.preview.hide();
     }
   }
+
+  return false;
 };
 
 /**
