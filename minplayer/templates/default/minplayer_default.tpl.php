@@ -1,42 +1,32 @@
-<div id="<?php print $params['id']; ?>" class="minplayer-default player-ui">
-  <div class="minplayer-default-loader-wrapper">
-    <div class="minplayer-default-big-play ui-state-default"><span></span></div>
-    <div class="minplayer-default-loader">&nbsp;</div>
-    <div class="minplayer-default-preview ui-widget-content"></div>
-  </div>
-  <div class="minplayer-default-controls ui-widget-header">
-    <div class="minplayer-default-controls-left">
-      <a class="minplayer-default-play minplayer-default-button ui-state-default ui-corner-all" title="Play">
-        <span class="ui-icon ui-icon-play"></span>
-      </a>
-      <a class="minplayer-default-pause minplayer-default-button ui-state-default ui-corner-all" title="Pause">
-        <span class="ui-icon ui-icon-pause"></span>
-      </a>
+<div id="<?php print $settings['id']; ?>" class="media-player" style="width:<?php print $settings['width']; ?>; height:<?php print $settings['height']; ?>;">
+  <div class="media-player-error"></div>
+  <div class="media-player-controls">
+    <div class="media-player-controls-left">
+      <a class="media-player-play" title="Play"></a>
+      <a class="media-player-pause" title="Pause"></a>
     </div>
-    <div class="minplayer-default-controls-right">
-      <div class="minplayer-default-timer">00:00</div>
-      <div class="minplayer-default-fullscreen ui-widget-content">
-        <div class="minplayer-default-fullscreen-inner ui-state-default"></div>
+    <div class="media-player-controls-right">
+      <div class="media-player-timer">00:00</div>
+      <div class="media-player-fullscreen">
+        <div class="media-player-fullscreen-inner"></div>
       </div>
-      <div class="minplayer-default-volume">
-        <div class="minplayer-default-volume-slider"></div>
-        <a class="minplayer-default-volume-mute minplayer-default-button ui-state-default ui-corner-all" title="Mute">
-          <span class="ui-icon ui-icon-volume-on"></span>
-        </a>
-        <a class="minplayer-default-volume-unmute minplayer-default-button ui-state-default ui-corner-all" title="Unmute">
-          <span class="ui-icon ui-icon-volume-off"></span>
-        </a>
+      <div class="media-player-volume">
+        <div class="media-player-volume-slider"></div>
+        <a class="media-player-volume-button" title="Mute/Unmute"></a>
       </div>
     </div>
-    <div class="minplayer-default-controls-mid">
-      <div class="minplayer-default-seek">
-        <div class="minplayer-default-progress ui-state-default"></div>
+    <div class="media-player-controls-mid">
+      <div class="media-player-seek">
+        <div class="media-player-progress"></div>
       </div>
     </div>
   </div>
-  <div class="minplayer-default-logo"></div>
-  <div class="minplayer-default-error"></div>
-  <div class="minplayer-default-display ui-widget-content">
-    <?php if (!empty($player)) { print $player; } ?>
+  <div class="media-player-play-loader">
+    <div class="media-player-big-play"><span></span></div>
+    <div class="media-player-loader">&nbsp;</div>
+    <div class="media-player-preview"></div>
+  </div>
+  <div class="media-player-display">
+    <?php print $player; ?>
   </div>
 </div>
