@@ -36,5 +36,7 @@
   </div>
   <div class="minplayer-default-logo"></div>
   <div class="minplayer-default-error"></div>
-  <div class="minplayer-default-display ui-widget-content"></div>
+  <div class="minplayer-default-display ui-widget-content">
+    <?php if (!empty($player)) { print $player; } ?>
+  </div>
 </div>
