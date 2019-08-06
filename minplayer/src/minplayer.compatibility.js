@@ -114,3 +114,16 @@ if (!minplayer.playTypes) {
   /** Determine if we have a touchscreen. */
   minplayer.hasTouch = 'ontouchstart' in window && !minplayer.isTouchPad;
 }
+
+// Get the URL variables.
+if (!minplayer.urlVars) {
+
+  /** The URL variables for the minplayer. */
+  minplayer.urlVars = {};
+
+  // Get the URL variables.
+  var regEx = /[?&]+([^=&]+)=([^&]*)/gi;
+  window.location.href.replace(regEx, function(m, key, value) {
+    minplayer.urlVars[key] = value;
+  });
+}
