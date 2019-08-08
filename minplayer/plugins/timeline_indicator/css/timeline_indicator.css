@@ -1,0 +1,33 @@
+.timeline-indicator {
+  position: absolute;
+  top: -25px;
+  left: -20px;
+  width: 40px;
+  height: 16px;
+  padding: 5px;
+  border-radius: 10px;
+  z-index: 10;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  background: rgba(23, 35, 34, 0.9);
+  box-shadow: 2px 2px 4px #000;
+  -webkit-box-shadow: 2px 2px 4px #000;
+  -moz-box-shadow: 2px 2px 4px #000;
+}
+
+.timeline-indicator-text {
+  color: #ccc;
+  width: 40px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.timeline-indicator-line {
+  position: absolute;
+  z-index: 5;
+  top: 32px;
+  left: 20px;
+  width: 3px;
+  height: 12px;
+  background-color: #eee;
+}
