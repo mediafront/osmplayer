@@ -2451,6 +2451,7 @@ minplayer.prototype.construct = function() {
     file: '',
     preview: '',
     attributes: {},
+    plugins: {},
     logo: '',
     link: '',
     width: '100%',
@@ -2459,6 +2460,21 @@ minplayer.prototype.construct = function() {
 
   // Call the minplayer display constructor.
   minplayer.display.prototype.construct.call(this);
+
+  // Initialize all plugins.
+  var plugin = null;
+  for (var pluginName in this.options.plugins) {
+    plugin = this.options.plugins[pluginName];
+    if (minplayer[plugin]) {
+      plugin = minplayer[plugin];
+      if (plugin[this.options.template] && plugin[this.options.template].init) {
+        plugin[this.options.template].init(this);
+      }
+      else if (plugin.init) {
+        plugin.init(this);
+      }
+    }
+  }
 
   // Set the plugin name within the options.
   this.options.pluginName = 'player';

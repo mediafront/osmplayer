@@ -132,7 +132,11 @@ minplayer.timeline_indicator.prototype.construct = function() {
   });
 };
 
-// Add the timeline indicator to the controller.
-minplayer.get('controller', function(controller) {
-  controller.timeline_indicator = new minplayer.timeline_indicator(controller.elements.seek);
-});
+/**
+ * Initalize the plugin.
+ */
+minplayer.timeline_indicator.init = function(player) {
+  player.get('controller', function(controller) {
+    controller.timeline_indicator = new minplayer.timeline_indicator(controller.elements.seek, player.options);
+  });
+};
