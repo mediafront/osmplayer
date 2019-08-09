@@ -1059,13 +1059,17 @@ minplayer.stopShowThenHide = function(element) {
  * @param {object} element The element you would like to hide or show.
  * @param {number} timeout The timeout to hide and show.
  * @param {function} callback Called when something happens.
+ * @param {object} hoverElement The element you would like to trigger the show.
  */
-minplayer.showThenHide = function(element, timeout, callback) {
+minplayer.showThenHide = function(element, timeout, callback, hoverElement) {
 
   // If no element exists, then just return.
   if (!element) {
     return;
   }
+
+  // Allow them to provide a different element to show then hide from.
+  hoverElement = hoverElement ? hoverElement : document;
 
   // Ensure we have a timeout.
   timeout = timeout || 5000;
@@ -1083,14 +1087,14 @@ minplayer.showThenHide = function(element, timeout, callback) {
     });
 
     // Bind to a click event.
-    minplayer.click(document, function() {
+    minplayer.click(hoverElement, function() {
       if (!element.stopShowThenHide) {
         minplayer.showThenHide(element, timeout, callback);
       }
     });
 
     // Bind to the mousemove event.
-    jQuery(document).bind('mousemove', function() {
+    jQuery(hoverElement).bind('mousemove', function() {
       if (!element.stopShowThenHide) {
         minplayer.showThenHide(element, timeout, callback);
       }

@@ -160,7 +160,7 @@ osmplayer.playlist.prototype.refreshScroll = function() {
       hScrollbar: !this.options.vertical,
       vScroll: this.options.vertical,
       vScrollbar: this.options.vertical,
-      hideScrollbar: true
+      hideScrollbar: (this.options.scrollMode !== 'none')
     });
 
     // Use autoScroll for non-touch devices.
