@@ -121,17 +121,6 @@ minplayer.prototype.construct = function() {
   /** The play loader for this player. */
   this.playLoader = this.create('playLoader');
 
-  // Set the focus of the element based on if they click in or outside of it.
-  minplayer.click(document, (function(player) {
-    return function(event) {
-      var target = jQuery(event.target);
-      var focus = !(target.closest('#' + player.options.id).length == 0);
-      minplayer.get.call(this, player.options.id, null, function(plugin) {
-        plugin.onFocus(focus);
-      });
-    };
-  })(this));
-
   /** Add the logo for the player. */
   if (this.options.logo && this.elements.logo) {
 
@@ -160,6 +149,22 @@ minplayer.prototype.construct = function() {
 
   // The player is ready.
   this.ready();
+};
+
+/**
+ * Set the focus for this player.
+ *
+ * @param {boolean} focus If the player is in focus or not.
+ */
+minplayer.prototype.setFocus = function(focus) {
+
+  // Tell all plugins about this.
+  minplayer.get.call(this, this.options.id, null, function(plugin) {
+    plugin.onFocus(focus);
+  });
+
+  // Trigger an event that a focus event has occured.
+  this.trigger('playerFocus', focus);
 };
 
 /**
@@ -193,6 +198,32 @@ minplayer.prototype.bindTo = function(plugin) {
  * We need to bind to events we are interested in.
  */
 minplayer.prototype.addEvents = function() {
+
+  // Set the focus when they enter the player.
+  this.display.bind('mouseenter', (function(player) {
+    return function() {
+      player.setFocus(true);
+    };
+  })(this));
+
+  this.display.bind('mouseleave', (function(player) {
+    return function() {
+      player.setFocus(false);
+    };
+  })(this));
+
+  var moveThrottle = false;
+  this.display.bind('mousemove', (function(player) {
+    return function() {
+      if (!moveThrottle) {
+        moveThrottle = setTimeout(function() {
+          moveThrottle = false;
+          player.setFocus(true);
+        }, 300);
+      }
+    };
+  })(this));
+
   minplayer.get.call(this, this.options.id, null, (function(player) {
     return function(plugin) {
       player.bindTo(plugin);

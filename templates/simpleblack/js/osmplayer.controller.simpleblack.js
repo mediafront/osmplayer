@@ -28,7 +28,7 @@
       this.get('player', function(player) {
         this.get('media', function(media) {
           if (!media.hasController()) {
-            minplayer.showThenHide(this.display, 5000, function(shown) {
+            this.showThenHide(5000, function(shown) {
               var op = shown ? 'addClass' : 'removeClass';
               player.display[op]('with-controller');
             });
