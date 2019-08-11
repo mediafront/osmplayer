@@ -60,9 +60,6 @@ fixjsstyle: ${files}
 
 # Install the necessary tools.
 tools:
-	apt-get install python-setuptools
-	apt-get install unzip
-	easy_install http://closure-linter.googlecode.com/files/closure_linter-latest.tar.gz
 	wget http://jsdoc-toolkit.googlecode.com/files/jsdoc_toolkit-2.4.0.zip -P tools
 	unzip tools/jsdoc_toolkit-2.4.0.zip -d tools
 	mv tools/jsdoc_toolkit-2.4.0/jsdoc-toolkit tools/jsdoc-toolkit
