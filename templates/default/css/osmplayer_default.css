@@ -299,6 +299,7 @@
   font-size: 16px;
   font-weight: bold;
   border-right:1px solid #888;
+  margin-top: 4px;
 }
 
 .player-ui .minplayer-default.fullscreen .minplayer-default-timer {
@@ -371,7 +372,7 @@
   height: 7px;
   width: 78px;
   top: 8px;
-  left: 34px;
+  left: 32px;
 }
 
 .player-ui .minplayer-default-volume-slider .ui-slider-handle {
@@ -492,7 +493,10 @@
   bottom: 34px;
 }
 
-.player-ui .ui-slider-horizontal .ui-slider-handle { top: -.3em; margin-left: -.6em; }
+.player-ui .ui-slider-horizontal .ui-slider-handle {
+  top: -5px;
+  margin-left: -5px;
+}
 
 
 /** OSM Player Styles **/
