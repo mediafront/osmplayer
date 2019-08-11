@@ -36,6 +36,14 @@ minplayer["default"].prototype.getDisplay = function() {
       'class': 'media-player'
     })).parent('.media-player');
 
+    if (this.options.height) {
+      this.context.height(this.options.height);
+    }
+
+    if (this.options.width) {
+      this.context.width(this.options.width);
+    }
+
     // Mark a flag that says this display needs to be built.
     this.options.build = true;
   }

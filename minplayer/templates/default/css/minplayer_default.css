@@ -240,6 +240,7 @@
   height: 15px;
   border: 1px solid #333;
   top: -4px;
+  margin-left: -7px;
   z-index:20;
   -moz-border-radius:10px;
   -webkit-border-radius:10px;
