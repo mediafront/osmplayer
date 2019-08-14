@@ -1500,15 +1500,21 @@ minplayer.prototype.bindTo = function(plugin) {
  */
 minplayer.prototype.addEvents = function() {
 
+  // Keep track if we are inside the player or not.
+  var inside = false;
+
   // Set the focus when they enter the player.
   this.display.bind('mouseenter', (function(player) {
     return function() {
+      inside = true;
       player.setFocus(true);
     };
   })(this));
 
+
   this.display.bind('mouseleave', (function(player) {
     return function() {
+      inside = false;
       player.setFocus(false);
     };
   })(this));
@@ -1519,7 +1525,9 @@ minplayer.prototype.addEvents = function() {
       if (!moveThrottle) {
         moveThrottle = setTimeout(function() {
           moveThrottle = false;
-          player.setFocus(true);
+          if (inside) {
+            player.setFocus(true);
+          }
         }, 300);
       }
     };
