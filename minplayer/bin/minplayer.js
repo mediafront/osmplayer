@@ -3377,7 +3377,10 @@ minplayer.players.html5.prototype.getVolume = function(callback) {
  */
 minplayer.players.html5.prototype.getDuration = function(callback) {
   if (this.isReady()) {
-    callback(this.player.duration);
+    this.duration.get(callback);
+    if (this.player.duration) {
+      this.duration.set(this.player.duration);
+    }
   }
 };
 
