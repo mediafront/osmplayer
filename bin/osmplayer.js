@@ -2158,9 +2158,16 @@ minplayer.display.prototype.showThenHide = function(element, timeout, cb) {
 
   // Show the element.
   if (!element.forceHide) {
-    element.show();
-    if (cb) {
-      cb(true);
+    if (typeof element.showMe !== 'undefined') {
+      if (element.showMe) {
+        element.showMe(cb);
+      }
+    }
+    else {
+      element.show();
+      if (cb) {
+        cb(true);
+      }
     }
   }
 
@@ -2181,13 +2188,19 @@ minplayer.display.prototype.showThenHide = function(element, timeout, cb) {
 
       // Check the hover state.
       if (!element.hoverState) {
-
-        // Hide the element.
-        element.hide('slow', function() {
-          if (cb) {
-            cb(false);
+        if (typeof element.hideMe !== 'undefined') {
+          if (element.hideMe) {
+            element.hideMe(cb);
           }
-        });
+        }
+        else {
+          // Hide the element.
+          element.hide('slow', function() {
+            if (cb) {
+              cb(false);
+            }
+          });
+        }
       }
       else {
 
@@ -2563,15 +2576,21 @@ minplayer.prototype.bindTo = function(plugin) {
  */
 minplayer.prototype.addEvents = function() {
 
+  // Keep track if we are inside the player or not.
+  var inside = false;
+
   // Set the focus when they enter the player.
   this.display.bind('mouseenter', (function(player) {
     return function() {
+      inside = true;
       player.setFocus(true);
     };
   })(this));
 
+
   this.display.bind('mouseleave', (function(player) {
     return function() {
+      inside = false;
       player.setFocus(false);
     };
   })(this));
@@ -2582,7 +2601,9 @@ minplayer.prototype.addEvents = function() {
       if (!moveThrottle) {
         moveThrottle = setTimeout(function() {
           moveThrottle = false;
-          player.setFocus(true);
+          if (inside) {
+            player.setFocus(true);
+          }
         }, 300);
       }
     };
@@ -4432,7 +4453,10 @@ minplayer.players.html5.prototype.getVolume = function(callback) {
  */
 minplayer.players.html5.prototype.getDuration = function(callback) {
   if (this.isReady()) {
-    callback(this.player.duration);
+    this.duration.get(callback);
+    if (this.player.duration) {
+      this.duration.set(this.player.duration);
+    }
   }
 };
 
