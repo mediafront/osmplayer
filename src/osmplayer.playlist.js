@@ -95,10 +95,10 @@ osmplayer.playlist.prototype.construct = function() {
 
     // Get the media.
     if (this.options.autoNext) {
-      this.get('media', function(media) {
-        media.bind('ended', (function(playlist) {
+      this.get('player', function(player) {
+        player.bind('player_ended', (function(playlist) {
           return function(event) {
-            media.options.autoplay = true;
+            player.options.autoplay = true;
             playlist.next();
           };
         })(this));

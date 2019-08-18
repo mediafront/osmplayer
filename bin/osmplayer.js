@@ -6128,12 +6128,14 @@ osmplayer.prototype.construct = function() {
   /** The play queue and index. */
   this.playQueue = [];
   this.playIndex = 0;
+  this.hasPlaylist = false;
 
   /** The playlist for this media player. */
   this.create('playlist', 'osmplayer');
 
   /** Get the playlist or any other playlist that connects. */
   this.get('playlist', function(playlist) {
+    this.hasPlaylist = true;
     playlist.bind('nodeLoad', (function(player) {
       return function(event, data) {
         player.loadNode(data);
@@ -6242,11 +6244,18 @@ osmplayer.prototype.playNext = function() {
     this.playNext();
   }
   else if (this.playQueue.length > 0) {
-    // If there is no playlist, and no repeat, we will
-    // just seek to the beginning and pause.
-    this.options.autoplay = false;
-    this.playIndex = 0;
-    this.playNext();
+
+    // If we have a playlist, let them handle what to do next.
+    if (this.hasPlaylist) {
+      this.trigger('player_ended');
+    }
+    else {
+      // If there is no playlist, and no repeat, we will
+      // just seek to the beginning and pause.
+      this.options.autoplay = false;
+      this.playIndex = 0;
+      this.playNext();
+    }
   }
   else if (this.media) {
     // Stop the player and unload.
@@ -6667,10 +6676,10 @@ osmplayer.playlist.prototype.construct = function() {
 
     // Get the media.
     if (this.options.autoNext) {
-      this.get('media', function(media) {
-        media.bind('ended', (function(playlist) {
+      this.get('player', function(player) {
+        player.bind('player_ended', (function(playlist) {
           return function(event) {
-            media.options.autoplay = true;
+            player.options.autoplay = true;
             playlist.next();
           };
         })(this));
