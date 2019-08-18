@@ -9,7 +9,9 @@
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/dark-hive/jquery-ui.css">
 
     <!-- The compressed osmplayer script. -->
-    <!--<script type="text/javascript" src="bin/osmplayer.compressed.js"></script> -->
+    <script type="text/javascript" src="bin/osmplayer.compressed.js"></script>
+
+    <!-- For debugging purposes.
     <script type="text/javascript" src="minplayer/src/minplayer.compatibility.js"></script>
     <script type="text/javascript" src="minplayer/src/minplayer.flags.js"></script>
     <script type="text/javascript" src="minplayer/src/minplayer.async.js"></script>
@@ -36,23 +38,28 @@
     <script type="text/javascript" src="src/iscroll/src/iscroll.js"></script>
     <script type="text/javascript" src="src/osmplayer.pager.js"></script>
     <script type="text/javascript" src="src/osmplayer.teaser.js"></script>
+    -->
 
     <!-- Include the OSM Player template files. -->
     <link rel="stylesheet" href="templates/default/css/osmplayer_default.css">
+
+    <script type="text/javascript" src="templates/default/osmplayer.default.js"></script>
+    <!-- For debuggin purposes.
     <script type="text/javascript" src="templates/default/js/osmplayer.default.js"></script>
     <script type="text/javascript" src="templates/default/js/osmplayer.controller.default.js"></script>
     <script type="text/javascript" src="templates/default/js/osmplayer.pager.default.js"></script>
     <script type="text/javascript" src="templates/default/js/osmplayer.playLoader.default.js"></script>
     <script type="text/javascript" src="templates/default/js/osmplayer.playlist.default.js"></script>
     <script type="text/javascript" src="templates/default/js/osmplayer.teaser.default.js"></script>
+    -->
 
     <!-- Here is how you make it come alive... -->
     <script type="text/javascript">
       $(function() {
         $("#osmplayer").osmplayer({
-          width: '600px',
-          height: '400px',
-          playlist: 'playlist.xml'
+          width: '100%',
+          height: '100%',
+          playlist: 'http://gdata.youtube.com/feeds/api/videos'
         });
       });
     </script>
