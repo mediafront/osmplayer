@@ -231,11 +231,13 @@ osmplayer.playlist.prototype.refreshScroll = function() {
   else if (this.scroll) {
 
     // Disable the scroll bar.
-    this.scroll.disable();
+    this.scroll.scrollTo(0, 0);
+    this.scroll.destroy();
+    this.scroll = null;
     this.elements.list
-      .unbind('mousemove')
-      .unbind('mouseenter')
-      .unbind('mouseleave');
+        .unbind('mousemove')
+        .unbind('mouseenter')
+        .unbind('mouseleave');
   }
 };
 
