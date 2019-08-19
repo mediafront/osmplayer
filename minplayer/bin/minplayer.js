@@ -2750,6 +2750,7 @@ minplayer.players.base.prototype.onLoaded = function() {
       return function(duration) {
         if (seek < duration) {
           player.seek(seek);
+          player.play();
         }
       };
     })(this));
