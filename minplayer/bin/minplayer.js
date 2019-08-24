@@ -679,16 +679,15 @@ minplayer.plugin.prototype.bind = function(type, data, fn) {
  * Unbind a media event.
  *
  * @param {string} type The event type.
- * @param {function} fn The callback function.
  * @return {object} The plugin object.
  **/
-minplayer.plugin.prototype.unbind = function(type, fn) {
+minplayer.plugin.prototype.unbind = function(type) {
 
   // If this is locked then try again after 10ms.
   if (this.lock) {
     setTimeout((function(plugin) {
       return function() {
-        plugin.unbind(type, fn);
+        plugin.unbind(type);
       };
     })(this), 10);
   }
@@ -696,28 +695,11 @@ minplayer.plugin.prototype.unbind = function(type, fn) {
   // Set the lock.
   this.lock = true;
 
-  // Get the queue type.
-  var queuetype = this.queue.hasOwnProperty(type) ? this.queue[type] : null;
-
   if (!type) {
     this.queue = {};
   }
-  else if (!fn) {
-    if (this.queue[type] && (this.queue[type].length > 0)) {
-      this.queue[type].length = 0;
-    }
-  }
-  else if (queuetype) {
-    // Iterate through all the callbacks and search for equal callbacks.
-    var i = 0, queue = {};
-    for (i in queuetype) {
-      if (queuetype.hasOwnProperty(i)) {
-        if (queuetype[i].callback === fn) {
-          queue = this.queue[type].splice(i, 1);
-          delete queue;
-        }
-      }
-    }
+  else if (this.queue.hasOwnProperty(type) && (this.queue[type].length > 0)) {
+    this.queue[type].length = 0;
   }
 
   // Reset the lock.
