@@ -97,7 +97,7 @@ osmplayer.prototype.construct = function() {
   /** Get the playlist or any other playlist that connects. */
   this.get('playlist', function(playlist) {
     this.hasPlaylist = true;
-    playlist.bind('nodeLoad', (function(player) {
+    playlist.ubind(this.uuid + ':nodeLoad', (function(player) {
       return function(event, data) {
         player.loadNode(data);
       };
@@ -107,7 +107,7 @@ osmplayer.prototype.construct = function() {
   // Play each media sequentially...
   this.get('media', (function(player) {
     return function(media) {
-      media.bind('ended', function() {
+      media.ubind(player.uuid + ':ended', function() {
         player.options.autoplay = true;
         player.playNext();
       });

@@ -171,7 +171,7 @@ minplayer.prototype.setFocus = function(focus) {
  * @param {object} plugin The plugin you wish to bind to.
  */
 minplayer.prototype.bindTo = function(plugin) {
-  plugin.bind('error', (function(player) {
+  plugin.ubind(this.uuid + ':error', (function(player) {
     return function(event, data) {
       if (player.currentPlayer == 'html5') {
         minplayer.player = 'minplayer';
@@ -185,7 +185,7 @@ minplayer.prototype.bindTo = function(plugin) {
   })(this));
 
   // Bind to the fullscreen event.
-  plugin.bind('fullscreen', (function(player) {
+  plugin.ubind(this.uuid + ':fullscreen', (function(player) {
     return function(event, data) {
       player.resize();
     };

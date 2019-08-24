@@ -300,6 +300,9 @@ minplayer.plugin = function(name, context, options, queue) {
   /** Create a queue lock. */
   this.lock = false;
 
+  /** The universally unique ID for this plugin. */
+  this.uuid = 0;
+
   // Only call the constructor if we have a context.
   if (context) {
 
@@ -438,7 +441,10 @@ minplayer.plugin.prototype.addPlugin = function(name, plugin) {
     }
 
     // Add this plugin.
-    minplayer.plugins[this.options.id][name].push(plugin);
+    var instance = minplayer.plugins[this.options.id][name].push(plugin);
+
+    // Set the uuid.
+    this.uuid = this.options.id + '__' + name + '__' + instance;
 
     // Now check the queue for this plugin.
     this.checkQueue(plugin);
@@ -537,6 +543,31 @@ minplayer.plugin.prototype.checkQueue = function(plugin) {
 };
 
 /**
+ * All minplayer event types.
+ */
+minplayer.eventTypes = {};
+
+/**
+ * Determine if an event is of a certain type.
+ *
+ * @param {string} name The full name of the event.
+ * @param {string} type The type of the event.
+ * @return {boolean} If this named event is of type.
+ */
+minplayer.plugin.prototype.isEvent = function(name, type) {
+  // Static cache for performance.
+  var cacheName = name + '__' + type;
+  if (typeof minplayer.eventTypes[cacheName] !== 'undefined') {
+    return minplayer.eventTypes[cacheName];
+  }
+  else {
+    var regex = new RegExp('^(.*\:)?' + type + '$', 'gi');
+    minplayer.eventTypes[cacheName] = (name.match(type) !== null);
+    return minplayer.eventTypes[cacheName];
+  }
+};
+
+/**
  * Trigger a media event.
  *
  * @param {string} type The event type.
@@ -553,26 +584,47 @@ minplayer.plugin.prototype.trigger = function(type, data) {
   // Add this to our triggered array.
   this.triggered[type] = data;
 
-  // Check to make sure the queue for this type exists.
-  if (this.queue.hasOwnProperty(type)) {
+  // Iterate through the queue.
+  var i = 0, queue = {}, queuetype = null;
 
-    var i = 0, queue = {}, queuetype = this.queue[type];
+  // Iterate through all the queue items.
+  for (var name in this.queue) {
 
-    // Iterate through all the callbacks in this queue.
-    for (i in queuetype) {
+    // See if this is an event we care about.
+    if (this.isEvent(name, type)) {
 
-      // Check to make sure the queue index exists.
-      if (queuetype.hasOwnProperty(i)) {
+      // Set the queuetype.
+      queuetype = this.queue[name];
 
-        // Setup the event object, and call the callback.
-        queue = queuetype[i];
-        queue.callback({target: this, data: queue.data}, data);
+      // Iterate through all the callbacks in this queue.
+      for (i in queuetype) {
+
+        // Check to make sure the queue index exists.
+        if (queuetype.hasOwnProperty(i)) {
+
+          // Setup the event object, and call the callback.
+          queue = queuetype[i];
+          queue.callback({target: this, data: queue.data}, data);
+        }
       }
     }
   }
 
   // Return the plugin object.
   return this;
+};
+
+/**
+ * Unbind then Bind
+ *
+ * @param {string} type The event type.
+ * @param {object} data The data to bind with the event.
+ * @param {function} fn The callback function.
+ * @return {object} The plugin object.
+ */
+minplayer.plugin.prototype.ubind = function(type, data, fn) {
+  this.unbind(type);
+  return this.bind(type, data, fn);
 };
 
 /**
@@ -604,9 +656,6 @@ minplayer.plugin.prototype.bind = function(type, data, fn) {
   // Initialize the queue for this type.
   this.queue[type] = this.queue[type] || [];
 
-  // Unbind any existing equivalent events.
-  this.unbind(type, fn);
-
   // Now add this event to the queue.
   this.queue[type].push({
     callback: fn,
@@ -614,10 +663,12 @@ minplayer.plugin.prototype.bind = function(type, data, fn) {
   });
 
   // Now see if this event has already been triggered.
-  if (this.triggered.hasOwnProperty(type)) {
-
-    // Go ahead and trigger the event.
-    fn({target: this, data: data}, this.triggered[type]);
+  for (var name in this.triggered) {
+    if (this.triggered.hasOwnProperty(name)) {
+      if (this.isEvent(type, name)) {
+        fn({target: this, data: data}, this.triggered[name]);
+      }
+    }
   }
 
   // Return the plugin.
@@ -652,7 +703,9 @@ minplayer.plugin.prototype.unbind = function(type, fn) {
     this.queue = {};
   }
   else if (!fn) {
-    this.queue[type] = [];
+    if (this.queue[type] && (this.queue[type].length > 0)) {
+      this.queue[type].length = 0;
+    }
   }
   else if (queuetype) {
     // Iterate through all the callbacks and search for equal callbacks.
@@ -1474,7 +1527,7 @@ minplayer.prototype.setFocus = function(focus) {
  * @param {object} plugin The plugin you wish to bind to.
  */
 minplayer.prototype.bindTo = function(plugin) {
-  plugin.bind('error', (function(player) {
+  plugin.ubind(this.uuid + ':error', (function(player) {
     return function(event, data) {
       if (player.currentPlayer == 'html5') {
         minplayer.player = 'minplayer';
@@ -1488,7 +1541,7 @@ minplayer.prototype.bindTo = function(plugin) {
   })(this));
 
   // Bind to the fullscreen event.
-  plugin.bind('fullscreen', (function(player) {
+  plugin.ubind(this.uuid + ':fullscreen', (function(player) {
     return function(event, data) {
       player.resize();
     };
@@ -2187,7 +2240,7 @@ minplayer.playLoader.prototype.initialize = function() {
       }
 
       // Bind to the player events to control the play loader.
-      media.unbind('loadstart').bind('loadstart', (function(playLoader) {
+      media.ubind(this.uuid + ':loadstart', (function(playLoader) {
         return function(event) {
           playLoader.busy.setFlag('media', true);
           playLoader.bigPlay.setFlag('media', true);
@@ -2195,19 +2248,19 @@ minplayer.playLoader.prototype.initialize = function() {
           playLoader.checkVisibility();
         };
       })(this));
-      media.bind('waiting', (function(playLoader) {
+      media.ubind(this.uuid + ':waiting', (function(playLoader) {
         return function(event) {
           playLoader.busy.setFlag('media', true);
           playLoader.checkVisibility();
         };
       })(this));
-      media.bind('loadeddata', (function(playLoader) {
+      media.ubind(this.uuid + ':loadeddata', (function(playLoader) {
         return function(event) {
           playLoader.busy.setFlag('media', false);
           playLoader.checkVisibility();
         };
       })(this));
-      media.bind('playing', (function(playLoader) {
+      media.ubind(this.uuid + ':playing', (function(playLoader) {
         return function(event) {
           playLoader.busy.setFlag('media', false);
           playLoader.bigPlay.setFlag('media', false);
@@ -2217,7 +2270,7 @@ minplayer.playLoader.prototype.initialize = function() {
           playLoader.checkVisibility();
         };
       })(this));
-      media.bind('pause', (function(playLoader) {
+      media.ubind(this.uuid + ':pause', (function(playLoader) {
         return function(event) {
           playLoader.bigPlay.setFlag('media', true);
           playLoader.checkVisibility();
@@ -2403,7 +2456,7 @@ minplayer.players.base.prototype.construct = function() {
   this.mediaFile = this.options.file;
 
   // Make sure we always autoplay on streams.
-  this.options.autoplay = this.options.autoplay || this.mediaFile.stream;
+  this.options.autoplay = this.options.autoplay || !!this.mediaFile.stream;
 
   // Clear the media player.
   this.clear();
@@ -2463,6 +2516,11 @@ minplayer.players.base.prototype.construct = function() {
       }
     };
   })(this));
+
+  // Make sure that we trigger onReady if autoload is false.
+  if (!this.options.autoload) {
+    this.onReady();
+  }
 };
 
 /**
@@ -2856,6 +2914,8 @@ minplayer.players.base.prototype.load = function(file) {
  * @return {boolean} If this action was performed.
  */
 minplayer.players.base.prototype.play = function() {
+  this.options.autoload = true;
+  this.options.autoplay = true;
   return this.isReady();
 };
 
@@ -3150,6 +3210,9 @@ minplayer.players.html5.prototype.addPlayerEvents = function() {
     });
     this.addPlayerEvent('loadstart', function() {
       this.onReady();
+      if (!this.options.autoload) {
+        this.onLoaded();
+      }
     });
     this.addPlayerEvent('loadeddata', function() {
       this.onLoaded();
@@ -3246,10 +3309,15 @@ minplayer.players.html5.prototype.create = function() {
   // Fix the fluid width and height.
   element.eq(0)[0].setAttribute('width', '100%');
   element.eq(0)[0].setAttribute('height', '100%');
-  element.eq(0)[0].setAttribute('autobuffer', true);
-  var option = this.options.autoload ? 'auto' : 'metadata';
+  var option = this.options.autoload ? 'metadata' : 'none';
   option = minplayer.isIDevice ? 'metadata' : option;
   element.eq(0)[0].setAttribute('preload', option);
+
+  // Make sure that we trigger onReady if autoload is false.
+  if (!this.options.autoload) {
+    element.eq(0)[0].setAttribute('autobuffer', false);
+  }
+
   return element;
 };
 
@@ -3701,10 +3769,14 @@ minplayer.players.minplayer.prototype.create = function() {
     'debug': this.options.debug,
     'config': 'nocontrols',
     'file': this.mediaFile.path,
-    'stream': this.mediaFile.stream,
     'autostart': this.options.autoplay,
     'autoload': this.options.autoload
   };
+
+  // Add a stream if one is provided.
+  if (this.mediaFile.stream) {
+    flashVars.stream = this.mediaFile.stream;
+  }
 
   // Return a flash media player object.
   return this.getFlash({
@@ -3727,6 +3799,9 @@ minplayer.players.minplayer.prototype.onMediaUpdate = function(eventType) {
     case 'mediaMeta':
       this.onLoaded();
       break;
+    case 'mediaConnected':
+      this.onLoaded();
+      break;
     case 'mediaPlaying':
       if (this.minplayerloaded) {
         this.onPlaying();
@@ -3747,7 +3822,7 @@ minplayer.players.minplayer.prototype.onMediaUpdate = function(eventType) {
  */
 minplayer.players.minplayer.prototype.clear = function() {
   minplayer.players.flash.prototype.clear.call(this);
-  this.minplayerloaded = this.options.autoplay;
+  this.minplayerloaded = this.options.autoplay || !this.options.autoload;
 };
 
 /**
@@ -4754,7 +4829,7 @@ minplayer.controller.prototype.construct = function() {
         })(this));
 
         // Bind to the pause event of the media.
-        media.bind('pause', (function(controller) {
+        media.ubind(this.uuid + ':pause', (function(controller) {
           return function(event) {
             controller.setPlayPause(true);
           };
@@ -4773,7 +4848,7 @@ minplayer.controller.prototype.construct = function() {
         })(this));
 
         // Bind to the play event of the media.
-        media.bind('playing', (function(controller) {
+        media.ubind(this.uuid + ':playing', (function(controller) {
           return function(event) {
             controller.setPlayPause(false);
           };
@@ -4784,7 +4859,7 @@ minplayer.controller.prototype.construct = function() {
       if (this.elements.duration) {
 
         // Bind to the duration change event.
-        media.bind('durationchange', (function(controller) {
+        media.ubind(this.uuid + ':durationchange', (function(controller) {
           return function(event, data) {
             controller.setTimeString('duration', data.duration);
           };
@@ -4802,7 +4877,7 @@ minplayer.controller.prototype.construct = function() {
       if (this.elements.progress) {
 
         // Bind to the progress event.
-        media.bind('progress', (function(controller) {
+        media.ubind(this.uuid + ':progress', (function(controller) {
           return function(event, data) {
             var percent = data.total ? (data.loaded / data.total) * 100 : 0;
             controller.elements.progress.width(percent + '%');
@@ -4814,7 +4889,7 @@ minplayer.controller.prototype.construct = function() {
       if (this.seekBar || this.elements.timer) {
 
         // Bind to the time update event.
-        media.bind('timeupdate', (function(controller) {
+        media.ubind(this.uuid + ':timeupdate', (function(controller) {
           return function(event, data) {
             if (!controller.dragging) {
               var value = 0;
@@ -4894,7 +4969,7 @@ minplayer.controller.prototype.construct = function() {
           }
         });
 
-        media.bind('volumeupdate', (function(controller) {
+        media.ubind(this.uuid + ':volumeupdate', (function(controller) {
           return function(event, vol) {
             controller.volumeBar.slider('option', 'value', (vol * 100));
           };

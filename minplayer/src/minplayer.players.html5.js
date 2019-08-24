@@ -123,6 +123,9 @@ minplayer.players.html5.prototype.addPlayerEvents = function() {
     });
     this.addPlayerEvent('loadstart', function() {
       this.onReady();
+      if (!this.options.autoload) {
+        this.onLoaded();
+      }
     });
     this.addPlayerEvent('loadeddata', function() {
       this.onLoaded();
@@ -219,10 +222,15 @@ minplayer.players.html5.prototype.create = function() {
   // Fix the fluid width and height.
   element.eq(0)[0].setAttribute('width', '100%');
   element.eq(0)[0].setAttribute('height', '100%');
-  element.eq(0)[0].setAttribute('autobuffer', true);
-  var option = this.options.autoload ? 'auto' : 'metadata';
+  var option = this.options.autoload ? 'metadata' : 'none';
   option = minplayer.isIDevice ? 'metadata' : option;
   element.eq(0)[0].setAttribute('preload', option);
+
+  // Make sure that we trigger onReady if autoload is false.
+  if (!this.options.autoload) {
+    element.eq(0)[0].setAttribute('autobuffer', false);
+  }
+
   return element;
 };
 

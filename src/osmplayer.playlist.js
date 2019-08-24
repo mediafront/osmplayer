@@ -79,12 +79,12 @@ osmplayer.playlist.prototype.construct = function() {
 
   // Create the pager.
   this.pager = this.create('pager', 'osmplayer');
-  this.pager.bind('nextPage', (function(playlist) {
+  this.pager.ubind(this.uuid + ':nextPage', (function(playlist) {
     return function(event) {
       playlist.nextPage();
     };
   })(this));
-  this.pager.bind('prevPage', (function(playlist) {
+  this.pager.ubind(this.uuid + ':prevPage', (function(playlist) {
     return function(event) {
       playlist.prevPage();
     };
@@ -96,7 +96,7 @@ osmplayer.playlist.prototype.construct = function() {
     // Get the media.
     if (this.options.autoNext) {
       this.get('player', function(player) {
-        player.bind('player_ended', (function(playlist) {
+        player.ubind(this.uuid + ':player_ended', (function(playlist) {
           return function(event) {
             player.options.autoplay = true;
             playlist.next();
@@ -286,7 +286,7 @@ osmplayer.playlist.prototype.set = function(playlist, loadIndex) {
       // Create the teaser object.
       teaser = this.create('teaser', 'osmplayer', this.elements.list);
       teaser.setNode(playlist.nodes[index]);
-      teaser.bind('nodeLoad', (function(playlist, index) {
+      teaser.ubind(this.uuid + ':nodeLoad', (function(playlist, index) {
         return function(event, data) {
           playlist.loadItem(index);
         };
