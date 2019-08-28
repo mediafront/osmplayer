@@ -281,7 +281,7 @@ minplayer.players.minplayer.prototype.getDuration = function(callback) {
     else {
 
       // If not, then poll every second for the duration.
-      this.poll((function(player) {
+      this.poll('duration', (function(player) {
         return function() {
           duration = player.player.getDuration();
           if (duration) {

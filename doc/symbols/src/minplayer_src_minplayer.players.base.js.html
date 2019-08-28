@@ -256,7 +256,7 @@
 <span class='line'>249</span> </span><span class="WHIT">  </span><span class="NAME">this.loading</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>250</span> 
 <span class='line'>251</span> </span><span class="WHIT">  </span><span class="COMM">// Create a poll to get the progress.</span><span class="WHIT">
-<span class='line'>252</span> </span><span class="WHIT">  </span><span class="NAME">this.poll</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">player</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>252</span> </span><span class="WHIT">  </span><span class="NAME">this.poll</span><span class="PUNC">(</span><span class="STRN">'progress'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">player</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>253</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>254</span> 
 <span class='line'>255</span> </span><span class="WHIT">      </span><span class="COMM">// Only do this if the play interval is set.</span><span class="WHIT">
@@ -358,7 +358,7 @@
 <span class='line'>351</span> </span><span class="WHIT">  </span><span class="NAME">this.playing</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>352</span> 
 <span class='line'>353</span> </span><span class="WHIT">  </span><span class="COMM">// Create a poll to get the timeupate.</span><span class="WHIT">
-<span class='line'>354</span> </span><span class="WHIT">  </span><span class="NAME">this.poll</span><span class="PUNC">(</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">player</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>354</span> </span><span class="WHIT">  </span><span class="NAME">this.poll</span><span class="PUNC">(</span><span class="STRN">'timeupdate'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">player</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>355</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
 <span class='line'>356</span> 
 <span class='line'>357</span> </span><span class="WHIT">      </span><span class="COMM">// Only do this if the play interval is set.</span><span class="WHIT">
@@ -390,7 +390,7 @@
 <span class='line'>383</span> </span><span class="WHIT">      </span><span class="COMM">// Keep polling as long as it is playing.</span><span class="WHIT">
 <span class='line'>384</span> </span><span class="WHIT">      </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">player.playing</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>385</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>386</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">1000</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>386</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">(</span><span class="KEYW">this</span><span class="PUNC">)</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NUMB">500</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>387</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>388</span> 
 <span class='line'>389</span> </span><span class="COMM">/**

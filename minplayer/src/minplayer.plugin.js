@@ -190,20 +190,29 @@ minplayer.plugin.prototype.addPlugin = function(name, plugin) {
   }
 };
 
+/** Create timers for the polling. */
+minplayer.timers = {};
+
 /**
  * Create a polling timer.
  *
+ * @param {string} name The name of the timer.
  * @param {function} callback The function to call when you poll.
  * @param {integer} interval The interval you would like to poll.
+ * @return {string} The setTimeout ID.
  */
-minplayer.plugin.prototype.poll = function(callback, interval) {
-  setTimeout((function(context) {
+minplayer.plugin.prototype.poll = function(name, callback, interval) {
+  if (minplayer.timers.hasOwnProperty(name)) {
+    clearTimeout(minplayer.timers[name]);
+  }
+  minplayer.timers[name] = setTimeout((function(context) {
     return function callLater() {
       if (callback.call(context)) {
-        setTimeout(callLater, interval);
+        minplayer.timers[name] = setTimeout(callLater, interval);
       }
     };
   })(this), interval);
+  return minplayer.timers[name];
 };
 
 /**

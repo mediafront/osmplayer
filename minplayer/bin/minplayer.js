@@ -451,20 +451,29 @@ minplayer.plugin.prototype.addPlugin = function(name, plugin) {
   }
 };
 
+/** Create timers for the polling. */
+minplayer.timers = {};
+
 /**
  * Create a polling timer.
  *
+ * @param {string} name The name of the timer.
  * @param {function} callback The function to call when you poll.
  * @param {integer} interval The interval you would like to poll.
+ * @return {string} The setTimeout ID.
  */
-minplayer.plugin.prototype.poll = function(callback, interval) {
-  setTimeout((function(context) {
+minplayer.plugin.prototype.poll = function(name, callback, interval) {
+  if (minplayer.timers.hasOwnProperty(name)) {
+    clearTimeout(minplayer.timers[name]);
+  }
+  minplayer.timers[name] = setTimeout((function(context) {
     return function callLater() {
       if (callback.call(context)) {
-        setTimeout(callLater, interval);
+        minplayer.timers[name] = setTimeout(callLater, interval);
       }
     };
   })(this), interval);
+  return minplayer.timers[name];
 };
 
 /**
@@ -2604,7 +2613,7 @@ minplayer.players.base.prototype.onReady = function() {
   this.loading = true;
 
   // Create a poll to get the progress.
-  this.poll((function(player) {
+  this.poll('progress', (function(player) {
     return function() {
 
       // Only do this if the play interval is set.
@@ -2706,7 +2715,7 @@ minplayer.players.base.prototype.onPlaying = function() {
   this.playing = true;
 
   // Create a poll to get the timeupate.
-  this.poll((function(player) {
+  this.poll('timeupdate', (function(player) {
     return function() {
 
       // Only do this if the play interval is set.
@@ -2738,7 +2747,7 @@ minplayer.players.base.prototype.onPlaying = function() {
       // Keep polling as long as it is playing.
       return player.playing;
     };
-  })(this), 1000);
+  })(this), 500);
 };
 
 /**
@@ -3908,7 +3917,7 @@ minplayer.players.minplayer.prototype.getDuration = function(callback) {
     else {
 
       // If not, then poll every second for the duration.
-      this.poll((function(player) {
+      this.poll('duration', (function(player) {
         return function() {
           duration = player.player.getDuration();
           if (duration) {
@@ -4145,7 +4154,7 @@ minplayer.players.youtube.prototype.create = function() {
   this.playerId = this.options.id + '-player';
 
   // Poll until the YouTube API is ready.
-  this.poll((function(player) {
+  this.poll('youtube', (function(player) {
     return function() {
       var ready = jQuery('#' + player.playerId).length > 0;
       ready = ready && ('YT' in window);
@@ -4491,7 +4500,7 @@ minplayer.players.vimeo.prototype.create = function() {
   iframe.setAttribute('src', src);
 
   // Now register this player when the froogaloop code is loaded.
-  this.poll((function(player) {
+  this.poll('vimeo', (function(player) {
     return function() {
       if (window.Froogaloop) {
         player.player = window.Froogaloop(iframe);
@@ -4775,6 +4784,7 @@ minplayer.controller.prototype.construct = function() {
 
     // Create the volume bar slider control.
     this.volumeBar = this.elements.volume.slider({
+      animate: true,
       range: 'min',
       orientation: 'vertical'
     });
@@ -4881,7 +4891,7 @@ minplayer.controller.prototype.construct = function() {
 
               // Update the seek bar if it exists.
               if (controller.seekBar) {
-                controller.seekBar.slider('option', 'value', value);
+                controller.seekBar.slider('value', value);
               }
 
               controller.setTimeString('timer', data.currentTime);
@@ -4930,11 +4940,11 @@ minplayer.controller.prototype.construct = function() {
             var value = controller.volumeBar.slider('option', 'value');
             if (value > 0) {
               controller.vol = value;
-              controller.volumeBar.slider('option', 'value', 0);
+              controller.volumeBar.slider('value', 0);
               media.setVolume(0);
             }
             else {
-              controller.volumeBar.slider('option', 'value', controller.vol);
+              controller.volumeBar.slider('value', controller.vol);
               media.setVolume(controller.vol / 100);
             }
           };
@@ -4953,14 +4963,14 @@ minplayer.controller.prototype.construct = function() {
 
         media.ubind(this.uuid + ':volumeupdate', (function(controller) {
           return function(event, vol) {
-            controller.volumeBar.slider('option', 'value', (vol * 100));
+            controller.volumeBar.slider('value', (vol * 100));
           };
         })(this));
 
         // Set the volume to match that of the player.
         media.getVolume((function(controller) {
           return function(vol) {
-            controller.volumeBar.slider('option', 'value', (vol * 100));
+            controller.volumeBar.slider('value', (vol * 100));
           };
         })(this));
       }

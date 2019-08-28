@@ -249,7 +249,7 @@ minplayer.players.base.prototype.onReady = function() {
   this.loading = true;
 
   // Create a poll to get the progress.
-  this.poll((function(player) {
+  this.poll('progress', (function(player) {
     return function() {
 
       // Only do this if the play interval is set.
@@ -351,7 +351,7 @@ minplayer.players.base.prototype.onPlaying = function() {
   this.playing = true;
 
   // Create a poll to get the timeupate.
-  this.poll((function(player) {
+  this.poll('timeupdate', (function(player) {
     return function() {
 
       // Only do this if the play interval is set.
@@ -383,7 +383,7 @@ minplayer.players.base.prototype.onPlaying = function() {
       // Keep polling as long as it is playing.
       return player.playing;
     };
-  })(this), 1000);
+  })(this), 500);
 };
 
 /**
