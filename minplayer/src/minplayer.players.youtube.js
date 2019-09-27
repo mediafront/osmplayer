@@ -345,7 +345,12 @@ minplayer.players.youtube.prototype.getVolume = function(callback) {
  * @see minplayer.players.base#getDuration.
  */
 minplayer.players.youtube.prototype.getDuration = function(callback) {
-  this.getValue('getDuration', callback);
+  if (this.options.duration) {
+    callback(this.options.duration);
+  }
+  else {
+    this.getValue('getDuration', callback);
+  }
 };
 
 /**

@@ -680,7 +680,12 @@ minplayer.players.base.prototype.getCurrentTime = function(callback) {
  * @return {number} The duration of the loaded media.
  */
 minplayer.players.base.prototype.getDuration = function(callback) {
-  return this.duration.get(callback);
+  if (this.options.duration) {
+    callback(this.options.duration);
+  }
+  else {
+    return this.duration.get(callback);
+  }
 };
 
 /**
