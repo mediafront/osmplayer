@@ -72,6 +72,11 @@ minplayer.controller.prototype.getElements = function() {
  */
 minplayer.controller.prototype.construct = function() {
 
+  // Make sure we provide default options...
+  this.options = jQuery.extend({
+    disptime: 0
+  }, this.options);
+
   // Call the minplayer plugin constructor.
   minplayer.display.prototype.construct.call(this);
 
@@ -170,13 +175,15 @@ minplayer.controller.prototype.construct = function() {
         // Bind to the duration change event.
         media.ubind(this.uuid + ':durationchange', (function(controller) {
           return function(event, data) {
-            controller.setTimeString('duration', data.duration);
+            var duration = controller.options.disptime || data.duration;
+            controller.setTimeString('duration', duration);
           };
         })(this));
 
         // Set the timestring to the duration.
         media.getDuration((function(controller) {
           return function(duration) {
+            duration = controller.options.disptime || duration;
             controller.setTimeString('duration', duration);
           };
         })(this));
