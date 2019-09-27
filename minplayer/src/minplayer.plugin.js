@@ -320,17 +320,22 @@ minplayer.plugin.prototype.isEvent = function(name, type) {
  *
  * @param {string} type The event type.
  * @param {object} data The event data object.
+ * @param {boolean} noqueue If this trigger should not be queued.
  * @return {object} The plugin object.
  */
-minplayer.plugin.prototype.trigger = function(type, data) {
+minplayer.plugin.prototype.trigger = function(type, data, noqueue) {
 
   // Don't trigger if this plugin is inactive.
   if (!this.active) {
     return this;
   }
 
-  // Add this to our triggered array.
-  this.triggered[type] = data;
+  // Only queue if they wish it to be so...
+  if (!noqueue) {
+
+    // Add this to our triggered array.
+    this.triggered[type] = data;
+  }
 
   // Iterate through the queue.
   var i = 0, queue = {}, queuetype = null;

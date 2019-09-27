@@ -223,10 +223,10 @@ minplayer.players.base.prototype.reset = function() {
   this.loading = false;
 
   // Tell everyone else we reset.
-  this.trigger('pause');
-  this.trigger('waiting');
-  this.trigger('progress', {loaded: 0, total: 0, start: 0});
-  this.trigger('timeupdate', {currentTime: 0, duration: 0});
+  this.trigger('pause', null, true);
+  this.trigger('waiting', null, true);
+  this.trigger('progress', {loaded: 0, total: 0, start: 0}, true);
+  this.trigger('timeupdate', {currentTime: 0, duration: 0}, true);
 };
 
 /**
