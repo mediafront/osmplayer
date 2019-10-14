@@ -230,10 +230,10 @@
 <span class='line'>223</span> </span><span class="WHIT">  </span><span class="NAME">this.loading</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>224</span> 
 <span class='line'>225</span> </span><span class="WHIT">  </span><span class="COMM">// Tell everyone else we reset.</span><span class="WHIT">
-<span class='line'>226</span> </span><span class="WHIT">  </span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'pause'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>227</span> </span><span class="WHIT">  </span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'waiting'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>228</span> </span><span class="WHIT">  </span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'progress'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">loaded</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">total</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">start</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>229</span> </span><span class="WHIT">  </span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'timeupdate'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">currentTime</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">duration</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>226</span> </span><span class="WHIT">  </span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'pause'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>227</span> </span><span class="WHIT">  </span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'waiting'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">null</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>228</span> </span><span class="WHIT">  </span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'progress'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">loaded</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">total</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">start</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>229</span> </span><span class="WHIT">  </span><span class="NAME">this.trigger</span><span class="PUNC">(</span><span class="STRN">'timeupdate'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="NAME">currentTime</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">duration</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NUMB">0</span><span class="PUNC">}</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="KEYW">true</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>230</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
 <span class='line'>231</span> 
 <span class='line'>232</span> </span><span class="COMM">/**
@@ -687,36 +687,41 @@
 <span class='line'>680</span>  * @return {number} The duration of the loaded media.
 <span class='line'>681</span>  */</span><span class="WHIT">
 <span class='line'>682</span> </span><span class="NAME">minplayer.players.base.prototype.getDuration</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>683</span> </span><span class="WHIT">  </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.duration.get</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>684</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>685</span> 
-<span class='line'>686</span> </span><span class="COMM">/**
-<span class='line'>687</span>  * Return the start bytes for the loaded media.
-<span class='line'>688</span>  *
-<span class='line'>689</span>  * @param {function} callback Called when the start bytes is determined.
-<span class='line'>690</span>  * @return {int} The bytes that were started.
-<span class='line'>691</span>  */</span><span class="WHIT">
-<span class='line'>692</span> </span><span class="NAME">minplayer.players.base.prototype.getBytesStart</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>693</span> </span><span class="WHIT">  </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.bytesStart.get</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>694</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>695</span> 
-<span class='line'>696</span> </span><span class="COMM">/**
-<span class='line'>697</span>  * Return the bytes of media loaded.
-<span class='line'>698</span>  *
-<span class='line'>699</span>  * @param {function} callback Called when the bytes loaded is determined.
-<span class='line'>700</span>  * @return {int} The amount of bytes loaded.
-<span class='line'>701</span>  */</span><span class="WHIT">
-<span class='line'>702</span> </span><span class="NAME">minplayer.players.base.prototype.getBytesLoaded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>703</span> </span><span class="WHIT">  </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.bytesLoaded.get</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>704</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>705</span> 
-<span class='line'>706</span> </span><span class="COMM">/**
-<span class='line'>707</span>  * Return the total amount of bytes.
-<span class='line'>708</span>  *
-<span class='line'>709</span>  * @param {function} callback Called when the bytes total is determined.
-<span class='line'>710</span>  * @return {int} The total amount of bytes for this media.
-<span class='line'>711</span>  */</span><span class="WHIT">
-<span class='line'>712</span> </span><span class="NAME">minplayer.players.base.prototype.getBytesTotal</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
-<span class='line'>713</span> </span><span class="WHIT">  </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.bytesTotal.get</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>714</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
-<span class='line'>715</span> </span></pre></body></html>
+<span class='line'>683</span> </span><span class="WHIT">  </span><span class="KEYW">if</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">this.options.duration</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>684</span> </span><span class="WHIT">    </span><span class="NAME">callback</span><span class="PUNC">(</span><span class="NAME">this.options.duration</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>685</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>686</span> </span><span class="WHIT">  </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>687</span> </span><span class="WHIT">    </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.duration.get</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>688</span> </span><span class="WHIT">  </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>689</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>690</span> 
+<span class='line'>691</span> </span><span class="COMM">/**
+<span class='line'>692</span>  * Return the start bytes for the loaded media.
+<span class='line'>693</span>  *
+<span class='line'>694</span>  * @param {function} callback Called when the start bytes is determined.
+<span class='line'>695</span>  * @return {int} The bytes that were started.
+<span class='line'>696</span>  */</span><span class="WHIT">
+<span class='line'>697</span> </span><span class="NAME">minplayer.players.base.prototype.getBytesStart</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>698</span> </span><span class="WHIT">  </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.bytesStart.get</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>699</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>700</span> 
+<span class='line'>701</span> </span><span class="COMM">/**
+<span class='line'>702</span>  * Return the bytes of media loaded.
+<span class='line'>703</span>  *
+<span class='line'>704</span>  * @param {function} callback Called when the bytes loaded is determined.
+<span class='line'>705</span>  * @return {int} The amount of bytes loaded.
+<span class='line'>706</span>  */</span><span class="WHIT">
+<span class='line'>707</span> </span><span class="NAME">minplayer.players.base.prototype.getBytesLoaded</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>708</span> </span><span class="WHIT">  </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.bytesLoaded.get</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>709</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>710</span> 
+<span class='line'>711</span> </span><span class="COMM">/**
+<span class='line'>712</span>  * Return the total amount of bytes.
+<span class='line'>713</span>  *
+<span class='line'>714</span>  * @param {function} callback Called when the bytes total is determined.
+<span class='line'>715</span>  * @return {int} The total amount of bytes for this media.
+<span class='line'>716</span>  */</span><span class="WHIT">
+<span class='line'>717</span> </span><span class="NAME">minplayer.players.base.prototype.getBytesTotal</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>718</span> </span><span class="WHIT">  </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">this.bytesTotal.get</span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>719</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>720</span> </span></pre></body></html>
