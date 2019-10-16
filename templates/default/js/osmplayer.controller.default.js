@@ -33,7 +33,13 @@
     if (!this.options.volumeVertical || this.options.controllerOnly) {
       this.display.addClass('minplayer-controls-volume-horizontal');
       this.display.removeClass('minplayer-controls-volume-vertical');
-      this.volumeBar.slider("option", "orientation", "horizontal");
+
+      // Need to catch this exception so that the player will continue to
+      // function.  This is a bug with Opera.
+      try {
+        this.volumeBar.slider("option", "orientation", "horizontal");
+      }
+      catch (e) {}
     }
     else {
       this.display.addClass('minplayer-controls-volume-vertical');
