@@ -72,6 +72,10 @@
   display:none !important;
 }
 
+.player-ui.nomedia .minplayer-default-controls, .player-ui.nomedia .minplayer-default-big-play, .player-ui.nomedia .minplayer-default-loader {
+  display:none;
+}
+
 .player-ui .minplayer-default-loader {
   width:42px;
   height:10px;
