@@ -213,7 +213,7 @@ osmplayer.prototype.playNext = function() {
   else if (this.playQueue.length > 0) {
 
     // If we have a playlist, let them handle what to do next.
-    if (this.hasPlaylist) {
+    if (this.hasPlaylist && this.options.autoNext) {
       this.trigger('player_ended');
     }
     else {
