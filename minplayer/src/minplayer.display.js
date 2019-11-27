@@ -166,6 +166,10 @@ minplayer.display.prototype.showThenHide = function(element, timeout, cb) {
     element = this.display;
   }
 
+  if (!element) {
+    return;
+  }
+
   // Make sure we have a timeout.
   timeout = timeout || 5000;
 
