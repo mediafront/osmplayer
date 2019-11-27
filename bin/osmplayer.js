@@ -6180,6 +6180,15 @@ minplayer.controller.prototype.setTimeString = function(element, time) {
 // Add a way to instanciate using jQuery prototype.
 if (!jQuery.fn.osmplayer) {
 
+  /** A special jQuery event to handle the player being removed from DOM. */
+  jQuery.event.special.playerdestroyed = {
+    remove: function(o) {
+      if (o.handler) {
+        o.handler();
+      }
+    }
+  };
+
   /**
    * @constructor
    *
@@ -6200,6 +6209,19 @@ if (!jQuery.fn.osmplayer) {
         else {
           new osmplayer(jQuery(this), options);
         }
+
+        // We need to cleanup the player when it has been destroyed.
+        jQuery(this).bind('playerdestroyed', function() {
+          for (var plugin in minplayer.plugins[options.id]) {
+            for (var index in minplayer.plugins[options.id][plugin]) {
+              minplayer.plugins[options.id][plugin][index].destroy();
+              delete minplayer.plugins[options.id][plugin][index];
+            }
+            minplayer.plugins[options.id][plugin].length = 0;
+          }
+          delete minplayer.plugins[options.id];
+          minplayer.plugins[options.id] = null;
+        });
       }
     });
   };
