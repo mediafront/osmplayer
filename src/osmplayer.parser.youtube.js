@@ -62,7 +62,7 @@ osmplayer.parser.youtube = {
             media: {
               'media': {
                 player: 'youtube',
-                id: item.id
+                id: node.id
               }
             }
           }
