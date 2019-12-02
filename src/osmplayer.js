@@ -102,16 +102,16 @@ osmplayer.prototype.construct = function() {
   // We need to cleanup the player when it has been destroyed.
   jQuery(this.display).bind('playerdestroyed', (function(player) {
     return function(element) {
-      if (element === player) {
-        for (var plugin in minplayer.plugins[options.id]) {
-          for (var index in minplayer.plugins[options.id][plugin]) {
-            minplayer.plugins[options.id][plugin][index].destroy();
-            delete minplayer.plugins[options.id][plugin][index];
+      if (element === player.display.eq(0)[0]) {
+        for (var plugin in minplayer.plugins[player.options.id]) {
+          for (var index in minplayer.plugins[player.options.id][plugin]) {
+            minplayer.plugins[player.options.id][plugin][index].destroy();
+            delete minplayer.plugins[player.options.id][plugin][index];
           }
-          minplayer.plugins[options.id][plugin].length = 0;
+          minplayer.plugins[player.options.id][plugin].length = 0;
         }
-        delete minplayer.plugins[options.id];
-        minplayer.plugins[options.id] = null;
+        delete minplayer.plugins[player.options.id];
+        minplayer.plugins[player.options.id] = null;
       }
     };
   })(this));
