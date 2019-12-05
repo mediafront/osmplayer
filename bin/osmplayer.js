@@ -6277,7 +6277,6 @@ osmplayer.prototype.construct = function() {
   this.options = jQuery.extend({
     playlist: '',
     node: {},
-    swfplayer: 'minplayer/flash/minplayer.swf',
     logo: 'http://www.mediafront.org/assets/osmplayer/logo.png',
     link: 'http://www.mediafront.org'
   }, this.options);
