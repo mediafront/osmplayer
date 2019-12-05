@@ -6275,7 +6275,7 @@ osmplayer.prototype.construct = function() {
     playlist: '',
     node: {},
     swfplayer: 'minplayer/flash/minplayer.swf',
-    logo: 'logo.png',
+    logo: 'http://www.mediafront.org/assets/osmplayer/logo.png',
     link: 'http://www.mediafront.org'
   }, this.options);
 
