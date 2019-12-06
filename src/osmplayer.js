@@ -91,9 +91,13 @@ osmplayer.prototype.construct = function() {
   this.options = jQuery.extend({
     playlist: '',
     node: {},
-    logo: 'http://www.mediafront.org/assets/osmplayer/logo.png',
     link: 'http://www.mediafront.org'
   }, this.options);
+
+  // Provide a default logo if one isn't provided.
+  if (!this.options.logo) {
+    this.options.logo = 'http://mediafront.org/assets/osmplayer/logo.png';
+  }
 
   // Call the minplayer display constructor.
   minplayer.prototype.construct.call(this);

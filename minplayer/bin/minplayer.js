@@ -3602,17 +3602,9 @@ minplayer.players.flash.canPlay = function(file) {
  * @return {object} A Flash DOM element.
  */
 minplayer.players.flash.prototype.getFlash = function(params) {
-  // Get the protocol.
-  var protocol = window.location.protocol;
-  if (protocol.charAt(protocol.length - 1) == ':') {
-    protocol = protocol.substring(0, protocol.length - 1);
-  }
-
   // Insert the swfobject javascript.
   var tag = document.createElement('script');
-  var src = protocol;
-  src += '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js';
-  tag.src = src;
+  tag.src = '//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js';
   var firstScriptTag = document.getElementsByTagName('script')[0];
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
@@ -3776,13 +3768,11 @@ minplayer.players.minplayer.canPlay = function(file) {
  */
 minplayer.players.minplayer.prototype.create = function() {
 
-  var swfplayer = 'http://www.mediafront.org/assets/osmplayer/minplayer/';
-  swfplayer += 'flash/minplayer.swf';
-
-  // Make sure we provide default options...
-  this.options = jQuery.extend({
-    swfplayer: swfplayer
-  }, this.options);
+  // Make sure we provide default swfplayer...
+  if (!this.options.swfplayer) {
+    this.options.swfplayer = 'http://mediafront.org/assets/osmplayer/minplayer';
+    this.options.swfplayer += '/flash/minplayer.swf';
+  }
 
   minplayer.players.flash.prototype.create.call(this);
 

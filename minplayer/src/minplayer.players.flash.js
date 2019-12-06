@@ -62,17 +62,9 @@ minplayer.players.flash.canPlay = function(file) {
  * @return {object} A Flash DOM element.
  */
 minplayer.players.flash.prototype.getFlash = function(params) {
-  // Get the protocol.
-  var protocol = window.location.protocol;
-  if (protocol.charAt(protocol.length - 1) == ':') {
-    protocol = protocol.substring(0, protocol.length - 1);
-  }
-
   // Insert the swfobject javascript.
   var tag = document.createElement('script');
-  var src = protocol;
-  src += '://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js';
-  tag.src = src;
+  tag.src = '//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js';
   var firstScriptTag = document.getElementsByTagName('script')[0];
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
