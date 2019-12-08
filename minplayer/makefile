@@ -26,6 +26,7 @@ files =   src/minplayer.compatibility.js\
           src/minplayer.players.minplayer.js\
           src/minplayer.players.youtube.js\
           src/minplayer.players.vimeo.js\
+          src/minplayer.players.limelight.js\
           src/minplayer.controller.js
 
 .DEFAULT_GOAL := all

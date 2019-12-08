@@ -243,12 +243,11 @@ minplayer.players.html5.prototype.getPlayer = function() {
 
 /**
  * @see minplayer.players.base#load
- * @return {boolean} If this action was performed.
  */
-minplayer.players.html5.prototype.load = function(file) {
+minplayer.players.html5.prototype.load = function(file, callback) {
 
   // See if a load is even necessary.
-  if (minplayer.players.base.prototype.load.call(this, file)) {
+  minplayer.players.base.prototype.load.call(this, file, function() {
 
     // Get the current source.
     var src = this.elements.media.attr('src');
@@ -271,93 +270,88 @@ minplayer.players.html5.prototype.load = function(file) {
       // Change the source...
       var code = '<source src="' + file.path + '"></source>';
       this.elements.media.removeAttr('src').empty().html(code);
-      return true;
+      if (callback) {
+        callback.call(this);
+      }
     }
-  }
-
-  return false;
+  });
 };
 
 /**
  * @see minplayer.players.base#play
- * @return {boolean} If this action was performed.
  */
-minplayer.players.html5.prototype.play = function() {
-  if (minplayer.players.base.prototype.play.call(this)) {
+minplayer.players.html5.prototype.play = function(callback) {
+  minplayer.players.base.prototype.play.call(this, function() {
     this.player.play();
-    return true;
-  }
-
-  return false;
+    if (callback) {
+      callback.call(this);
+    }
+  });
 };
 
 /**
  * @see minplayer.players.base#pause
- * @return {boolean} If this action was performed.
  */
-minplayer.players.html5.prototype.pause = function() {
-  if (minplayer.players.base.prototype.pause.call(this)) {
+minplayer.players.html5.prototype.pause = function(callback) {
+  minplayer.players.base.prototype.pause.call(this, function() {
     this.player.pause();
-    return true;
-  }
-
-  return false;
+    if (callback) {
+      callback.call(this);
+    }
+  });
 };
 
 /**
  * @see minplayer.players.base#stop
- * @return {boolean} If this action was performed.
  */
-minplayer.players.html5.prototype.stop = function() {
-  if (minplayer.players.base.prototype.stop.call(this)) {
+minplayer.players.html5.prototype.stop = function(callback) {
+  minplayer.players.base.prototype.stop.call(this, function() {
     this.player.pause();
     this.player.src = '';
-    return true;
-  }
-
-  return false;
+    if (callback) {
+      callback.call(this);
+    }
+  });
 };
 
 /**
  * @see minplayer.players.base#seek
- * @return {boolean} If this action was performed.
  */
-minplayer.players.html5.prototype.seek = function(pos) {
-  if (minplayer.players.base.prototype.seek.call(this, pos)) {
+minplayer.players.html5.prototype.seek = function(pos, callback) {
+  minplayer.players.base.prototype.seek.call(this, pos, function() {
     this.player.currentTime = pos;
-    return true;
-  }
-
-  return false;
+    if (callback) {
+      callback.call(this);
+    }
+  });
 };
 
 /**
  * @see minplayer.players.base#setVolume
- * @return {boolean} If this action was performed.
  */
-minplayer.players.html5.prototype.setVolume = function(vol) {
-  if (minplayer.players.base.prototype.setVolume.call(this, vol)) {
+minplayer.players.html5.prototype.setVolume = function(vol, callback) {
+  minplayer.players.base.prototype.setVolume.call(this, vol, function() {
     this.player.volume = vol;
-    return true;
-  }
-
-  return false;
+    if (callback) {
+      callback.call(this);
+    }
+  });
 };
 
 /**
  * @see minplayer.players.base#getVolume
  */
 minplayer.players.html5.prototype.getVolume = function(callback) {
-  if (this.isReady()) {
+  this.whenReady(function() {
     callback(this.player.volume);
-  }
+  });
 };
 
 /**
  * @see minplayer.players.base#getDuration
  */
 minplayer.players.html5.prototype.getDuration = function(callback) {
-  if (this.isReady()) {
+  this.whenReady(function() {
     if (this.options.duration) {
       callback(this.options.duration);
     }
@@ -367,23 +361,23 @@ minplayer.players.html5.prototype.getDuration = function(callback) {
         this.duration.set(this.player.duration);
       }
     }
-  }
+  });
 };
 
 /**
  * @see minplayer.players.base#getCurrentTime
  */
 minplayer.players.html5.prototype.getCurrentTime = function(callback) {
-  if (this.isReady()) {
+  this.whenReady(function() {
     callback(this.player.currentTime);
-  }
+  });
 };
 
 /**
  * @see minplayer.players.base#getBytesLoaded
  */
 minplayer.players.html5.prototype.getBytesLoaded = function(callback) {
-  if (this.isReady()) {
+  this.whenReady(function() {
     var loaded = 0;
 
     // Check several different possibilities.
@@ -404,15 +398,14 @@ minplayer.players.html5.prototype.getBytesLoaded = function(callback) {
 
     // Return the loaded amount.
     callback(loaded);
-  }
+  });
 };
 
 /**
  * @see minplayer.players.base#getBytesTotal
  */
 minplayer.players.html5.prototype.getBytesTotal = function(callback) {
-  if (this.isReady()) {
-
+  this.whenReady(function() {
     var total = 0;
 
     // Check several different possibilities.
@@ -433,5 +426,5 @@ minplayer.players.html5.prototype.getBytesTotal = function(callback) {
 
     // Return the loaded amount.
     callback(total);
-  }
+  });
 };

@@ -256,82 +256,76 @@ minplayer.players.youtube.prototype.create = function() {
 
 /**
  * @see minplayer.players.base#load
- * @return {boolean} If this action was performed.
  */
-minplayer.players.youtube.prototype.load = function(file) {
-  if (minplayer.players.base.prototype.load.call(this, file)) {
+minplayer.players.youtube.prototype.load = function(file, callback) {
+  minplayer.players.base.prototype.load.call(this, file, function() {
     this.player.loadVideoById(file.id, 0, this.quality);
-    return true;
-  }
-
-  return false;
+    if (callback) {
+      callback.call(this);
+    }
+  });
 };
 
 /**
  * @see minplayer.players.base#play
- * @return {boolean} If this action was performed.
  */
-minplayer.players.youtube.prototype.play = function() {
-  if (minplayer.players.base.prototype.play.call(this)) {
+minplayer.players.youtube.prototype.play = function(callback) {
+  minplayer.players.base.prototype.play.call(this, function() {
     this.onWaiting();
     this.player.playVideo();
-    return true;
-  }
-
-  return false;
+    if (callback) {
+      callback.call(this);
+    }
+  });
 };
 
 /**
  * @see minplayer.players.base#pause
- * @return {boolean} If this action was performed.
  */
-minplayer.players.youtube.prototype.pause = function() {
-  if (minplayer.players.base.prototype.pause.call(this)) {
+minplayer.players.youtube.prototype.pause = function(callback) {
+  minplayer.players.base.prototype.pause.call(this, function() {
     this.player.pauseVideo();
-    return true;
-  }
-
-  return false;
+    if (callback) {
+      callback.call(this);
+    }
+  });
 };
 
 /**
  * @see minplayer.players.base#stop
- * @return {boolean} If this action was performed.
  */
-minplayer.players.youtube.prototype.stop = function() {
-  if (minplayer.players.base.prototype.stop.call(this)) {
+minplayer.players.youtube.prototype.stop = function(callback) {
+  minplayer.players.base.prototype.stop.call(this, function() {
     this.player.stopVideo();
-    return true;
-  }
-
-  return false;
+    if (callback) {
+      callback.call(this);
+    }
+  });
 };
 
 /**
  * @see minplayer.players.base#seek
- * @return {boolean} If this action was performed.
  */
-minplayer.players.youtube.prototype.seek = function(pos) {
-  if (minplayer.players.base.prototype.seek.call(this, pos)) {
+minplayer.players.youtube.prototype.seek = function(pos, callback) {
+  minplayer.players.base.prototype.seek.call(this, pos, function() {
     this.onWaiting();
     this.player.seekTo(pos, true);
-    return true;
-  }
-
-  return false;
+    if (callback) {
+      callback.call(this);
+    }
+  });
 };
 
 /**
  * @see minplayer.players.base#setVolume
- * @return {boolean} If this action was performed.
  */
-minplayer.players.youtube.prototype.setVolume = function(vol) {
-  if (minplayer.players.base.prototype.setVolume.call(this, vol)) {
+minplayer.players.youtube.prototype.setVolume = function(vol, callback) {
+  minplayer.players.base.prototype.setVolume.call(this, vol, function() {
     this.player.setVolume(vol * 100);
-    return true;
-  }
-
-  return false;
+    if (callback) {
+      callback.call(this);
+    }
+  });
 };
 
 /**

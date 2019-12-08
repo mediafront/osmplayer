@@ -79,6 +79,9 @@ minplayer.players.base.prototype.construct = function() {
   // Set the plugin name within the options.
   this.options.pluginName = 'basePlayer';
 
+  /** The ready queue for this player. */
+  this.readyQueue = [];
+
   /** The currently loaded media file. */
   this.mediaFile = this.options.file;
 
@@ -143,11 +146,6 @@ minplayer.players.base.prototype.construct = function() {
       }
     };
   })(this));
-
-  // Make sure that we trigger onReady if autoload is false.
-  if (!this.options.autoload) {
-    this.onReady();
-  }
 };
 
 /**
@@ -187,6 +185,7 @@ minplayer.players.base.prototype.clear = function() {
   // If the player exists, then unbind all events.
   if (this.player) {
     jQuery(this.player).unbind();
+    this.player = null;
   }
 };
 
@@ -221,6 +220,9 @@ minplayer.players.base.prototype.reset = function() {
 
   // We are not loading.
   this.loading = false;
+
+  // If we are loaded.
+  this.loaded = false;
 
   // Tell everyone else we reset.
   this.trigger('pause', null, true);
@@ -294,8 +296,20 @@ minplayer.players.base.prototype.onReady = function() {
   // We are now ready.
   this.ready();
 
-  // Trigger that the load has started.
-  this.trigger('loadstart');
+  // Iterate through our ready queue.
+  for (var i in this.readyQueue) {
+    this.readyQueue[i].call(this);
+  }
+
+  // Empty the ready queue.
+  this.readyQueue.length = 0;
+  this.readyQueue = [];
+
+  if (!this.loaded) {
+
+    // If we are still loading, then trigger that the load has started.
+    this.trigger('loadstart');
+  }
 };
 
 /**
@@ -426,6 +440,10 @@ minplayer.players.base.prototype.onLoaded = function() {
     this.play();
   }
 
+  // We are now loaded.
+  this.loaded = true;
+
+  // Trigger this event.
   this.trigger('loadeddata');
 
   // See if they would like to seek.
@@ -467,6 +485,24 @@ minplayer.players.base.prototype.isReady = function() {
 
   // Return that the player is set and the ready flag is good.
   return (this.player && this.playerReady);
+};
+
+/**
+ * Calls the callback when this player is ready.
+ *
+ * @param {function} callback Called when it is done performing this operation.
+ */
+minplayer.players.base.prototype.whenReady = function(callback) {
+
+  // If the player is ready, then call the callback.
+  if (this.isReady()) {
+    callback.call(this);
+  }
+  else {
+
+    // Add this to the ready queue.
+    this.readyQueue.push(callback);
+  }
 };
 
 /**
@@ -520,49 +556,54 @@ minplayer.players.base.prototype.getPlayer = function() {
  * Loads a new media player.
  *
  * @param {object} file A {@link minplayer.file} object.
- * @return {boolean} If this action was performed.
+ * @param {function} callback Called when it is done performing this operation.
  */
-minplayer.players.base.prototype.load = function(file) {
+minplayer.players.base.prototype.load = function(file, callback) {
 
   // Store the media file for future lookup.
   var isString = (typeof this.mediaFile == 'string');
   var path = isString ? this.mediaFile : this.mediaFile.path;
-  if (file && this.isReady() && (file.path != path)) {
-    this.reset();
-    this.mediaFile = file;
-    return true;
+  if (file && (file.path != path)) {
+    this.whenReady(function() {
+      this.reset();
+      this.mediaFile = file;
+      if (callback) {
+        callback.call(this);
+      }
+    });
   }
-
-  return false;
 };
 
 /**
  * Play the loaded media file.
- * @return {boolean} If this action was performed.
+ *
+ * @param {function} callback Called when it is done performing this operation.
  */
-minplayer.players.base.prototype.play = function() {
+minplayer.players.base.prototype.play = function(callback) {
   this.options.autoload = true;
   this.options.autoplay = true;
-  return this.isReady();
+  this.whenReady(callback);
 };
 
 /**
  * Pause the loaded media file.
- * @return {boolean} If this action was performed.
+ *
+ * @param {function} callback Called when it is done performing this operation.
  */
-minplayer.players.base.prototype.pause = function() {
-  return this.isReady();
+minplayer.players.base.prototype.pause = function(callback) {
+  this.whenReady(callback);
 };
 
 /**
  * Stop the loaded media file.
- * @return {boolean} If this action was performed.
+ *
+ * @param {function} callback Called when it is done performing this operation.
  */
-minplayer.players.base.prototype.stop = function() {
+minplayer.players.base.prototype.stop = function(callback) {
   this.playing = false;
   this.loading = false;
   this.hasFocus = false;
-  return this.isReady();
+  this.whenReady(callback);
 };
 
 /**
@@ -603,10 +644,10 @@ minplayer.players.base.prototype.seekRelative = function(pos) {
  * Seek the loaded media.
  *
  * @param {number} pos The position to seek the minplayer. 0 to 1.
- * @return {boolean} If this action was performed.
+ * @param {function} callback Called when it is done performing this operation.
  */
-minplayer.players.base.prototype.seek = function(pos) {
-  return this.isReady();
+minplayer.players.base.prototype.seek = function(pos, callback) {
+  this.whenReady(callback);
 };
 
 /**
@@ -646,11 +687,11 @@ minplayer.players.base.prototype.setVolumeRelative = function(vol) {
  * Set the volume of the loaded minplayer.
  *
  * @param {number} vol The volume to set the media. 0 to 1.
- * @return {boolean} If this action was performed.
+ * @param {function} callback Called when it is done performing this operation.
  */
-minplayer.players.base.prototype.setVolume = function(vol) {
+minplayer.players.base.prototype.setVolume = function(vol, callback) {
   this.trigger('volumeupdate', vol);
-  return this.isReady();
+  this.whenReady(callback);
 };
 
 /**

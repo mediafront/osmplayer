@@ -157,14 +157,12 @@ minplayer.players.minplayer.prototype.onMediaUpdate = function(eventType) {
       break;
     case 'mediaConnected':
       this.onLoaded();
+      this.onPaused();
       break;
     case 'mediaPlaying':
-      if (this.minplayerloaded) {
-        this.onPlaying();
-      }
+      this.onPlaying();
       break;
     case 'mediaPaused':
-      this.minplayerloaded = true;
       this.onPaused();
       break;
     case 'mediaComplete':
@@ -174,105 +172,91 @@ minplayer.players.minplayer.prototype.onMediaUpdate = function(eventType) {
 };
 
 /**
- * Resets all variables.
- */
-minplayer.players.minplayer.prototype.clear = function() {
-  minplayer.players.flash.prototype.clear.call(this);
-  this.minplayerloaded = this.options.autoplay || !this.options.autoload;
-};
-
-/**
  * @see minplayer.players.base#load
- * @return {boolean} If this action was performed.
  */
-minplayer.players.minplayer.prototype.load = function(file) {
-  if (minplayer.players.flash.prototype.load.call(this, file)) {
+minplayer.players.minplayer.prototype.load = function(file, callback) {
+  minplayer.players.flash.prototype.load.call(this, file, function() {
     this.player.loadMedia(file.path, file.stream);
-    return true;
-  }
-
-  return false;
+    if (callback) {
+      callback.call(this);
+    }
+  });
 };
 
 /**
  * @see minplayer.players.base#play
- * @return {boolean} If this action was performed.
  */
-minplayer.players.minplayer.prototype.play = function() {
-  if (minplayer.players.flash.prototype.play.call(this)) {
+minplayer.players.minplayer.prototype.play = function(callback) {
+  minplayer.players.flash.prototype.play.call(this, function() {
     this.player.playMedia();
-    return true;
-  }
-
-  return false;
+    if (callback) {
+      callback.call(this);
+    }
+  });
 };
 
 /**
  * @see minplayer.players.base#pause
- * @return {boolean} If this action was performed.
  */
-minplayer.players.minplayer.prototype.pause = function() {
-  if (minplayer.players.flash.prototype.pause.call(this)) {
+minplayer.players.minplayer.prototype.pause = function(callback) {
+  minplayer.players.flash.prototype.pause.call(this, function() {
     this.player.pauseMedia();
-    return true;
-  }
-
-  return false;
+    if (callback) {
+      callback.call(this);
+    }
+  });
 };
 
 /**
  * @see minplayer.players.base#stop
- * @return {boolean} If this action was performed.
  */
-minplayer.players.minplayer.prototype.stop = function() {
-  if (minplayer.players.flash.prototype.stop.call(this)) {
+minplayer.players.minplayer.prototype.stop = function(callback) {
+  minplayer.players.flash.prototype.stop.call(this, function() {
     this.player.stopMedia();
-    return true;
-  }
-
-  return false;
+    if (callback) {
+      callback.call(this);
+    }
+  });
 };
 
 /**
  * @see minplayer.players.base#seek
- * @return {boolean} If this action was performed.
  */
-minplayer.players.minplayer.prototype.seek = function(pos) {
-  if (minplayer.players.flash.prototype.seek.call(this, pos)) {
+minplayer.players.minplayer.prototype.seek = function(pos, callback) {
+  minplayer.players.flash.prototype.seek.call(this, pos, function() {
     this.player.seekMedia(pos);
-    return true;
-  }
-
-  return false;
+    if (callback) {
+      callback.call(this);
+    }
+  });
 };
 
 /**
  * @see minplayer.players.base#setVolume
- * @return {boolean} If this action was performed.
  */
-minplayer.players.minplayer.prototype.setVolume = function(vol) {
-  if (minplayer.players.flash.prototype.setVolume.call(this, vol)) {
+minplayer.players.minplayer.prototype.setVolume = function(vol, callback) {
+  minplayer.players.flash.prototype.setVolume.call(this, vol, function() {
     this.player.setVolume(vol);
-    return true;
-  }
-
-  return false;
+    if (callback) {
+      callback.call(this);
+    }
+  });
 };
 
 /**
  * @see minplayer.players.base#getVolume
  */
 minplayer.players.minplayer.prototype.getVolume = function(callback) {
-  if (this.isReady()) {
+  this.whenReady(function() {
     callback(this.player.getVolume());
-  }
+  });
 };
 
 /**
  * @see minplayer.players.flash#getDuration
  */
 minplayer.players.minplayer.prototype.getDuration = function(callback) {
-  if (this.isReady()) {
+  this.whenReady(function() {
     if (this.options.duration) {
       callback(this.options.duration);
     }
@@ -296,32 +280,32 @@ minplayer.players.minplayer.prototype.getDuration = function(callback) {
         })(this), 1000);
       }
     }
-  }
+  });
 };
 
 /**
  * @see minplayer.players.base#getCurrentTime
  */
 minplayer.players.minplayer.prototype.getCurrentTime = function(callback) {
-  if (this.isReady()) {
+  this.whenReady(function() {
     callback(this.player.getCurrentTime());
-  }
+  });
 };
 
 /**
  * @see minplayer.players.base#getBytesLoaded
  */
 minplayer.players.minplayer.prototype.getBytesLoaded = function(callback) {
-  if (this.isReady()) {
+  this.whenReady(function() {
     callback(this.player.getMediaBytesLoaded());
-  }
+  });
 };
 
 /**
  * @see minplayer.players.base#getBytesTotal.
  */
 minplayer.players.minplayer.prototype.getBytesTotal = function(callback) {
-  if (this.isReady()) {
+  this.whenReady(function() {
     callback(this.player.getMediaBytesTotal());
-  }
+  });
 };
