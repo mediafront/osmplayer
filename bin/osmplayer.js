@@ -1528,6 +1528,14 @@ minplayer.plugin.prototype.isValid = function() {
 };
 
 /**
+ * Allows a plugin to do something when it is added to another plugin.
+ *
+ * @param {object} plugin The plugin that this plugin was added to.
+ */
+minplayer.plugin.prototype.onAdded = function(plugin) {
+};
+
+/**
  * Adds a new plugin to this player.
  *
  * @param {string} name The name of this plugin.
@@ -1561,6 +1569,9 @@ minplayer.plugin.prototype.addPlugin = function(name, plugin) {
 
     // Now check the queue for this plugin.
     this.checkQueue(plugin);
+
+    // Now let the plugin do something with this plugin.
+    plugin.onAdded(this);
   }
 };
 
@@ -2101,9 +2112,8 @@ minplayer.display.prototype.constructor = minplayer.display;
  */
 minplayer.display.prototype.getDisplay = function(context, options) {
 
-  // Return null by default so that display plugins without an element do not
-  // get initialized.
-  return null;
+  // Return the context.
+  return context;
 };
 
 /**
@@ -2121,6 +2131,12 @@ minplayer.display.prototype.initialize = function() {
   // Only continue loading this plugin if there is a display.
   if (this.display) {
 
+    // Set the plugin name within the options.
+    this.options.pluginName = 'display';
+
+    // Get the display elements.
+    this.elements = this.getElements();
+
     // Call the plugin initialize method.
     minplayer.plugin.prototype.initialize.call(this);
   }
@@ -2133,12 +2149,6 @@ minplayer.display.prototype.construct = function() {
 
   // Call the plugin constructor.
   minplayer.plugin.prototype.construct.call(this);
-
-  // Set the plugin name within the options.
-  this.options.pluginName = 'display';
-
-  // Get the display elements.
-  this.elements = this.getElements();
 
   // Set if this display is in autohide.
   this.autoHide = false;
@@ -2975,9 +2985,6 @@ minplayer.image = function(context, options) {
   // The image element.
   this.img = null;
 
-  // Force the display to the context.
-  this.display = context;
-
   // Derive from display
   minplayer.display.call(this, 'image', context, options);
 };
@@ -3371,7 +3378,7 @@ minplayer.playLoader.prototype.initializePlayLoader = function() {
 
       // Bind to the player events to control the play loader.
       media.ubind(this.uuid + ':loadstart', (function(playLoader) {
-        return function(event) {
+        return function(event, data, reset) {
           playLoader.busy.setFlag('media', true);
           playLoader.bigPlay.setFlag('media', true);
           playLoader.previewFlag.setFlag('media', true);
@@ -3379,31 +3386,39 @@ minplayer.playLoader.prototype.initializePlayLoader = function() {
         };
       })(this));
       media.ubind(this.uuid + ':waiting', (function(playLoader) {
-        return function(event) {
-          playLoader.busy.setFlag('media', true);
-          playLoader.checkVisibility();
+        return function(event, data, reset) {
+          if (!reset) {
+            playLoader.busy.setFlag('media', true);
+            playLoader.checkVisibility();
+          }
         };
       })(this));
       media.ubind(this.uuid + ':loadeddata', (function(playLoader) {
-        return function(event) {
-          playLoader.busy.setFlag('media', false);
-          playLoader.checkVisibility();
+        return function(event, data, reset) {
+          if (!reset) {
+            playLoader.busy.setFlag('media', false);
+            playLoader.checkVisibility();
+          }
         };
       })(this));
       media.ubind(this.uuid + ':playing', (function(playLoader) {
-        return function(event) {
-          playLoader.busy.setFlag('media', false);
-          playLoader.bigPlay.setFlag('media', false);
-          if (media.mediaFile.type !== 'audio') {
-            playLoader.previewFlag.setFlag('media', false);
+        return function(event, data, reset) {
+          if (!reset) {
+            playLoader.busy.setFlag('media', false);
+            playLoader.bigPlay.setFlag('media', false);
+            if (media.mediaFile.type !== 'audio') {
+              playLoader.previewFlag.setFlag('media', false);
+            }
+            playLoader.checkVisibility();
           }
-          playLoader.checkVisibility();
         };
       })(this));
       media.ubind(this.uuid + ':pause', (function(playLoader) {
-        return function(event) {
-          playLoader.bigPlay.setFlag('media', true);
-          playLoader.checkVisibility();
+        return function(event, data, reset) {
+          if (!reset) {
+            playLoader.bigPlay.setFlag('media', true);
+            playLoader.checkVisibility();
+          }
         };
       })(this));
     }
@@ -3453,7 +3468,7 @@ minplayer.playLoader.prototype.clear = function() {
 minplayer.playLoader.prototype.loadPreview = function() {
 
   // Ignore if disabled.
-  if (!this.enabled) {
+  if (!this.enabled || (this.display.length == 0)) {
     return;
   }
 
@@ -3544,9 +3559,6 @@ minplayer.players = minplayer.players || {};
  */
 minplayer.players.base = function(context, options, queue) {
 
-  // Force the display to the context.
-  this.display = context;
-
   // Derive from display
   minplayer.display.call(this, 'media', context, options, queue);
 };
@@ -3622,6 +3634,15 @@ minplayer.players.base.prototype.construct = function() {
 
   // Clear the media player.
   this.clear();
+
+  // Now setup the media player.
+  this.setupPlayer();
+};
+
+/**
+ * Sets up a new media player.
+ */
+minplayer.players.base.prototype.setupPlayer = function() {
 
   // Get the player display object.
   if (!this.playerFound()) {
@@ -3716,7 +3737,7 @@ minplayer.players.base.prototype.clear = function() {
 
   // If the player exists, then unbind all events.
   if (this.player) {
-    jQuery(this.player).unbind();
+    jQuery(this.player).remove();
     this.player = null;
   }
 };
@@ -3828,19 +3849,29 @@ minplayer.players.base.prototype.onReady = function() {
   // We are now ready.
   this.ready();
 
-  // Iterate through our ready queue.
-  for (var i in this.readyQueue) {
-    this.readyQueue[i].call(this);
+  // Make sure the player is ready or errors will occur.
+  if (this.isReady()) {
+
+    // Iterate through our ready queue.
+    for (var i in this.readyQueue) {
+      this.readyQueue[i].call(this);
+    }
+
+    // Empty the ready queue.
+    this.readyQueue.length = 0;
+    this.readyQueue = [];
+
+    if (!this.loaded) {
+
+      // If we are still loading, then trigger that the load has started.
+      this.trigger('loadstart');
+    }
   }
+  else {
 
-  // Empty the ready queue.
-  this.readyQueue.length = 0;
-  this.readyQueue = [];
-
-  if (!this.loaded) {
-
-    // If we are still loading, then trigger that the load has started.
-    this.trigger('loadstart');
+    // Empty the ready queue.
+    this.readyQueue.length = 0;
+    this.readyQueue = [];
   }
 };
 
@@ -4096,13 +4127,18 @@ minplayer.players.base.prototype.load = function(file, callback) {
   var isString = (typeof this.mediaFile == 'string');
   var path = isString ? this.mediaFile : this.mediaFile.path;
   if (file && (file.path != path)) {
-    this.whenReady(function() {
-      this.reset();
-      this.mediaFile = file;
-      if (callback) {
-        callback.call(this);
-      }
-    });
+
+    // If the player is not ready, then setup.
+    if (!this.isReady()) {
+      this.setupPlayer();
+    }
+
+    // Reset the media and set the media file.
+    this.reset();
+    this.mediaFile = file;
+    if (callback) {
+      callback.call(this);
+    }
   }
 };
 
@@ -4443,7 +4479,7 @@ minplayer.players.html5.prototype.addPlayerEvents = function() {
 
     var errorSent = false;
     this.addPlayerEvent('error', function() {
-      if (!errorSent) {
+      if (!errorSent && this.player) {
         errorSent = true;
         this.trigger('error', 'An error occured - ' + this.player.error.code);
       }
@@ -6714,11 +6750,6 @@ osmplayer.prototype.fullScreenElement = function() {
  */
 osmplayer.prototype.reset = function() {
 
-  // Stop the media.
-  if (this.media) {
-    this.media.stop();
-  }
-
   // Empty the playqueue.
   this.playQueue.length = 0;
   this.playQueue = [];
@@ -6739,6 +6770,9 @@ osmplayer.prototype.loadNode = function(node) {
 
   // Reset the player.
   this.reset();
+
+  // Set the hasMedia flag.
+  this.hasMedia = node && node.mediafiles && node.mediafiles.media;
 
   // If this node is set and has files.
   if (node && node.mediafiles) {
@@ -6772,19 +6806,25 @@ osmplayer.prototype.loadNode = function(node) {
       this.display.addClass('nomedia');
     }
 
+    // Play the next media
+    this.playNext();
+
     // Load the preview image.
     osmplayer.getImage(node.mediafiles, 'preview', (function(player) {
       return function(image) {
         player.options.preview = image.path;
-        if (player.playLoader) {
+        if (player.playLoader && (player.playLoader.display.length > 0)) {
           player.playLoader.enabled = true;
           player.playLoader.loadPreview();
+          player.playLoader.previewFlag.setFlag('media', true);
+          if (!player.hasMedia) {
+            player.playLoader.busy.setFlag('media', false);
+            player.playLoader.bigPlay.setFlag('media', false);
+          }
+          player.playLoader.checkVisibility();
         }
       };
     })(this));
-
-    // Play the next media
-    this.playNext();
   }
 };
 
@@ -6829,6 +6869,11 @@ osmplayer.prototype.playNext = function() {
   }
   else if (this.media) {
     this.media.stop();
+
+    // If there is no media found, then clear the player.
+    if (!this.hasMedia) {
+      this.media.clear();
+    }
   }
 };
 
@@ -7191,9 +7236,6 @@ osmplayer.playlist.prototype.construct = function() {
     scrollMode: 'auto'
   }, this.options);
 
-  // Call the minplayer plugin constructor.
-  minplayer.display.prototype.construct.call(this);
-
   /** The nodes within this playlist. */
   this.nodes = [];
 
@@ -7243,23 +7285,37 @@ osmplayer.playlist.prototype.construct = function() {
   })(this));
 
   // Load the "next" item.
-  if (this.next()) {
+  this.hasNext = this.next();
 
-    // Get the media.
-    if (this.options.autoNext) {
-      this.get('player', function(player) {
-        player.ubind(this.uuid + ':player_ended', (function(playlist) {
-          return function(event) {
-            player.options.autoplay = true;
-            playlist.next();
-          };
-        })(this));
-      });
-    }
-  }
+  // Call the minplayer plugin constructor.
+  minplayer.display.prototype.construct.call(this);
 
   // Say that we are ready.
   this.ready();
+};
+
+/**
+ * @see minplayer.plugin.onAdded
+ */
+osmplayer.playlist.prototype.onAdded = function(plugin) {
+
+  // Load the "next" item.
+  if (this.hasNext) {
+
+    // Get the media.
+    if (this.options.autoNext) {
+
+      // Get the player from this plugin.
+      plugin.get('player', (function(playlist) {
+        return function(player) {
+          player.ubind(playlist.uuid + ':player_ended', function(event) {
+            player.options.autoplay = true;
+            playlist.next();
+          });
+        };
+      })(this));
+    }
+  }
 };
 
 /**

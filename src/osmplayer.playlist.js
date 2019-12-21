@@ -39,9 +39,6 @@ osmplayer.playlist.prototype.construct = function() {
     scrollMode: 'auto'
   }, this.options);
 
-  // Call the minplayer plugin constructor.
-  minplayer.display.prototype.construct.call(this);
-
   /** The nodes within this playlist. */
   this.nodes = [];
 
@@ -91,23 +88,37 @@ osmplayer.playlist.prototype.construct = function() {
   })(this));
 
   // Load the "next" item.
-  if (this.next()) {
+  this.hasNext = this.next();
 
-    // Get the media.
-    if (this.options.autoNext) {
-      this.get('player', function(player) {
-        player.ubind(this.uuid + ':player_ended', (function(playlist) {
-          return function(event) {
-            player.options.autoplay = true;
-            playlist.next();
-          };
-        })(this));
-      });
-    }
-  }
+  // Call the minplayer plugin constructor.
+  minplayer.display.prototype.construct.call(this);
 
   // Say that we are ready.
   this.ready();
+};
+
+/**
+ * @see minplayer.plugin.onAdded
+ */
+osmplayer.playlist.prototype.onAdded = function(plugin) {
+
+  // Load the "next" item.
+  if (this.hasNext) {
+
+    // Get the media.
+    if (this.options.autoNext) {
+
+      // Get the player from this plugin.
+      plugin.get('player', (function(playlist) {
+        return function(player) {
+          player.ubind(playlist.uuid + ':player_ended', function(event) {
+            player.options.autoplay = true;
+            playlist.next();
+          });
+        };
+      })(this));
+    }
+  }
 };
 
 /**

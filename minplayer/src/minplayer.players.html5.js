@@ -151,7 +151,7 @@ minplayer.players.html5.prototype.addPlayerEvents = function() {
 
     var errorSent = false;
     this.addPlayerEvent('error', function() {
-      if (!errorSent) {
+      if (!errorSent && this.player) {
         errorSent = true;
         this.trigger('error', 'An error occured - ' + this.player.error.code);
       }
