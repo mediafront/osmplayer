@@ -26,6 +26,14 @@ minplayer.players.base.prototype = new minplayer.display();
 minplayer.players.base.prototype.constructor = minplayer.players.base;
 
 /**
+ * @see minplayer.display.getDisplay
+ * @return {object} The media container for which this media will reside.
+ */
+minplayer.players.base.prototype.getDisplay = function(context, options) {
+  return context;
+};
+
+/**
  * @see minplayer.display.getElements
  * @this minplayer.players.base
  * @return {object} The elements for this display.
@@ -159,7 +167,7 @@ minplayer.players.base.prototype.addPlayer = function() {
   }
 
   // Create a new media player element.
-  this.elements.media = jQuery(this.create());
+  this.elements.media = jQuery(this.createPlayer());
   this.display.html(this.elements.media);
 };
 
@@ -538,7 +546,7 @@ minplayer.players.base.prototype.playerFound = function() {
  *
  * @return {object} The media player entity.
  */
-minplayer.players.base.prototype.create = function() {
+minplayer.players.base.prototype.createPlayer = function() {
   this.reset();
   return null;
 };

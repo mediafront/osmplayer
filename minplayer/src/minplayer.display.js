@@ -28,19 +28,38 @@ minplayer.display.prototype.constructor = minplayer.display;
 /**
  * Returns the display for this component.
  *
+ * @param {object} context The context which this display is within.
+ * @param {object} options The options to get the display.
+ *
  * @return {object} The jQuery context for this display.
  */
-minplayer.display.prototype.getDisplay = function() {
-  return this.context;
+minplayer.display.prototype.getDisplay = function(context, options) {
+
+  // Return null by default so that display plugins without an element do not
+  // get initialized.
+  return null;
+};
+
+/**
+ * @see minplayer.plugin.initialize
+ */
+minplayer.display.prototype.initialize = function() {
+
+  // Set the display.
+  this.display = this.getDisplay(this.context, this.options);
+
+  // Only continue loading this plugin if there is a display.
+  if (this.display) {
+
+    // Call the plugin initialize method.
+    minplayer.plugin.prototype.initialize.call(this);
+  }
 };
 
 /**
  * @see minplayer.plugin.construct
  */
 minplayer.display.prototype.construct = function() {
-
-  // Set the display.
-  this.display = this.getDisplay(this.context, this.options);
 
   // Call the plugin constructor.
   minplayer.plugin.prototype.construct.call(this);

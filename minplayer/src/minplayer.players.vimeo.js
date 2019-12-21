@@ -127,8 +127,8 @@ minplayer.players.vimeo.prototype.reset = function() {
  * @see minplayer.players.base#create
  * @return {object} The media player entity.
  */
-minplayer.players.vimeo.prototype.create = function() {
-  minplayer.players.base.prototype.create.call(this);
+minplayer.players.vimeo.prototype.createPlayer = function() {
+  minplayer.players.base.prototype.createPlayer.call(this);
 
   // Insert the Vimeo Froogaloop player.
   var tag = document.createElement('script');

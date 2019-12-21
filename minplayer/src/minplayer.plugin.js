@@ -45,15 +45,21 @@ minplayer.plugin = function(name, context, options, queue) {
   // Only call the constructor if we have a context.
   if (context) {
 
-    /** Say that we are active. */
-    this.active = true;
-
     /** Keep track of the context. */
     this.context = jQuery(context);
 
-    // Construct this plugin.
-    this.construct();
+    // Initialize this plugin.
+    this.initialize();
   }
+};
+
+/**
+ * Initialize function for the plugin.
+ */
+minplayer.plugin.prototype.initialize = function() {
+
+  // Construct this plugin.
+  this.construct();
 };
 
 /**
@@ -64,6 +70,9 @@ minplayer.plugin = function(name, context, options, queue) {
  * as object creation.
  */
 minplayer.plugin.prototype.construct = function() {
+
+  /** Say that we are active. */
+  this.active = true;
 
   // Adds this as a plugin.
   this.addPlugin();
