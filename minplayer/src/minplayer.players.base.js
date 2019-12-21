@@ -15,6 +15,9 @@ minplayer.players = minplayer.players || {};
  */
 minplayer.players.base = function(context, options, queue) {
 
+  // Force the display to the context.
+  this.display = context;
+
   // Derive from display
   minplayer.display.call(this, 'media', context, options, queue);
 };
@@ -24,14 +27,6 @@ minplayer.players.base.prototype = new minplayer.display();
 
 /** Reset the constructor. */
 minplayer.players.base.prototype.constructor = minplayer.players.base;
-
-/**
- * @see minplayer.display.getDisplay
- * @return {object} The media container for which this media will reside.
- */
-minplayer.players.base.prototype.getDisplay = function(context, options) {
-  return context;
-};
 
 /**
  * @see minplayer.display.getElements
