@@ -3053,7 +3053,7 @@ minplayer.image.prototype.load = function(src) {
 minplayer.image.prototype.clear = function(callback) {
   this.loaded = false;
   if (this.img) {
-    this.img.fadeOut((function(image) {
+    this.img.fadeOut(150, (function(image) {
       return function() {
         image.img.attr('src', '');
         image.loader.src = '';
@@ -3097,7 +3097,7 @@ minplayer.image.prototype.resize = function(width, height) {
     }
 
     // Show the container.
-    this.img.fadeIn();
+    this.img.fadeIn(150);
   }
 };
 
@@ -3436,8 +3436,10 @@ minplayer.playLoader.prototype.initializePlayLoader = function() {
 
 /**
  * Clears the playloader.
+ *
+ * @param {function} callback Called when the playloader is finished clearing.
  */
-minplayer.playLoader.prototype.clear = function() {
+minplayer.playLoader.prototype.clear = function(callback) {
 
   // Define the flags that control the busy cursor.
   this.busy = new minplayer.flags();
@@ -3448,16 +3450,35 @@ minplayer.playLoader.prototype.clear = function() {
   // Define the flags the control the preview.
   this.previewFlag = new minplayer.flags();
 
-  // If the preview is defined, then clear the image.
-  if (this.preview) {
-    this.preview.clear();
-  }
-
-  /** The preview image. */
-  this.preview = null;
-
   /** If the playLoader is enabled. */
   this.enabled = true;
+
+  // If the preview is defined, then clear the image.
+  if (this.preview) {
+
+    this.preview.clear((function(playLoader) {
+      return function() {
+
+        // Reset the preview.
+        playLoader.preview = null;
+
+        // If they wish to be called back after it is cleared.
+        if (callback) {
+          callback();
+        }
+      };
+    })(this));
+  }
+  else {
+
+    /** The preview image. */
+    this.preview = null;
+
+    // Return the callback.
+    if (callback) {
+      callback();
+    }
+  }
 };
 
 /**
@@ -6747,8 +6768,10 @@ osmplayer.prototype.fullScreenElement = function() {
 
 /**
  * Reset the osmplayer.
+ *
+ * @param {function} callback Called when it is done resetting.
  */
-osmplayer.prototype.reset = function() {
+osmplayer.prototype.reset = function(callback) {
 
   // Empty the playqueue.
   this.playQueue.length = 0;
@@ -6756,9 +6779,16 @@ osmplayer.prototype.reset = function() {
   this.playIndex = 0;
 
   // Clear the playloader.
-  if (this.playLoader) {
+  if (this.playLoader && this.options.preview) {
     this.options.preview = '';
-    this.playLoader.clear();
+    this.playLoader.clear((function(player) {
+      return function() {
+        callback.call(player);
+      };
+    })(this));
+  }
+  else if (callback) {
+    callback.call(this);
   }
 };
 
@@ -6766,67 +6796,74 @@ osmplayer.prototype.reset = function() {
  * The load node function.
  *
  * @param {object} node A media node object.
+ * @return {boolean} If the node was loaded.
  */
 osmplayer.prototype.loadNode = function(node) {
 
+  // Make sure this is a valid node.
+  if (!node || (node.hasOwnProperty('length') && (node.length == 0))) {
+    return false;
+  }
+
   // Reset the player.
-  this.reset();
+  this.reset(function() {
 
-  // Set the hasMedia flag.
-  this.hasMedia = node && node.mediafiles && node.mediafiles.media;
+    // Set the hasMedia flag.
+    this.hasMedia = node && node.mediafiles && node.mediafiles.media;
 
-  // If this node is set and has files.
-  if (node && node.mediafiles) {
+    // If this node is set and has files.
+    if (node && node.mediafiles) {
 
-    // Load the media files.
-    var media = node.mediafiles.media;
-    if (media) {
-      var file = null;
-      var types = [];
+      // Load the media files.
+      var media = node.mediafiles.media;
+      if (media) {
+        var file = null;
+        var types = [];
 
-      // For mobile devices, we should only show the main media.
-      if (minplayer.isAndroid || minplayer.isIDevice) {
-        types = ['media'];
+        // For mobile devices, we should only show the main media.
+        if (minplayer.isAndroid || minplayer.isIDevice) {
+          types = ['media'];
+        }
+        else {
+          types = ['intro', 'commercial', 'prereel', 'media', 'postreel'];
+        }
+
+        // Iterate through the types.
+        jQuery.each(types, (function(player) {
+          return function(key, type) {
+            if (file = player.addToQueue(media[type])) {
+              file.queueType = type;
+            }
+          };
+        })(this));
       }
       else {
-        types = ['intro', 'commercial', 'prereel', 'media', 'postreel'];
+
+        // Add a class to the display to let themes handle this.
+        this.display.addClass('nomedia');
       }
 
-      // Iterate through the types.
-      jQuery.each(types, (function(player) {
-        return function(key, type) {
-          if (file = player.addToQueue(media[type])) {
-            file.queueType = type;
+      // Play the next media
+      this.playNext();
+
+      // Load the preview image.
+      osmplayer.getImage(node.mediafiles, 'preview', (function(player) {
+        return function(image) {
+          player.options.preview = image.path;
+          if (player.playLoader && (player.playLoader.display.length > 0)) {
+            player.playLoader.enabled = true;
+            player.playLoader.loadPreview();
+            player.playLoader.previewFlag.setFlag('media', true);
+            if (!player.hasMedia) {
+              player.playLoader.busy.setFlag('media', false);
+              player.playLoader.bigPlay.setFlag('media', false);
+            }
+            player.playLoader.checkVisibility();
           }
         };
       })(this));
     }
-    else {
-
-      // Add a class to the display to let themes handle this.
-      this.display.addClass('nomedia');
-    }
-
-    // Play the next media
-    this.playNext();
-
-    // Load the preview image.
-    osmplayer.getImage(node.mediafiles, 'preview', (function(player) {
-      return function(image) {
-        player.options.preview = image.path;
-        if (player.playLoader && (player.playLoader.display.length > 0)) {
-          player.playLoader.enabled = true;
-          player.playLoader.loadPreview();
-          player.playLoader.previewFlag.setFlag('media', true);
-          if (!player.hasMedia) {
-            player.playLoader.busy.setFlag('media', false);
-            player.playLoader.bigPlay.setFlag('media', false);
-          }
-          player.playLoader.checkVisibility();
-        }
-      };
-    })(this));
-  }
+  });
 };
 
 /**

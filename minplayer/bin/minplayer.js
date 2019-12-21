@@ -1949,7 +1949,7 @@ minplayer.image.prototype.load = function(src) {
 minplayer.image.prototype.clear = function(callback) {
   this.loaded = false;
   if (this.img) {
-    this.img.fadeOut((function(image) {
+    this.img.fadeOut(150, (function(image) {
       return function() {
         image.img.attr('src', '');
         image.loader.src = '';
@@ -1993,7 +1993,7 @@ minplayer.image.prototype.resize = function(width, height) {
     }
 
     // Show the container.
-    this.img.fadeIn();
+    this.img.fadeIn(150);
   }
 };
 
@@ -2332,8 +2332,10 @@ minplayer.playLoader.prototype.initializePlayLoader = function() {
 
 /**
  * Clears the playloader.
+ *
+ * @param {function} callback Called when the playloader is finished clearing.
  */
-minplayer.playLoader.prototype.clear = function() {
+minplayer.playLoader.prototype.clear = function(callback) {
 
   // Define the flags that control the busy cursor.
   this.busy = new minplayer.flags();
@@ -2344,16 +2346,35 @@ minplayer.playLoader.prototype.clear = function() {
   // Define the flags the control the preview.
   this.previewFlag = new minplayer.flags();
 
-  // If the preview is defined, then clear the image.
-  if (this.preview) {
-    this.preview.clear();
-  }
-
-  /** The preview image. */
-  this.preview = null;
-
   /** If the playLoader is enabled. */
   this.enabled = true;
+
+  // If the preview is defined, then clear the image.
+  if (this.preview) {
+
+    this.preview.clear((function(playLoader) {
+      return function() {
+
+        // Reset the preview.
+        playLoader.preview = null;
+
+        // If they wish to be called back after it is cleared.
+        if (callback) {
+          callback();
+        }
+      };
+    })(this));
+  }
+  else {
+
+    /** The preview image. */
+    this.preview = null;
+
+    // Return the callback.
+    if (callback) {
+      callback();
+    }
+  }
 };
 
 /**
