@@ -97,11 +97,13 @@ minplayer.image.prototype.clear = function(callback) {
         image.img.attr('src', '');
         image.loader.src = '';
         jQuery(this).remove();
-        callback.call(image);
+        if (callback) {
+          callback.call(image);
+        }
       };
     })(this));
   }
-  else {
+  else if (callback) {
     callback.call(this);
   }
 };

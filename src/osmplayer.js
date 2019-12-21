@@ -138,14 +138,14 @@ osmplayer.prototype.construct = function() {
   });
 
   // Play each media sequentially...
-  this.get('media', (function(player) {
-    return function(media) {
-      media.ubind(player.uuid + ':ended', function() {
+  this.get('media', function(media) {
+    media.ubind(this.uuid + ':ended', (function(player) {
+      return function() {
         player.options.autoplay = true;
         player.playNext();
-      });
-    };
-  })(this));
+      };
+    })(this));
+  });
 
   // Load the node if one is provided.
   if (this.options.node) {
@@ -163,19 +163,42 @@ osmplayer.prototype.fullScreenElement = function() {
 };
 
 /**
+ * Reset the osmplayer.
+ */
+osmplayer.prototype.reset = function() {
+
+  // Stop the media.
+  if (this.media) {
+    this.media.stop();
+  }
+
+  // Empty the playqueue.
+  this.playQueue.length = 0;
+  this.playQueue = [];
+  this.playIndex = 0;
+
+  // Clear the playloader.
+  if (this.playLoader) {
+    this.playLoader.clear();
+  }
+};
+
+/**
  * The load node function.
  *
  * @param {object} node A media node object.
  */
 osmplayer.prototype.loadNode = function(node) {
+
+  // Reset the player.
+  this.reset();
+
+  // If this node is set and has files.
   if (node && node.mediafiles) {
 
     // Load the media files.
     var media = node.mediafiles.media;
     if (media) {
-      this.playQueue.length = 0;
-      this.playQueue = [];
-      this.playIndex = 0;
       var file = null;
       var types = [];
 
@@ -258,7 +281,6 @@ osmplayer.prototype.playNext = function() {
     }
   }
   else if (this.media) {
-    // Stop the player and unload.
     this.media.stop();
   }
 };
