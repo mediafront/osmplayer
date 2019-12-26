@@ -22,12 +22,12 @@ osmplayer.playlist.prototype = new minplayer.display();
 osmplayer.playlist.prototype.constructor = osmplayer.playlist;
 
 /**
- * @see minplayer.plugin#construct
+ * Returns the default options for this plugin.
+ *
+ * @return {object} The default options for this plugin.
  */
-osmplayer.playlist.prototype.construct = function() {
-
-  // Make sure we provide default options...
-  this.options = jQuery.extend({
+osmplayer.playlist.prototype.defaultOptions = function() {
+  return {
     vertical: true,
     playlist: '',
     pageLimit: 10,
@@ -37,7 +37,13 @@ osmplayer.playlist.prototype.construct = function() {
     hysteresis: 40,
     scrollSpeed: 20,
     scrollMode: 'auto'
-  }, this.options);
+  };
+};
+
+/**
+ * @see minplayer.plugin#construct
+ */
+osmplayer.playlist.prototype.construct = function() {
 
   /** The nodes within this playlist. */
   this.nodes = [];
