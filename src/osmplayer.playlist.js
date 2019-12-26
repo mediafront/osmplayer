@@ -24,20 +24,19 @@ osmplayer.playlist.prototype.constructor = osmplayer.playlist;
 /**
  * Returns the default options for this plugin.
  *
- * @return {object} The default options for this plugin.
+ * @param {object} options The default options for this plugin.
  */
-osmplayer.playlist.prototype.defaultOptions = function() {
-  return {
-    vertical: true,
-    playlist: '',
-    pageLimit: 10,
-    autoNext: true,
-    shuffle: false,
-    loop: false,
-    hysteresis: 40,
-    scrollSpeed: 20,
-    scrollMode: 'auto'
-  };
+osmplayer.playlist.prototype.defaultOptions = function(options) {
+  options.vertical = true;
+  options.playlist = '';
+  options.pageLimit = 10;
+  options.autoNext = true;
+  options.shuffle = false;
+  options.loop = false;
+  options.hysteresis = 40;
+  options.scrollSpeed = 20;
+  options.scrollMode = 'auto';
+  minplayer.display.prototype.defaultOptions.call(this, options);
 };
 
 /**

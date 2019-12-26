@@ -85,15 +85,14 @@ osmplayer.prototype.create = function(name, base, context) {
 /**
  * Get the default options for this plugin.
  *
- * @return {object} The default options for this plugin.
+ * @param {object} options The default options for this plugin.
  */
-osmplayer.prototype.defaultOptions = function() {
-  return {
-    playlist: '',
-    node: {},
-    link: 'http://www.mediafront.org',
-    logo: 'http://mediafront.org/assets/osmplayer/logo.png'
-  };
+osmplayer.prototype.defaultOptions = function(options) {
+  options.playlist = '';
+  options.node = {};
+  options.link = 'http://www.mediafront.org';
+  options.logo = 'http://mediafront.org/assets/osmplayer/logo.png';
+  minplayer.prototype.defaultOptions.call(this, options);
 };
 
 /**

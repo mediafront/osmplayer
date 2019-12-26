@@ -70,12 +70,11 @@ minplayer.controller.prototype.getElements = function() {
 /**
  * Get the default options for this plugin.
  *
- * @return {object} The default options for this plugin.
+ * @param {object} options The default options for this plugin.
  */
-minplayer.controller.prototype.defaultOptions = function() {
-  return {
-    disptime: 0
-  };
+minplayer.controller.prototype.defaultOptions = function(options) {
+  options.disptime = 0;
+  minplayer.display.prototype.defaultOptions.call(this, options);
 };
 
 /**
