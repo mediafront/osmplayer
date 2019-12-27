@@ -48,7 +48,7 @@ osmplayer.teaser.prototype.setNode = function(node) {
   }
 
   // Load the thumbnail image if it exists.
-  if (node.mediafiles && node.mediafiles.image) {
+  if (node.mediafiles) {
     osmplayer.getImage(node.mediafiles, 'thumbnail', (function(teaser) {
       return function(image) {
         if (image && teaser.elements.image) {

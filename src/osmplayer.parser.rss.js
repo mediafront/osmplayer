@@ -45,21 +45,44 @@ osmplayer.parser.rss = {
   // Parse an RSS item.
   addRSSItem: function(playlist, item) {
     playlist.total_rows++;
-    playlist.nodes.push({
-      title: item.find('title').text(),
-      description: item.find('annotation').text(),
-      mediafiles: {
+    var node = {}, title = '', desc = '', img = '', media = '';
+
+    // Get the title.
+    title = item.find('title');
+    if (title.length) {
+      node.title = title.text();
+    }
+
+    // Get the description.
+    desc = item.find('annotation');
+    if (desc.length) {
+      node.description = desc.text();
+    }
+
+    // Add the media files.
+    node.mediafiles = {};
+
+    // Get the image.
+    img = item.find('image');
+    if (img.length) {
+      node.mediafiles.image = {
         image: {
-          'image': {
-            path: item.find('image').text()
-          }
-        },
-        media: {
-          'media': {
-            path: item.find('location').text()
-          }
+          path: img.text()
         }
-      }
-    });
+      };
+    }
+
+    // Get the media.
+    media = item.find('location');
+    if (media.length) {
+      node.mediafiles.media = {
+        media: {
+          path: media.text()
+        }
+      };
+    }
+
+    // Add this node to the playlist.
+    playlist.nodes.push(node);
   }
 };
