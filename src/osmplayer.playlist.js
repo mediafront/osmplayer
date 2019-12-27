@@ -282,7 +282,8 @@ osmplayer.playlist.prototype.set = function(playlist, loadIndex) {
     this.currentItem = 0;
 
     // Show or hide the next page if there is or is not a next page.
-    if (((this.page + 1) * this.options.pageLimit) >= this.totalItems) {
+    if ((((this.page + 1) * this.options.pageLimit) >= this.totalItems) ||
+        (this.totalItems == playlist.nodes.length)) {
       this.pager.nextPage.hide();
     }
     else {
