@@ -100,6 +100,50 @@ minplayer.players.youtube.getImage = function(file, type, callback) {
 };
 
 /**
+ * Parse a single playlist node.
+ *
+ * @param {object} item The youtube item.
+ * @return {object} The mediafront node.
+ */
+minplayer.players.youtube.parseNode = function(item) {
+  var node = (typeof item.video !== 'undefined') ? item.video : item;
+  return {
+    title: node.title,
+    description: node.description,
+    mediafiles: {
+      image: {
+        'thumbnail': {
+          path: node.thumbnail.sqDefault
+        },
+        'image': {
+          path: node.thumbnail.hqDefault
+        }
+      },
+      media: {
+        'media': {
+          player: 'youtube',
+          id: node.id
+        }
+      }
+    }
+  };
+};
+
+/**
+ * Returns information about this youtube video.
+ *
+ * @param {object} file The file to load.
+ * @param {function} callback Called when the node is loaded.
+ */
+minplayer.players.youtube.getNode = function(file, callback) {
+  var url = 'https://gdata.youtube.com/feeds/api/videos/' + file.id;
+  url += '?v=2&alt=jsonc';
+  jQuery.get(url, function(data) {
+    callback(minplayer.players.youtube.parseNode(data.data));
+  });
+};
+
+/**
  * Translates the player state for the YouTube API player.
  *
  * @param {number} playerState The YouTube player state.

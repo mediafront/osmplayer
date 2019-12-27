@@ -312,6 +312,26 @@ osmplayer.prototype.playNext = function() {
 };
 
 /**
+ * Returns a node.
+ *
+ * @param {object} node The node to get.
+ * @param {function} callback Called when the node is retrieved.
+ */
+osmplayer.getNode = function(node, callback) {
+  if (node && node.mediafiles && node.mediafiles.media) {
+    var mediaFile = minplayer.getMediaFile(node.mediafiles.media.media);
+    if (mediaFile) {
+      var player = minplayer.players[mediaFile.player];
+      if (player && (typeof player.getNode === 'function')) {
+        player.getNode(mediaFile, function(node) {
+          callback(node);
+        });
+      }
+    }
+  }
+};
+
+/**
  * Returns an image provided image array.
  *
  * @param {object} mediafiles The mediafiles to search within.

@@ -4229,6 +4229,50 @@ minplayer.players.youtube.getImage = function(file, type, callback) {
 };
 
 /**
+ * Parse a single playlist node.
+ *
+ * @param {object} item The youtube item.
+ * @return {object} The mediafront node.
+ */
+minplayer.players.youtube.parseNode = function(item) {
+  var node = (typeof item.video !== 'undefined') ? item.video : item;
+  return {
+    title: node.title,
+    description: node.description,
+    mediafiles: {
+      image: {
+        'thumbnail': {
+          path: node.thumbnail.sqDefault
+        },
+        'image': {
+          path: node.thumbnail.hqDefault
+        }
+      },
+      media: {
+        'media': {
+          player: 'youtube',
+          id: node.id
+        }
+      }
+    }
+  };
+};
+
+/**
+ * Returns information about this youtube video.
+ *
+ * @param {object} file The file to load.
+ * @param {function} callback Called when the node is loaded.
+ */
+minplayer.players.youtube.getNode = function(file, callback) {
+  var url = 'https://gdata.youtube.com/feeds/api/videos/' + file.id;
+  url += '?v=2&alt=jsonc';
+  jQuery.get(url, function(data) {
+    callback(minplayer.players.youtube.parseNode(data.data));
+  });
+};
+
+/**
  * Translates the player state for the YouTube API player.
  *
  * @param {number} playerState The YouTube player state.
@@ -4610,6 +4654,60 @@ minplayer.players.vimeo.getMediaId = function(file) {
 };
 
 /**
+ * Parse a single playlist node.
+ *
+ * @param {object} item The youtube item.
+ * @return {object} The mediafront node.
+ */
+minplayer.players.vimeo.parseNode = function(item) {
+  return {
+    title: item.title,
+    description: item.description,
+    mediafiles: {
+      image: {
+        'thumbnail': {
+          path: item.thumbnail_small
+        },
+        'image': {
+          path: item.thumbnail_large
+        }
+      },
+      media: {
+        'media': {
+          player: 'vimeo',
+          id: item.id
+        }
+      }
+    }
+  };
+};
+
+/** Keep track of loaded nodes from vimeo. */
+minplayer.players.vimeo.nodes = {};
+
+/**
+ * Returns information about this youtube video.
+ *
+ * @param {object} file The file to get the node from.
+ * @param {function} callback Callback when the node is loaded.
+ */
+minplayer.players.vimeo.getNode = function(file, callback) {
+  if (minplayer.players.vimeo.nodes.hasOwnProperty(file.id)) {
+    callback(minplayer.players.vimeo.nodes[file.id]);
+  }
+  else {
+    jQuery.ajax({
+      url: 'http://vimeo.com/api/v2/video/' + file.id + '.json',
+      dataType: 'jsonp',
+      success: function(data) {
+        minplayer.players.vimeo.nodes[file.id] = data[0];
+        callback(minplayer.players.vimeo.parseNode(data[0]));
+      }
+    });
+  }
+};
+
+/**
  * Returns a preview image for this media player.
  *
  * @param {object} file A {@link minplayer.file} object.
@@ -4617,12 +4715,8 @@ minplayer.players.vimeo.getMediaId = function(file) {
  * @param {function} callback Called when the image is retrieved.
  */
 minplayer.players.vimeo.getImage = function(file, type, callback) {
-  jQuery.ajax({
-    url: 'http://vimeo.com/api/v2/video/' + file.id + '.json',
-    dataType: 'jsonp',
-    success: function(data) {
-      callback(data[0].thumbnail_large);
-    }
+  minplayer.players.vimeo.getNode(file, function(node) {
+    callback(node.mediafiles.image.image);
   });
 };
 
