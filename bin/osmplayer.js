@@ -5501,7 +5501,8 @@ minplayer.players.youtube.prototype.createPlayer = function() {
             origin: origin,
             wmode: 'opaque',
             controls: minplayer.isAndroid ? 1 : 0,
-            rel: 0
+            rel: 0,
+            showinfo: 0
           };
         }
 
