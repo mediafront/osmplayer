@@ -162,7 +162,7 @@ minplayer.players.limelight.prototype.createPlayer = function() {
 
   // Insert the embed.js.
   var tag = document.createElement('script');
-  tag.src = 'http://assets.delvenetworks.com/player/embed.js';
+  tag.src = 'https://assets.delvenetworks.com/player/embed.js';
   var firstScriptTag = document.getElementsByTagName('script')[0];
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
@@ -222,7 +222,7 @@ minplayer.players.limelight.prototype.createPlayer = function() {
 
   // Return a flash media player object.
   return this.getFlash({
-    swf: 'http://assets.delvenetworks.com/player/loader.swf',
+    swf: 'https://assets.delvenetworks.com/player/loader.swf',
     id: playerId,
     width: this.options.width,
     height: '100%',

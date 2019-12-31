@@ -96,7 +96,7 @@ minplayer.players.youtube.getMediaId = function(file) {
  */
 minplayer.players.youtube.getImage = function(file, type, callback) {
   type = (type == 'thumbnail') ? '1' : '0';
-  callback('http://img.youtube.com/vi/' + file.id + '/' + type + '.jpg');
+  callback('https://img.youtube.com/vi/' + file.id + '/' + type + '.jpg');
 };
 
 /**
