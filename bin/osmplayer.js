@@ -4536,8 +4536,10 @@ minplayer.players.html5.prototype.addPlayerEvents = function() {
       this.onWaiting();
     });
     this.addPlayerEvent('durationchange', function() {
-      this.duration.set(this.player.duration);
-      this.trigger('durationchange', {duration: this.player.duration});
+      if (this.player) {
+        this.duration.set(this.player.duration);
+        this.trigger('durationchange', {duration: this.player.duration});
+      }
     });
     this.addPlayerEvent('progress', function(event) {
       this.bytesTotal.set(event.total);
