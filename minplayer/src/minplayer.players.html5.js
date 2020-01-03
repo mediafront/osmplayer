@@ -47,6 +47,8 @@ minplayer.players.html5.canPlay = function(file) {
     case 'video/m4v':
     case 'video/x-m4v':
       return !!minplayer.playTypes.videoH264;
+    case 'application/vnd.apple.mpegurl':
+      return !!minplayer.playTypes.videoMPEGURL;
     case 'video/x-webm':
     case 'video/webm':
     case 'application/octet-stream':

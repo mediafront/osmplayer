@@ -81,6 +81,9 @@ minplayer.compatibility = function() {
     'application/octet-stream'
   ]);
 
+  /** Can play MPEG URL streams. */
+  this.videoMPEGURL = checkPlayType(elem, 'application/vnd.apple.mpegurl');
+
   // Create an audio element.
   elem = document.createElement('audio');
 
@@ -2115,6 +2118,7 @@ minplayer.file.prototype.getPriority = function() {
     case 'video/x-webm':
     case 'video/webm':
     case 'application/octet-stream':
+    case 'application/vnd.apple.mpegurl':
       return priority * 10;
     case 'video/mp4':
     case 'audio/mp4':
@@ -2147,6 +2151,9 @@ minplayer.file.prototype.getMimeType = function() {
   switch (this.extension) {
     case 'mp4': case 'm4v': case 'flv': case 'f4v':
       return 'video/mp4';
+    case 'm3u8':
+      return 'application/vnd.apple.mpegurl';
+      break;
     case'webm':
       return 'video/webm';
     case 'ogg': case 'ogv':
@@ -2186,11 +2193,18 @@ minplayer.file.prototype.getMimeType = function() {
 minplayer.file.prototype.getType = function() {
   var type = this.mimetype.match(/([^\/]+)(\/)/);
   type = (type && (type.length > 1)) ? type[1] : '';
-  if (type == 'video' || this.mimetype == 'application/octet-stream') {
+  if (type == 'video') {
     return 'video';
   }
   if (type == 'audio') {
     return 'audio';
+  }
+  switch (this.mimetype) {
+    case 'application/octet-stream':
+    case 'application/x-shockwave-flash':
+    case 'application/vnd.apple.mpegurl':
+      return 'video';
+      break;
   }
   return '';
 };
@@ -3323,6 +3337,8 @@ minplayer.players.html5.canPlay = function(file) {
     case 'video/m4v':
     case 'video/x-m4v':
       return !!minplayer.playTypes.videoH264;
+    case 'application/vnd.apple.mpegurl':
+      return !!minplayer.playTypes.videoMPEGURL;
     case 'video/x-webm':
     case 'video/webm':
     case 'application/octet-stream':

@@ -81,6 +81,9 @@ minplayer.compatibility = function() {
     'application/octet-stream'
   ]);
 
+  /** Can play MPEG URL streams. */
+  this.videoMPEGURL = checkPlayType(elem, 'application/vnd.apple.mpegurl');
+
   // Create an audio element.
   elem = document.createElement('audio');
 
