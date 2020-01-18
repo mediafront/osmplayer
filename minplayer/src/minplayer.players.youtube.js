@@ -237,16 +237,19 @@ minplayer.players.youtube.prototype.createPlayer = function() {
   minplayer.players.base.prototype.createPlayer.call(this);
 
   // Insert the YouTube iframe API player.
-  var tag = document.createElement('script');
-  tag.src = 'https://www.youtube.com/player_api';
-  var firstScriptTag = document.getElementsByTagName('script')[0];
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  var youtube_script = 'https://www.youtube.com/player_api';
+  if (jQuery('script[src="' + youtube_script + '"]').length == 0) {
+    var tag = document.createElement('script');
+    tag.src = youtube_script;
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  }
 
   // Get the player ID.
   this.playerId = this.options.id + '-player';
 
   // Poll until the YouTube API is ready.
-  this.poll('youtube', (function(player) {
+  this.poll(this.options.id + '_youtube', (function(player) {
     return function() {
       var ready = jQuery('#' + player.playerId).length > 0;
       ready = ready && ('YT' in window);
