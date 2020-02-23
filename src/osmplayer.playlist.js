@@ -153,7 +153,7 @@ osmplayer.playlist.prototype.refreshScroll = function() {
     setTimeout((function(playlist) {
       return function() {
         playlist.refreshScroll.call(playlist);
-      }
+      };
     })(this), 200);
     return;
   }
@@ -513,7 +513,7 @@ osmplayer.playlist.prototype.load = function(page, loadIndex) {
   this.page = page;
 
   // Hide or show the page based on if we are on the first page.
-  if (this.page == 0) {
+  if (this.page === 0) {
     this.pager.prevPage.hide();
   }
   else {
@@ -566,13 +566,13 @@ osmplayer.playlist.prototype.load = function(page, loadIndex) {
           playlist.elements.playlist_busy.hide();
         }
         playlist.trigger('error', textStatus);
-      }
+      };
     })(this)
   };
 
   // Set the data if applicable.
-  var dataType = '';
-  if (dataType = parser.getType()) {
+  var dataType = parser.getType();
+  if (dataType) {
     request.dataType = dataType;
   }
 

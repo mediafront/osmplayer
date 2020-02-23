@@ -205,7 +205,7 @@ minplayer.playLoader.prototype.loadPreview = function(image) {
   this.options.preview = image;
 
   // Ignore if disabled.
-  if (!this.enabled || (this.display.length == 0)) {
+  if (!this.enabled || (this.display.length === 0)) {
     return;
   }
 

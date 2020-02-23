@@ -278,6 +278,7 @@
 .player-ui .minplayer-default-seek .ui-slider-range {
   position: absolute;
   height: 10px;
+  top: -1px;
   -moz-border-radius:15px;
   -webkit-border-radius:15px;
   z-index:10px;
@@ -510,7 +511,7 @@
 }
 
 .player-ui .ui-slider-horizontal .ui-slider-handle {
-  top: -5px;
+  top: -4px;
   margin-left: -5px;
 }
 

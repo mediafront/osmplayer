@@ -383,7 +383,8 @@ minplayer.display.prototype.getElements = function() {
   })();
 
   if (!methods) {
-    return window.screenfull = false;
+    window.screenfull = false;
+    return window.screenfull;
   }
 
   var keyboardAllowed = 'ALLOW_KEYBOARD_INPUT' in Element;

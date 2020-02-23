@@ -49,6 +49,8 @@ minplayer.players.vimeo.getPriority = function(file) {
 
 /**
  * @see minplayer.players.base#canPlay
+ *
+ * @param {object} file A {@link minplayer.file} object.
  * @return {boolean} If this player can play this media type.
  */
 minplayer.players.vimeo.canPlay = function(file) {
@@ -100,7 +102,7 @@ minplayer.players.vimeo.getMediaId = function(file) {
 /**
  * Parse a single playlist node.
  *
- * @param {object} item The youtube item.
+ * @param {object} item The vimeo item.
  * @return {object} The mediafront node.
  */
 minplayer.players.vimeo.parseNode = function(item) {
@@ -130,7 +132,7 @@ minplayer.players.vimeo.parseNode = function(item) {
 minplayer.players.vimeo.nodes = {};
 
 /**
- * Returns information about this youtube video.
+ * Returns information about this vimeo video.
  *
  * @param {object} file The file to get the node from.
  * @param {function} callback Callback when the node is loaded.
@@ -183,7 +185,7 @@ minplayer.players.vimeo.prototype.createPlayer = function() {
 
   // Insert the Vimeo Froogaloop player.
   var vimeo_script = 'http://a.vimeocdn.com/js/froogaloop2.min.js';
-  if (jQuery('script[src="' + vimeo_script + '"]').length == 0) {
+  if (jQuery('script[src="' + vimeo_script + '"]').length === 0) {
     var tag = document.createElement('script');
     tag.src = vimeo_script;
     var firstScriptTag = document.getElementsByTagName('script')[0];

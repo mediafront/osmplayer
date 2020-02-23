@@ -143,7 +143,7 @@ minplayer.plugin.prototype.create = function(name, base, context) {
 
     // Make sure the plugin is a function.
     if (typeof plugin !== 'function') {
-      plugin = window['minplayer'][name];
+      plugin = window.minplayer[name];
     }
 
     // Make sure it is a function.
@@ -301,8 +301,8 @@ minplayer.plugin.prototype.checkQueue = function(plugin) {
 
       // Now check to see if this queue is about us.
       check = !q.id && !q.plugin;
-      check |= (q.plugin == plugin.name);
-      check &= (!q.id || (q.id == this.options.id));
+      check |= (q.plugin === plugin.name);
+      check &= (!q.id || (q.id === this.options.id));
 
       // If the check passes, and hasn't already been added...
       if (check && !q.addedto.hasOwnProperty(plugin.options.id)) {
@@ -342,7 +342,7 @@ minplayer.plugin.prototype.isEvent = function(name, type) {
     return minplayer.eventTypes[cacheName];
   }
   else {
-    var regex = new RegExp('^(.*\:)?' + type + '$', 'gi');
+    var regex = new RegExp('^(.*:)?' + type + '$', 'gi');
     minplayer.eventTypes[cacheName] = (name.match(type) !== null);
     return minplayer.eventTypes[cacheName];
   }
@@ -546,7 +546,7 @@ minplayer.bind = function(event, id, plugin, callback, fromCheck) {
   }
 
   // Get the plugins.
-  var plugins = minplayer.plugins;
+  var plugins = minplayer.plugins, thisPlugin = null, thisId = null;
 
   // Determine the selected plugins.
   var selected = [];
@@ -568,28 +568,29 @@ minplayer.bind = function(event, id, plugin, callback, fromCheck) {
 
   // If they provide no id but a plugin.
   else if (!id && plugin) {
-    for (var id in plugins) {
-      addSelected(id, plugin);
+    for (thisId in plugins) {
+      addSelected(thisId, plugin);
     }
   }
 
   // If they provide an id but no plugin.
   else if (id && !plugin && plugins[id]) {
-    for (var plugin in plugins[id]) {
-      addSelected(id, plugin);
+    for (thisPlugin in plugins[id]) {
+      addSelected(id, thisPlugin);
     }
   }
 
   // If they provide niether an id or a plugin.
   else if (!id && !plugin) {
-    for (var id in plugins) {
-      for (var plugin in plugins[id]) {
-        addSelected(id, plugin);
+    for (thisId in plugins) {
+      for (thisPlugin in plugins[thisId]) {
+        addSelected(thisId, thisPlugin);
       }
     }
   }
 
   // Iterate through the selected plugins and bind.
+  /* jshint loopfunc: true */
   var i = selected.length;
   while (i--) {
     selected[i].bind(event, (function(context) {
@@ -696,7 +697,7 @@ minplayer.get = function(id, plugin, callback) {
   }
 
   // Get the plugins.
-  var plugins = minplayer.plugins;
+  var plugins = minplayer.plugins, thisId = null;
 
   // 0x000
   if (!id && !plugin && !callback) {
@@ -713,11 +714,12 @@ minplayer.get = function(id, plugin, callback) {
   // 0x010
   else if (!id && plugin && !callback) {
     var plugin_types = [];
-    for (var id in plugins) {
-      if (plugins.hasOwnProperty(id) && plugins[id].hasOwnProperty(plugin)) {
-        var i = plugins[id][plugin].length;
+    for (thisId in plugins) {
+      if (plugins.hasOwnProperty(thisId) &&
+          plugins[thisId].hasOwnProperty(plugin)) {
+        var i = plugins[thisId][plugin].length;
         while (i--) {
-          plugin_types.push(plugins[id][plugin][i]);
+          plugin_types.push(plugins[thisId][plugin][i]);
         }
       }
     }
