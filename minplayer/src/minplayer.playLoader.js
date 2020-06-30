@@ -127,6 +127,7 @@ minplayer.playLoader.prototype.initializePlayLoader = function() {
       media.ubind(this.uuid + ':pause', (function(playLoader) {
         return function(event, data, reset) {
           if (!reset) {
+            playLoader.busy.setFlag('media', false);
             playLoader.bigPlay.setFlag('media', true);
             playLoader.checkVisibility();
           }
