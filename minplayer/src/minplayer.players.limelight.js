@@ -25,6 +25,19 @@ minplayer.players.limelight.prototype = new minplayer.players.flash();
 minplayer.players.limelight.prototype.constructor = minplayer.players.limelight;
 
 /**
+ * @see minplayer.plugin.construct
+ * @this minplayer.players.limelight
+ */
+minplayer.players.limelight.prototype.construct = function() {
+
+  // Call the players.flash constructor.
+  minplayer.players.flash.prototype.construct.call(this);
+
+  // Set the plugin name within the options.
+  this.options.pluginName = 'limelight';
+};
+
+/**
  * @see minplayer.players.base#getPriority
  * @return {number} The priority of this media player.
  */

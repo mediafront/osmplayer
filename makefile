@@ -27,6 +27,7 @@ files =   minplayer/src/minplayer.compatibility.js\
           minplayer/src/minplayer.players.youtube.js\
           minplayer/src/minplayer.players.vimeo.js\
           minplayer/src/minplayer.players.limelight.js\
+          minplayer/src/minplayer.players.kaltura.js\
           minplayer/src/minplayer.controller.js\
           src/osmplayer.js\
           src/osmplayer.parser.default.js\
