@@ -5919,13 +5919,13 @@ minplayer.players.kaltura.prototype.createPlayer = function() {
       var regex = null;
       switch (item) {
         case 'entryId':
-          regex = /.*kaltura\.com.*entry_id\/([a-zA-Z0-9_-]+)/i;
+          regex = /.*kaltura\.com.*entry_id\/([^\/]+)/i;
           break;
         case 'uiConfId':
-          regex = /.*kaltura\.com.*uiconf_id\/([a-zA-Z0-9_-]+)/i;
+          regex = /.*kaltura\.com.*uiconf_id\/([^\/]+)/i;
           break;
         case 'partnerId':
-          regex = /.*kaltura\.com.*wid\/_([a-zA-Z0-9_-]+)/i;
+          regex = /.*kaltura\.com.*wid\/_([^\/]+)/i;
           break;
       }
 
