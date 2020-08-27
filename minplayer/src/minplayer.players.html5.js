@@ -371,57 +371,53 @@ minplayer.players.html5.prototype._getCurrentTime = function(callback) {
 };
 
 /**
- * @see minplayer.players.base#getBytesLoaded
+ * @see minplayer.players.base#_getBytesLoaded
  */
-minplayer.players.html5.prototype.getBytesLoaded = function(callback) {
-  this.whenReady(function() {
-    var loaded = 0;
+minplayer.players.html5.prototype._getBytesLoaded = function(callback) {
+  var loaded = 0;
 
-    // Check several different possibilities.
-    if (this.bytesLoaded.value) {
-      loaded = this.bytesLoaded.value;
-    }
-    else if (this.player.buffered &&
-        this.player.buffered.length > 0 &&
-        this.player.buffered.end &&
-        this.player.duration) {
-      loaded = this.player.buffered.end(0);
-    }
-    else if (this.player.bytesTotal !== undefined &&
-             this.player.bytesTotal > 0 &&
-             this.player.bufferedBytes !== undefined) {
-      loaded = this.player.bufferedBytes;
-    }
+  // Check several different possibilities.
+  if (this.bytesLoaded.value) {
+    loaded = this.bytesLoaded.value;
+  }
+  else if (this.player.buffered &&
+      this.player.buffered.length > 0 &&
+      this.player.buffered.end &&
+      this.player.duration) {
+    loaded = this.player.buffered.end(0);
+  }
+  else if (this.player.bytesTotal !== undefined &&
+           this.player.bytesTotal > 0 &&
+           this.player.bufferedBytes !== undefined) {
+    loaded = this.player.bufferedBytes;
+  }
 
-    // Return the loaded amount.
-    callback(loaded);
-  });
+  // Return the loaded amount.
+  callback(loaded);
 };
 
 /**
- * @see minplayer.players.base#getBytesTotal
+ * @see minplayer.players.base#_getBytesTotal
  */
-minplayer.players.html5.prototype.getBytesTotal = function(callback) {
-  this.whenReady(function() {
-    var total = 0;
+minplayer.players.html5.prototype._getBytesTotal = function(callback) {
+  var total = 0;
 
-    // Check several different possibilities.
-    if (this.bytesTotal.value) {
-      total = this.bytesTotal.value;
-    }
-    else if (this.player.buffered &&
-        this.player.buffered.length > 0 &&
-        this.player.buffered.end &&
-        this.player.duration) {
-      total = this.player.duration;
-    }
-    else if (this.player.bytesTotal !== undefined &&
-             this.player.bytesTotal > 0 &&
-             this.player.bufferedBytes !== undefined) {
-      total = this.player.bytesTotal;
-    }
+  // Check several different possibilities.
+  if (this.bytesTotal.value) {
+    total = this.bytesTotal.value;
+  }
+  else if (this.player.buffered &&
+      this.player.buffered.length > 0 &&
+      this.player.buffered.end &&
+      this.player.duration) {
+    total = this.player.duration;
+  }
+  else if (this.player.bytesTotal !== undefined &&
+           this.player.bytesTotal > 0 &&
+           this.player.bufferedBytes !== undefined) {
+    total = this.player.bytesTotal;
+  }
 
-    // Return the loaded amount.
-    callback(total);
-  });
+  // Return the loaded amount.
+  callback(total);
 };

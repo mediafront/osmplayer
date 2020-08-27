@@ -410,20 +410,20 @@ minplayer.players.youtube.prototype._getCurrentTime = function(callback) {
 /**
  * @see minplayer.players.base#getBytesStart.
  */
-minplayer.players.youtube.prototype.getBytesStart = function(callback) {
-  this.getValue('getVideoStartBytes', callback);
+minplayer.players.youtube.prototype._getBytesStart = function(callback) {
+  callback(this.player.getVideoStartBytes());
 };
 
 /**
  * @see minplayer.players.base#getBytesLoaded.
  */
-minplayer.players.youtube.prototype.getBytesLoaded = function(callback) {
-  this.getValue('getVideoBytesLoaded', callback);
+minplayer.players.youtube.prototype._getBytesLoaded = function(callback) {
+  callback(this.player.getVideoBytesLoaded());
 };
 
 /**
  * @see minplayer.players.base#getBytesTotal.
  */
-minplayer.players.youtube.prototype.getBytesTotal = function(callback) {
-  this.getValue('getVideoBytesTotal', callback);
+minplayer.players.youtube.prototype._getBytesTotal = function(callback) {
+  callback(this.player.getVideoBytesTotal());
 };
