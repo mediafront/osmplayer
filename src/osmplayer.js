@@ -130,9 +130,9 @@ osmplayer.prototype.construct = function() {
 
   /** Get the playlist or any other playlist that connects. */
   this.get('playlist', function(playlist) {
-    this.hasPlaylist = true;
     playlist.ubind(this.uuid + ':nodeLoad', (function(player) {
       return function(event, data) {
+        player.hasPlaylist = true;
         player.loadNode(data);
       };
     })(this));
