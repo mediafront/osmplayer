@@ -167,7 +167,10 @@ minplayer.players.html5.prototype.addPlayerEvents = function() {
     this.addPlayerEvent('durationchange', function() {
       if (this.player) {
         this.duration.set(this.player.duration);
-        this.trigger('durationchange', {duration: this.player.duration});
+        var self = this;
+        this.getDuration(function(duration) {
+          self.trigger('durationchange', {duration: duration});
+        });
       }
     });
     this.addPlayerEvent('progress', function(event) {
@@ -349,36 +352,22 @@ minplayer.players.html5.prototype.setVolume = function(vol, callback) {
 /**
  * @see minplayer.players.base#getVolume
  */
-minplayer.players.html5.prototype.getVolume = function(callback) {
-  this.whenReady(function() {
-    callback(this.player.volume);
-  });
+minplayer.players.html5.prototype._getVolume = function(callback) {
+  callback(this.player.volume);
 };
 
 /**
- * @see minplayer.players.base#getDuration
+ * @see minplayer.players.base#_getDuration
  */
-minplayer.players.html5.prototype.getDuration = function(callback) {
-  this.whenReady(function() {
-    if (this.options.duration) {
-      callback(this.options.duration);
-    }
-    else {
-      this.duration.get(callback);
-      if (this.player.duration) {
-        this.duration.set(this.player.duration);
-      }
-    }
-  });
+minplayer.players.html5.prototype._getDuration = function(callback) {
+  callback(this.player.duration);
 };
 
 /**
  * @see minplayer.players.base#getCurrentTime
  */
-minplayer.players.html5.prototype.getCurrentTime = function(callback) {
-  this.whenReady(function() {
-    callback(this.player.currentTime);
-  });
+minplayer.players.html5.prototype._getCurrentTime = function(callback) {
+  callback(this.player.currentTime);
 };
 
 /**

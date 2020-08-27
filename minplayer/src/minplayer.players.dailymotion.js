@@ -356,39 +356,22 @@ minplayer.players.dailymotion.prototype.setVolume = function(vol, callback) {
 };
 
 /**
- * @see minplayer.players.base#getValue
+ * @see minplayer.players.base#_getVolume
  */
-minplayer.players.dailymotion.prototype.getValue = function(getter, callback) {
-  if (this.isReady()) {
-    var value = this.player[getter];
-    if ((value !== undefined) && (value !== null) && callback) {
-      callback(value);
-    }
-  }
+minplayer.players.dailymotion.prototype._getVolume = function(callback) {
+  callback(this.player.volume);
 };
 
 /**
- * @see minplayer.players.base#getVolume
+ * @see minplayer.players.base#_getDuration.
  */
-minplayer.players.dailymotion.prototype.getVolume = function(callback) {
-  this.getValue('volume', callback);
+minplayer.players.dailymotion.prototype._getDuration = function(callback) {
+  callback(this.player.duration);
 };
 
 /**
- * @see minplayer.players.base#getDuration.
+ * @see minplayer.players.base#_getCurrentTime
  */
-minplayer.players.dailymotion.prototype.getDuration = function(callback) {
-  if (this.options.duration && callback !== undefined) {
-    callback(this.options.duration);
-  }
-  else {
-    this.getValue('duration', callback);
-  }
-};
-
-/**
- * @see minplayer.players.base#getCurrentTime
- */
-minplayer.players.dailymotion.prototype.getCurrentTime = function(callback) {
-  this.getValue('currentTime', callback);
+minplayer.players.dailymotion.prototype._getCurrentTime = function(callback) {
+  callback(this.player.currentTime);
 };

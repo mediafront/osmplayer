@@ -389,27 +389,22 @@ minplayer.players.youtube.prototype.setVolume = function(vol, callback) {
 /**
  * @see minplayer.players.base#getVolume
  */
-minplayer.players.youtube.prototype.getVolume = function(callback) {
-  this.getValue('getVolume', callback);
+minplayer.players.youtube.prototype._getVolume = function(callback) {
+  callback(this.player.getVolume());
 };
 
 /**
  * @see minplayer.players.base#getDuration.
  */
-minplayer.players.youtube.prototype.getDuration = function(callback) {
-  if (this.options.duration) {
-    callback(this.options.duration);
-  }
-  else {
-    this.getValue('getDuration', callback);
-  }
+minplayer.players.youtube.prototype._getDuration = function(callback) {
+  callback(this.player.getDuration());
 };
 
 /**
  * @see minplayer.players.base#getCurrentTime
  */
-minplayer.players.youtube.prototype.getCurrentTime = function(callback) {
-  this.getValue('getCurrentTime', callback);
+minplayer.players.youtube.prototype._getCurrentTime = function(callback) {
+  callback(this.player.getCurrentTime());
 };
 
 /**
