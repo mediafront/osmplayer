@@ -295,14 +295,9 @@ minplayer.players.kaltura.prototype.stop = function(callback) {
 /**
  * @see minplayer.players.base#seek
  */
-minplayer.players.kaltura.prototype.seek = function(pos, callback) {
-  minplayer.players.base.prototype.seek.call(this, pos, function() {
-    this.seekValue = pos;
-    this.player.sendNotification("doSeek", pos);
-    if (callback) {
-      callback.call(this);
-    }
-  });
+minplayer.players.kaltura.prototype._seek = function(pos) {
+  this.seekValue = pos;
+  this.player.sendNotification("doSeek", pos);
 };
 
 /**

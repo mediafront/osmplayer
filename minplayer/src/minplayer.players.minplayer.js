@@ -222,15 +222,10 @@ minplayer.players.minplayer.prototype.stop = function(callback) {
 };
 
 /**
- * @see minplayer.players.base#seek
+ * @see minplayer.players.base#_seek
  */
-minplayer.players.minplayer.prototype.seek = function(pos, callback) {
-  minplayer.players.flash.prototype.seek.call(this, pos, function() {
-    this.player.seekMedia(pos);
-    if (callback) {
-      callback.call(this);
-    }
-  });
+minplayer.players.minplayer.prototype._seek = function(pos) {
+  this.player.seekMedia(pos);
 };
 
 /**

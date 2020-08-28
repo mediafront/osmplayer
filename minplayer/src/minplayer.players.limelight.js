@@ -283,16 +283,11 @@ minplayer.players.limelight.prototype.stop = function(callback) {
 };
 
 /**
- * @see minplayer.players.base#seek
+ * @see minplayer.players.base#_seek
  */
-minplayer.players.limelight.prototype.seek = function(pos, callback) {
-  minplayer.players.flash.prototype.seek.call(this, pos, function() {
-    this.seekValue = pos;
-    this.player.doSeekToSecond(pos);
-    if (callback) {
-      callback.call(this);
-    }
-  });
+minplayer.players.limelight.prototype._seek = function(pos) {
+  this.seekValue = pos;
+  this.player.doSeekToSecond(pos);
 };
 
 /**

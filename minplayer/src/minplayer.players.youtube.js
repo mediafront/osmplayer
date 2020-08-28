@@ -362,16 +362,11 @@ minplayer.players.youtube.prototype.stop = function(callback) {
 };
 
 /**
- * @see minplayer.players.base#seek
+ * @see minplayer.players.base#_seek
  */
-minplayer.players.youtube.prototype.seek = function(pos, callback) {
-  minplayer.players.base.prototype.seek.call(this, pos, function() {
-    this.onWaiting();
-    this.player.seekTo(pos, true);
-    if (callback) {
-      callback.call(this);
-    }
-  });
+minplayer.players.youtube.prototype._seek = function(pos) {
+  this.onWaiting();
+  this.player.seekTo(pos, true);
 };
 
 /**

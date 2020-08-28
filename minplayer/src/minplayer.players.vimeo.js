@@ -353,15 +353,10 @@ minplayer.players.vimeo.prototype.stop = function(callback) {
 };
 
 /**
- * @see minplayer.players.base#seek
+ * @see minplayer.players.base#_seek
  */
-minplayer.players.vimeo.prototype.seek = function(pos, callback) {
-  minplayer.players.base.prototype.seek.call(this, pos, function() {
-    this.player.api('seekTo', pos);
-    if (callback) {
-      callback.call(this);
-    }
-  });
+minplayer.players.vimeo.prototype._seek = function(pos) {
+  this.player.api('seekTo', pos);
 };
 
 /**
