@@ -177,6 +177,24 @@ minplayer.players.minplayer.prototype.onMediaUpdate = function(eventType) {
  * @see minplayer.players.base#load
  */
 minplayer.players.minplayer.prototype.load = function(file, callback) {
+  if (this.loaded) {
+    this.stop(function() {
+      this._loadMedia(file, callback);
+    });
+  }
+  else {
+    this._loadMedia(file, callback);
+  }
+};
+
+/**
+ * Load the media in the minplayer.
+ *
+ * @param file
+ * @param callback
+ * @private
+ */
+minplayer.players.minplayer.prototype._loadMedia = function(file, callback) {
   minplayer.players.flash.prototype.load.call(this, file, function() {
     this.player.loadMedia(file.path, file.stream);
     if (callback) {
