@@ -19,10 +19,9 @@ minplayer.async = function() {
  * Retrieve the value of this variable.
  *
  * @param {function} callback The function to call when the value is determined.
- * @param {function} pollValue The poll function to try and get the value every
  * 1 second if the value is not set.
  */
-minplayer.async.prototype.get = function(callback, pollValue) {
+minplayer.async.prototype.get = function(callback) {
 
   // If the value is set, then immediately call the callback, otherwise, just
   // add it to the queue when the variable is set.

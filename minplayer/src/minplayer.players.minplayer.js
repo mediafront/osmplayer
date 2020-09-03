@@ -265,24 +265,17 @@ minplayer.players.minplayer.prototype._getVolume = function(callback) {
  * @see minplayer.players.flash#getDuration
  */
 minplayer.players.minplayer.prototype._getDuration = function(callback) {
-  // Check to see if it is immediately available.
-  var duration = this.player.getDuration();
-  if (duration) {
-    callback(duration);
-  }
-  else {
-
-    // If not, then poll every second for the duration.
-    this.poll('duration', (function(player) {
-      return function() {
-        duration = player.player.getDuration();
-        if (duration) {
-          callback(duration);
-        }
-        return !duration;
-      };
-    })(this), 1000);
-  }
+  var self = this, duration = 0;
+  var tryDuration = function() {
+    duration = self.player.getDuration();
+    if (duration) {
+      callback(duration);
+    }
+    else {
+      setTimeout(tryDuration, 1000);
+    }
+  };
+  tryDuration();
 };
 
 /**

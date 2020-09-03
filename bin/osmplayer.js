@@ -1255,10 +1255,9 @@ minplayer.async = function() {
  * Retrieve the value of this variable.
  *
  * @param {function} callback The function to call when the value is determined.
- * @param {function} pollValue The poll function to try and get the value every
  * 1 second if the value is not set.
  */
-minplayer.async.prototype.get = function(callback, pollValue) {
+minplayer.async.prototype.get = function(callback) {
 
   // If the value is set, then immediately call the callback, otherwise, just
   // add it to the queue when the variable is set.
@@ -5350,24 +5349,17 @@ minplayer.players.minplayer.prototype._getVolume = function(callback) {
  * @see minplayer.players.flash#getDuration
  */
 minplayer.players.minplayer.prototype._getDuration = function(callback) {
-  // Check to see if it is immediately available.
-  var duration = this.player.getDuration();
-  if (duration) {
-    callback(duration);
-  }
-  else {
-
-    // If not, then poll every second for the duration.
-    this.poll('duration', (function(player) {
-      return function() {
-        duration = player.player.getDuration();
-        if (duration) {
-          callback(duration);
-        }
-        return !duration;
-      };
-    })(this), 1000);
-  }
+  var self = this, duration = 0;
+  var tryDuration = function() {
+    duration = self.player.getDuration();
+    if (duration) {
+      callback(duration);
+    }
+    else {
+      setTimeout(tryDuration, 1000);
+    }
+  };
+  tryDuration();
 };
 
 /**
