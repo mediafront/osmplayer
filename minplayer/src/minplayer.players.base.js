@@ -827,8 +827,8 @@ minplayer.players.base.prototype._getVolume = function(callback) {
  * @return {number} The volume of the media; 0 to 1.
  */
 minplayer.players.base.prototype.getCurrentTime = function(callback) {
+  var self = this;
   this.getValue('_getCurrentTime', 'currentTime', function(currentTime) {
-    var self = this;
     self.setStartStop();
     if (self.stopTime && (currentTime > self.stopTime)) {
       self.stop(function() {
@@ -861,10 +861,11 @@ minplayer.players.base.prototype.getDuration = function(callback) {
     callback(this.options.duration);
   }
   else {
+    var self = this;
     this.getValue('_getDuration', 'duration', function(duration) {
-      this.setStartStop();
-      this.realDuration = duration;
-      callback(this.mediaRange ? this.mediaRange : duration);
+      self.setStartStop();
+      self.realDuration = duration;
+      callback(self.mediaRange ? self.mediaRange : duration);
     });
   }
 };
