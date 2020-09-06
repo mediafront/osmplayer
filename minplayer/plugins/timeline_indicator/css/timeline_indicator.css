@@ -5,7 +5,7 @@
   width: 30px;
   padding: 4px 10px;
   border-radius: 10px;
-  z-index: 10;
+  z-index: 1000;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   background: rgba(23, 35, 34, 0.9);
