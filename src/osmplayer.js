@@ -133,6 +133,7 @@ osmplayer.prototype.construct = function() {
     playlist.ubind(this.uuid + ':nodeLoad', (function(player) {
       return function(event, data) {
         player.hasPlaylist = true;
+        player.options.autoplay = !!data.autoplay;
         player.loadNode(data);
       };
     })(this));

@@ -4269,6 +4269,11 @@ minplayer.players.base.prototype.load = function(file, callback) {
       callback.call(this);
     }
   }
+
+  // We still want to play the song if it isn't playing but has autoplay enabled.
+  else if (this.options.autoplay && !this.playing) {
+    this.play();
+  }
 };
 
 /**
@@ -7329,6 +7334,7 @@ osmplayer.prototype.construct = function() {
     playlist.ubind(this.uuid + ':nodeLoad', (function(player) {
       return function(event, data) {
         player.hasPlaylist = true;
+        player.options.autoplay = !!data.autoplay;
         player.loadNode(data);
       };
     })(this));
@@ -8125,7 +8131,7 @@ osmplayer.playlist.prototype.addNode = function(node) {
   // Bind to when it loads.
   teaser.ubind(this.uuid + ':nodeLoad', (function(playlist) {
     return function(event, data) {
-      playlist.loadItem(index);
+      playlist.loadItem(index, true);
     };
   })(this));
 
@@ -8276,7 +8282,7 @@ osmplayer.playlist.prototype.prev = function() {
  * @param {number} index The index of the item you would like to load.
  * @return {boolean} TRUE if loaded, FALSE if not.
  */
-osmplayer.playlist.prototype.loadItem = function(index) {
+osmplayer.playlist.prototype.loadItem = function(index, autoplay) {
   if (index < this.nodes.length) {
     this.setQueue();
 
@@ -8288,6 +8294,7 @@ osmplayer.playlist.prototype.loadItem = function(index) {
     // Get the new teaser and select it.
     teaser = this.nodes[index];
     teaser.select(true);
+    teaser.node.autoplay = !!autoplay;
     this.trigger('nodeLoad', teaser.node);
     return true;
   }
