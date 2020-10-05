@@ -11,25 +11,7 @@
 #      directory within the tools directory.
 
 # Create the list of files
-files =   minplayer/src/minplayer.compatibility.js\
-          minplayer/src/minplayer.async.js\
-          minplayer/src/minplayer.flags.js\
-          minplayer/src/minplayer.plugin.js\
-          minplayer/src/minplayer.display.js\
-          minplayer/src/minplayer.js\
-          minplayer/src/minplayer.image.js\
-          minplayer/src/minplayer.file.js\
-          minplayer/src/minplayer.playLoader.js\
-          minplayer/src/minplayer.players.base.js\
-          minplayer/src/minplayer.players.html5.js\
-          minplayer/src/minplayer.players.flash.js\
-          minplayer/src/minplayer.players.minplayer.js\
-          minplayer/src/minplayer.players.youtube.js\
-          minplayer/src/minplayer.players.vimeo.js\
-          minplayer/src/minplayer.players.limelight.js\
-          minplayer/src/minplayer.players.kaltura.js\
-          minplayer/src/minplayer.controller.js\
-          src/osmplayer.js\
+files =   src/osmplayer.js\
           src/osmplayer.parser.default.js\
           src/osmplayer.parser.youtube.js\
           src/osmplayer.parser.rss.js\
@@ -48,7 +30,10 @@ default_template =   templates/default/js/osmplayer.playLoader.default.js\
 
 .DEFAULT_GOAL := all
 
-all: jslint js jsdoc
+all: makeminplayer jslint js jsdoc
+
+makeminplayer:
+	cd minplayer; make -B; cd ..;
 
 # Perform a jsLint on all the files.
 jslint: ${files}
@@ -56,8 +41,19 @@ jslint: ${files}
 
 # Create an aggregated js file and a compressed js file.
 js: ${files}
+	@curl https://raw.github.com/cubiq/iscroll/v5.0.6/build/iscroll.js > bin/iscroll.js
+	@echo "Creating osmplayer.playlist.js"
+	@mv src/osmplayer.playlist.js src/osmplayer.playlist.tmp.js
+	@echo "var osmplayer = osmplayer || {};" > src/osmplayer.playlist.js
+	@echo "(function(exports) {" >> src/osmplayer.playlist.js
+	@cat bin/iscroll.js >> src/osmplayer.playlist.js
+	@echo "exports.IScroll = IScroll;" >> src/osmplayer.playlist.js
+	@echo "})(osmplayer);" >> src/osmplayer.playlist.js
+	@cat src/osmplayer.playlist.tmp.js >> src/osmplayer.playlist.js
+	@rm src/osmplayer.playlist.tmp.js
+	@rm bin/iscroll.js
 	@echo "Generating aggregated bin/osmplayer.js file"
-	@cat > bin/osmplayer.js src/iscroll/src/iscroll.js $^
+	@cat > bin/osmplayer.js minplayer/bin/minplayer.js $^
 	@echo "Generating compressed bin/osmplayer.compressed file"
 	curl -s \
 	  -d compilation_level=SIMPLE_OPTIMIZATIONS \

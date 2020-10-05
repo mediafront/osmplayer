@@ -41,6 +41,17 @@ jslint: ${files}
 
 # Create an aggregated js file and a compressed js file.
 js: ${files}
+	@curl https://raw.github.com/sindresorhus/screenfull.js/v1.1.1/dist/screenfull.min.js > bin/screenfull.min.js
+	@echo "Creating minplayer.display.js"
+	@mv src/minplayer.display.js src/minplayer.display.tmp.js
+	@echo "minplayer = minplayer || {};" > src/minplayer.display.js
+	@echo "(function(exports) {" >> src/minplayer.display.js
+	@cat bin/screenfull.min.js >> src/minplayer.display.js
+	@echo "exports.screenfull = screenfull;" >> src/minplayer.display.js
+	@echo "})(minplayer);" >> src/minplayer.display.js
+	@cat src/minplayer.display.tmp.js >> src/minplayer.display.js
+	@rm src/minplayer.display.tmp.js
+	@rm bin/screenfull.min.js
 	@echo "Generating aggregated bin/minplayer.js file"
 	@cat > bin/minplayer.js $^
 	@echo "Generating compressed bin/minplayer.compressed file"
