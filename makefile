@@ -41,13 +41,12 @@ jslint: ${files}
 
 # Create an aggregated js file and a compressed js file.
 js: ${files}
-	@curl https://raw.github.com/cubiq/iscroll/v5.0.6/build/iscroll.js > bin/iscroll.js
+	@curl https://raw.github.com/cubiq/iscroll/v4.2.5/src/iscroll-lite.js > bin/iscroll.js
 	@echo "Creating osmplayer.playlist.js"
 	@mv src/osmplayer.playlist.js src/osmplayer.playlist.tmp.js
 	@echo "var osmplayer = osmplayer || {};" > src/osmplayer.playlist.js
 	@echo "(function(exports) {" >> src/osmplayer.playlist.js
 	@cat bin/iscroll.js >> src/osmplayer.playlist.js
-	@echo "exports.IScroll = IScroll;" >> src/osmplayer.playlist.js
 	@echo "})(osmplayer);" >> src/osmplayer.playlist.js
 	@cat src/osmplayer.playlist.tmp.js >> src/osmplayer.playlist.js
 	@rm src/osmplayer.playlist.tmp.js
