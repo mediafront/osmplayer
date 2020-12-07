@@ -451,8 +451,13 @@ minplayer.prototype.load = function(files) {
     // If the player isn't valid, then show an error.
     if (this.options.file.mimetype && !this.options.file.player) {
       this.showError('Cannot play media: ' + this.options.file.mimetype);
+      return false;
     }
+
+    return true;
   }
+
+  return false;
 };
 
 /**

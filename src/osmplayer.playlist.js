@@ -709,6 +709,9 @@ osmplayer.playlist.prototype.onAdded = function(plugin) {
       return function(player) {
         player.ubind(playlist.uuid + ':player_ended', function(event) {
           if (playlist.hasPlaylist) {
+            if (typeof player.options.originalAutoPlay == 'undefined') {
+              player.options.originalAutoPlay = player.options.autoplay;
+            }
             player.options.autoplay = true;
             playlist.next();
           }

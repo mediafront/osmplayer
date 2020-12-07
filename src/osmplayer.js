@@ -134,6 +134,9 @@ osmplayer.prototype.construct = function() {
       return function(event, data) {
         player.hasPlaylist = true;
         if (!player.options.autoplay && !!data.autoplay) {
+          if (typeof player.options.originalAutoPlay == 'undefined') {
+            player.options.originalAutoPlay = player.options.autoplay;
+          }
           player.options.autoplay = true;
         }
         player.loadNode(data);
@@ -145,6 +148,9 @@ osmplayer.prototype.construct = function() {
   this.get('media', function(media) {
     media.ubind(this.uuid + ':ended', (function(player) {
       return function() {
+        if (typeof player.options.originalAutoPlay == 'undefined') {
+          player.options.originalAutoPlay = player.options.autoplay;
+        }
         player.options.autoplay = true;
         player.playNext();
       };
@@ -152,9 +158,7 @@ osmplayer.prototype.construct = function() {
   });
 
   // Load the node if one is provided.
-  if (this.options.node) {
-    this.loadNode(this.options.node);
-  }
+  this.loadNode(this.options.node);
 };
 
 /**
@@ -210,6 +214,7 @@ osmplayer.prototype.loadNode = function(node) {
 
     // Set the hasMedia flag.
     this.hasMedia = node && node.mediafiles && node.mediafiles.media;
+    this.hasMedia = this.hasMedia || this.options.file;
 
     // If this node is set and has files.
     if (node && node.mediafiles) {
@@ -307,11 +312,20 @@ osmplayer.prototype.playNext = function() {
     }
   }
   else if (this.media) {
+
+    // Reset the autoplay variable.
+    if (typeof this.options.originalAutoPlay != 'undefined') {
+      this.options.autoplay = this.options.originalAutoPlay;
+    }
+
     this.media.stop();
 
-    // If there is no media found, then clear the player.
-    if (!this.hasMedia) {
-      this.media.clear();
+    // Load the media again.
+    if (this.options.file) {
+      this.load();
+    }
+    else {
+      this.loadNode();
     }
   }
 };

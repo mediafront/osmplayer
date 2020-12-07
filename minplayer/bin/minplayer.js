@@ -1792,8 +1792,13 @@ minplayer.prototype.load = function(files) {
     // If the player isn't valid, then show an error.
     if (this.options.file.mimetype && !this.options.file.player) {
       this.showError('Cannot play media: ' + this.options.file.mimetype);
+      return false;
     }
+
+    return true;
   }
+
+  return false;
 };
 
 /**
@@ -2523,6 +2528,7 @@ minplayer.players.base.prototype.construct = function() {
 
   /** The ready queue for this player. */
   this.readyQueue = [];
+  this.loadedQueue = [];
 
   /** The currently loaded media file. */
   this.mediaFile = this.options.file;
@@ -2960,6 +2966,15 @@ minplayer.players.base.prototype.onLoaded = function() {
   // See if we are loaded.
   var isLoaded = this.loaded;
 
+  // Iterate through our ready queue.
+  for (var i in this.loadedQueue) {
+    this.loadedQueue[i].call(this);
+  }
+
+  // Empty the loaded queue.
+  this.loadedQueue.length = 0;
+  this.loadedQueue = [];
+
   // If we should autoplay, then just play now.
   if (!this.loaded && this.options.autoplay) {
     this.play();
@@ -3014,6 +3029,24 @@ minplayer.players.base.prototype.whenReady = function(callback) {
 
     // Add this to the ready queue.
     this.readyQueue.push(callback);
+  }
+};
+
+/**
+ * Calls the callback when this player is loaded.
+ *
+ * @param {function} callback Called when it is done performing this operation.
+ */
+minplayer.players.base.prototype.whenLoaded = function(callback) {
+
+  // If the player is loaded, then call the callback.
+  if (this.loaded) {
+    callback.call(this);
+  }
+  else {
+
+    // Add this to the loaded queue.
+    this.loadedQueue.push(callback);
   }
 };
 
@@ -3094,6 +3127,15 @@ minplayer.players.base.prototype.load = function(file, callback) {
   else if (this.options.autoplay && !this.playing) {
     this.play();
   }
+  else {
+
+    // Seek to the beginning.
+    this.seek(0, function() {
+      this.pause();
+      this.trigger('progress', {loaded: 0, total: 0, start: 0}, true);
+      this.trigger('timeupdate', {currentTime: 0, duration: 0}, true);
+    });
+  }
 };
 
 /**
@@ -3103,8 +3145,11 @@ minplayer.players.base.prototype.load = function(file, callback) {
  */
 minplayer.players.base.prototype.play = function(callback) {
   this.options.autoload = true;
+  if (typeof this.options.originalAutoPlay == 'undefined') {
+    this.options.originalAutoPlay = this.options.autoplay;
+  }
   this.options.autoplay = true;
-  this.whenReady(callback);
+  this.whenLoaded(callback);
 };
 
 /**
@@ -3113,7 +3158,7 @@ minplayer.players.base.prototype.play = function(callback) {
  * @param {function} callback Called when it is done performing this operation.
  */
 minplayer.players.base.prototype.pause = function(callback) {
-  this.whenReady(callback);
+  this.whenLoaded(callback);
 };
 
 /**
@@ -3125,7 +3170,7 @@ minplayer.players.base.prototype.stop = function(callback) {
   this.playing = false;
   this.loading = false;
   this.hasFocus = false;
-  this.whenReady(callback);
+  this.whenLoaded(callback);
 };
 
 /**
@@ -3169,7 +3214,7 @@ minplayer.players.base.prototype.seekRelative = function(pos) {
  * @param {function} callback Called when it is done performing this operation.
  */
 minplayer.players.base.prototype.seek = function(pos, callback, noOffset) {
-  this.whenReady(function() {
+  this.whenLoaded(function() {
     pos = Number(pos);
     if (!noOffset) {
       pos += this.offsetTime;
@@ -3209,7 +3254,7 @@ minplayer.players.base.prototype.setVolumeRelative = function(vol) {
  */
 minplayer.players.base.prototype.setVolume = function(vol, callback) {
   this.trigger('volumeupdate', vol);
-  this.whenReady(callback);
+  this.whenLoaded(callback);
 };
 
 /**
@@ -3220,7 +3265,7 @@ minplayer.players.base.prototype.setVolume = function(vol, callback) {
  * @param {function} callback The callback function.
  */
 minplayer.players.base.prototype.getValue = function(method, prop, callback) {
-  this.whenReady(function() {
+  this.whenLoaded(function() {
     var self = this;
     this[method](function(value) {
       if (value !== null) {
@@ -3823,6 +3868,9 @@ minplayer.players.html5.prototype.construct = function() {
   // Set the plugin name within the options.
   this.options.pluginName = 'html5';
 
+  // See when the player has ended.
+  this.hasEnded = false;
+
   // Add the player events.
   this.addPlayerEvents();
 };
@@ -3887,6 +3935,7 @@ minplayer.players.html5.prototype.addPlayerEvents = function() {
       this.onLoaded();
     });
     this.addPlayerEvent('ended', function() {
+      this.hasEnded = true;
       this.onComplete();
     });
     this.addPlayerEvent('pause', function() {
@@ -3901,7 +3950,7 @@ minplayer.players.html5.prototype.addPlayerEvents = function() {
 
     var errorSent = false;
     this.addPlayerEvent('error', function() {
-      if (!errorSent && this.player) {
+      if (!this.hasEnded && !errorSent && this.player) {
         errorSent = true;
         this.trigger('error', 'An error occured - ' + this.player.error.code);
       }
@@ -4006,6 +4055,9 @@ minplayer.players.html5.prototype.load = function(file, callback) {
   // See if a load is even necessary.
   minplayer.players.base.prototype.load.call(this, file, function() {
 
+    // Reset the has ended flag.
+    this.hasEnded = false;
+
     // Get the current source.
     var src = this.elements.media.attr('src');
     if (!src) {
@@ -4025,8 +4077,7 @@ minplayer.players.html5.prototype.load = function(file, callback) {
       this.addPlayerEvents();
 
       // Change the source...
-      var code = '<source src="' + file.path + '"></source>';
-      this.elements.media.removeAttr('src').empty().html(code);
+      this.player.src = file.path;
       if (callback) {
         callback.call(this);
       }
@@ -4064,11 +4115,20 @@ minplayer.players.html5.prototype.pause = function(callback) {
 minplayer.players.html5.prototype.stop = function(callback) {
   minplayer.players.base.prototype.stop.call(this, function() {
     this.player.pause();
-    this.player.src = '';
     if (callback) {
       callback.call(this);
     }
   });
+};
+
+/**
+ * Clears the media player.
+ */
+minplayer.players.html5.prototype.clear = function() {
+  minplayer.players.base.prototype.clear.call(this);
+  if (this.player) {
+    this.player.src = '';
+  }
 };
 
 /**
