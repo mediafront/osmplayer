@@ -240,7 +240,7 @@ minplayer.players.youtube.prototype.createPlayer = function() {
   minplayer.players.base.prototype.createPlayer.call(this);
 
   // Insert the YouTube iframe API player.
-  var youtube_script = 'https://www.youtube.com/player_api';
+  var youtube_script = 'https://www.youtube.com/iframe_api';
   if (jQuery('script[src="' + youtube_script + '"]').length === 0) {
     var tag = document.createElement('script');
     tag.src = youtube_script;
