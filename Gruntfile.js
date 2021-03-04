@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
 
   var iscroll = [
-    'lib/screenfull.js/dist/screenfull.min.js'
+    'lib/iscroll/src/iscroll.js'
   ];
 
   var iscrollPath = 'src/osmplayer.iscroll.js';
