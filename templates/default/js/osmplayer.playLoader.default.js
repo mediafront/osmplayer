@@ -1,8 +1,5 @@
 (function(template, osmplayer) {
 
-  /** The osmplayer namespace. */
-  var osmplayer = osmplayer || {};
-
   // Define the busy object.
   osmplayer.playLoader = osmplayer.playLoader || {};
 
@@ -26,16 +23,17 @@
     if (this.options.build) {
 
       // Prepend the playloader template.
-      jQuery('.minplayer-' + template + '', this.context).prepend('\
-      <div class="minplayer-' + template + '-loader-wrapper">\
-        <div class="minplayer-' + template + '-big-play ui-state-default"><span></span></div>\
-        <div class="minplayer-' + template + '-loader">&nbsp;</div>\
-        <div class="minplayer-' + template + '-preview ui-widget-content"></div>\
-      </div>');
+      jQuery('.minplayer-' + template + '', this.context).prepend(
+        '<div class="minplayer-' + template + '-loader-wrapper">' +
+          '<div class="minplayer-' + template + '-big-play ui-state-default"><span></span></div>' +
+          '<div class="minplayer-' + template + '-loader">&nbsp;</div>' +
+          '<div class="minplayer-' + template + '-preview ui-widget-content"></div>' +
+        '</div>'
+      );
     }
 
     return jQuery('.minplayer-' + template + ' .minplayer-' + template + '-loader-wrapper', this.context);
-  }
+  };
 
   /**
    * Loads the preview image.
@@ -55,5 +53,5 @@
       preview:jQuery('.minplayer-' + template + '-preview', this.display)
     });
   };
-})('default', osmplayer);
+})('default', (osmplayer || {}));
 
