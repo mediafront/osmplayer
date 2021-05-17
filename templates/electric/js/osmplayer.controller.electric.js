@@ -21,7 +21,19 @@ osmplayer.controller["electric"].prototype.constructor = osmplayer.controller["e
  * @see osmplayer.plugin#construct
  */
 osmplayer.controller["electric"].prototype.construct = function() {
+  // Make sure we provide default options...
+  this.options = jQuery.extend({
+    volumeVertical: true,
+    controllerOnly: false,
+    showController: true
+  }, this.options);
+
   minplayer.controller.prototype.construct.call(this);
+
+  // Don't do anything if they don't want to see the controller.
+  if (!this.options.showController) {
+    return;
+  }
   this.showThenHide();
 }
 
@@ -29,6 +41,10 @@ osmplayer.controller["electric"].prototype.construct = function() {
  * Return the display for this plugin.
  */
 osmplayer.controller["electric"].prototype.getDisplay = function() {
+
+  if (!this.options.showController) {
+    return jQuery(null);
+  }
 
   // See if we need to build out the controller.
   if (this.options.build) {

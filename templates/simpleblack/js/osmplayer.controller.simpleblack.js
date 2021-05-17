@@ -23,8 +23,19 @@
    * @see minplayer.plugin#construct
    */
   osmplayer.controller[template].prototype.construct = function() {
+    // Make sure we provide default options...
+    this.options = jQuery.extend({
+      volumeVertical: true,
+      controllerOnly: false,
+      showController: true
+    }, this.options);
+
     minplayer.controller.prototype.construct.call(this);
-    if (!this.options.controllerOnly) {
+
+    if (this.options.controllerOnly) {
+      this.display.addClass('controller-only');
+    }
+    else {
       this.get('player', function(player) {
         this.get('media', function(media) {
           if (!media.hasController()) {
