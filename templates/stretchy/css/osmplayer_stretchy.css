@@ -1,0 +1,709 @@
+/* base styles */
+
+.minplayer-stretchy {
+  position: relative;
+  font-family:"Trebuchet MS", Helvetica, sans-serif;
+}
+
+.player-ui .minplayer-stretchy-error {
+  display:none;
+  color: #eee;
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  width: 320px;
+  height: 40px;
+  line-height: 40px;
+  margin: -20px 0 0 -160px;
+  text-align: center;
+  vertical-align: center;
+  border: none;
+  z-index: 200;
+  opacity: 0.9;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  background: rgba(23, 35, 34, 0.9);
+  box-shadow: 2px 2px 4px #000;
+  -webkit-box-shadow: 2px 2px 4px #000;
+  -moz-box-shadow: 2px 2px 4px #000;
+}
+
+.player-ui.controller-only .minplayer-stretchy-error {
+  display:none !important;
+}
+
+.player-ui .minplayer-stretchy-display {
+  width:100%;
+  height:100%;
+}
+
+.player-ui .minplayer-stretchy-display video {
+  width: 100%;
+  height: auto;
+}
+
+.player-ui .minplayer-stretchy-preview {
+  width:100%;
+  height:100%;
+  position:absolute;
+  z-index:1;
+}
+
+.player-ui .minplayer-stretchy-loader-wrapper {
+  width:100%;
+  height:100%;
+  position:absolute;
+  z-index:2;
+  background: rgb(0, 0, 0);
+  background: rgba(0, 0, 0, 0.3);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#55000000, endColorstr=#55000000);
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#55000000, endColorstr=#55000000)";
+}
+
+.player-ui.controller-only .minplayer-stretchy-loader-wrapper {
+  display:none !important;
+}
+
+.player-ui.nomedia .minplayer-stretchy-controls, .player-ui.nomedia .minplayer-stretchy-big-play, .player-ui.nomedia .minplayer-stretchy-loader {
+  display:none;
+}
+
+.player-ui .minplayer-stretchy-loader {
+  width:42px;
+  height:10px;
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 50%;
+  margin: -5px 0 0 -21px;
+  text-align:center;
+  vertical-align:center;
+  background: url(images/loader.gif) no-repeat;
+}
+
+/* Big play button */
+.player-ui .minplayer-stretchy-big-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  margin: -40px 0 0 -40px;
+  text-align: center;
+  vertical-align: center;
+  cursor: pointer !important;
+  border: none;
+  opacity: 0.9;
+  z-index:3;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  background: rgba(23, 35, 34, 0.746094);
+  box-shadow: 2px 2px 4px #000;
+  -webkit-box-shadow: 2px 2px 4px #000;
+  -moz-box-shadow: 2px 2px 4px #000;
+}
+
+.player-ui .minplayer-stretchy-big-play span {
+  display: block;
+  font-size: 0;
+  line-height: 0;
+  width: 0;
+  height: 0;
+  margin-top: 25%;
+  margin-left:25%;
+  border-left: 40px solid white;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+}
+
+.player-ui .minplayer-stretchy.fullscreen, .player-ui .minplayer-stretchy.fullscreen .minplayer-stretchy-display, .player-ui .minplayer-stretchy.fullscreen .minplayer-stretchy-loader-wrapper {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  z-index:1000;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.player-ui .minplayer-stretchy.fullscreen .minplayer-stretchy-play-loader {
+  z-index:1001;
+}
+
+.player-ui.controller-only .minplayer-stretchy-play-loader {
+  display:none !important;
+}
+
+.player-ui .minplayer-stretchy-controls {
+  position: absolute;
+  display: block;
+  z-index:3;
+  bottom:0px;
+  left:0px;
+  right:0px;
+  height:30px;
+}
+
+.player-ui.controller-only {
+  height: 32px !important;
+}
+
+.player-ui .minplayer-stretchy-controls-left {
+  float:left;
+  width:29px;
+  margin: 3px;
+  border-right:1px solid #888;
+}
+
+.player-ui .minplayer-stretchy.fullscreen .minplayer-stretchy-controls-left {
+  width:40px;
+  border:none;
+}
+
+.player-ui .minplayer-stretchy-controls-right {
+  float:right;
+  width:120px;
+  margin: 3px;
+}
+
+.player-ui .minplayer-controls-volume-horizontal .minplayer-stretchy-controls-right {
+  width: 200px;
+}
+
+.player-ui .minplayer-stretchy.fullscreen .minplayer-stretchy-controls-right {
+  width:110px;
+}
+
+.player-ui .minplayer-stretchy-controls-mid {
+  position:absolute;
+  left:40px;
+  right:130px;
+  height:30px;
+  margin: 3px;
+}
+
+.player-ui .minplayer-controls-volume-horizontal .minplayer-stretchy-controls-mid {
+  right: 210px;
+}
+
+.player-ui .minplayer-stretchy.fullscreen .minplayer-stretchy-controls-mid {
+  left:50px;
+}
+
+.player-ui .minplayer-stretchy-play, .minplayer-stretchy-volume, .player-ui .minplayer-stretchy-timer, .player-ui .minplayer-stretchy-mute, .player-ui .minplayer-stretchy-unmute {
+  float: left;
+}
+
+.player-ui .minplayer-stretchy-play, .minplayer-stretchy-fullscreen, .minplayer-stretchy-mute, .minplayer-stretchy-unmute {
+  cursor: pointer;
+}
+
+.player-ui .minplayer-stretchy-timer {
+  cursor: stretchy;
+}
+
+/* play, pause */
+.player-ui .minplayer-stretchy-button {
+  display: block;
+  width: 24px;
+  height: 24px;
+  opacity: 0.7;
+  -moz-transition: all 0.2s ease-in-out; /* Firefox */
+  -webkit-transition: all 0.2s ease-in-out; /* Safari and Chrome */
+  -o-transition: all 0.2s ease-in-out;  /* Opera */
+  transition: all 0.2s ease-in-out;
+}
+
+.player-ui .minplayer-stretchy-button:hover {
+  opacity: 1;
+}
+
+.player-ui .minplayer-stretchy-button span {
+  margin: 4px 0 0 4px;
+  margin-top: 3px\9;
+}
+
+.player-ui .minplayer-stretchy-button span.ui-icon-pause {
+  margin-left: 3px;
+}
+
+.player-ui .minplayer-stretchy-pause {
+  display:none;
+}
+
+/* seek */
+.player-ui .minplayer-stretchy-seek {
+  position:relative;
+  height: 10px;
+  margin-top: 7px;
+  -moz-border-radius:4px;
+  -webkit-border-radius:4px;
+  border-radius:4px;
+  background: #535353;
+  background-image: -moz-linear-gradient(top, #535353, #333333);
+  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #535353),color-stop(1, #333333));
+  box-shadow: inset 0 -3px 3px #333333;
+}
+
+.player-ui .minplayer-stretchy-seek .ui-slider-handle {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #333;
+  z-index:20;
+  -moz-border-radius:10px;
+  -webkit-border-radius:10px;
+  border-radius:10px;
+  background: #e6e6e6;
+  background-image: -moz-linear-gradient(top, #e6e6e6, #d5d5d5);
+  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #e6e6e6),color-stop(1, #d5d5d5));
+  box-shadow: inset 0 -3px 3px #d5d5d5;
+}
+
+.player-ui .minplayer-stretchy-seek .ui-slider-handle.ui-state-hover {
+  background: #fff;
+}
+
+.player-ui .minplayer-stretchy-seek .ui-slider-range {
+  position: absolute;
+  height: 10px;
+  -moz-border-radius:15px;
+  -webkit-border-radius:15px;
+  z-index:10px;
+  border-radius:15px;
+}
+
+.player-ui .minplayer-stretchy-progress {
+  position: absolute;
+  width:0px;
+  height:10px;
+  -moz-border-radius:15px;
+  -webkit-border-radius:15px;
+  z-index:8px;
+  border-radius:15px;
+  border: 0 !important;
+}
+
+/* timer */
+.player-ui .minplayer-stretchy-timer {
+  position:relative;
+  height: 22px;
+  float:left;
+  padding-right:6px;
+  font-size: 16px;
+  font-weight: bold;
+  border-right:1px solid #888;
+}
+
+.player-ui .minplayer-stretchy.fullscreen .minplayer-stretchy-timer {
+  border:none;
+}
+
+/* volume */
+.player-ui .minplayer-stretchy-volume {
+  height: 26px;
+  -moz-transition: all 0.1s ease-in-out; /* Firefox */
+  -webkit-transition: all 0.1s ease-in-out; /* Safari and Chrome */
+  -o-transition: all 0.2s ease-in-out;  /* Opera */
+  transition: all 0.1s ease-in-out;
+}
+
+.player-ui .minplayer-controls-volume-vertical .minplayer-stretchy-volume {
+  position: absolute;
+  right:38px;
+  bottom:1px;
+  overflow: hidden;
+  width: 26px;
+}
+
+.player-ui .minplayer-controls-volume-horizontal .minplayer-stretchy-volume {
+  position: relative;
+  width: 126px;
+  margin-left: 5px;
+}
+
+.player-ui .minplayer-stretchy.fullscreen .minplayer-stretchy-volume {
+  right:44px;
+  bottom:12px;
+}
+
+.player-ui .minplayer-controls-volume-vertical .minplayer-stretchy-volume:hover {
+  height: 133px;
+  height: 130px\9;
+}
+
+
+.player-ui .minplayer-controls-volume-vertical .minplayer-stretchy-volume:hover .minplayer-stretchy-volume-slider {
+  position: relative;
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}
+
+.player-ui .minplayer-stretchy-volume-slider {
+  position: relative;
+  border: 1px solid #444;
+  -moz-border-radius:15px;
+  -webkit-border-radius:15px;
+  border-radius:15px;
+  -moz-transition: all 0.1s ease-in-out; /* Firefox */
+  -webkit-transition: all 0.1s ease-in-out; /* Safari and Chrome */
+  -o-transition: all 0.1s ease-in-out;  /* Opera */
+  transition: all 0.1s ease-in-out;
+}
+
+.player-ui .minplayer-controls-volume-vertical .minplayer-stretchy-volume-slider {
+  height: 100px;
+  width: 7px;
+  left: 8px;
+  visiblity: hidden;
+  display: none;
+  opacity: 0;
+}
+.player-ui.controller-only .minplayer-controls-volume-horizontal .minplayer-stretchy-volume-slider {
+  height: 7px;
+  width: 105px;
+  top: 8px;
+  left: 34px !important;
+}
+
+.player-ui .minplayer-controls-volume-horizontal .minplayer-stretchy-volume-slider {
+  height: 7px;
+  width: 78px;
+  top: 8px;
+  left: 34px;
+}
+
+.player-ui .minplayer-stretchy-volume-slider .ui-slider-handle {
+  position: absolute;
+  z-index: 20;
+  width: 12px;
+  height: 12px;
+  border: 1px solid #333;
+  -moz-border-radius:10px;
+  -webkit-border-radius:10px;
+  border-radius:10px;
+  background: #e6e6e6;
+  background-image: -moz-linear-gradient(top, #e6e6e6, #d5d5d5);
+  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #e6e6e6),color-stop(1, #d5d5d5));
+  box-shadow: inset 0 3px 3px #d5d5d5;
+}
+
+.player-ui .minplayer-controls-volume-horizontal .minplayer-stretchy-volume-slider .ui-slider-handle {
+  margin-top:1px;
+}
+
+.player-ui .minplayer-controls-volume-vertical .minplayer-stretchy-volume-slider .ui-slider-handle {
+  left: -4px;
+  margin-bottom:-0.6em;
+  margin-left:0;
+}
+
+.player-ui .minplayer-stretchy-volume-slider .ui-slider-handle.ui-state-hover {
+  background: #fff;
+}
+
+.player-ui .minplayer-stretchy-volume-slider .ui-slider-range {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  -moz-border-radius:15px;
+  -webkit-border-radius:15px;
+  border-radius:15px;
+}
+
+/* volume button */
+.player-ui .minplayer-stretchy-volume-mute, .player-ui .minplayer-stretchy-volume-unmute {
+  position: absolute;
+  bottom: 0px;
+}
+
+.player-ui .minplayer-stretchy-volume-unmute {
+  display: none;
+}
+
+.player-ui.controller-only .minplayer-stretchy-fullscreen {
+  display: none !important;
+}
+
+/* Fullscreen button */
+.player-ui .minplayer-stretchy-fullscreen {
+  position: absolute;
+  right:6px;
+  bottom:7px;
+  width: 22px;
+  height: 14px;
+}
+
+.player-ui .minplayer-stretchy.fullscreen .minplayer-stretchy-fullscreen {
+  right:14px;
+  bottom:16px;
+}
+
+.player-ui .minplayer-stretchy-fullscreen-inner, .player-ui .minplayer-stretchy.fullscreen .minplayer-stretchy-fullscreen:hover .minplayer-stretchy-fullscreen-inner {
+  position:absolute;
+  bottom:0;
+  width:16px;
+  height:8px;
+  -moz-transition: all 0.1s ease-in-out; /* Firefox */
+  -webkit-transition: all 0.1s ease-in-out; /* Safari and Chrome */
+  -o-transition: all 0.1s ease-in-out;  /* Opera */
+  transition: all 0.1s ease-in-out;
+}
+
+.player-ui .minplayer-stretchy-fullscreen:hover .minplayer-stretchy-fullscreen-inner, .player-ui .minplayer-stretchy.fullscreen .minplayer-stretchy-fullscreen-inner {
+  width:20px;
+  height:12px;
+}
+
+.player-ui .minplayer-stretchy.fullscreen .minplayer-stretchy-controls {
+  position: absolute;
+  z-index:1002;
+  width:500px;
+  left: 50%;
+  bottom:10px;
+  margin: 0 0 0 -260px;
+  padding: 10px;
+  border: 1px solid #2E2E2E;
+  -moz-border-radius: 5px; /* FF1+ */
+  -webkit-border-radius: 5px; /* Saf3+, Chrome */
+  border-radius: 5px; /* Opera 10.5, IE 9 */
+  -moz-transition: all 0.1s ease-in-out; /* Firefox */
+  -webkit-transition: all 0.1s ease-in-out; /* Safari and Chrome */
+  -o-transition: all 0.1s ease-in-out;  /* Opera */
+  transition: all 0.1s ease-in-out;
+}
+
+.player-ui .minplayer-stretchy-logo {
+  z-index: 200;
+  line-height: 0px;
+  position: absolute;
+  bottom: 3px;
+  left: 3px;
+}
+
+.player-ui.controller-only .minplayer-stretchy-logo {
+  display: none !important;
+}
+
+.player-ui .minplayer-stretchy.fullscreen .minplayer-stretchy-logo {
+  z-index: 1002;
+}
+
+.with-controller .minplayer-stretchy-logo {
+  bottom: 34px;
+}
+
+.player-ui .ui-slider-horizontal .ui-slider-handle { top: -.3em; margin-left: -.6em; }
+
+
+/** OSM Player Styles **/
+.osmplayer-stretchy {
+  position: relative;
+  padding-bottom: 56.25%; /*16:9 Aspect Ratio*/
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family:"Trebuchet MS", Helvetica, sans-serif;
+}
+
+.osmplayer-stretchy.controller-only {
+  padding-bottom: 0;
+}
+
+.minplayer-stretchy {
+  position: absolute;
+  top: 0px;
+  right: 0px !important;
+  bottom: 0px;
+  left: 0px;
+}
+
+.player-ui .osmplayer-stretchy-playlist {
+  position: absolute;
+  width: 160px;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  z-index:999;
+  }
+
+.player-ui .osmplayer-stretchy-playlist.playlist-only {
+  width: 100%;
+  height: 100%;
+}
+
+.player-ui .playlist-horizontal {
+  width: 100%;
+  height: 160px;
+  top: inherit;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+
+.player-ui .osmplayer-stretchy-hide-show-playlist {
+  position: absolute;
+  z-index:9999;
+  top: 50%;
+  left: -16px;
+  width: 16px;
+  height: 40px;
+  margin: -20px 0 0 0;
+  text-align: center;
+  vertical-align: center;
+  opacity: 0.5;
+}
+
+.player-ui .playlist-horizontal .osmplayer-stretchy-hide-show-playlist {
+  top: inherit;
+  left: 50%;
+  bottom: 191px; /* Playlist height + control bar. */
+  width: 40px;
+  height: 16px;
+  margin: 0 0 0 -20px;
+}
+
+.player-ui .osmplayer-stretchy-hide-show-playlist span {
+  position: absolute;
+  top: 50%;
+  margin-top: -8px;
+}
+
+.player-ui .playlist-horizontal .osmplayer-stretchy-hide-show-playlist span {
+  top: inherit;
+  left: 50%;
+  margin-top: 0px;
+  margin-left: -8px;
+}
+
+.player-ui .osmplayer-stretchy-playlist-scroll {
+  position: absolute;
+  overflow: hidden;
+  top: 0px;
+  right: 0px;
+  left: 0px;
+  bottom: 32px;
+}
+
+.player-ui .playlist-horizontal .osmplayer-stretchy-playlist-scroll {
+  bottom: 30px;
+}
+
+.player-ui .osmplayer-stretchy-playlist-scrollbar {
+  position: absolute;
+  width: 10px;
+  height: 100%;
+  bottom: 0px;
+  right: 0px;
+  z-index: 20;
+  -moz-border-radius: 0px;
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
+}
+
+.player-ui .playlist-vertical .osmplayer-stretchy-playlist-scrollbar {
+  top: 0px;
+}
+
+.player-ui .playlist-horizontal .osmplayer-stretchy-playlist-scrollbar {
+  width: 100%;
+  height: 10px;
+  bottom: 0px;
+}
+
+.player-ui .osmplayer-stretchy-playlist-scrollbar .ui-slider-handle {
+  width: 8px;
+  height: 15px;
+  border: 1px solid #333;
+  right: 0;
+  left: 0;
+  margin: 0;
+  z-index:20px;
+  -moz-border-radius:2px;
+  -webkit-border-radius:2px;
+  border-radius:2px;
+  background: #e6e6e6;
+  background-image: -moz-linear-gradient(top, #e6e6e6, #d5d5d5);
+  background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #e6e6e6),color-stop(1, #d5d5d5));
+  box-shadow: inset 0 -3px 3px #d5d5d5;
+}
+
+.player-ui .playlist-horizontal .osmplayer-stretchy-playlist-scrollbar .ui-slider-handle {
+  width: 15px;
+  height: 8px;
+  top: 0px;
+  bottom: 0px;
+  right: inherit;
+  left: inherit;
+}
+
+.player-ui .osmplayer-stretchy-playlist-scrollbar .ui-slider-handle.ui-state-hover {
+  background: #fff;
+}
+
+.player-ui .osmplayer-stretchy-playlist-list {
+  margin: 2px 2px 2px 2px;
+}
+
+.player-ui .playlist-horizontal .osmplayer-stretchy-playlist-list {
+  position: absolute;
+  margin: 1px 2px 1px 2px;
+  top: 0px;
+  bottom: 0px;
+}
+
+.player-ui .osmplayer-stretchy-teaser {
+  margin:1px 0 1px 0;
+  cursor:pointer;
+  padding: 0;
+}
+
+.player-ui .playlist-horizontal .osmplayer-stretchy-teaser {
+  width: 160px;
+  height: 100%;
+  float: left;
+}
+
+.player-ui .osmplayer-stretchy-teaser-image {
+  width: 100%;
+  height: 80px;
+  margin: auto;
+}
+
+.player-ui .osmplayer-stretchy-teaser-info {
+  z-index: 20;
+  font-size: 12px;
+  margin-top: 2px;
+  padding: 4px;
+}
+
+.player-ui .osmplayer-stretchy-playlist-pager {
+  position: absolute;
+  display: block;
+  z-index:3;
+  bottom:0px;
+  left:0px;
+  right:0px;
+  height:30px;
+}
+
+.player-ui .osmplayer-stretchy-playlist-pager-link {
+  float:left;
+}
+
+.player-ui .osmplayer-stretchy-playlist-pager-left {
+  float:left;
+  margin: 3px;
+}
+
+.player-ui .osmplayer-stretchy-playlist-pager-right {
+  float:right;
+  margin: 3px;
+}
