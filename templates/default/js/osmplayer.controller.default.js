@@ -29,10 +29,13 @@
     }, this.options);
 
     minplayer.controller.prototype.construct.call(this);
+    var self = this;
 
     // Don't execute if we want to hide the controller.
     if (!this.options.showController) {
-      this.display.removeClass('with-controller');
+      this.get('player', function(player) {
+        player.display.removeClass('with-controller');
+      });
       return;
     }
 
@@ -52,11 +55,11 @@
       this.display.removeClass('minplayer-controls-volume-horizontal');
     }
 
-    if (this.options.controllerOnly) {
-      this.display.addClass('controller-only');
-    }
-    else {
-      this.get('player', function(player) {
+    this.get('player', function(player) {
+      if (self.options.controllerOnly) {
+        player.display.addClass('controller-only');
+      }
+      else {
         this.get('media', function(media) {
           if (!media.hasController()) {
             this.showThenHide(5000, function(shown) {
@@ -68,8 +71,8 @@
             player.display.addClass('with-controller');
           }
         });
-      });
-    }
+      }
+    });
   };
 
   /**

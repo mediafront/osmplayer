@@ -31,12 +31,12 @@
     }, this.options);
 
     minplayer.controller.prototype.construct.call(this);
-
-    if (this.options.controllerOnly) {
-      this.display.addClass('controller-only');
-    }
-    else {
-      this.get('player', function(player) {
+    var self = this;
+    this.get('player', function(player) {
+      if (self.options.controllerOnly) {
+        player.display.addClass('controller-only');
+      }
+      else {
         this.get('media', function(media) {
           if (!media.hasController()) {
             this.showThenHide(5000, function(shown) {
@@ -48,8 +48,8 @@
             player.display.addClass('with-controller');
           }
         });
-      });
-    }
+      }
+    });
   }
 
   /**
