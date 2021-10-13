@@ -2757,7 +2757,9 @@ minplayer.players.base.prototype.onReady = function() {
 
     // Iterate through our ready queue.
     for (var i in this.readyQueue) {
-      this.readyQueue[i].call(this);
+      if(this.readyQueue.hasOwnProperty(i)) {
+        this.readyQueue[i].call(this);
+      }
     }
 
     // Empty the ready queue.
@@ -2966,7 +2968,9 @@ minplayer.players.base.prototype.onLoaded = function() {
 
   // Iterate through our ready queue.
   for (var i in this.loadedQueue) {
-    this.loadedQueue[i].call(this);
+    if(this.loadedQueue.hasOwnProperty(i)) {
+      this.loadedQueue[i].call(this);
+    }
   }
 
   // Empty the loaded queue.
@@ -3435,7 +3439,7 @@ minplayer.players = minplayer.players || {};
 minplayer.players.dailymotion = function(context, options, queue) {
 
   /** The quality of the Dailymotion stream. */
-  this.quality = 'default';
+  this.quality = '380';
 
   // Derive from players base.
   minplayer.players.base.call(this, context, options, queue);
@@ -3738,6 +3742,7 @@ minplayer.players.dailymotion.prototype.pause = function(callback) {
 minplayer.players.dailymotion.prototype.stop = function(callback) {
   minplayer.players.base.prototype.stop.call(this, function() {
     this.player.pause();
+    this.player.seek(0);
     if (callback) {
       callback.call(this);
     }
@@ -4999,6 +5004,7 @@ minplayer.players.youtube.prototype.pause = function(callback) {
 minplayer.players.youtube.prototype.stop = function(callback) {
   minplayer.players.base.prototype.stop.call(this, function() {
     this.player.stopVideo();
+    this.player.seekTo(0, true);
     if (callback) {
       callback.call(this);
     }
