@@ -2865,6 +2865,34 @@ minplayer.players.base.prototype.setStartStop = function() {
 };
 
 /**
+ * Trigger a time update for anyone interested.
+ */
+minplayer.players.base.prototype.timeUpdate = function() {
+
+  // Get the current time asyncrhonously.
+  this.getCurrentTime(function(currentTime) {
+
+    // Get the duration asynchronously.
+    this.getDuration(function(duration) {
+
+      // Convert these to floats.
+      currentTime = parseFloat(currentTime);
+      duration = parseFloat(duration);
+
+      // Trigger an event about the progress.
+      if (currentTime || duration) {
+
+        // Trigger an update event.
+        this.trigger('timeupdate', {
+          currentTime: currentTime,
+          duration: duration
+        });
+      }
+    }.bind(this));
+  }.bind(this));
+};
+
+/**
  * Should be called when the media is playing.
  */
 minplayer.players.base.prototype.onPlaying = function() {
@@ -2899,27 +2927,8 @@ minplayer.players.base.prototype.onPlaying = function() {
       // Only do this if the play interval is set.
       if (player.playing) {
 
-        // Get the current time asyncrhonously.
-        player.getCurrentTime(function(currentTime) {
-
-          // Get the duration asynchronously.
-          player.getDuration(function(duration) {
-
-            // Convert these to floats.
-            currentTime = parseFloat(currentTime);
-            duration = parseFloat(duration);
-
-            // Trigger an event about the progress.
-            if (currentTime || duration) {
-
-              // Trigger an update event.
-              player.trigger('timeupdate', {
-                currentTime: currentTime,
-                duration: duration
-              });
-            }
-          });
-        });
+        // Trigger a time update.
+        player.timeUpdate();
       }
 
       // Keep polling as long as it is playing.
@@ -3222,6 +3231,7 @@ minplayer.players.base.prototype.seek = function(pos, callback, noOffset) {
       pos += this.offsetTime;
     }
     this._seek(pos);
+    this.timeUpdate();
     if (callback) {
       callback.call(this);
     }
