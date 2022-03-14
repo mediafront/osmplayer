@@ -16,7 +16,7 @@ osmplayer.parser.youtube = {
 
   // Return if this is a valid youtube feed.
   valid: function(feed) {
-    return (feed.search(/^http(s)?\:\/\/gdata\.youtube\.com/i) === 0);
+    return (feed.search(/^http(s)?\:\/\/www\.googleapis\.com\/youtube/i) === 0);
   },
 
   // Returns the type of request to make.
@@ -26,18 +26,19 @@ osmplayer.parser.youtube = {
 
   // Returns the feed provided the start and numItems.
   getFeed: function(feed, start, numItems) {
+    if(typeof(ENV) == "undefined" || typeof(ENV.youtubeApiKey) == 'undefined') throw 'YouTube API V3 requires authentication, please specify your API key in ENV.youtubeApiKey variable.';
     feed = feed.replace(/(.*)\??(.*)/i, '$1');
-    feed += '?start-index=' + (start + 1);
-    feed += '&max-results=' + (numItems);
-    feed += '&v=2&alt=jsonc';
+    //feed += '?start-index=' + (start + 1); //TODO pagination
+    feed += '&maxResults=' + (numItems);
+    feed += '&part=snippet';
+    feed += '&key=' + ENV.youtubeApiKey;
     return feed;
   },
 
   // Parse the feed.
   parse: function(data) {
-    data = data.data;
     var playlist = {
-      total_rows: data.totalItems,
+      total_rows: data.pageInfo.resultsPerPage,
       nodes: []
     };
 
